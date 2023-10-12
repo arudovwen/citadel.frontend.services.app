@@ -530,3 +530,18 @@ export const assignOption = [
     image: require("@/assets/images/avatar/av-6.svg"),
   },
 ];
+
+export const titleMenu = [
+  {
+    value: "Master",
+    label: "Mr",
+  },
+  {
+    value: "Mrs",
+    label: "Mrs",
+  },
+  {
+    value: "Miss",
+    label: "Miss",
+  },
+];

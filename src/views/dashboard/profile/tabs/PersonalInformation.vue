@@ -86,6 +86,16 @@
         classInput="h-[48px]"
       />
 
+      <CustomVueSelect
+        name="title"
+        v-model="title"
+        :modelValue="title"
+        :error="titleError"
+        :options="titleMenu"
+        label="Title"
+        @update:modelValue="defaultSelectedValue = $event"
+      />
+
       <Textinput
         label="Nearest Bus Stop"
         type="text"
@@ -120,20 +130,27 @@
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-
+import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useRouter } from "vue-router";
-
+import { titleMenu } from "@/constant/data";
 // Define a validation schema
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
   lastName: yup.string().required("Last name is required"),
   middleName: yup.string(),
   email: yup.string().required("Email is required").email(),
-  mobile1: yup.string(),
+  mobile1: yup.string().required("Mobile 1 is required"),
   mobile2: yup.string(),
   address1: yup.string(),
   address2: yup.string(),
-  title: yup.string(),
+  // title: yup.string(),
+  title: yup
+    .object()
+    .shape({
+      value: yup.string().required("Title text is required"),
+      label: yup.string(),
+    })
+    .nullable(),
   nearestBusStop: yup.string(),
   LGA: yup.string(),
   state: yup.string(),
