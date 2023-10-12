@@ -21,6 +21,16 @@ const routes = [
     component: () => import("@/views/auth/forgot-password.vue"),
   },
   {
+    path: "/privacy",
+    name: "privacy",
+    component: () => import("@/views/privacy.vue"),
+  },
+  {
+    path: "/terms",
+    name: "terms",
+    component: () => import("@/views/terms.vue"),
+  },
+  {
     path: "/",
     name: "Layout",
     redirect: "/home",
@@ -31,11 +41,6 @@ const routes = [
         path: "/home",
         name: "home",
         component: () => import("@/views/index.vue"),
-      },
-      {
-        path: "/about",
-        name: "about",
-        component: () => import("@/views/about.vue"),
       },
       {
         path: "/members-form",
@@ -66,7 +71,7 @@ router.beforeEach((to, from, next) => {
     words[i] = words[i][0].toUpperCase() + words[i].substr(1);
   }
 
-  document.title = "Dashcode  - " + words;
+  document.title = "Citadel  - " + words;
   next();
 });
 
