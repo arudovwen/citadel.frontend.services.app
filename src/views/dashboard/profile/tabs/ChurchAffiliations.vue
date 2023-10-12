@@ -1,5 +1,5 @@
 <template>
-  <div>Members</div>
+  <div>ChurchAffiliations</div>
 </template>
 
 <script setup></script>

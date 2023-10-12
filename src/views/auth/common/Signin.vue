@@ -84,8 +84,8 @@ export default {
     const toast = useToast();
     const router = useRouter();
 
-    const goToMembersForm = () => {
-      router.push("/members-form");
+    const goToProfile = () => {
+      router.push("/profile");
     };
 
     const formValues = {
@@ -128,7 +128,7 @@ export default {
           timeout: 2000,
         });
       }
-      goToMembersForm();
+      goToProfile();
     });
 
     return {
