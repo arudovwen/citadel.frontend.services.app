@@ -1,5 +1,7 @@
 <template>
-  <div>Members</div>
+  <div>
+    <div>Personal Info</div>
+  </div>
 </template>
 
 <script setup></script>

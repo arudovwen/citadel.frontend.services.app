@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import ProfileIndex from "@/views/profile/index.vue";
 function guard(to, from, next) {
   if (localStorage.activeUser) {
     next();
@@ -43,9 +44,16 @@ const routes = [
         component: () => import("@/views/index.vue"),
       },
       {
-        path: "/members-form",
-        name: "members form",
-        component: () => import("@/views/forms/MembersForm.vue"),
+        path: "/profile",
+        name: "Profile",
+        component: ProfileIndex,
+        children: [
+          {
+            path: "",
+            name: "Personal Information",
+            component: () => import("@/views/profile/PersonalInfo.vue"),
+          },
+        ],
       },
     ],
   },
