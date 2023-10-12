@@ -47,13 +47,13 @@ const routes = [
         path: "/profile",
         name: "Profile",
         component: ProfileIndex,
-        children: [
-          {
-            path: "",
-            name: "Personal Information",
-            component: () => import("@/views/profile/PersonalInfo.vue"),
-          },
-        ],
+        // children: [
+        //   {
+        //     path: "",
+        //     name: "Personal Information",
+        //     component: () => import("@/views/profile/PersonalInfo.vue"),
+        //   },
+        // ],
       },
     ],
   },
