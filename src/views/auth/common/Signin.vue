@@ -84,6 +84,10 @@ export default {
     const toast = useToast();
     const router = useRouter();
 
+    const goToMembersForm = () => {
+      router.push("/members-form");
+    };
+
     const formValues = {
       email: "dashcode@gmail.com",
       password: "dashcode",
@@ -124,6 +128,7 @@ export default {
           timeout: 2000,
         });
       }
+      goToMembersForm();
     });
 
     return {
