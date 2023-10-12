@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fromGroup relative h-[48px]"
+    class="fromGroup relative"
     :class="`${error ? 'has-error' : ''}  ${horizontal ? 'flex' : ''}  ${
       validate ? 'is-valid' : ''
     } `"

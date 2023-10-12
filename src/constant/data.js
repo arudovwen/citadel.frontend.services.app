@@ -545,3 +545,90 @@ export const titleMenu = [
     label: "Miss",
   },
 ];
+
+export const LGAMenu = [
+  {
+    value: "Ideato South",
+    label: "Ideato South",
+  },
+  {
+    value: "Ideato North",
+    label: "Ideato North",
+  },
+];
+
+export const stateMenu = [
+  {
+    value: "Lagos",
+    label: "Lagos",
+  },
+  {
+    value: "Imo",
+    label: "Imo",
+  },
+];
+export const countryMenu = [
+  {
+    value: "Nigeria",
+    label: "Nigeria",
+  },
+  {
+    value: "Egypt",
+    label: "Egypt",
+  },
+];
+
+export const genderMenu = [
+  {
+    value: "Male",
+    label: "Male",
+  },
+  {
+    value: "Female",
+    label: "Female",
+  },
+];
+
+export const employmentStatusMenu = [
+  {
+    value: "Employed",
+    label: "Employed",
+  },
+  {
+    value: "Unemployed",
+    label: "Unemployed",
+  },
+];
+
+export const nationalityMenu = [
+  {
+    value: "Nigeria",
+    label: "Nigeria",
+  },
+  {
+    value: "Ghana",
+    label: "Ghana",
+  },
+];
+
+export const stateOfOriginMenu = [
+  {
+    value: "Imo ",
+    label: "Imo ",
+  },
+  {
+    value: "Lagos",
+    label: "Lagos",
+  },
+];
+
+export const maritalStatusMenu = [
+  {
+    value: "Married",
+    label: "Married",
+  },
+  {
+    value: "Single",
+    label: "Single",
+  },
+];

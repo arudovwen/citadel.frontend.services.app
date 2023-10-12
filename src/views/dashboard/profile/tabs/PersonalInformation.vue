@@ -8,7 +8,7 @@
         name="firstName"
         v-model="firstName"
         :error="firstNameError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
       <Textinput
         label="Last Name"
@@ -17,7 +17,7 @@
         name="lastName"
         v-model="lastName"
         :error="lastNameError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
       <Textinput
         label="Middle Name"
@@ -26,7 +26,7 @@
         name="middleName"
         v-model="middleName"
         :error="middleNameError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
 
       <Textinput
@@ -36,7 +36,7 @@
         name="emil"
         v-model="email"
         :error="emailError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
       <Textinput
         label="Mobile 1"
@@ -45,7 +45,7 @@
         name="mobile1"
         v-model="mobile1"
         :error="mobile1Error"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
 
       <Textinput
@@ -55,7 +55,7 @@
         name="mobile2"
         v-model="mobile2"
         :error="mobile2Error"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
       <Textinput
         label="Address 1"
@@ -64,7 +64,7 @@
         name="address1"
         v-model="address1"
         :error="address1Error"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
       <Textinput
         label="Address 2"
@@ -73,17 +73,7 @@
         name="address2"
         v-model="address2"
         :error="address2Error"
-        classInput="h-[48px]"
-      />
-
-      <Textinput
-        label="Title"
-        type="text"
-        placeholder="Type your title"
-        name="title"
-        v-model="title"
-        :error="titleError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
 
       <CustomVueSelect
@@ -96,6 +86,85 @@
         @update:modelValue="defaultSelectedValue = $event"
       />
 
+      <CustomVueSelect
+        name="LGA"
+        v-model="LGA"
+        :modelValue="LGA"
+        :error="LGAError"
+        :options="LGAMenu"
+        label="LGA"
+        @update:modelValue="defaultSelectedValue = $event"
+      />
+      <CustomVueSelect
+        name="state"
+        v-model="state"
+        :modelValue="state"
+        :error="stateError"
+        :options="stateMenu"
+        label="State"
+        @update:modelValue="defaultSelectedValue = $event"
+      />
+
+      <CustomVueSelect
+        name="country"
+        v-model="country"
+        :modelValue="country"
+        :error="countryError"
+        :options="countryMenu"
+        label="Country"
+        @update:modelValue="defaultSelectedValue = $event"
+      />
+
+      <CustomVueSelect
+        name="gender"
+        v-model="gender"
+        :modelValue="gender"
+        :error="genderError"
+        :options="genderMenu"
+        label="Gender"
+        @update:modelValue="defaultSelectedValue = $event"
+      />
+
+      <CustomVueSelect
+        name="employmentStatus"
+        v-model="employmentStatus"
+        :modelValue="employmentStatus"
+        :error="employmentStatusError"
+        :options="employmentStatusMenu"
+        label="Employment Status"
+        @update:modelValue="defaultSelectedValue = $event"
+      />
+
+      <CustomVueSelect
+        name="nationality"
+        v-model="nationality"
+        :modelValue="nationality"
+        :error="nationalityError"
+        :options="nationalityMenu"
+        label="Nationality"
+        @update:modelValue="defaultSelectedValue = $event"
+      />
+
+      <CustomVueSelect
+        name="stateOfOrigin"
+        v-model="stateOfOrigin"
+        :modelValue="stateOfOrigin"
+        :error="stateOfOriginError"
+        :options="stateOfOriginMenu"
+        label="State of Origin"
+        @update:modelValue="defaultSelectedValue = $event"
+      />
+
+      <CustomVueSelect
+        name="maritalStatus"
+        v-model="maritalStatus"
+        :modelValue="maritalStatus"
+        :error="maritalStatusError"
+        :options="maritalStatusMenu"
+        label="Marital Status"
+        @update:modelValue="defaultSelectedValue = $event"
+      />
+
       <Textinput
         label="Nearest Bus Stop"
         type="text"
@@ -103,7 +172,7 @@
         name="nearestBusStop"
         v-model="nearestBusStop"
         :error="nearestBusStopError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
 
       <Textinput
@@ -113,7 +182,7 @@
         name="placeOfBirth"
         v-model="placeOfBirth"
         :error="placeOfBirthError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
     </div>
 
@@ -132,7 +201,17 @@ import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useRouter } from "vue-router";
-import { titleMenu } from "@/constant/data";
+import {
+  titleMenu,
+  LGAMenu,
+  stateMenu,
+  countryMenu,
+  genderMenu,
+  employmentStatusMenu,
+  nationalityMenu,
+  stateOfOriginMenu,
+  maritalStatusMenu,
+} from "@/constant/data";
 // Define a validation schema
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
@@ -152,15 +231,63 @@ const schema = yup.object({
     })
     .nullable(),
   nearestBusStop: yup.string(),
-  LGA: yup.string(),
-  state: yup.string(),
-  country: yup.string(),
-  gender: yup.string(),
-  employmentStatus: yup.string(),
+  LGA: yup
+    .object()
+    .shape({
+      value: yup.string(),
+      label: yup.string(),
+    })
+    .nullable(),
+  state: yup
+    .object()
+    .shape({
+      value: yup.string(),
+      label: yup.string(),
+    })
+    .nullable(),
+  country: yup
+    .object()
+    .shape({
+      value: yup.string(),
+      label: yup.string(),
+    })
+    .nullable(),
+  gender: yup
+    .object()
+    .shape({
+      value: yup.string(),
+      label: yup.string(),
+    })
+    .nullable(),
+  employmentStatus: yup
+    .object()
+    .shape({
+      value: yup.string(),
+      label: yup.string(),
+    })
+    .nullable(),
   placeOfBirth: yup.string(),
-  nationality: yup.string(),
-  stateOfOrigin: yup.string(),
-  maritalStatus: yup.string(),
+  nationality: yup
+    .object()
+    .shape({
+      value: yup.string(),
+      label: yup.string(),
+    })
+    .nullable(),
+  stateOfOrigin: yup
+    .object()
+    .shape({
+      value: yup.string(),
+      label: yup.string(),
+    })
+    .nullable(),
+  maritalStatus: yup
+    .object()
+    .shape({
+      value: yup.string(),
+      label: yup.string(),
+    })
+    .nullable(),
 });
 
 const router = useRouter();
@@ -176,19 +303,46 @@ const formValues = {
   email: "dashcode@gmail.com",
   address1: "",
   address2: "",
-  title: "",
+  title: {
+    value: "Mrs",
+    label: "Mrs",
+  },
   mobile1: "",
   mobile2: "",
   nearestBusStop: "",
-  LGA: "",
-  state: "",
-  country: "",
-  gender: "",
-  employmentStatus: "",
+  LGA: {
+    value: "",
+    label: "",
+  },
+  state: {
+    value: "",
+    label: "",
+  },
+  country: {
+    value: "",
+    label: "",
+  },
+  gender: {
+    value: "",
+    label: "",
+  },
+  employmentStatus: {
+    value: "",
+    label: "",
+  },
   placeOfBirth: "",
-  nationality: "",
-  stateOfOrigin: "",
-  maritalStatus: "",
+  nationality: {
+    value: "",
+    label: "",
+  },
+  stateOfOrigin: {
+    value: "",
+    label: "",
+  },
+  maritalStatus: {
+    value: "",
+    label: "",
+  },
 };
 
 const { handleSubmit } = useForm({
@@ -222,6 +376,8 @@ const { value: nationality, errorMessage: nationalityError } =
   useField("nationality");
 const { value: stateOfOrigin, errorMessage: stateOfOriginError } =
   useField("stateOfOrigin");
+const { value: maritalStatus, errorMessage: maritalStatusError } =
+  useField("maritalStatus");
 
 // const { value: email, errorMessage: emailError } = useField("email");
 
