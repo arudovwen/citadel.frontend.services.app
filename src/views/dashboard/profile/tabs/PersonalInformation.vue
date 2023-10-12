@@ -60,7 +60,7 @@
       <Textinput
         label="Address 1"
         type="text"
-        placeholder="Type your adress 1"
+        placeholder="Type your address 1"
         name="address1"
         v-model="address1"
         :error="address1Error"
@@ -69,7 +69,7 @@
       <Textinput
         label="Address 2"
         type="text"
-        placeholder="Type your adress 2"
+        placeholder="Type your address 2"
         name="address2"
         v-model="address2"
         :error="address2Error"

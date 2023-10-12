@@ -632,3 +632,10 @@ export const maritalStatusMenu = [
     label: "Single",
   },
 ];
+
+export const industryMenu = [
+  {
+    value: "Technology",
+    label: "Technology",
+  },
+];
