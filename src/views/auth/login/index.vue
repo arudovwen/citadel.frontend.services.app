@@ -67,7 +67,7 @@
             <div
               class="md:max-w-[345px] mx-auto font-normal text-slate-500 dark:text-slate-400 mt-12 uppercase text-sm"
             >
-              Don’t have an account? Sign up
+              Don’t have an account?
               <router-link
                 to="/register"
                 class="text-slate-900 dark:text-white font-medium hover:underline"
@@ -77,7 +77,8 @@
             </div>
           </div>
           <div class="auth-footer text-center">
-            Copyright 2021, Dashcode All Rights Reserved.
+            Copyright {{ new Date().getFullYear() }}, Dashcode All Rights
+            Reserved.
           </div>
         </div>
       </div>

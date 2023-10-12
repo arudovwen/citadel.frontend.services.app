@@ -67,7 +67,8 @@
             </div>
           </div>
           <div class="auth-footer text-center">
-            Copyright 2021, Dashcode All Rights Reserved.
+            Copyright {{ new Date().getFullYear() }}, Dashcode All Rights
+            Reserved.
           </div>
         </div>
       </div>
