@@ -1,11 +1,31 @@
 import { createRouter, createWebHistory } from "vue-router";
-
+function guard(to, from, next) {
+  if (localStorage.activeUser) {
+    next();
+  } else next({ name: "Login" });
+}
 const routes = [
+  {
+    path: "/",
+    name: "Login",
+    component: () => import("@/views/auth/login/index.vue"),
+  },
+  {
+    path: "/register",
+    name: "reg",
+    component: () => import("@/views/auth/register"),
+  },
+  {
+    path: "/forgot-password",
+    name: "forgot-password",
+    component: () => import("@/views/auth/forgot-password.vue"),
+  },
   {
     path: "/",
     name: "Layout",
     redirect: "/home",
     component: () => import("@/Layout/index.vue"),
+    beforeEnter: guard,
     children: [
       {
         path: "/home",
