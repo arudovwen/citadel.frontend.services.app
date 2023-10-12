@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ProfileIndex from "@/views/profile/index.vue";
+import ProfileIndex from "@/views/dashboard/profile/index.vue";
 function guard(to, from, next) {
   if (localStorage.activeUser) {
     next();
