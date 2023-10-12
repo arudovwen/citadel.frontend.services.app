@@ -8,7 +8,7 @@
         name="firstName"
         v-model="firstName"
         :error="firstNameError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
       <Textinput
         label="Last Name"
@@ -17,7 +17,7 @@
         name="lastName"
         v-model="lastName"
         :error="lastNameError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
       <Textinput
         label="Middle Name"
@@ -26,7 +26,7 @@
         name="middleName"
         v-model="middleName"
         :error="middleNameError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
 
       <Textinput
@@ -36,7 +36,7 @@
         name="emil"
         v-model="email"
         :error="emailError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
       <Textinput
         label="Mobile 1"
@@ -45,7 +45,7 @@
         name="mobile1"
         v-model="mobile1"
         :error="mobile1Error"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
 
       <Textinput
@@ -55,35 +55,7 @@
         name="mobile2"
         v-model="mobile2"
         :error="mobile2Error"
-        classInput="h-[48px]"
-      />
-      <Textinput
-        label="Address 1"
-        type="text"
-        placeholder="Type your adress 1"
-        name="address1"
-        v-model="address1"
-        :error="address1Error"
-        classInput="h-[48px]"
-      />
-      <Textinput
-        label="Address 2"
-        type="text"
-        placeholder="Type your adress 2"
-        name="address2"
-        v-model="address2"
-        :error="address2Error"
-        classInput="h-[48px]"
-      />
-
-      <Textinput
-        label="Title"
-        type="text"
-        placeholder="Type your title"
-        name="title"
-        v-model="title"
-        :error="titleError"
-        classInput="h-[48px]"
+        classInput="h-[40px]"
       />
 
       <CustomVueSelect
@@ -96,25 +68,24 @@
         @update:modelValue="defaultSelectedValue = $event"
       />
 
-      <Textinput
-        label="Nearest Bus Stop"
-        type="text"
-        placeholder="Type your nearest bus stop"
-        name="nearestBusStop"
-        v-model="nearestBusStop"
-        :error="nearestBusStopError"
-        classInput="h-[48px]"
+      <CustomVueSelect
+        name="gender"
+        v-model="gender"
+        :modelValue="gender"
+        :error="genderError"
+        :options="genderMenu"
+        label="Gender"
+        @update:modelValue="defaultSelectedValue = $event"
       />
 
-      <Textinput
-        label="Place Of Birth"
-        type="text"
-        placeholder="Type your placeOfBirth"
-        name="placeOfBirth"
-        v-model="placeOfBirth"
-        :error="placeOfBirthError"
-        classInput="h-[48px]"
-      />
+      <FromGroup label="DOB" name="d1">
+        <flat-pickr
+          v-model="DOB"
+          class="form-control"
+          id="d1"
+          placeholder="yyyy, dd M"
+        />
+      </FromGroup>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
@@ -127,12 +98,13 @@
 </template>
 
 <script setup>
+import FromGroup from "@/components/FromGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useRouter } from "vue-router";
-import { titleMenu } from "@/constant/data";
+import { titleMenu, genderMenu } from "@/constant/data";
 // Define a validation schema
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
@@ -141,9 +113,7 @@ const schema = yup.object({
   email: yup.string().required("Email is required").email(),
   mobile1: yup.string().required("Mobile 1 is required"),
   mobile2: yup.string(),
-  address1: yup.string(),
-  address2: yup.string(),
-  // title: yup.string(),
+
   title: yup
     .object()
     .shape({
@@ -151,16 +121,15 @@ const schema = yup.object({
       label: yup.string(),
     })
     .nullable(),
-  nearestBusStop: yup.string(),
-  LGA: yup.string(),
-  state: yup.string(),
-  country: yup.string(),
-  gender: yup.string(),
-  employmentStatus: yup.string(),
-  placeOfBirth: yup.string(),
-  nationality: yup.string(),
-  stateOfOrigin: yup.string(),
-  maritalStatus: yup.string(),
+
+  gender: yup
+    .object()
+    .shape({
+      value: yup.string(),
+      label: yup.string(),
+    })
+    .nullable(),
+  DOB: yup.string(),
 });
 
 const router = useRouter();
@@ -174,21 +143,17 @@ const formValues = {
   lastName: "",
   middleName: "",
   email: "dashcode@gmail.com",
-  address1: "",
-  address2: "",
-  title: "",
+  title: {
+    value: "",
+    label: "",
+  },
   mobile1: "",
   mobile2: "",
-  nearestBusStop: "",
-  LGA: "",
-  state: "",
-  country: "",
-  gender: "",
-  employmentStatus: "",
-  placeOfBirth: "",
-  nationality: "",
-  stateOfOrigin: "",
-  maritalStatus: "",
+  gender: {
+    value: "",
+    label: "",
+  },
+  DOB: "",
 };
 
 const { handleSubmit } = useForm({
@@ -205,23 +170,12 @@ const { value: middleName, errorMessage: middleNameError } =
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
 const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
-const { value: address1, errorMessage: address1Error } = useField("address1");
-const { value: address2, errorMessage: address2Error } = useField("address2");
+
 const { value: title, errorMessage: titleError } = useField("title");
-const { value: nearestBusStop, errorMessage: nearestBusStopError } =
-  useField("nearestBusStop");
-const { value: LGA, errorMessage: LGAError } = useField("LGA");
-const { value: state, errorMessage: stateError } = useField("state");
-const { value: country, errorMessage: countryError } = useField("country");
+
 const { value: gender, errorMessage: genderError } = useField("gender");
-const { value: employmentStatus, errorMessage: employmentStatusError } =
-  useField("employmentStatus");
-const { value: placeOfBirth, errorMessage: placeOfBirthError } =
-  useField("placeOfBirth");
-const { value: nationality, errorMessage: nationalityError } =
-  useField("nationality");
-const { value: stateOfOrigin, errorMessage: stateOfOriginError } =
-  useField("stateOfOrigin");
+
+const { value: DOB } = useField("DOB");
 
 // const { value: email, errorMessage: emailError } = useField("email");
 
