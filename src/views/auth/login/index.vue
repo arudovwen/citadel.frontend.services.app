@@ -5,13 +5,13 @@
         <div class="max-w-[520px] pt-20 pl-20">
           <router-link to="/">
             <img
-              src="@/assets/images/logo/logo.svg"
+              src="@/assets/images/logo/logo.png"
               alt=""
               class="mb-10"
               v-if="!this.$store.state.isDark"
             />
             <img
-              src="@/assets/images/logo/logo-white.svg"
+              src="@/assets/images/logo/logo.png"
               alt=""
               class="mb-10"
               v-else
@@ -43,13 +43,13 @@
             <div class="mobile-logo text-center mb-6 lg:hidden block">
               <router-link to="/">
                 <img
-                  src="@/assets/images/logo/logo.svg"
+                  src="@/assets/images/logo/logo.png"
                   alt=""
                   class="mx-auto"
                   v-if="!this.$store.state.isDark"
                 />
                 <img
-                  src="@/assets/images/logo/logo-white.svg"
+                  src="@/assets/images/logo/logo.png"
                   alt=""
                   class="mx-auto"
                   v-else
@@ -77,8 +77,8 @@
             </div>
           </div>
           <div class="auth-footer text-center">
-            Copyright {{ new Date().getFullYear() }}, Dashcode All Rights
-            Reserved.
+            Copyright {{ new Date().getFullYear() }}, The Citadel Global
+            Community Church, All Rights Reserved.
           </div>
         </div>
       </div>

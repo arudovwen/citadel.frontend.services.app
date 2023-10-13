@@ -5,13 +5,13 @@
         <div class="max-w-[520px] pt-20 pl-20">
           <router-link to="/">
             <img
-              src="@/assets/images/logo/logo.svg"
+              src="@/assets/images/logo/logo.png"
               alt=""
               class="mb-10"
               v-if="!this.$store.state.isDark"
             />
             <img
-              src="@/assets/images/logo/logo-white.svg"
+              src="@/assets/images/logo/logo.png"
               alt=""
               class="mb-10"
               v-else
@@ -41,7 +41,7 @@
             <div class="mobile-logo text-center mb-6 lg:hidden block">
               <router-link to="/"
                 ><img
-                  src="@/assets/images/logo/logo.svg"
+                  src="@/assets/images/logo/logo.png"
                   alt=""
                   class="mx-auto"
               /></router-link>
@@ -49,7 +49,7 @@
             <div class="text-center 2xl:mb-10 mb-5">
               <h4 class="font-medium">Sign up</h4>
               <div class="text-slate-500 dark:text-slate-400 text-base">
-                Create an account to start using Dashcode
+                Create an account to start
               </div>
             </div>
             <Signup />

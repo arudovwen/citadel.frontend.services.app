@@ -23,13 +23,15 @@
           v-if="!this.$store.state.sidebarCollasp"
         >
           <img
-            src="@/assets/images/logo/logo.svg"
+            src="@/assets/images/logo/logo.png"
             alt=""
+            class="w-[150px]"
             v-if="!this.$store.state.isDark && !this.$store.state.semidark"
           />
 
           <img
-            src="@/assets/images/logo/logo-white.svg"
+            src="@/assets/images/logo/logo.png"
+            class="w-[150px]"
             alt=""
             v-if="this.$store.state.isDark || this.$store.state.semidark"
           />
@@ -39,12 +41,12 @@
           v-if="this.$store.state.sidebarCollasp"
         >
           <img
-            src="@/assets/images/logo/logo-c.svg"
+            src="@/assets/images/logo/icon.png"
             alt=""
             v-if="!this.$store.state.isDark && !this.$store.state.semidark"
           />
           <img
-            src="@/assets/images/logo/logo-c-white.svg"
+            src="@/assets/images/logo/icon.png"
             alt=""
             v-if="this.$store.state.isDark || this.$store.state.semidark"
           />
