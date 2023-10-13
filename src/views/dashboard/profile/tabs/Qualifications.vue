@@ -1,75 +1,9 @@
-<!-- <template>
-  <form @submit.prevent="onSubmit" class="space-y-4">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <Textinput
-        label="Highest Qualification"
-        type="text"
-        placeholder="Type your highest qualification"
-        name="highestQualification"
-        v-model="highestQualification"
-        :error="highestQualificationError"
-        classInput="h-[48px]"
-      />
-      <Textinput
-        label="Lowest Qualification"
-        type="text"
-        placeholder="Type your lowest qualification"
-        name="lowestQualiofication"
-        v-model="lowestQualiofication"
-        :error="lowestQualioficationError"
-        classInput="h-[48px]"
-      />
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-      <div class="hidden sm:block"></div>
-      <button type="submit" class="btn btn-dark block w-full text-center">
-        Save Changes
-      </button>
-    </div>
-  </form>
-</template>
-
-<script setup>
-import Textinput from "@/components/Textinput";
-import { useField, useForm } from "vee-validate";
-import * as yup from "yup";
-
-// Define a validation schema
-const schema = yup.object({
-  highestQualification: yup.string(),
-  lowestQualiofication: yup.string(),
-});
-
-const formValues = {
-  highestQualification: "",
-  lowestQualiofication: "",
-};
-
-const { handleSubmit } = useForm({
-  validationSchema: schema,
-  initialValues: formValues,
-});
-
-const { value: highestQualification, errorMessage: highestQualificationError } =
-  useField("highestQualification");
-const { value: lowestQualiofication, errorMessage: lowestQualioficationError } =
-  useField("lowestQualiofication");
-
-const onSubmit = handleSubmit((values) => {
-  console.log("Qualifications: " + JSON.stringify(values));
-});
-</script>
-
-<style lang="scss" scoped></style> -->
-
 <template>
   <div>
     <Card bodyClass="p-0">
       <header
-        class="border-b px-4 border-slate-100 dark:border-slate-700 pt-4 pb-3 flex justify-between items-center"
+        class="border-b px-4 border-slate-100 dark:border-slate-700 pt-4 pb-3 flex justify-end items-center"
       >
-        <h6 class="card-title mb-0">Repeating Forms</h6>
         <div>
           <Button
             text="Add new"
@@ -91,9 +25,9 @@ const onSubmit = handleSubmit((values) => {
               :key="field.idx"
               :id="`highestQualification_${idx}`"
               label="Highest Qualification"
-              v-model="values.users[idx].highestQualification"
+              v-model="values.qualifications[idx].highestQualification"
               type="text"
-              :name="`users[${idx}].highestQualification`"
+              :name="`qualifications[${idx}].highestQualification`"
               placeholder="Type your highest qualification"
             />
             <Textinput
@@ -101,8 +35,8 @@ const onSubmit = handleSubmit((values) => {
               :id="`lowestQualiofication_${idx}`"
               label="Lowest Qualification"
               type="text"
-              v-model="values.users[idx].lowestQualiofication"
-              :name="`users[${idx}].lowestQualiofication`"
+              v-model="values.qualifications[idx].lowestQualiofication"
+              :name="`qualifications[${idx}].lowestQualiofication`"
               placeholder="Type your lowest qualification"
             />
 
@@ -143,13 +77,28 @@ const formValues = {
   lowestQualiofication: "",
 };
 
+// const schema = yup.object().shape({
+//   qualifications: yup
+//     .array()
+//     .of(
+//       yup.object().shape({
+//         name: yup.string().required().label('Name'),
+//         email: yup.string().email().required().label('Email'),
+//       })
+//     )
+//     .strict(),
+// });
+
 const { handleSubmit, values } = useForm({
   initialValues: {
-    users: [formValues],
+    qualifications: [formValues],
   },
 });
-const { remove, push, fields } = useFieldArray("users");
+
+const { remove, push, fields } = useFieldArray("qualifications");
 const onSubmit = handleSubmit(() => {
-  console.log("Qualifications: " + JSON.stringify(values.users, null, 2));
+  console.log(
+    "Qualifications: " + JSON.stringify(values.qualifications, null, 2)
+  );
 });
 </script>

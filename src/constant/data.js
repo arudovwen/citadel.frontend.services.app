@@ -3,15 +3,15 @@ export const menuItems = [
     isHeadr: true,
     title: "menu",
   },
+  // {
+  //   title: "Dashboard",
+  //   icon: "heroicons-outline:home",
+  //   link: "home",
+  // },
   {
-    title: "Dashboard",
-    icon: "heroicons-outline:home",
-    link: "home",
-  },
-  {
-    title: "About",
-    icon: "fa6-regular:circle-check",
-    link: "about",
+    title: "Profile",
+    icon: "heroicons-outline:user",
+    link: "profile",
   },
 ];
 
