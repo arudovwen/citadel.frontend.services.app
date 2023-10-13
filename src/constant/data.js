@@ -530,3 +530,170 @@ export const assignOption = [
     image: require("@/assets/images/avatar/av-6.svg"),
   },
 ];
+
+export const titleMenu = [
+  {
+    value: "Master",
+    label: "Mr",
+  },
+  {
+    value: "Mrs",
+    label: "Mrs",
+  },
+  {
+    value: "Miss",
+    label: "Miss",
+  },
+];
+
+export const LGAMenu = [
+  {
+    value: "Ideato South",
+    label: "Ideato South",
+  },
+  {
+    value: "Ideato North",
+    label: "Ideato North",
+  },
+];
+
+export const stateMenu = [
+  {
+    value: "Lagos",
+    label: "Lagos",
+  },
+  {
+    value: "Imo",
+    label: "Imo",
+  },
+];
+export const countryMenu = [
+  {
+    value: "Nigeria",
+    label: "Nigeria",
+  },
+  {
+    value: "Egypt",
+    label: "Egypt",
+  },
+];
+
+export const genderMenu = [
+  {
+    value: "Male",
+    label: "Male",
+  },
+  {
+    value: "Female",
+    label: "Female",
+  },
+];
+
+export const employmentStatusMenu = [
+  {
+    value: "Employed",
+    label: "Employed",
+  },
+  {
+    value: "Unemployed",
+    label: "Unemployed",
+  },
+];
+
+export const nationalityMenu = [
+  {
+    value: "Nigeria",
+    label: "Nigeria",
+  },
+  {
+    value: "Ghana",
+    label: "Ghana",
+  },
+];
+
+export const stateOfOriginMenu = [
+  {
+    value: "Imo ",
+    label: "Imo ",
+  },
+  {
+    value: "Lagos",
+    label: "Lagos",
+  },
+];
+
+export const maritalStatusMenu = [
+  {
+    value: "Married",
+    label: "Married",
+  },
+  {
+    value: "Single",
+    label: "Single",
+  },
+];
+
+export const industryMenu = [
+  {
+    value: "Technology",
+    label: "Technology",
+  },
+];
+
+export const levelOfATSMenu = [
+  {
+    value: "1",
+    label: "1",
+  },
+  {
+    value: "2",
+    label: "2",
+  },
+];
+export const isCharterMemberMenu = [
+  {
+    value: true,
+    label: "True",
+  },
+  {
+    value: false,
+    label: "False",
+  },
+];
+export const CIHZoneMenu = [
+  {
+    value: "Chevron",
+    label: "Chevron",
+  },
+  {
+    value: "Akoka",
+    label: "Akoka",
+  },
+];
+export const affinityGroupMenu = [
+  {
+    value: "Choir",
+    label: "Choir",
+  },
+  {
+    value: "Single",
+    label: "Single",
+  },
+];
+export const departmentMenu = [
+  {
+    value: "Logistics",
+    label: "Logistics",
+  },
+];
+
+export const CIHAddressMenu = [
+  {
+    value: "Lekki",
+    label: "Lekki",
+  },
+  {
+    value: "Jakande",
+    label: "Jakande",
+  },
+];
