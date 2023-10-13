@@ -53,6 +53,7 @@
     "vue3-apexcharts": "^1.4.1",
     "vue3-click-away": "^1.2.4",
     "vue3-dropzone": "^2.0.1",
+    "vue3-otp-input": "^0.4.1",
     "vuedraggable": "^4.1.0",
     "vuex": "^4.0.0",
     "yup": "^0.32.11"
