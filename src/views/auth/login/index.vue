@@ -87,7 +87,6 @@
 </template>
 <script>
 import Signin from "../common/Signin";
-
 export default {
   components: {
     Signin,
