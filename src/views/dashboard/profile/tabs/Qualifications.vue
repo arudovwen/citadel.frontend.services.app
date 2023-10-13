@@ -139,13 +139,13 @@ import Textinput from "@/components/Textinput";
 import Icon from "@/components/Icon";
 
 const formValues = {
-  highestQualification: "dd",
-  lowestQualiofication: "ff",
+  highestQualification: "",
+  lowestQualiofication: "",
 };
 
 const { handleSubmit, values } = useForm({
   initialValues: {
-    users: [formValues, formValues],
+    users: [formValues],
   },
 });
 const { remove, push, fields } = useFieldArray("users");
