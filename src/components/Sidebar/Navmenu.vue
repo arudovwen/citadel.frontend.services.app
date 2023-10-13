@@ -37,6 +37,7 @@
         "
         @click="toggleSubmenu(i)"
       >
+        sss
         <div class="flex-1 flex items-start">
           <span class="menu-icon" v-show="item.icon">
             <Icon :icon="item.icon"
@@ -63,7 +64,7 @@
         @after-leave="afterLeave"
       >
         <!-- !! SubMenu !! -->
-        <ul calss="sub-menu " v-if="i === activeSubmenu">
+        <ul class="sub-menu" v-if="i === activeSubmenu">
           <li
             v-for="(ci, index) in item.child"
             :key="index"
@@ -94,16 +95,6 @@
           </li>
         </ul>
       </Transition>
-    </li>
-    <li class="single-sidebar-menu">
-      <a
-        href="https://dashcode-doc.codeshaper.tech/"
-        target="_blank"
-        class="menu-link"
-      >
-        <span class="menu-icon"><Icon icon="heroicons:document" /></span>
-        <div class="text-box">Documentation</div>
-      </a>
     </li>
   </ul>
 </template>
