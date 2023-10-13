@@ -639,3 +639,61 @@ export const industryMenu = [
     label: "Technology",
   },
 ];
+
+export const levelOfATSMenu = [
+  {
+    value: "1",
+    label: "1",
+  },
+  {
+    value: "2",
+    label: "2",
+  },
+];
+export const isCharterMemberMenu = [
+  {
+    value: "True",
+    label: "True",
+  },
+  {
+    value: "False",
+    label: "False",
+  },
+];
+export const CIHZoneMenu = [
+  {
+    value: "Chevron",
+    label: "Chevron",
+  },
+  {
+    value: "Akoka",
+    label: "Akoka",
+  },
+];
+export const affinityGroupMenu = [
+  {
+    value: "Choir",
+    label: "Choir",
+  },
+  {
+    value: "Single",
+    label: "Single",
+  },
+];
+export const departmentMenu = [
+  {
+    value: "Logistics",
+    label: "Logistics",
+  },
+];
+
+export const CIHAddressMenu = [
+  {
+    value: "Lekki",
+    label: "Lekki",
+  },
+  {
+    value: "Jakande",
+    label: "Jakande",
+  },
+];
