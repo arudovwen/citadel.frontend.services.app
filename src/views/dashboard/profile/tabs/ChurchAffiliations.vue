@@ -22,6 +22,7 @@
       />
 
       <Textinput
+        v-if="Number(levelOfATS.value) >= 2 && isCharterMember.value"
         label="Charter Member Number"
         type="number"
         placeholder="Type your charter number"
@@ -115,7 +116,7 @@ const schema = yup.object({
   isCharterMember: yup
     .object()
     .shape({
-      value: yup.string(),
+      value: yup.bool(),
       label: yup.string(),
     })
     .nullable(),
@@ -163,8 +164,8 @@ const formValues = {
     label: "",
   },
   isCharterMember: {
-    value: "",
-    label: "",
+    value: false,
+    label: "false",
   },
   charterMemberNumber: "",
   CIHZone: {

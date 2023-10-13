@@ -652,11 +652,11 @@ export const levelOfATSMenu = [
 ];
 export const isCharterMemberMenu = [
   {
-    value: "True",
+    value: true,
     label: "True",
   },
   {
-    value: "False",
+    value: false,
     label: "False",
   },
 ];
