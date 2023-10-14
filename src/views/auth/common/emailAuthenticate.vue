@@ -22,13 +22,30 @@
     <button type="submit" class="btn btn-dark block w-full text-center">
       Verify Email
     </button>
+
+    <button
+      type="button"
+      class="btn btn-light block w-full text-center"
+      @click="resendOTP"
+      :disabled="resendDisabled"
+    >
+      Resend OTP
+      <span v-if="resendDisabled">
+        (Resend in {{ resendCountdown }} seconds)</span
+      >
+    </button>
   </form>
 </template>
+
 <script setup>
-import { ref } from "vue";
+import { ref, watch, onMounted } from "vue";
 import VOtpInput from "vue3-otp-input";
 
 const otpInput = ref(null);
+const bindModal = ref("");
+const resendCountdown = ref(0);
+const resendDisabled = ref(false);
+
 const handleOnComplete = (value) => {
   console.log("OTP completed: ", value);
 };
@@ -37,16 +54,41 @@ const handleOnChange = (value) => {
   console.log("OTP changed: ", value);
 };
 
-// const clearInput = () => {
-//   otpInput.value?.clearInput();
-// };
+const resendOTP = () => {
+  // Implement your OTP resend logic here
+  // Disable the button and start the countdown
+  resendDisabled.value = true;
+  let countdown = 120; // 2 minutes
+  resendCountdown.value = countdown;
 
-// const fillInput = (value) => {
-//   console.log(value);
-//   otpInput.value?.fillInput(value);
-// };
-// Define a validation schema
+  const interval = setInterval(() => {
+    countdown--;
+    resendCountdown.value = countdown;
+    if (countdown <= 0) {
+      clearInterval(interval);
+      resendDisabled.value = false;
+    }
+  }, 1000);
+};
 
-// No need to define rules for fields
+// Automatically start the countdown on component mount
+onMounted(() => {
+  watch(
+    resendDisabled,
+    (newValue) => {
+      if (newValue) {
+        const interval = setInterval(() => {
+          resendCountdown.value--;
+          if (resendCountdown.value <= 0) {
+            clearInterval(interval);
+            resendDisabled.value = false;
+          }
+        }, 1000);
+      }
+    },
+    { immediate: true }
+  );
+});
 </script>
+
 <style lang="scss"></style>
