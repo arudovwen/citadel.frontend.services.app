@@ -156,7 +156,7 @@ export default {
           percentClass: "text-primary-500",
         },
         {
-          title: "Appointmennts ",
+          title: "Venues ",
           count: "$86,954",
 
           bg: "bg-info-500",
@@ -167,7 +167,7 @@ export default {
           percentClass: "text-primary-500",
         },
         {
-          title: "Meetings",
+          title: "Outreaches",
           count: "15%",
           bg: "bg-primary-500",
           text: "text-danger-500",
