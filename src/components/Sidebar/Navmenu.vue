@@ -37,7 +37,6 @@
         "
         @click="toggleSubmenu(i)"
       >
-        sss
         <div class="flex-1 flex items-start">
           <span class="menu-icon" v-show="item.icon">
             <Icon :icon="item.icon"
