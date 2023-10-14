@@ -1,6 +1,8 @@
 <template>
   <TabGroup>
-    <TabList class="lg:space-x-8 md:space-x-4 space-x-0 rtl:space-x-reverse">
+    <TabList
+      class="lg:space-x-8 md:space-x-4 space-x-0 rtl:space-x-reverse flex justify-between flex-row item"
+    >
       <Tab
         v-slot="{ selected }"
         as="template"
@@ -8,6 +10,7 @@
         :key="i"
       >
         <button
+          v-if="item.isShowing"
           :class="[
             selected
               ? 'text-primary-500 before:w-full'
@@ -29,15 +32,12 @@
       <TabPanel>
         <Employer />
       </TabPanel>
-      <!-- <div v-if="isMarried"> -->
       <TabPanel>
         <SpouseDetails />
       </TabPanel>
       <TabPanel>
         <ChildrenDetails />
       </TabPanel>
-      <!-- </div> -->
-
       <TabPanel>
         <ChurchAffiliations />
       </TabPanel>
@@ -71,11 +71,11 @@ const buttons = [
   },
   {
     title: "Spouse Details",
-    isShowing: isMarried.value,
+    isShowing: isMarried,
   },
   {
     title: "Children Details",
-    isShowing: isMarried.value,
+    isShowing: isMarried,
   },
   {
     title: "Church Affiliations",

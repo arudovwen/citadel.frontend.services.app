@@ -7,7 +7,11 @@
           : 'shadow-base'
       }   ${
         this.$store.state.sidebarCollasp ? this.closeClass : this.openClass
-      }`"
+      } 
+      
+      `"
+      @mouseenter="this.$store.state.sidebarCollasp = false"
+      @mouseleave="this.$store.state.sidebarCollasp = true"
     >
       <div
         :class="`logo-segment flex justify-between items-center bg-white dark:bg-slate-800 z-[9] py-6  sticky top-0   px-4  ${
@@ -148,6 +152,11 @@ export default defineComponent({
 .sidebar-wrapper {
   @apply fixed left-0 top-0   h-screen   z-[999];
 }
+// .sidebar-wrapper {
+//   @apply fixed ltr:left-0 rtl:right-0 top-0   h-screen   z-[999];
+//   transition: width 0.2s cubic-bezier(0.39, 0.575, 0.565, 1);
+//   will-change: width;
+// }
 .close_sidebar.sidebar-wrapper {
   @apply absolute bottom-0 h-full;
 }
