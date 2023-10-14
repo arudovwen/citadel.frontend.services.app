@@ -13,6 +13,63 @@ export const menuItems = [
     icon: "heroicons-outline:user",
     link: "profile",
   },
+  { title: "Members", icon: "heroicons-outline:user", link: "members" },
+  {
+    title: "First Timers",
+    icon: "heroicons-outline:user",
+    link: "first-timers",
+  },
+  {
+    title: "Outreach Management",
+    icon: "heroicons-outline:user",
+    link: "outreach-management",
+  },
+  {
+    title: "Attendance",
+    icon: "heroicons-outline:user",
+    link: "attendance",
+  },
+  { title: "Goals", icon: "heroicons-outline:user", link: "goals" },
+  {
+    title: "Meeting Management",
+    icon: "heroicons-outline:user",
+    link: "meeting-management",
+  },
+  {
+    title: "Issue Management",
+    icon: "heroicons-outline:user",
+    link: "issue-management",
+  },
+  {
+    title: "Event Management",
+    icon: "heroicons-outline:user",
+    link: "event-management",
+  },
+  {
+    title: "Notification Management",
+    icon: "heroicons-outline:user",
+    link: "notification-management",
+  },
+  {
+    title: "Appointment Booking",
+    icon: "heroicons-outline:user",
+    link: "appointment-booking",
+  },
+  {
+    title: "Venue Management",
+    icon: "heroicons-outline:user",
+    link: "venue-management",
+  },
+  {
+    title: "Chat Management",
+    icon: "heroicons-outline:user",
+    link: "chat-management",
+  },
+  {
+    title: "Ancillary Services",
+    icon: "heroicons-outline:user",
+    link: "ancillary-services",
+  },
 ];
 
 // menuseetins

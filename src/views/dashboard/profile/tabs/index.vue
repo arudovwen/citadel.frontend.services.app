@@ -29,12 +29,15 @@
       <TabPanel>
         <Employer />
       </TabPanel>
+      <!-- <div v-if="isMarried"> -->
       <TabPanel>
         <SpouseDetails />
       </TabPanel>
       <TabPanel>
         <ChildrenDetails />
       </TabPanel>
+      <!-- </div> -->
+
       <TabPanel>
         <ChurchAffiliations />
       </TabPanel>
@@ -50,24 +53,33 @@ import SpouseDetails from "./SpouseDetails.vue";
 import ChildrenDetails from "./ChildrenDetails.vue";
 import ChurchAffiliations from "./ChurchAffiliations.vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
+import { inject } from "vue";
+
+const isMarried = inject("isMarried");
 const buttons = [
   {
     title: "Personal Information",
+    isShowing: true,
   },
   {
     title: "Qualifications",
+    isShowing: true,
   },
   {
     title: "Employer",
+    isShowing: true,
   },
   {
     title: "Spouse Details",
+    isShowing: isMarried.value,
   },
   {
     title: "Children Details",
+    isShowing: isMarried.value,
   },
   {
     title: "Church Affiliations",
+    isShowing: true,
   },
 ];
 </script>

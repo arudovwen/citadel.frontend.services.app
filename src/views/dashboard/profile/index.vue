@@ -31,7 +31,7 @@
               Albert Flores
             </div>
             <div class="text-sm font-light text-slate-600 dark:text-slate-400">
-              Front End Developer
+              Role
             </div>
           </div>
         </div>
@@ -117,7 +117,11 @@
 <script setup>
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
+import { provide, ref } from "vue";
 import Tab from "./tabs/index.vue";
+const isMarried = ref(false);
+
+provide("isMarried", isMarried);
 </script>
 
 <style lang="scss" scoped></style>

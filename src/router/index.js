@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ProfileIndex from "@/views/dashboard/profile/index.vue";
+import MembersIndex from "@/views/dashboard/members/index.vue";
 function guard(to, from, next) {
   if (localStorage.activeUser) {
     next();
@@ -54,6 +55,11 @@ const routes = [
         //     component: () => import("@/views/profile/PersonalInfo.vue"),
         //   },
         // ],
+      },
+      {
+        path: "/members",
+        name: "members",
+        component: MembersIndex,
       },
     ],
   },
