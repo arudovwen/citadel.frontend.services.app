@@ -3,73 +3,74 @@ export const menuItems = [
     isHeadr: true,
     title: "menu",
   },
+  {
+    title: "Overview",
+    icon: "heroicons-outline:home",
+    link: "overview",
+  },
   // {
-  //   title: "Dashboard",
-  //   icon: "heroicons-outline:home",
-  //   link: "home",
+  //   title: "Profile",
+  //   icon: "heroicons-outline:user",
+  //   link: "profile",
   // },
   {
-    title: "Profile",
-    icon: "heroicons-outline:user",
-    link: "profile",
-  },
-  { title: "Members", icon: "heroicons-outline:user", link: "members" },
-  {
     title: "First Timers",
-    icon: "heroicons-outline:user",
+    icon: "heroicons-outline:user-add",
     link: "first-timers",
   },
+  { title: "Members", icon: "heroicons-outline:user-group", link: "members" },
+
   {
-    title: "Outreach Management",
-    icon: "heroicons-outline:user",
+    title: "Outreach",
+    icon: "bx:donate-heart",
     link: "outreach-management",
   },
   {
     title: "Attendance",
-    icon: "heroicons-outline:user",
+    icon: "heroicons-outline:clipboard-check",
     link: "attendance",
   },
-  { title: "Goals", icon: "heroicons-outline:user", link: "goals" },
+  { title: "Goals", icon: "bx:football", link: "goals" },
   {
-    title: "Meeting Management",
-    icon: "heroicons-outline:user",
+    title: "Meetings",
+    icon: "bx:merge",
     link: "meeting-management",
   },
+  // {
+  //   title: "Issue Management",
+  //   icon: "heroicons-outline:user",
+  //   link: "issue-management",
+  // },
   {
-    title: "Issue Management",
-    icon: "heroicons-outline:user",
-    link: "issue-management",
-  },
-  {
-    title: "Event Management",
-    icon: "heroicons-outline:user",
+    title: "Events",
+    icon: "bx:server",
     link: "event-management",
   },
   {
-    title: "Notification Management",
-    icon: "heroicons-outline:user",
+    title: "Notifications",
+    icon: "heroicons-outline:speakerphone",
     link: "notification-management",
   },
   {
-    title: "Appointment Booking",
-    icon: "heroicons-outline:user",
+    title: "Appointments",
+    icon: "bx:calendar-plus",
     link: "appointment-booking",
   },
   {
-    title: "Venue Management",
-    icon: "heroicons-outline:user",
+    title: "Venues",
+    icon: "bx:buildings",
     link: "venue-management",
   },
-  {
-    title: "Chat Management",
-    icon: "heroicons-outline:user",
-    link: "chat-management",
-  },
-  {
-    title: "Ancillary Services",
-    icon: "heroicons-outline:user",
-    link: "ancillary-services",
-  },
+  // {
+  //   title: "Chat Management",
+  //   icon: "heroicons-outline:user",
+  //   link: "chat-management",
+  // },
+  // {
+  //   title: "Ancillary Services",
+  //   icon: "heroicons-outline:user",
+  //   link: "ancillary-services",
+  // },
 ];
 
 // menuseetins
@@ -80,36 +81,36 @@ export const ProfileMenu = [
     icon: "heroicons-outline:user",
     link: "#",
   },
-  {
-    label: "Chat",
-    icon: "heroicons-outline:chat",
-    link: "chat",
-  },
-  {
-    label: "Email",
-    icon: "heroicons-outline:mail",
-    link: "email",
-  },
-  {
-    label: "Todo",
-    icon: "heroicons-outline:chip",
-    link: "todo",
-  },
+  // {
+  //   label: "Chat",
+  //   icon: "heroicons-outline:chat",
+  //   link: "chat",
+  // },
+  // {
+  //   label: "Email",
+  //   icon: "heroicons-outline:mail",
+  //   link: "email",
+  // },
+  // {
+  //   label: "Todo",
+  //   icon: "heroicons-outline:chip",
+  //   link: "todo",
+  // },
   {
     label: "Settings",
     icon: "heroicons-outline:cog",
     link: "#",
   },
-  {
-    label: "Price",
-    icon: "heroicons-outline:credit-card",
-    link: "pricing",
-  },
-  {
-    label: "Faq",
-    icon: "heroicons-outline:information-circle",
-    link: "faq",
-  },
+  // {
+  //   label: "Price",
+  //   icon: "heroicons-outline:credit-card",
+  //   link: "pricing",
+  // },
+  // {
+  //   label: "Faq",
+  //   icon: "heroicons-outline:information-circle",
+  //   link: "faq",
+  // },
   {
     label: "Logout",
     icon: "heroicons-outline:login",

@@ -50,6 +50,14 @@ const routes = [
         component: () => import("@/views/index.vue"),
       },
       {
+        path: "/overview",
+        name: "overview",
+        component: () => import("@/views/home/crm.vue"),
+        meta: {
+          hide: true,
+        },
+      },
+      {
         path: "/profile",
         name: "profile",
         component: ProfileIndex,
