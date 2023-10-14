@@ -43,15 +43,15 @@
             <div class="mobile-logo text-center mb-6 lg:hidden block">
               <router-link to="/">
                 <img
-                  src="@/assets/images/logo/logo.png"
+                  src="@/assets/images/logo/icon.png"
                   alt=""
-                  class="mx-auto"
+                  class="mx-auto w-[100px]"
                   v-if="!this.$store.state.isDark"
                 />
                 <img
-                  src="@/assets/images/logo/logo.png"
+                  src="@/assets/images/logo/icon.png"
                   alt=""
-                  class="mx-auto"
+                  class="mx-auto w-[100px]"
                   v-else
                 />
               </router-link>
