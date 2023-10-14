@@ -104,11 +104,21 @@ const checkbox = ref(false);
 // Define a validation schema
 const schema = yup.object({
   email: yup.string().required("Email is required").email(),
-  password: yup.string().required("Password is  required").min(8),
+  password: yup
+    .string()
+    .required("Password is required")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character (@, $, !, %, *, ?, or &)"
+    ),
   firstName: yup.string().required("First name is required"),
   lastName: yup.string().required("Last name is required"),
-  phoneNumber: yup.string().required("Phone number is required"),
+  phoneNumber: yup
+    .string()
+    .matches(/^\d{11}$/, "Phone number must be a 11-digit number")
+    .required("Phone number is required"),
 });
+
 const swal = inject("$swal");
 const toast = useToast();
 const router = useRouter();

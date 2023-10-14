@@ -9,7 +9,7 @@
       "
       class="font-medium lg:text-2xl text-xl capitalize text-slate-900 inline-block pr-4"
     >
-      {{ this.$route.name.replace('-', ' ') }}
+      {{ this.$route.name.replace("-", " ") }}
     </h4>
     <ul class="breadcrumbs" v-if="this.$route.meta.groupParent">
       <li class="text-primary-500">
@@ -29,13 +29,13 @@
         </span>
       </li>
       <li class="capitalize text-slate-500 dark:text-slate-400">
-        {{ this.$route.name.replace('-', ' ') }}
+        {{ this.$route.name.replace("-", " ") }}
       </li>
     </ul>
   </div>
 </template>
 <script>
-import Icon from '@/components/Icon';
+import Icon from "@/components/Icon";
 export default {
   components: {
     Icon,

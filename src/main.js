@@ -1,7 +1,7 @@
 import "animate.css";
 import "flatpickr/dist/flatpickr.css";
 import "simplebar-vue/dist/simplebar-vue.js";
-import "simplebar-vue/dist/simplebar.min.css";
+// import "simplebar-vue/dist/simplebar.min.css";
 import "simplebar/dist/simplebar.min.css";
 import "sweetalert2/dist/sweetalert2.min.css";
 import { createApp } from "vue";
@@ -21,6 +21,7 @@ import router from "./router";
 import store from "./store";
 import VCalendar from "v-calendar";
 import "v-calendar/dist/style.css";
+import VOtpInput from "vue3-otp-input";
 
 if (localStorage.users === undefined) {
   let users = [
@@ -83,4 +84,5 @@ createApp(App)
   .use(VueGoodTablePlugin)
   .use(VueApexCharts)
   .use(VCalendar)
+  .component("v-otp-input", VOtpInput)
   .mount("#app");

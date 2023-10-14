@@ -85,7 +85,7 @@ export default {
     const router = useRouter();
 
     const goToProfile = () => {
-      router.push("/profile");
+      router.push("/overview");
     };
 
     const formValues = {

@@ -6,7 +6,7 @@ import project from "./app/project";
 import apptodo from "./app/todo";
 export default createStore({
   state: {
-    sidebarCollasp: false,
+    sidebarCollasp: true,
     sidebarHidden: false,
     mobielSidebar: false,
     semidark: false,
