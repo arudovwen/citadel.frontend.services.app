@@ -153,7 +153,32 @@
           </Card>
 
           <Card title="Events">
-            <div class="legend-ring3">Time</div>
+            <template #header>
+              <DropEvent />
+            </template>
+            <ul class="relative pl-2">
+              <li
+                v-for="(item, i) in trackingParcel.slice(0, 5)"
+                :key="i"
+                :class="
+                  item.status === 'ok'
+                    ? 'before:opacity-100'
+                    : ' before:opacity-50'
+                "
+                class="border-l-2 border-slate-100 dark:border-slate-700 pb-4 last:border-none pl-[22px] relative before:absolute before:left-[-8px] before:top-[0px] before:rounded-full before:w-4 before:h-4 before:bg-slate-900 dark:before:bg-slate-600 before:leading-[2px] before:content-[url('@/assets/images/all-img/ck.svg')]"
+              >
+                <div class="p-[10px] relative top-[-20px]">
+                  <h2
+                    class="text-sm font-medium dark:text-slate-400-900 mb-1 text-slate-600"
+                  >
+                    {{ item.title }}
+                  </h2>
+                  <p class="text-xs capitalize dark:text-slate-400">
+                    {{ item.date }}
+                  </p>
+                </div>
+              </li>
+            </ul>
           </Card>
         </div>
       </div>
@@ -175,6 +200,7 @@ import {
   stackedDark,
 } from "./Analytics-Component/data";
 import DropEvent from "./Analytics-Component/DropEvent";
+import { trackingParcel } from "../../constant/data";
 
 export default {
   components: {
@@ -193,6 +219,7 @@ export default {
       rangeDate: null,
       pieChart,
       pieChartDark,
+      trackingParcel,
       statistics: [
         {
           title: "Members",
