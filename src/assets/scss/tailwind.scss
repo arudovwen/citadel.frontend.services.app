@@ -25,7 +25,7 @@
   }
 
   .app-wrapper {
-    @apply relative;
+    @apply relative min-h-[100vh];
   }
   .space-x-rb {
     > div,
