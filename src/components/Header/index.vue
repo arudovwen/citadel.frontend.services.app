@@ -43,9 +43,9 @@
           "
         />
         <div class="nav-tools flex items-center lg:space-x-6 space-x-3">
-          <LanguageVue />
+          <!-- <LanguageVue /> -->
           <SwitchDark />
-          <Message v-if="window.width > 768" />
+          <!-- <Message v-if="window.width > 768" /> -->
           <Notification v-if="window.width > 768" />
           <Profile v-if="window.width > 768" />
           <handle-mobile-menu v-if="window.width < 768" />
@@ -57,12 +57,12 @@
 <script>
 import Profile from "./Navtools/Profile.vue";
 import Notification from "./Navtools/Notification.vue";
-import Message from "./Navtools/Message.vue";
+// import Message from "./Navtools/Message.vue";
 import SwitchDark from "./Navtools/SwitchDark.vue";
 import Mainnav from "./horizental-nav.vue";
 // import Icon from "../Icon";
 import SearchModal from "./Navtools/SearchModal.vue";
-import LanguageVue from "./Navtools/Language.vue";
+// import LanguageVue from "./Navtools/Language.vue";
 import Logo from "./Navtools/Logo.vue";
 import MobileLogo from "./Navtools/MobileLogo.vue";
 import window from "@/mixins/window";
@@ -73,11 +73,11 @@ export default {
   components: {
     Profile,
     Notification,
-    Message,
+    // Message,
     SwitchDark,
     Mainnav,
     // Icon,
-    LanguageVue,
+    // LanguageVue,
     SearchModal,
     Logo,
     MobileLogo,

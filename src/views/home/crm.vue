@@ -100,7 +100,7 @@
           </Card>
         </div>
       </div>
-      <Card title="Latest Transaction" noborder>
+      <Card title="Departments Overview" noborder>
         <template #header>
           <DropEvent />
         </template>

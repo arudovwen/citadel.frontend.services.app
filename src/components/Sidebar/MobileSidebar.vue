@@ -29,7 +29,7 @@
 
     <div class="sidebar-menu px-4 h-[calc(100%-100px)]" data-simplebar>
       <Navmenu :items="menuItems" />
-      <div
+      <!-- <div
         class="bg-slate-900 mb-[100px] mt-14 p-4 relative text-center rounded-2xl text-white"
         v-if="!this.$store.state.sidebarCollasp"
       >
@@ -51,7 +51,7 @@
             Upgrade
           </button>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

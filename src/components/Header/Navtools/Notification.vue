@@ -5,7 +5,7 @@
       ><Icon icon="heroicons-outline:bell" />
       <span
         class="absolute lg:right-0 lg:top-0 -top-2 -right-2 h-4 w-4 bg-red-500 text-[8px] font-semibold flex flex-col items-center justify-center rounded-full text-white z-[99]"
-        >2</span
+        >0</span
       >
     </span>
     <template v-slot:menus>

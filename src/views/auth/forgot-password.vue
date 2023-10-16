@@ -2,36 +2,11 @@
   <div class="loginwrapper">
     <div class="lg-inner-column">
       <div class="left-column relative z-[1]">
-        <div class="max-w-[520px] pt-20 pl-20">
-          <router-link to="/">
-            <img
-              src="@/assets/images/logo/logo.png"
-              alt=""
-              class="mb-10"
-              v-if="!this.$store.state.isDark"
-            />
-            <img
-              src="@/assets/images/logo/logo.png"
-              alt=""
-              class="mb-10"
-              v-else
-            />
-          </router-link>
-
-          <h4>
-            Unlock your Project
-            <span class="text-slate-800 dark:text-slate-400 font-bold"
-              >performance</span
-            >
-          </h4>
-        </div>
-        <div class="absolute left-0 bottom-[-130px] h-full w-full z-[-1]">
-          <img
-            src="@/assets/images/auth/ils1.svg"
-            alt=""
-            class="h-full w-full object-contain"
-          />
-        </div>
+        <Carousel
+          :carousels="content"
+          :canNavigate="false"
+          :canPaginate="false"
+        />
       </div>
       <div class="right-column relative">
         <div
@@ -82,11 +57,29 @@
   </div>
 </template>
 <script>
+import Carousel from "@/components/Carousel";
 import ForgotPass from "./common/forgot";
 
 export default {
   components: {
     ForgotPass,
+    Carousel,
+  },
+  data() {
+    return {
+      content: [
+        {
+          img: "images/all-img/auth-1.jpg",
+          title: "",
+          description: "",
+        },
+        {
+          img: "images/all-img/auth-2.jpg",
+          title: "",
+          description: "",
+        },
+      ],
+    };
   },
 };
 </script>

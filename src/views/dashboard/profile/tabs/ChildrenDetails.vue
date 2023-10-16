@@ -8,7 +8,7 @@
           <Button
             text="Add new"
             icon="heroicons-outline:plus"
-            btnClass="btn-dark"
+            btnClass="btn-primary btn-sm"
             @click="push(formValues)"
           />
         </div>
@@ -21,9 +21,7 @@
             :key="field.idx"
             class="flex gap-x-8 mb-12"
           >
-            <div
-              class="w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 grid gap-5 last:mb-0"
-            >
+            <div class="w-full lg:grid-cols-2 grid-cols-1 grid gap-5 last:mb-0">
               <Textinput
                 :key="field.idx"
                 :id="`firstName_${idx}`"

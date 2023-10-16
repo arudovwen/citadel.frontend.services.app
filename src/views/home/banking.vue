@@ -57,7 +57,7 @@
               <Button
                 icon="heroicons-outline:plus"
                 text="Add card"
-                btnClass="btn-dark btn-sm "
+                btnClass="btn-primary btn-sm "
               />
             </template>
             <div class="max-w-[90%] mx-auto mt-2">

@@ -84,7 +84,7 @@
 
     <button
       type="submit"
-      class="btn btn-dark block w-full text-center disabled:opacity-60"
+      class="btn btn-primary block w-full text-center disabled:opacity-60"
       :disabled="!checkbox"
     >
       Create an account

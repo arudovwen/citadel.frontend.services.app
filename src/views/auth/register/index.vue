@@ -2,49 +2,34 @@
   <div class="loginwrapper">
     <div class="lg-inner-column">
       <div class="left-column relative z-[1]">
-        <div class="max-w-[520px] pt-20 pl-20">
-          <router-link to="/">
-            <img
-              src="@/assets/images/logo/logo.png"
-              alt=""
-              class="mb-10"
-              v-if="!this.$store.state.isDark"
-            />
-            <img
-              src="@/assets/images/logo/logo.png"
-              alt=""
-              class="mb-10"
-              v-else
-            />
-          </router-link>
-
-          <h4>
-            Unlock your Project
-            <span class="text-slate-800 dark:text-slate-400 font-bold"
-              >performance</span
-            >
-          </h4>
-        </div>
-        <div class="absolute left-0 bottom-[-130px] h-full w-full z-[-1]">
-          <img
-            src="@/assets/images/auth/ils1.svg"
-            alt=""
-            class="h-full w-full object-contain"
-          />
-        </div>
+        <Carousel
+          :carousels="content"
+          :canNavigate="false"
+          :canPaginate="false"
+        />
       </div>
-      <div class="right-column relative bg-white dark:bg-slate-800">
+      <div
+        class="right-column relative bg-white dark:bg-slate-800 h-screen overflow-y-auto"
+      >
         <div
           class="inner-content h-full flex flex-col bg-white dark:bg-slate-800"
         >
           <div class="auth-box h-full flex flex-col justify-center">
-            <div class="mobile-logo text-center mb-6 lg:hidden block">
-              <router-link to="/"
-                ><img
+            <div class="mobile-logo text-center mb-6 4xl:hidden block">
+              <router-link to="/">
+                <img
                   src="@/assets/images/logo/icon.png"
                   alt=""
                   class="mx-auto w-[100px]"
-              /></router-link>
+                  v-if="!this.$store.state.isDark"
+                />
+                <img
+                  src="@/assets/images/logo/icon.png"
+                  alt=""
+                  class="mx-auto w-[100px]"
+                  v-else
+                />
+              </router-link>
             </div>
             <div class="text-center 2xl:mb-10 mb-5">
               <h4 class="font-medium">Sign up</h4>
@@ -77,10 +62,27 @@
 </template>
 <script>
 import Signup from "../common/Signup";
-
+import Carousel from "@/components/Carousel";
 export default {
   components: {
     Signup,
+    Carousel,
+  },
+  data() {
+    return {
+      content: [
+        {
+          img: "images/all-img/auth-1.jpg",
+          title: "",
+          description: "",
+        },
+        {
+          img: "images/all-img/auth-2.jpg",
+          title: "",
+          description: "",
+        },
+      ],
+    };
   },
 };
 </script>

@@ -3,13 +3,16 @@
     :modules="modules"
     :slides-per-view="sliderPreview"
     :space-between="space"
-    navigation
-    :pagination="{ clickable: true }"
-    class="main-caro"
+    :navigation="canNavigate"
+    :autoplay="canAutoPlay"
+    :pagination="canPaginate"
+    effect="fade"
+    :speed="4000"
+    class="main-caro h-full"
   >
-    <swiper-slide v-for="(item, i) in carousels" :key="i">
+    <swiper-slide v-for="(item, i) in carousels" :key="i" class="h-full">
       <div
-        class="single-slide bg-no-repeat bg-cover bg-center rounded-md min-h-[300px]"
+        class="single-slide bg-no-repeat bg-cover bg-center rounded-md min-h-[300px] h-full"
         :style="{
           backgroundImage: 'url(' + require(`@/assets/${item.img}`) + ')',
         }"
@@ -39,17 +42,17 @@ import {
   A11y,
   Autoplay,
   EffectFade,
-} from 'swiper';
+} from "swiper";
 
 // Import Swiper Vue.js components
-import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Swiper, SwiperSlide } from "swiper/vue";
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-import 'swiper/css/effect-fade';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/effect-fade";
 
 // Import Swiper styles
 export default {
@@ -67,32 +70,43 @@ export default {
       default: 0,
     },
 
+    canNavigate: {
+      type: Boolean,
+      default: true,
+    },
+    canAutoPlay: {
+      type: Boolean,
+      default: true,
+    },
+    canPaginate: {
+      default: { clickable: true },
+    },
     carousels: {
       type: Array,
       default: () => [
         {
-          img: 'images/all-img/c1.png',
-          title: 'Lorem ipsum',
+          img: "images/all-img/c1.png",
+          title: "Lorem ipsum",
           description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur..',
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur..",
         },
         {
-          img: 'images/all-img/c2.png',
-          title: 'Lorem ipsum',
+          img: "images/all-img/c2.png",
+          title: "Lorem ipsum",
           description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur.',
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur.",
         },
         {
-          img: 'images/all-img/c3.png',
-          title: 'Lorem ipsum',
+          img: "images/all-img/c3.png",
+          title: "Lorem ipsum",
           description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur.',
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur.",
         },
         {
-          img: 'images/all-img/c4.png',
-          title: 'Lorem ipsum',
+          img: "images/all-img/c4.png",
+          title: "Lorem ipsum",
           description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         },
       ],
     },
@@ -113,10 +127,10 @@ export default {
     font-family: unset !important;
   }
   .swiper-button-next:after {
-    content: url('https://api.iconify.design/heroicons-outline/chevron-right.svg?color=white&width=24');
+    content: url("https://api.iconify.design/heroicons-outline/chevron-right.svg?color=white&width=24");
   }
   .swiper-button-prev:after {
-    content: url('https://api.iconify.design/heroicons-outline/chevron-left.svg?color=white&width=24');
+    content: url("https://api.iconify.design/heroicons-outline/chevron-left.svg?color=white&width=24");
   }
   .swiper-pagination-bullet {
     height: 2px;

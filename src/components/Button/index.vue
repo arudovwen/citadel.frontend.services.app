@@ -164,16 +164,16 @@
   </div>
 </template>
 <script>
-import Icon from '@/components/Icon';
+import Icon from "@/components/Icon";
 export default {
   components: {
     Icon,
   },
-  name: 'Button',
+  name: "Button",
   props: {
     text: {
       type: String,
-      default: '',
+      default: "",
     },
     isDisabled: {
       type: Boolean,
@@ -185,27 +185,27 @@ export default {
     },
     btnClass: {
       type: String,
-      default: 'bg-primary-500 text-white',
+      default: "bg-primary-500 text-white",
     },
     icon: {
       type: String,
-      default: '',
+      default: "",
     },
     iconPosition: {
       type: String,
-      default: 'left',
+      default: "left",
     },
     iconClass: {
       type: String,
-      default: 'text-[20px]',
+      default: "text-[20px]",
     },
     loadingClass: {
       type: String,
-      default: '',
+      default: "",
     },
     link: {
       type: String,
-      default: '',
+      default: "",
     },
     div: {
       type: Boolean,

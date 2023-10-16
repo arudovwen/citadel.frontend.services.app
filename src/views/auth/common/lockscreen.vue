@@ -11,7 +11,7 @@
       classInput="h-[48px]"
     />
 
-    <button type="submit" class="btn btn-dark block w-full text-center">
+    <button type="submit" class="btn btn-primary block w-full text-center">
       Unlock
     </button>
   </form>
