@@ -74,8 +74,16 @@
               />
             </div>
           </Card>
+          <Card title="Departments Overview" noborder>
+            <template #header>
+              <DropEvent />
+            </template>
+            <div class="-mx-6">
+              <CrmTable />
+            </div>
+          </Card>
         </div>
-        <div class="grid grid-cols-1 lg:col-span-4 col-span-12 space-y-5">
+        <div class="flex flex-col lg:col-span-4 col-span-12 space-y-5">
           <Card title="Goals">
             <template #header>
               <DropEvent />
@@ -92,22 +100,63 @@
               </div>
             </div>
           </Card>
-          <Card title="Meetings">
-            <div class="legend-ring3">Time</div>
-          </Card>
           <Card title="Appointments">
+            <template #header>
+              <button type="button" class="btn btn-dark btn-sm">
+                Add More
+              </button>
+            </template>
+            <div class="-mx-6 custom-calender">
+              <v-calendar
+                is-expanded
+                :attributes="attributes"
+                :is-dark="this.$store.state.isDark"
+              />
+            </div>
+            <ul class="divide-y divide-slate-100 dark:divide-slate-700">
+              <li v-for="(item, i) in meets" :key="i" class="block py-[10px]">
+                <div class="flex space-x-2">
+                  <div class="flex-1 flex space-x-2">
+                    <div class="flex-none">
+                      <div class="h-8 w-8">
+                        <img
+                          :src="item.img"
+                          alt=""
+                          class="block w-full h-full object-cover rounded-full border hover:border-white border-transparent"
+                        />
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <span
+                        class="block text-slate-600 text-sm dark:text-slate-300 mb-1 font-medium"
+                        >{{ item.title }}</span
+                      >
+                      <span
+                        class="flex font-normal text-xs dark:text-slate-400 text-slate-500"
+                      >
+                        <span class="text-base inline-block mr-1"
+                          ><Icon icon="heroicons-outline:video-camera"
+                        /></span>
+                        {{ item.meet }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex-none">
+                    <span
+                      class="block text-xs text-slate-600 dark:text-slate-400"
+                      >{{ item.date }}</span
+                    >
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </Card>
+
+          <Card title="Events">
             <div class="legend-ring3">Time</div>
           </Card>
         </div>
       </div>
-      <Card title="Departments Overview" noborder>
-        <template #header>
-          <DropEvent />
-        </template>
-        <div class="-mx-6">
-          <CrmTable />
-        </div>
-      </Card>
     </div>
   </div>
 </template>
@@ -261,8 +310,93 @@ export default {
           height: "h-4",
         },
       ],
+      attributes: [
+        {
+          key: "today",
+          highlight: {
+            color: "gray-500",
+            fillMode: "solid",
+          },
+
+          dates: new Date(),
+        },
+        {},
+      ],
+      meets: [
+        {
+          img: require("@/assets/images/svg/sk.svg"),
+          title: "Meeting with client",
+          date: "01 Nov 2021",
+          meet: "Zoom meeting",
+        },
+        {
+          img: require("@/assets/images/svg/path.svg"),
+          title: "Design meeting (team)",
+          date: "01 Nov 2021",
+          meet: "Skyp meeting",
+        },
+        {
+          img: require("@/assets/images/svg/dc.svg"),
+          title: "Background research",
+          date: "01 Nov 2021",
+          meet: "Google meeting",
+        },
+        {
+          img: require("@/assets/images/svg/sk.svg"),
+          title: "Meeting with client",
+          date: "01 Nov 2021",
+          meet: "Zoom meeting",
+        },
+      ],
     };
   },
 };
 </script>
-<style lang=""></style>
+
+<style lang="scss">
+.custom-calender {
+  .vc-pane-container,
+  .vc-pane-layout,
+  .vc-container,
+  .vc-container * {
+    border: none !important;
+    font-family: "Inter", sans-serif !important;
+    //background: #fafbff !important;
+    font-weight: 400;
+  }
+  .vc-title {
+    color: #0f172a !important;
+    font-size: 24px !important;
+    font-weight: 500 !important;
+    margin-bottom: 15px !important;
+  }
+  .vc-arrow {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+    color: #0f172a !important;
+  }
+  .vc-weekday {
+    @apply font-normal dark:text-slate-400 text-sm text-slate-600;
+  }
+  .vc-day {
+    @apply text-slate-900 dark:text-white;
+  }
+  .vc-highlight {
+    background-color: #0f172a !important;
+  }
+}
+.dark {
+  .custom-calender {
+    .vc-title {
+      color: #fff !important;
+    }
+    .vc-arrow {
+      color: #fff !important;
+    }
+  }
+  .vc-container,
+  .vc-container {
+    @apply bg-slate-800;
+  }
+}
+</style>
