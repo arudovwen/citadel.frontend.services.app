@@ -19,114 +19,117 @@
           <div
             v-for="(field, idx) in fields"
             :key="field.idx"
-            class="lg:grid-cols-3 md:grid-cols-2 grid-cols-1 grid gap-5 mb-5 last:mb-0"
+            class="flex gap-x-8 mb-12"
           >
-            <Textinput
-              :key="field.idx"
-              :id="`firstName_${idx}`"
-              label="First Name"
-              type="text"
-              v-model="values.childrenDetails[idx].firstName"
-              placeholder="Type your first name"
-              :name="`childrenDetails[${idx}].firstName`"
-              :error="firstNameError"
-              classInput="h-[40px]"
-            />
-
-            <Textinput
-              :key="field.idx"
-              :id="`lastName_${idx}`"
-              label="Last Name"
-              type="text"
-              v-model="values.childrenDetails[idx].lastName"
-              placeholder="Type your last name"
-              :name="`childrenDetails[${idx}].lastName`"
-              :error="lastNameError"
-              classInput="h-[40px]"
-            />
-
-            <Textinput
-              :key="field.idx"
-              :id="`middleName_${idx}`"
-              label="Middle Name"
-              type="text"
-              v-model="values.childrenDetails[idx].middleName"
-              placeholder="Type your middle name"
-              :name="`childrenDetails[${idx}].middleName`"
-              :error="middleNameError"
-              classInput="h-[40px]"
-            />
-
-            <Textinput
-              :key="field.idx"
-              :id="`email_${idx}`"
-              label="Middle Name"
-              type="text"
-              v-model="values.childrenDetails[idx].email"
-              placeholder="Type your email address"
-              :name="`childrenDetails[${idx}].email`"
-              :error="emailError"
-              classInput="h-[40px]"
-            />
-
-            <Textinput
-              :key="field.idx"
-              :id="`mobile1_${idx}`"
-              label="Mobile 1"
-              type="text"
-              v-model="values.childrenDetails[idx].mobile1"
-              placeholder="Type your mobile number"
-              :name="`childrenDetails[${idx}].mobile1`"
-              :error="mobile1Error"
-              classInput="h-[40px]"
-            />
-
-            <Textinput
-              :key="field.idx"
-              :id="`mobile2_${idx}`"
-              label="Mobile 2"
-              type="text"
-              v-model="values.childrenDetails[idx].mobile2"
-              placeholder="Type your mobile 2"
-              :name="`childrenDetails[${idx}].mobile2`"
-              :error="mobile2Error"
-              classInput="h-[40px]"
-            />
-
-            <CustomVueSelect
-              :key="field.idx"
-              :id="`title_${idx}`"
-              label="Title"
-              v-model="values.childrenDetails[idx].title"
-              :name="`childrenDetails[${idx}].title`"
-              :modelValue="title"
-              :error="titleError"
-              :options="titleMenu"
-              @update:modelValue="defaultSelectedValue = $event"
-            />
-
-            <CustomVueSelect
-              :key="field.idx"
-              :id="`gender_${idx}`"
-              label="Gender"
-              v-model="values.childrenDetails[idx].gender"
-              :name="`childrenDetails[${idx}].gender`"
-              :modelValue="gender"
-              :error="genderError"
-              :options="genderMenu"
-              @update:modelValue="defaultSelectedValue = $event"
-            />
-
-            <FromGroup label="DOB" name="d1">
-              <flat-pickr
+            <div
+              class="w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 grid gap-5 last:mb-0"
+            >
+              <Textinput
                 :key="field.idx"
-                v-model="values.childrenDetails[idx].DOB"
-                class="form-control"
-                id="d1"
-                placeholder="yyyy, dd M"
+                :id="`firstName_${idx}`"
+                label="First Name"
+                type="text"
+                v-model="values.childrenDetails[idx].firstName"
+                placeholder="Type your first name"
+                :name="`childrenDetails[${idx}].firstName`"
+                :error="firstNameError"
+                classInput="h-[40px]"
               />
-            </FromGroup>
 
+              <Textinput
+                :key="field.idx"
+                :id="`lastName_${idx}`"
+                label="Last Name"
+                type="text"
+                v-model="values.childrenDetails[idx].lastName"
+                placeholder="Type your last name"
+                :name="`childrenDetails[${idx}].lastName`"
+                :error="lastNameError"
+                classInput="h-[40px]"
+              />
+
+              <Textinput
+                :key="field.idx"
+                :id="`middleName_${idx}`"
+                label="Middle Name"
+                type="text"
+                v-model="values.childrenDetails[idx].middleName"
+                placeholder="Type your middle name"
+                :name="`childrenDetails[${idx}].middleName`"
+                :error="middleNameError"
+                classInput="h-[40px]"
+              />
+
+              <Textinput
+                :key="field.idx"
+                :id="`email_${idx}`"
+                label="Middle Name"
+                type="text"
+                v-model="values.childrenDetails[idx].email"
+                placeholder="Type your email address"
+                :name="`childrenDetails[${idx}].email`"
+                :error="emailError"
+                classInput="h-[40px]"
+              />
+
+              <Textinput
+                :key="field.idx"
+                :id="`mobile1_${idx}`"
+                label="Mobile 1"
+                type="text"
+                v-model="values.childrenDetails[idx].mobile1"
+                placeholder="Type your mobile number"
+                :name="`childrenDetails[${idx}].mobile1`"
+                :error="mobile1Error"
+                classInput="h-[40px]"
+              />
+
+              <Textinput
+                :key="field.idx"
+                :id="`mobile2_${idx}`"
+                label="Mobile 2"
+                type="text"
+                v-model="values.childrenDetails[idx].mobile2"
+                placeholder="Type your mobile 2"
+                :name="`childrenDetails[${idx}].mobile2`"
+                :error="mobile2Error"
+                classInput="h-[40px]"
+              />
+
+              <CustomVueSelect
+                :key="field.idx"
+                :id="`title_${idx}`"
+                label="Title"
+                v-model="values.childrenDetails[idx].title"
+                :name="`childrenDetails[${idx}].title`"
+                :modelValue="title"
+                :error="titleError"
+                :options="titleMenu"
+                @update:modelValue="defaultSelectedValue = $event"
+              />
+
+              <CustomVueSelect
+                :key="field.idx"
+                :id="`gender_${idx}`"
+                label="Gender"
+                v-model="values.childrenDetails[idx].gender"
+                :name="`childrenDetails[${idx}].gender`"
+                :modelValue="gender"
+                :error="genderError"
+                :options="genderMenu"
+                @update:modelValue="defaultSelectedValue = $event"
+              />
+
+              <FromGroup label="DOB" name="d1">
+                <flat-pickr
+                  :key="field.idx"
+                  v-model="values.childrenDetails[idx].DOB"
+                  class="form-control"
+                  id="d1"
+                  placeholder="yyyy, dd M"
+                />
+              </FromGroup>
+            </div>
             <div class="flex justify-between items-end space-x-5">
               <div class="flex-none relative">
                 <button
