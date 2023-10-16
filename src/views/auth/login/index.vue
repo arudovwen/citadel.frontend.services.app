@@ -40,7 +40,7 @@
           class="inner-content h-full flex flex-col bg-white dark:bg-slate-800"
         >
           <div class="auth-box h-full flex flex-col justify-center">
-            <div class="mobile-logo text-center mb-6 lg:hidden block">
+            <div class="mobile-logo text-center mb-6 4xl:hidden block">
               <router-link to="/">
                 <img
                   src="@/assets/images/logo/icon.png"
