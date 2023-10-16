@@ -32,11 +32,11 @@
             />
             <Textinput
               :key="field.idx"
-              :id="`lowestQualiofication_${idx}`"
+              :id="`lowestQualification_${idx}`"
               label="Lowest Qualification"
               type="text"
-              v-model="values.qualifications[idx].lowestQualiofication"
-              :name="`qualifications[${idx}].lowestQualiofication`"
+              v-model="values.qualifications[idx].lowestQualification"
+              :name="`qualifications[${idx}].lowestQualification`"
               placeholder="Type your lowest qualification"
             />
 
@@ -74,7 +74,7 @@ import Icon from "@/components/Icon";
 
 const formValues = {
   highestQualification: "",
-  lowestQualiofication: "",
+  lowestQualification: "",
 };
 
 // const schema = yup.object().shape({
