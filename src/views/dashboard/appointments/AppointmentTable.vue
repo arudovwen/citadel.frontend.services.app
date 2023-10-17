@@ -5,7 +5,7 @@
       <vue-good-table
         :columns="columns"
         styleClass=" vgt-table centered  lesspadding2 table-head "
-        :rows="venueTable"
+        :rows="appointmentTable"
         :pagination-options="{
           enabled: true,
           perPage: perpage,
@@ -108,11 +108,11 @@
               </Tooltip>
               <Tooltip placement="top" arrow theme="danger-500">
                 <template #button>
-                  <!-- <div class="action-btn">
+                  <div class="action-btn">
                     <Icon icon="heroicons:trash" />
-                  </div> -->
+                  </div>
 
-                  <TableDeleteModal
+                  <!-- <TableDeleteModal
                     :activeModal="openDelete"
                     title="Delete Venue"
                     label="Default modal"
@@ -141,7 +141,7 @@
                         />
                       </div>
                     </template>
-                  </TableDeleteModal>
+                  </TableDeleteModal> -->
                 </template>
 
                 <span>Delete</span>
@@ -171,18 +171,18 @@
 </template>
 <script setup>
 // import Card from "@/components/Card";
-import { ref } from "vue";
-import TableDeleteModal from "./TableDeleteModal.vue";
+// import { ref } from "vue";
+// import TableDeleteModal from "./TableDeleteModal.vue";
 import Icon from "@/components/Icon";
 import Tooltip from "@/components/Tooltip";
 import Pagination from "@/components/Pagination";
-import { venueTable } from "../../../constant/basic-tablle-data";
-import Button from "@/components/Button";
+import { appointmentTable } from "../../../constant/basic-tablle-data";
+// import Button from "@/components/Button";
 const current = 1;
 const perpage = 10;
 const pageRange = 5;
 const searchTerm = "";
-const openDelete = ref(false);
+// const openDelete = ref(false);
 
 // const toggleDelete = () => {
 //   openDelete.value = !openDelete.value;
@@ -209,27 +209,23 @@ const columns = [
     field: "id",
   },
   {
-    label: "Name",
-    field: "name",
+    label: "Date",
+    field: "date",
   },
   {
-    label: "Capacity",
-    field: "capacity",
+    label: "Time",
+    field: "time",
   },
   {
-    label: "Description",
-    field: "description",
+    label: "Purpose",
+    field: "purpose",
   },
 
   {
-    label: "Accessories",
-    field: "accessories",
+    label: "Who To See",
+    field: "whoToSee",
   },
 
-  {
-    label: "Status",
-    field: "status",
-  },
   {
     label: "Action",
     field: "action",

@@ -9,11 +9,11 @@ import { provide } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const addVenue = () => {
-  router.push("/add-venue");
+const addAppointment = () => {
+  router.push("/add-appointment");
 };
 
-provide("addVenue", addVenue);
+provide("addAppointment", addAppointment);
 </script>
 
 <style lang="scss" scoped></style>

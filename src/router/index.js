@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import ProfileIndex from "@/views/dashboard/profile/index.vue";
 import MembersIndex from "@/views/dashboard/members/index.vue";
 import VenuesIndex from "@/views/dashboard/venues/index.vue";
+import AppointmentsIndex from "@/views/dashboard/appointments/index.vue";
+
 function guard(to, from, next) {
   if (localStorage.activeUser) {
     next();
@@ -84,6 +86,41 @@ const routes = [
             path: "",
             name: "venue-list",
             component: () => import("@/views/dashboard/venues/VenueList.vue"),
+          },
+          {
+            path: "/add-venue",
+            name: "add venue",
+            component: () => import("@/views/dashboard/venues/AddVenue.vue"),
+          },
+          {
+            path: "/edit-venue/:id",
+            name: "edit venue",
+            component: () => import("@/views/dashboard/venues/AddVenue.vue"),
+          },
+        ],
+      },
+      {
+        path: "/appointments",
+        name: "appointments",
+        component: AppointmentsIndex,
+        children: [
+          {
+            path: "",
+            name: "appointment-list",
+            component: () =>
+              import("@/views/dashboard/appointments/AppointmentList.vue"),
+          },
+          {
+            path: "/add-appointment",
+            name: "add appointment",
+            component: () =>
+              import("@/views/dashboard/appointments/AddAppointment.vue"),
+          },
+          {
+            path: "/edit-appointment/:id",
+            name: "edit appointment",
+            component: () =>
+              import("@/views/dashboard/appointments/AddAppointment.vue"),
           },
         ],
       },

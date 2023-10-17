@@ -1,6 +1,6 @@
 <template>
-  <button type="button" @click="openModal" :class="labelClass">
-    {{ label }}
+  <button type="button" @click="openModal" class="btn" :class="labelClass">
+    <Icon icon="heroicons:trash" />
   </button>
 
   <TransitionRoot :show="isOpen" as="template">

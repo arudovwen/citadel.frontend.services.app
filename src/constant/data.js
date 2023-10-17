@@ -54,7 +54,7 @@ export const menuItems = [
   {
     title: "Appointments",
     icon: "bx:calendar-plus",
-    link: "appointment-booking",
+    link: "appointments",
   },
   {
     title: "Venues",

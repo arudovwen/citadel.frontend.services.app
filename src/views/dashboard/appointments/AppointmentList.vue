@@ -14,11 +14,11 @@
           text="Add new"
           icon="heroicons-outline:plus"
           btnClass="btn-primary btn-sm"
-          @click="addVenue"
+          @click="addAppointment"
         />
       </div>
 
-      <VenueTable />
+      <AppointmentTable />
     </Card>
   </div>
 </template>
@@ -28,10 +28,10 @@ import Card from "@/components/Card";
 import Button from "@/components/Button";
 import InputGroup from "@/components/InputGroup";
 import { inject, ref } from "vue";
-import VenueTable from "./VenueTable.vue";
+import AppointmentTable from "./AppointmentTable.vue";
 
 const searchText = ref("");
-const addVenue = inject("addVenue");
+const addAppointment = inject("addAppointment");
 </script>
 
 <style lang="scss" scoped></style>
