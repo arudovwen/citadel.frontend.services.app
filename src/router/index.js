@@ -79,6 +79,13 @@ const routes = [
         path: "/venues",
         name: "venues",
         component: VenuesIndex,
+        children: [
+          {
+            path: "",
+            name: "venue-list",
+            component: () => import("@/views/dashboard/venues/VenueList.vue"),
+          },
+        ],
       },
     ],
   },
