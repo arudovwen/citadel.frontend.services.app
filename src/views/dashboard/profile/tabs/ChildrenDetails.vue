@@ -15,7 +15,7 @@
       </header>
       <div class="p-6">
         <!-- {{ values }} -->
-        <form @submit="onSubmit" novalidate>
+        <form @submit="onSubmit" :validation-schema="schema">
           <div
             v-for="(field, idx) in fields"
             :key="field.idx"
@@ -160,39 +160,47 @@ import Card from "@/components/Card";
 import Button from "@/components/Button";
 import FromGroup from "@/components/FromGroup";
 import Textinput from "@/components/Textinput";
-import { useForm, useFieldArray } from "vee-validate";
+import { useField, useForm, useFieldArray } from "vee-validate";
 import { titleMenu, genderMenu } from "@/constant/data";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 
-// import * as yup from "yup";
+import * as yup from "yup";
 // import { useRouter } from "vue-router";
 
 // Define a validation schema
-// const schema = yup.object({
-//   firstName: yup.string().required("First name is required"),
-// lastName: yup.string().required("Last name is required"),
-// middleName: yup.string(),
-// email: yup.string().required("Email is required").email(),
-// mobile1: yup.string(),
-// mobile2: yup.string(),
 
-// title: yup
-//   .object()
-//   .shape({
-//     value: yup.string().required("Title text is required"),
-//     label: yup.string(),
-//   })
-//   .nullable(),
+const schema = yup.object().shape({
+  users: yup
+    .array()
+    .of(
+      yup.object().shape({
+        irstName: yup.string().required("First name is required"),
+        lastName: yup.string().required("Last name is required"),
+        middleName: yup.string(),
+        email: yup.string().required("Email is required").email(),
+        mobile1: yup.string(),
+        mobile2: yup.string(),
 
-// gender: yup
-//   .object()
-//   .shape({
-//     value: yup.string(),
-//     label: yup.string(),
-//   })
-//   .nullable(),
-// DOB: yup.string(),
-// });
+        title: yup
+          .object()
+          .shape({
+            value: yup.string().required("Title text is required"),
+            label: yup.string(),
+          })
+          .nullable(),
+
+        gender: yup
+          .object()
+          .shape({
+            value: yup.string(),
+            label: yup.string(),
+          })
+          .nullable(),
+        DOB: yup.string(),
+      })
+    )
+    .strict(),
+});
 
 // const router = useRouter();
 
@@ -226,20 +234,18 @@ const { handleSubmit, values } = useForm({
 });
 // No need to define rules for fields
 
-// const { value: firstName, errorMessage: firstNameError } =
-//   useField("firstName");
-// const { value: lastName, errorMessage: lastNameError } = useField("lastName");
-// const { value: middleName, errorMessage: middleNameError } =
-//   useField("middleName");
-// const { value: email, errorMessage: emailError } = useField("email");
-// const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
-// const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
+const { errorMessage: firstNameError } = useField("firstName");
+const { errorMessage: lastNameError } = useField("lastName");
+const { errorMessage: middleNameError } = useField("middleName");
+const { errorMessage: emailError } = useField("email");
+const { errorMessage: mobile1Error } = useField("mobile1");
+const { errorMessage: mobile2Error } = useField("mobile2");
 
-// const { value: title, errorMessage: titleError } = useField("title");
+const { value: title, errorMessage: titleError } = useField("title");
 
-// const { value: gender, errorMessage: genderError } = useField("gender");
+const { value: gender, errorMessage: genderError } = useField("gender");
 
-// const { value: DOB } = useField("DOB");
+// const { value: DO } = useField("DOB");
 
 // const { value: email, errorMessage: emailError } = useField("email");
 
