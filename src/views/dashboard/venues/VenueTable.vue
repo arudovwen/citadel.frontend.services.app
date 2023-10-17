@@ -113,6 +113,8 @@
                   </div> -->
 
                   <TableDeleteModal
+                    :id="props.row.id"
+                    @deleteItem="deleteVenue"
                     :activeModal="openDelete"
                     title="Delete Venue"
                     label="Default modal"
@@ -124,23 +126,6 @@
                     >
                       Are you sure you want to delete this venue?
                     </h4>
-
-                    <template v-slot:footer>
-                      <div
-                        class="w-full py-4 grid grid-cols-2 gap-4 items-center"
-                      >
-                        <Button
-                          text="Cancel"
-                          btnClass="btn-outline-danger  w-full"
-                          @click="$refs.modal3.closeModal()"
-                        />
-                        <Button
-                          text="Accept"
-                          btnClass="btn-danger  w-full"
-                          @click="$refs.modal3.closeModal()"
-                        />
-                      </div>
-                    </template>
                   </TableDeleteModal>
                 </template>
 
@@ -177,7 +162,6 @@ import Icon from "@/components/Icon";
 import Tooltip from "@/components/Tooltip";
 import Pagination from "@/components/Pagination";
 import { venueTable } from "../../../constant/basic-tablle-data";
-import Button from "@/components/Button";
 const current = 1;
 const perpage = 10;
 const pageRange = 5;
@@ -235,6 +219,10 @@ const columns = [
     field: "action",
   },
 ];
+
+const deleteVenue = (id) => {
+  console.log(id);
+};
 </script>
 <style lang="scss" scoped>
 .action-btn {
