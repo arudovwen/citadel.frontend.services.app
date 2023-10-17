@@ -157,7 +157,7 @@
                 :class="item.isDone ? 'line-through dark:text-white' : ''"
               >
                 <span class="flex-1 text-sm text-slate-600 dark:text-slate-300">
-                  {{ item.title.slice(0, 20) + '...' }}</span
+                  {{ item.title.slice(0, 20) + "..." }}</span
                 >
                 <span class="flex-none space-x-2 text-base text-secondary-500">
                   <button type="button" v-if="item.isDone === false">
@@ -320,11 +320,11 @@
   </div>
 </template>
 <script>
-import Breadcrumb from './Analytics-Component/Breadcrumbs';
-import Card from '@/components/Card';
-import Checkbox from '@/components/Checkbox';
-import Icon from '@/components/Icon';
-import { message, TodoList, trackingParcel } from '../../constant/data';
+import Breadcrumb from "./Analytics-Component/Breadcrumbs";
+import Card from "@/components/Card";
+import Checkbox from "@/components/Checkbox";
+import Icon from "@/components/Icon";
+import { message, TodoList, trackingParcel } from "../../constant/data";
 
 import {
   basicArea,
@@ -332,10 +332,10 @@ import {
   donutTwo,
   donutTwoDark,
   pieChart,
-} from './Analytics-Component/data';
-import DropEvent from './Analytics-Component/DropEvent';
-import SelectMonth from './Analytics-Component/SelectMonth';
-import Teamtable from './Analytics-Component/Teamtable';
+} from "./Analytics-Component/data";
+import DropEvent from "./Analytics-Component/DropEvent";
+import SelectMonth from "./Analytics-Component/SelectMonth";
+import Teamtable from "./Analytics-Component/Teamtable";
 export default {
   components: {
     Card,
@@ -359,10 +359,10 @@ export default {
 
       attributes: [
         {
-          key: 'today',
+          key: "today",
           highlight: {
-            color: 'gray-500',
-            fillMode: 'solid',
+            color: "gray-500",
+            fillMode: "solid",
           },
 
           dates: new Date(),
@@ -371,112 +371,112 @@ export default {
       ],
       meets: [
         {
-          img: require('@/assets/images/svg/sk.svg'),
-          title: 'Meeting with client',
-          date: '01 Nov 2021',
-          meet: 'Zoom meeting',
+          img: require("@/assets/images/svg/sk.svg"),
+          title: "Meeting with client",
+          date: "01 Nov 2021",
+          meet: "Zoom meeting",
         },
         {
-          img: require('@/assets/images/svg/path.svg'),
-          title: 'Design meeting (team)',
-          date: '01 Nov 2021',
-          meet: 'Skyp meeting',
+          img: require("@/assets/images/svg/path.svg"),
+          title: "Design meeting (team)",
+          date: "01 Nov 2021",
+          meet: "Skyp meeting",
         },
         {
-          img: require('@/assets/images/svg/dc.svg'),
-          title: 'Background research',
-          date: '01 Nov 2021',
-          meet: 'Google meeting',
+          img: require("@/assets/images/svg/dc.svg"),
+          title: "Background research",
+          date: "01 Nov 2021",
+          meet: "Google meeting",
         },
         {
-          img: require('@/assets/images/svg/sk.svg'),
-          title: 'Meeting with client',
-          date: '01 Nov 2021',
-          meet: 'Zoom meeting',
+          img: require("@/assets/images/svg/sk.svg"),
+          title: "Meeting with client",
+          date: "01 Nov 2021",
+          meet: "Zoom meeting",
         },
       ],
       files: [
         {
-          img: 'file-1.svg',
-          title: 'Dashboard.fig',
-          date: '06 June 2021 / 155MB',
+          img: "file-1.svg",
+          title: "Dashboard.fig",
+          date: "06 June 2021 / 155MB",
         },
         {
-          img: 'pdf-1.svg',
-          title: 'Ecommerce.pdf',
-          date: '06 June 2021 / 155MB',
+          img: "pdf-1.svg",
+          title: "Ecommerce.pdf",
+          date: "06 June 2021 / 155MB",
         },
         {
-          img: 'zip-1.svg',
-          title: 'Job portal_app.zip',
-          date: '06 June 2021 / 155MB',
+          img: "zip-1.svg",
+          title: "Job portal_app.zip",
+          date: "06 June 2021 / 155MB",
         },
         {
-          img: 'pdf-2.svg',
-          title: 'Ecommerce.pdf',
-          date: '06 June 2021 / 155MB',
+          img: "pdf-2.svg",
+          title: "Ecommerce.pdf",
+          date: "06 June 2021 / 155MB",
         },
         {
-          img: 'scr-1.svg',
-          title: 'Screenshot.jpg',
-          date: '06 June 2021 / 155MB',
+          img: "scr-1.svg",
+          title: "Screenshot.jpg",
+          date: "06 June 2021 / 155MB",
         },
       ],
       statistics: [
         {
-          title: 'Total Task',
-          count: '64',
-          bg: 'bg-info-500',
-          text: 'text-info-500',
-          percent: '25.67% ',
-          icon: 'heroicons-outline:menu-alt-1',
+          title: "Total Task",
+          count: "64",
+          bg: "bg-info-500",
+          text: "text-info-500",
+          percent: "25.67% ",
+          icon: "heroicons-outline:menu-alt-1",
         },
         {
-          title: 'Completed ',
-          count: '45',
+          title: "Completed ",
+          count: "45",
 
-          bg: 'bg-warning-500',
-          text: 'text-warning-500',
-          percent: '8.67%',
-          icon: 'heroicons-outline:chart-pie',
+          bg: "bg-warning-500",
+          text: "text-warning-500",
+          percent: "8.67%",
+          icon: "heroicons-outline:chart-pie",
         },
         {
-          title: 'Hours',
-          count: '190',
-          bg: 'bg-primary-500',
-          text: 'text-primary-500',
-          percent: '1.67%  ',
-          icon: 'heroicons-outline:clock',
+          title: "Hours",
+          count: "190",
+          bg: "bg-primary-500",
+          text: "text-primary-500",
+          percent: "1.67%  ",
+          icon: "heroicons-outline:clock",
         },
         {
-          title: 'Spendings',
-          count: '$3,564',
-          bg: 'bg-success-500',
-          text: 'text-success-500',
-          percent: '11.67%  ',
-          icon: 'heroicons-outline:calculator',
+          title: "Spendings",
+          count: "$3,564",
+          bg: "bg-success-500",
+          text: "text-success-500",
+          percent: "11.67%  ",
+          icon: "heroicons-outline:calculator",
         },
       ],
       Campaigns: [
         {
-          name: 'Channel',
-          value: 'roi',
+          name: "Channel",
+          value: "roi",
         },
         {
-          name: 'Email',
-          value: '40%',
+          name: "Email",
+          value: "40%",
         },
         {
-          name: 'Website',
-          value: '28%',
+          name: "Website",
+          value: "28%",
         },
         {
-          name: 'Facebook',
-          value: '34%',
+          name: "Facebook",
+          value: "34%",
         },
         {
-          name: 'Offline',
-          value: '17%',
+          name: "Offline",
+          value: "17%",
         },
       ],
     };
@@ -497,7 +497,7 @@ export default {
   .vc-container,
   .vc-container * {
     border: none !important;
-    font-family: 'Inter', sans-serif !important;
+    font-family: "Inter", sans-serif !important;
     //background: #fafbff !important;
     font-weight: 400;
   }

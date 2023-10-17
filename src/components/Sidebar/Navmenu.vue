@@ -6,7 +6,11 @@
       :class="`
       ${item.child ? 'item-has-children' : ''}
       ${activeSubmenu === i ? 'open' : ''}
-      ${this.$route.name === item.link ? 'menu-item-active' : ''}
+      ${
+        item?.link?.includes(this.$route.meta.activeName)
+          ? 'menu-item-active'
+          : ''
+      }
       
       `"
       class="single-sidebar-menu"

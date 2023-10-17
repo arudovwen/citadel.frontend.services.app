@@ -18,12 +18,16 @@ export const menuItems = [
     icon: "heroicons-outline:user-add",
     link: "first-timers",
   },
-  { title: "Members", icon: "heroicons-outline:user-group", link: "members" },
+  {
+    title: "Members",
+    icon: "heroicons-outline:user-group",
+    link: "members-management",
+  },
 
   {
     title: "Outreach",
     icon: "bx:donate-heart",
-    link: "outreach-management",
+    link: "outreach",
   },
   {
     title: "Attendance",
@@ -34,7 +38,7 @@ export const menuItems = [
   {
     title: "Meetings",
     icon: "bx:merge",
-    link: "meeting-management",
+    link: "meetings",
   },
   // {
   //   title: "Issue Management",
@@ -44,12 +48,12 @@ export const menuItems = [
   {
     title: "Events",
     icon: "bx:server",
-    link: "event-management",
+    link: "events",
   },
   {
     title: "Notifications",
     icon: "heroicons-outline:speakerphone",
-    link: "notification-management",
+    link: "notifications",
   },
   {
     title: "Appointments",

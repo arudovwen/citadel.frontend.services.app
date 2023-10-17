@@ -21,9 +21,11 @@
         </span>
       </li>
       <li class="text-primary-500">
-        <button type="button" class="capitalize">
-          {{ this.$route.meta.groupParent }}
-        </button>
+        <router-link :to="this.$route.meta.groupParent.url" class="text-base">
+          <button type="button" class="capitalize">
+            {{ this.$route.meta.groupParent.name }}
+          </button>
+        </router-link>
         <span class="breadcrumbs-icon">
           <Icon icon="heroicons:chevron-right" />
         </span>
