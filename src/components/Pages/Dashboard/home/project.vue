@@ -73,7 +73,7 @@
         <div class="lg:col-span-4 col-span-12 space-y-5">
           <Card title="Notes">
             <template #header>
-              <button type="button" class="btn btn-primary btn-sm">
+              <button type="button" class="btn btn-dark btn-sm">
                 Add More
               </button>
             </template>
