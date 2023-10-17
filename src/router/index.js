@@ -201,54 +201,66 @@ const routes = [
           },
         ],
       },
-      {
-        path: "/appointments",
-        name: "appointments",
-        component: () => import("@/views/dashboard/appointments/index.vue"),
-        children: [
-          {
-            path: "",
-            name: "appointments",
-            component: () => import("@/components/Pages/Dashboard/Members"),
-            meta: {
-              activeName: "appointments",
-            },
-          },
-        ],
-      },
+      // {
+      //   path: "/appointments",
+      //   name: "appointments",
+      //   component: () => import("@/views/dashboard/appointments/index.vue"),
+      //   children: [
+      //     {
+      //       path: "",
+      //       name: "appointments",
+      //       component: () => import("@/components/Pages/Dashboard/Members"),
+      //       meta: {
+      //         activeName: "appointments",
+      //       },
+      //     },
+      //   ],
+      // },
+      // {
+      //   path: "/venue-management",
+      //   name: "venue-management",
+      //   component: () => import("@/views/dashboard/venues/index.vue"),
+      //   children: [
+      //     {
+      //       path: "",
+      //       name: "venue-management",
+      //       component: () => import("@/components/Pages/Dashboard/Members"),
+      //       meta: {
+      //         activeName: "venue-management",
+      //       },
+      //     },
+      //   ],
+      // },
       {
         path: "/venue-management",
         name: "venue-management",
-        component: () => import("@/views/dashboard/venues/index.vue"),
-        children: [
-          {
-            path: "",
-            name: "venue-management",
-            component: () => import("@/components/Pages/Dashboard/Members"),
-            meta: {
-              activeName: "venue-management",
-            },
-          },
-        ],
-      },
-      {
-        path: "/venues",
-        name: "venues",
+        meta: {
+          activeName: "venue-management",
+        },
         component: VenuesIndex,
         children: [
           {
             path: "",
             name: "venue-list",
+            meta: {
+              activeName: "venue-management",
+            },
             component: () => import("@/views/dashboard/venues/VenueList.vue"),
           },
           {
             path: "/add-venue",
+            meta: {
+              activeName: "venue-management",
+            },
             name: "add venue",
             component: () => import("@/views/dashboard/venues/AddVenue.vue"),
           },
           {
             path: "/edit-venue/:id",
             name: "edit venue",
+            meta: {
+              activeName: "venue-management",
+            },
             component: () => import("@/views/dashboard/venues/AddVenue.vue"),
           },
         ],
@@ -257,22 +269,34 @@ const routes = [
         path: "/appointments",
         name: "appointments",
         component: AppointmentsIndex,
+        meta: {
+          activeName: "appointments",
+        },
         children: [
           {
             path: "",
             name: "appointment-list",
+            meta: {
+              activeName: "appointments",
+            },
             component: () =>
               import("@/views/dashboard/appointments/AppointmentList.vue"),
           },
           {
             path: "/add-appointment",
             name: "add appointment",
+            meta: {
+              activeName: "appointments",
+            },
             component: () =>
               import("@/views/dashboard/appointments/AddAppointment.vue"),
           },
           {
             path: "/edit-appointment/:id",
             name: "edit appointment",
+            meta: {
+              activeName: "appointments",
+            },
             component: () =>
               import("@/views/dashboard/appointments/AddAppointment.vue"),
           },

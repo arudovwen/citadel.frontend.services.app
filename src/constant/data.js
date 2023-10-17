@@ -58,12 +58,12 @@ export const menuItems = [
   {
     title: "Appointments",
     icon: "bx:calendar-plus",
-    link: "appointments",
+    link: "/appointments",
   },
   {
     title: "Venues",
     icon: "bx:buildings",
-    link: "venues",
+    link: "/venue-management",
   },
   // {
   //   title: "Chat Management",
