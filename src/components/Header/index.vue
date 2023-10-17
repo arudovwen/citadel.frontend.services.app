@@ -16,13 +16,13 @@
           v-if="this.$store.state.menuLayout === 'vertical'"
           class="flex items-center md:space-x-4 space-x-2"
         >
-          <!-- <button
+          <button
             class="mr-5 text-xl text-slate-900 dark:text-white"
             v-if="this.$store.state.sidebarCollasp && window.width > 1280"
             @click="this.$store.state.sidebarCollasp = false"
           >
             <Icon icon="akar-icons:arrow-right" />
-          </button> -->
+          </button>
           <MobileLogo v-if="window.width < 1280" />
           <handle-mobile-menu
             v-if="window.width < 1280 && window.width > 768"
@@ -60,7 +60,7 @@ import Notification from "./Navtools/Notification.vue";
 // import Message from "./Navtools/Message.vue";
 import SwitchDark from "./Navtools/SwitchDark.vue";
 import Mainnav from "./horizental-nav.vue";
-// import Icon from "../Icon";
+import Icon from "../Icon";
 import SearchModal from "./Navtools/SearchModal.vue";
 // import LanguageVue from "./Navtools/Language.vue";
 import Logo from "./Navtools/Logo.vue";
@@ -76,7 +76,7 @@ export default {
     // Message,
     SwitchDark,
     Mainnav,
-    // Icon,
+    Icon,
     // LanguageVue,
     SearchModal,
     Logo,
