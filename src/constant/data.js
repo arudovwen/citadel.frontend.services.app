@@ -59,7 +59,7 @@ export const menuItems = [
   {
     title: "Venues",
     icon: "bx:buildings",
-    link: "venue-management",
+    link: "venues",
   },
   // {
   //   title: "Chat Management",
@@ -121,7 +121,6 @@ export const notifications = [
   // {
   //   title: "Your order is placed",
   //   desc: "Amet minim mollit non deser unt ullamco est sit aliqua.",
-
   //   image: "user.png",
   //   link: "#",
   // },
@@ -135,14 +134,12 @@ export const notifications = [
   // {
   //   title: "Revised Order 👋",
   //   desc: "Won the monthly best seller badge",
-
   //   image: "user3.png",
   //   link: "#",
   // },
   // {
   //   title: "Brooklyn Simmons",
   //   desc: "Added you to Top Secret Project group...",
-
   //   image: "user4.png",
   //   link: "#",
   // },
