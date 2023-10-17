@@ -103,7 +103,7 @@ const routes = [
             name: "first timers",
             component: () => import("@/components/Pages/Dashboard/Members"),
             meta: {
-              activeName: "first timers",
+              activeName: "first-timers",
             },
           },
         ],
@@ -176,7 +176,7 @@ const routes = [
           {
             path: "",
             name: "events",
-            component: () => import("@/components/Pages/Dashboard/Members"),
+            component: () => import("@/components/Pages/Dashboard/Events"),
             meta: {
               activeName: "events",
             },
