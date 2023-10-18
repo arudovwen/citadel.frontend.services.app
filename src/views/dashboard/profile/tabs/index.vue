@@ -1,7 +1,7 @@
 <template>
   <TabGroup>
     <TabList
-      class="lg:space-x-8 md:space-x-4 space-x-0 rtl:space-x-reverse flex justify-between overflow-x-auto no-scrollbar"
+      class="lg:space-x-2 md:space-x-2 space-x-0 rtl:space-x-reverse flex justify-start overflow-x-auto no-scrollbar"
     >
       <Tab
         v-slot="{ selected }"

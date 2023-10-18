@@ -42,7 +42,7 @@
     </div>
     <div class="grid grid-cols-12 gap-6">
       <div class="lg:col-span-4 col-span-12">
-        <Card title="Info">
+        <Card title="Info " className="!h-auto">
           <ul class="list space-y-8">
             <li class="flex space-x-3 rtl:space-x-reverse">
               <div
@@ -108,7 +108,7 @@
         </Card>
       </div>
       <div class="lg:col-span-8 col-span-12">
-        <Card title="User Overview"> <Tab /></Card>
+        <Card title="User Profile"> <Tab /></Card>
       </div>
     </div>
   </div>
