@@ -100,35 +100,35 @@
 </template>
 <script>
 export default {
-  name: 'Card',
+  name: "Card",
   props: {
     className: {
       type: String,
-      default: '',
+      default: "",
     },
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     titleClass: {
       type: String,
-      default: '',
+      default: "",
     },
     subtitle: {
       type: String,
-      default: '',
+      default: "",
     },
     subtitleClass: {
       type: String,
-      default: '',
+      default: "",
     },
     img: {
       type: String,
-      default: '',
+      default: "",
     },
     imaClass: {
       type: String,
-      default: '',
+      default: "",
     },
     imgTop: {
       type: Boolean,
@@ -152,7 +152,7 @@ export default {
     },
     bodyClass: {
       type: String,
-      default: 'p-6',
+      default: "p-6",
     },
   },
 };
