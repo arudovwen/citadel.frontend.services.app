@@ -61,7 +61,7 @@
               <Textinput
                 :key="field.idx"
                 :id="`email_${idx}`"
-                label="Middle Name"
+                label="Email Address"
                 type="text"
                 v-model="values.childrenDetails[idx].email"
                 placeholder="Type your email address"
