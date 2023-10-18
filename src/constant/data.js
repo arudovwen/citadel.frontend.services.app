@@ -756,3 +756,28 @@ export const CIHAddressMenu = [
     label: "Jakande",
   },
 ];
+
+export const childrenDetailstable = [
+  {
+    label: "Last Name",
+    field: "lastName",
+  },
+  {
+    label: "First Name",
+    field: "firstName",
+  },
+
+  {
+    label: "Gender",
+    field: "gender",
+  },
+
+  {
+    label: "DOB",
+    field: "DOB",
+  },
+  {
+    label: "Action",
+    field: "action",
+  },
+];
