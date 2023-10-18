@@ -29,7 +29,7 @@
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Member"
-            btnClass=" btn-dark font-normal btn-sm "
+            btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
             link="member-add"
           />
