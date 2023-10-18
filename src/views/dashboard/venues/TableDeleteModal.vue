@@ -1,6 +1,6 @@
 <template>
-  <button type="button" @click="openModal" :class="labelClass">
-    {{ label }}
+  <button type="button" @click="openModal" class="btn" :class="labelClass">
+    <Icon icon="heroicons:trash" />
   </button>
 
   <TransitionRoot :show="isOpen" as="template">
@@ -63,9 +63,20 @@
               </div>
               <div
                 class="px-4 py-3 flex justify-end space-x-3 border-t border-slate-100 dark:border-slate-700"
-                v-if="$slots.footer"
               >
-                <slot name="footer"></slot>
+                <div class="w-full py-4 grid grid-cols-2 gap-4 items-center">
+                  <Button
+                    text="Cancel"
+                    btnClass="btn-outline-danger  w-full"
+                    @click="closeModal"
+                  />
+                  <Button
+                    text="Delete"
+                    btnClass="btn-danger  w-full"
+                    @click="$emit('deleteItem', id)"
+                  />
+                </div>
+                <!-- <slot name="footer"></slot> -->
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -127,6 +138,7 @@
 
 <script>
 import Icon from "@/components/Icon";
+import Button from "@/components/Button";
 
 import {
   TransitionRoot,
@@ -142,9 +154,14 @@ export default defineComponent({
     TransitionChild,
     Dialog,
     DialogPanel,
+    Button,
   },
 
   props: {
+    id: {
+      type: String || Number,
+      default: "",
+    },
     labelClass: {
       type: String,
       default: "btn-primary",

@@ -11,6 +11,8 @@
       
       `"
     >
+      <!-- @mouseenter="this.$store.state.sidebarCollasp = false"
+      @mouseleave="this.$store.state.sidebarCollasp = true" -->
       <div
         :class="`logo-segment flex justify-between items-center bg-white dark:bg-slate-800 z-[9] py-6  sticky top-0   px-4  ${
           this.$store.state.sidebarCollasp ? this.closeClass : this.openClass

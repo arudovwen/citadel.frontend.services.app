@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ProfileIndex from "@/views/dashboard/profile/index.vue";
 import MembersIndex from "@/views/dashboard/members/index.vue";
+import VenuesIndex from "@/views/dashboard/venues/index.vue";
+import AppointmentsIndex from "@/views/dashboard/appointments/index.vue";
+
 function guard(to, from, next) {
   if (localStorage.activeUser) {
     next();
@@ -198,33 +201,104 @@ const routes = [
           },
         ],
       },
+      // {
+      //   path: "/appointments",
+      //   name: "appointments",
+      //   component: () => import("@/views/dashboard/appointments/index.vue"),
+      //   children: [
+      //     {
+      //       path: "",
+      //       name: "appointments",
+      //       component: () => import("@/components/Pages/Dashboard/Members"),
+      //       meta: {
+      //         activeName: "appointments",
+      //       },
+      //     },
+      //   ],
+      // },
+      // {
+      //   path: "/venue-management",
+      //   name: "venue-management",
+      //   component: () => import("@/views/dashboard/venues/index.vue"),
+      //   children: [
+      //     {
+      //       path: "",
+      //       name: "venue-management",
+      //       component: () => import("@/components/Pages/Dashboard/Members"),
+      //       meta: {
+      //         activeName: "venue-management",
+      //       },
+      //     },
+      //   ],
+      // },
       {
-        path: "/appointments",
-        name: "appointments",
-        component: () => import("@/views/dashboard/appointments/index.vue"),
+        path: "/venue-management",
+        name: "venue-management",
+        meta: {
+          activeName: "venue-management",
+        },
+        component: VenuesIndex,
         children: [
           {
             path: "",
-            name: "appointments",
-            component: () => import("@/components/Pages/Dashboard/Members"),
+            name: "venue-list",
             meta: {
-              activeName: "appointments",
+              activeName: "venue-management",
             },
+            component: () => import("@/views/dashboard/venues/VenueList.vue"),
+          },
+          {
+            path: "/add-venue",
+            meta: {
+              activeName: "venue-management",
+            },
+            name: "add venue",
+            component: () => import("@/views/dashboard/venues/AddVenue.vue"),
+          },
+          {
+            path: "/edit-venue/:id",
+            name: "edit venue",
+            meta: {
+              activeName: "venue-management",
+            },
+            component: () => import("@/views/dashboard/venues/AddVenue.vue"),
           },
         ],
       },
       {
-        path: "/venue-management",
-        name: "venue-management",
-        component: () => import("@/views/dashboard/venues/index.vue"),
+        path: "/appointments",
+        name: "appointments",
+        component: AppointmentsIndex,
+        meta: {
+          activeName: "appointments",
+        },
         children: [
           {
             path: "",
-            name: "venue-management",
-            component: () => import("@/components/Pages/Dashboard/Members"),
+            name: "appointment-list",
             meta: {
-              activeName: "venue-management",
+              activeName: "appointments",
             },
+            component: () =>
+              import("@/views/dashboard/appointments/AppointmentList.vue"),
+          },
+          {
+            path: "/add-appointment",
+            name: "add appointment",
+            meta: {
+              activeName: "appointments",
+            },
+            component: () =>
+              import("@/views/dashboard/appointments/AddAppointment.vue"),
+          },
+          {
+            path: "/edit-appointment/:id",
+            name: "edit appointment",
+            meta: {
+              activeName: "appointments",
+            },
+            component: () =>
+              import("@/views/dashboard/appointments/AddAppointment.vue"),
           },
         ],
       },

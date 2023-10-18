@@ -12,13 +12,13 @@
   >
     <swiper-slide v-for="(item, i) in carousels" :key="i" class="h-full">
       <div
-        class="single-slide bg-no-repeat bg-cover bg-center rounded-md min-h-[300px] h-full"
+        class="single-slide bg-no-repeat bg-cover bg-center min-h-[300px] h-full"
         :style="{
           backgroundImage: 'url(' + require(`@/assets/${item.img}`) + ')',
         }"
       >
         <div
-          class="pt-20 container text-center px-4 slider-content h-full w-full min-h-[300px] rounded-md flex flex-col items-center justify-center text-white"
+          class="pt-20 container text-center px-4 slider-content h-full w-full min-h-[300px] flex flex-col items-center justify-center text-white"
         >
           <div class="max-w-sm">
             <h2 v-if="item.title" class="text-xl font-medium text-white">

@@ -1689,3 +1689,61 @@ export const recetOrder = [
     status: "inactive",
   },
 ];
+
+export const venueTable = [
+  {
+    id: 1,
+    name: "Victory Chapel",
+    capacity: 5000,
+    location: "Akoka",
+    description: "Those who are victorious",
+    accessories: [{ id: "1", name: "Drums" }],
+    status: "Available",
+  },
+  {
+    id: 2,
+    name: "Healing Citadel",
+    capacity: 5000,
+    location: "Akoka",
+    description: "Those who are victorious",
+    accessories: [
+      { id: "1", name: "Piano" },
+      { id: "1", name: "Speakers" },
+    ],
+    status: "Booked",
+  },
+];
+
+// export const appointmentTable = [
+//   {
+//     id: 1,
+//     date: "1/01/2023",
+//     title: "Appointment",
+//     description: "Meeting with Daddy G.O",
+//     recipient: "Daddy G.O",
+//   },
+//   {
+//     id: 2,
+//     date: "1/01/2023",
+//     title: "Appointment",
+//     description: "Meeting with Daddy G.O",
+//     recipient: "Daddy G.O",
+//   },
+// ];
+
+export const appointmentTable = [
+  {
+    id: "1",
+    date: "1/01/2023",
+    time: "1/01/2023",
+    purpose: "Meeting with Daddy G.O",
+    whoToSee: "Daddy G.O",
+  },
+  {
+    id: "2",
+    date: "1/01/2023",
+    time: "1/01/2023",
+    purpose: "Meeting with Daddy G.O",
+    whoToSee: "Daddy G.O",
+  },
+];
