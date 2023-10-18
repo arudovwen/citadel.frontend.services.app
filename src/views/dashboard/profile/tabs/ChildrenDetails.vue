@@ -81,7 +81,7 @@
                 :id="title"
                 label="Title"
                 v-model="title"
-                :name="title"
+                name="title"
                 :modelValue="title"
                 :error="titleError"
                 :options="titleMenu"
@@ -92,7 +92,7 @@
                 :id="gender"
                 label="Gender"
                 v-model="gender"
-                :name="gender"
+                name="gender"
                 :modelValue="gender"
                 :error="genderError"
                 :options="genderMenu"
@@ -130,7 +130,53 @@
           </div>
         </form>
 
-        <div @click="addDetail" class="ltr:text-right rtl:text-left">
+        <Card v-if="childrenDetails.length > 0" bodyClass="p-0">
+          <header class="px-4 pt-4 pb-3 mb-3">
+            <h5 class="card-title mb-0 !text-[18px]">Children List</h5>
+          </header>
+          <vue-good-table
+            :columns="childrenDetailstable"
+            :rows="childrenDetails"
+            styleClass=" vgt-table"
+            :sort-options="{
+              enabled: false,
+            }"
+          >
+            <template v-slot:table-row="props">
+              <span
+                v-if="props.column.field == 'gender'"
+                class="text-slate-500 dark:text-slate-300"
+              >
+                {{ props.row.gender.value }}
+              </span>
+              <span v-if="props.column.field == 'action'">
+                <div class="flex space-x-3 rtl:space-x-reverse justify-center">
+                  <button
+                    type="button"
+                    class="action-btn inline-flex items-center justify-center h-8 w-8 text-lg border rounded text-white"
+                    @click="() => {}"
+                  >
+                    <Icon icon="heroicons:pencil-square" />
+                  </button>
+
+                  <button
+                    type="button"
+                    class="inline-flex items-center justify-center h-8 w-8 bg-danger-500 text-lg border rounded border-danger-500 text-white"
+                    @click="removeChild"
+                  >
+                    <Icon icon="heroicons-outline:trash" />
+                  </button>
+                </div>
+              </span>
+            </template>
+          </vue-good-table>
+        </Card>
+
+        <div
+          v-if="childrenDetails.length > 0"
+          @click="addDetail"
+          class="mt-6 ltr:text-right rtl:text-left"
+        >
           <Button text="Submit" btnClass="btn-dark" />
         </div>
       </div>
@@ -139,13 +185,13 @@
 </template>
 
 <script setup>
-// import Icon from "@/components/Icon";
+import Icon from "@/components/Icon";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
 import FromGroup from "@/components/FromGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
-import { titleMenu, genderMenu } from "@/constant/data";
+import { titleMenu, genderMenu, childrenDetailstable } from "@/constant/data";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 
 import * as yup from "yup";
@@ -196,6 +242,14 @@ const formValues = {
     label: "",
   },
   DOB: "",
+};
+
+const removeChild = (idx) => {
+  // Index of the item you want to remove
+  const indexToRemove = idx; // For example, removing "item3"
+
+  // Use splice to remove the item at the specified index
+  childrenDetails.value.splice(indexToRemove, 1);
 };
 
 // const router = useRouter();
@@ -257,4 +311,8 @@ const addDetail = () => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.action-btn {
+  @apply flex flex-col items-center justify-center border border-slate-200 dark:border-slate-700 rounded;
+}
+</style>
