@@ -1,105 +1,87 @@
 <template>
   <div>
     <Card bodyClass="p-0">
-      <header
+      <!-- <header
         class="border-b px-4 border-slate-100 dark:border-slate-700 pt-4 pb-3 flex justify-end items-center"
       >
-        <div>
-          <Button
-            text="Add new"
-            icon="heroicons-outline:plus"
-            btnClass="btn-primary btn-sm"
-            @click="push(formValues)"
-          />
-        </div>
-      </header>
+      
+      </header> -->
       <div class="p-6">
         <!-- {{ values }} -->
-        <form @submit="onSubmit" :validation-schema="schema">
-          <div
-            v-for="(field, idx) in fields"
-            :key="field.idx"
-            class="flex gap-x-8 mb-12"
-          >
+        <form @submit.prevent="pushDetails()" :validation-schema="schema">
+          <div class="flex gap-x-8 mb-12">
             <div class="w-full lg:grid-cols-2 grid-cols-1 grid gap-5 last:mb-0">
               <Textinput
-                :key="field.idx"
-                :id="`firstName_${idx}`"
+                :id="firstName"
                 label="First Name"
                 type="text"
-                v-model="values.childrenDetails[idx].firstName"
+                v-model="firstName"
                 placeholder="Type your first name"
-                :name="`childrenDetails[${idx}].firstName`"
+                :name="firstName"
                 :error="firstNameError"
                 classInput="h-[40px]"
               />
 
               <Textinput
-                :key="field.idx"
-                :id="`lastName_${idx}`"
+                :id="lastName"
                 label="Last Name"
                 type="text"
-                v-model="values.childrenDetails[idx].lastName"
+                v-model="lastName"
                 placeholder="Type your last name"
-                :name="`childrenDetails[${idx}].lastName`"
+                :name="lastName"
                 :error="lastNameError"
                 classInput="h-[40px]"
               />
 
               <Textinput
-                :key="field.idx"
-                :id="`middleName_${idx}`"
+                :id="middleName"
                 label="Middle Name"
                 type="text"
-                v-model="values.childrenDetails[idx].middleName"
+                v-model="middleName"
                 placeholder="Type your middle name"
-                :name="`childrenDetails[${idx}].middleName`"
+                :name="middleName"
                 :error="middleNameError"
                 classInput="h-[40px]"
               />
 
               <Textinput
-                :key="field.idx"
-                :id="`email_${idx}`"
+                :id="email"
                 label="Email Address"
                 type="text"
-                v-model="values.childrenDetails[idx].email"
+                v-model="email"
                 placeholder="Type your email address"
-                :name="`childrenDetails[${idx}].email`"
+                :name="email"
                 :error="emailError"
                 classInput="h-[40px]"
               />
 
               <Textinput
-                :key="field.idx"
-                :id="`mobile1_${idx}`"
+                :id="mobile1"
                 label="Mobile 1"
                 type="text"
-                v-model="values.childrenDetails[idx].mobile1"
+                v-model="mobile1"
                 placeholder="Type your mobile number"
-                :name="`childrenDetails[${idx}].mobile1`"
+                :name="mobile1"
                 :error="mobile1Error"
                 classInput="h-[40px]"
               />
 
               <Textinput
-                :key="field.idx"
-                :id="`mobile2_${idx}`"
+                :id="mobile2"
                 label="Mobile 2"
                 type="text"
-                v-model="values.childrenDetails[idx].mobile2"
+                v-model="mobile2"
                 placeholder="Type your mobile 2"
-                :name="`childrenDetails[${idx}].mobile2`"
+                :name="mobile2"
                 :error="mobile2Error"
                 classInput="h-[40px]"
               />
 
               <CustomVueSelect
-                :key="field.idx"
-                :id="`title_${idx}`"
+                :id="title"
                 label="Title"
-                v-model="values.childrenDetails[idx].title"
-                :name="`childrenDetails[${idx}].title`"
+                v-model="title"
+                :name="title"
                 :modelValue="title"
                 :error="titleError"
                 :options="titleMenu"
@@ -107,11 +89,10 @@
               />
 
               <CustomVueSelect
-                :key="field.idx"
-                :id="`gender_${idx}`"
+                :id="gender"
                 label="Gender"
-                v-model="values.childrenDetails[idx].gender"
-                :name="`childrenDetails[${idx}].gender`"
+                v-model="gender"
+                :name="gender"
                 :modelValue="gender"
                 :error="genderError"
                 :options="genderMenu"
@@ -120,93 +101,84 @@
 
               <FromGroup label="DOB" name="d1">
                 <flat-pickr
-                  :key="field.idx"
-                  v-model="values.childrenDetails[idx].DOB"
+                  v-model="DOB"
                   class="form-control"
                   id="d1"
                   placeholder="yyyy, dd M"
+                  :error="DOBError"
                 />
               </FromGroup>
             </div>
             <div class="flex justify-between items-end space-x-5">
               <div class="flex-none relative">
-                <button
+                <!-- <button
                   type="button"
                   class="inline-flex items-center justify-center h-10 w-10 bg-danger-500 text-lg border rounded border-danger-500 text-white"
                   @click="remove(idx)"
                 >
                   <Icon icon="heroicons-outline:trash" />
-                </button>
+                </button> -->
+                <div>
+                  <Button
+                    text="Add new"
+                    icon="heroicons-outline:plus"
+                    btnClass="btn-primary btn-sm"
+                  />
+                </div>
               </div>
             </div>
           </div>
-
-          <div class="ltr:text-right rtl:text-left">
-            <Button
-              text="Submit"
-              btnClass="btn-dark"
-              :isDisabled="fields.length === 0"
-            />
-          </div>
         </form>
+
+        <div @click="addDetail" class="ltr:text-right rtl:text-left">
+          <Button text="Submit" btnClass="btn-dark" />
+        </div>
       </div>
     </Card>
   </div>
 </template>
 
 <script setup>
-import Icon from "@/components/Icon";
+// import Icon from "@/components/Icon";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
 import FromGroup from "@/components/FromGroup";
 import Textinput from "@/components/Textinput";
-import { useField, useForm, useFieldArray } from "vee-validate";
+import { useField, useForm } from "vee-validate";
 import { titleMenu, genderMenu } from "@/constant/data";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 
 import * as yup from "yup";
+import { ref } from "vue";
 // import { useRouter } from "vue-router";
 
 // Define a validation schema
+const childrenDetails = ref([]);
+const schema = yup.object({
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
+  middleName: yup.string(),
+  email: yup.string().required("Email is required").email(),
+  mobile1: yup.string(),
+  mobile2: yup.string(),
 
-const schema = yup.object().shape({
-  users: yup
-    .array()
-    .of(
-      yup.object().shape({
-        irstName: yup.string().required("First name is required"),
-        lastName: yup.string().required("Last name is required"),
-        middleName: yup.string(),
-        email: yup.string().required("Email is required").email(),
-        mobile1: yup.string(),
-        mobile2: yup.string(),
+  title: yup
+    .object()
+    .shape({
+      value: yup.string().required("Title text is required"),
+      label: yup.string(),
+    })
+    .nullable(),
 
-        title: yup
-          .object()
-          .shape({
-            value: yup.string().required("Title text is required"),
-            label: yup.string(),
-          })
-          .nullable(),
-
-        gender: yup
-          .object()
-          .shape({
-            value: yup.string(),
-            label: yup.string(),
-          })
-          .nullable(),
-        DOB: yup.string(),
-      })
-    )
-    .strict(),
+  gender: yup
+    .object()
+    .shape({
+      value: yup.string(),
+      label: yup.string(),
+    })
+    .nullable(),
+  DOB: yup.string(),
 });
-
-// const router = useRouter();
-
-// const goToProfile = () => {
-//   router.push("/profile");
-// };
 
 const formValues = {
   firstName: "",
@@ -226,39 +198,63 @@ const formValues = {
   DOB: "",
 };
 
-const { handleSubmit, values } = useForm({
-  // validationSchema: schema,
-  initialValues: {
-    childrenDetails: [formValues],
-  },
+// const router = useRouter();
+
+const { handleSubmit } = useForm({
+  validationSchema: schema,
+  initialValues: formValues,
 });
 // No need to define rules for fields
 
-const { errorMessage: firstNameError } = useField("firstName");
-const { errorMessage: lastNameError } = useField("lastName");
-const { errorMessage: middleNameError } = useField("middleName");
-const { errorMessage: emailError } = useField("email");
-const { errorMessage: mobile1Error } = useField("mobile1");
-const { errorMessage: mobile2Error } = useField("mobile2");
+const { value: firstName, errorMessage: firstNameError } =
+  useField("firstName");
+const { value: lastName, errorMessage: lastNameError } = useField("lastName");
+const { value: middleName, errorMessage: middleNameError } =
+  useField("middleName");
+const { value: email, errorMessage: emailError } = useField("email");
+const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
+const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
 
 const { value: title, errorMessage: titleError } = useField("title");
 
 const { value: gender, errorMessage: genderError } = useField("gender");
 
-// const { value: DO } = useField("DOB");
+const { value: DOB, errorMessage: DOBError } = useField("DOB");
 
-// const { value: email, errorMessage: emailError } = useField("email");
-
-const { remove, push, fields } = useFieldArray("childrenDetails");
+// const { remove, push, fields } = useFieldArray("childrenDetails");
 
 // console.log(
 //   firstName + lastName + middleName + email + mobile1 + mobile2 + title + DOB
 // );
 
-const onSubmit = handleSubmit((values) => {
+const resetForm = () => {
+  formValues.firstName = "";
+  formValues.lastName = "";
+  formValues.middleName = "";
+  formValues.email = "";
+  formValues.title = {
+    value: "",
+    label: "",
+  };
+  formValues.mobile1 = "";
+  formValues.mobile2 = "";
+  formValues.gender = {
+    value: "",
+    label: "",
+  };
+  formValues.DOB = "";
+};
+
+const pushDetails = handleSubmit((values) => {
   console.log("PersonalDetails: " + JSON.stringify(values));
-  // goToProfile();
+  childrenDetails.value.push(values);
+  console.log("Children's Details" + JSON.stringify(childrenDetails.value));
+  resetForm();
 });
+
+const addDetail = () => {
+  console.log("PersonalDetails: " + JSON.stringify(childrenDetails.value));
+};
 </script>
 
 <style lang="scss" scoped></style>
