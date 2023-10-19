@@ -44,7 +44,7 @@
         <vue-good-table
           :columns="columns"
           styleClass="vgt-table centered"
-          :rows="[]"
+          :rows="advancedTable"
           :sort-options="{
             enabled: false,
           }"
