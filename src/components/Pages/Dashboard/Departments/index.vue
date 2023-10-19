@@ -15,7 +15,7 @@
     <Grid v-if="fillter === 'grid' && !isSkeletion" />
 
     <DepartmentAddmodal />
-    <updateModal />
+    <UpdateModal />
   </div>
 </template>
 
@@ -24,7 +24,7 @@ import Button from "@/components/Button";
 import GridSkletion from "@/components/Skeleton/Project-grid";
 import { computed, ref, watch, onMounted } from "vue";
 import DepartmentAddmodal from "./AddDepartment";
-import updateModal from "./EditDepartment";
+import UpdateModal from "./EditDepartment";
 import Grid from "./Departments-grid";
 import { useStore } from "vuex";
 const store = useStore();

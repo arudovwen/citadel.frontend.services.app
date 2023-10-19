@@ -40,7 +40,12 @@
             text="Add Member"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
-            link="member-add"
+            @click="
+              () => {
+                type = 'add';
+                $refs.modalChange.openModal();
+              }
+            "
           />
         </div>
       </div>
@@ -48,7 +53,7 @@
         <vue-good-table
           :columns="columns"
           styleClass=" vgt-table  centered "
-          :rows="advancedTable"
+          :rows="[]"
           :sort-options="{
             enabled: false,
           }"
@@ -127,23 +132,19 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="generateAction(item.name, props.row.id).doit"
-                      :class="`
-                
-                  ${
-                    generateAction(item.name, props.row.id).name === 'delete'
-                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
-                      : 'hover:bg-slate-900 hover:text-white'
-                  }
-                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
+                      @click="item.doit(item.name)"
+                      :class="{
+                        'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
+                          item.name === 'delete',
+                        'hover:bg-slate-900 hover:text-white':
+                          item.name !== 'delete',
+                      }"
+                      class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
                     >
-                      <span class="text-base"
-                        ><Icon
-                          :icon="generateAction(item.name, props.row.id).icon"
-                      /></span>
-                      <span>{{
-                        generateAction(item.name, props.row.id).name
-                      }}</span>
+                      <span class="text-base">
+                        <Icon :icon="item.icon" />
+                      </span>
+                      <span>{{ item.name }}</span>
                     </div>
                   </MenuItem>
                 </template>
@@ -205,6 +206,23 @@
       </div>
     </template>
   </Modal>
+
+  <Modal
+    :title="
+      type === 'add'
+        ? 'Add member'
+        : type === 'edit'
+        ? 'Edit member'
+        : 'View member'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-3xl"
+  >
+    <AddRecord v-if="type === 'add'" />
+    <EditRecord v-if="type === 'edit'" />
+    <ViewRecord v-if="type === 'view'" />
+  </Modal>
 </template>
 <script>
 import Dropdown from "@/components/Dropdown";
@@ -216,10 +234,17 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
+import AddRecord from "../member-add.vue";
+import EditRecord from "../member-edit.vue";
+import ViewRecord from "../member-preview.vue";
 import window from "@/mixins/window";
+
 export default {
   mixins: [window],
   components: {
+    AddRecord,
+    EditRecord,
+    ViewRecord,
     Pagination,
     InputGroup,
     Modal,
@@ -244,18 +269,36 @@ export default {
       actions: [
         {
           name: "Approve",
+          icon: "ph:check",
+          doit: (name) => {
+            this.type = name;
+            this.$refs.modal.openModal();
+          },
         },
         {
           name: "Delist",
+          icon: "ph:x-light",
+          doit: (name) => {
+            this.type = name;
+            this.$refs.modal.openModal();
+          },
         },
         {
           name: "view",
+          icon: "heroicons-outline:eye",
+          doit: (name) => {
+            this.type = name;
+            this.$refs.modalChange.openModal();
+          },
         },
-        {
-          name: "edit",
-        },
+
         {
           name: "delete",
+          icon: "heroicons-outline:trash",
+          doit: (name) => {
+            this.type = name;
+            this.$refs.modal.openModal();
+          },
         },
       ],
       options: [
@@ -277,33 +320,32 @@ export default {
           label: "Id",
           field: "id",
         },
-
-        {
-          label: "Customer",
-          field: "customer",
-        },
         {
           label: "Date",
           field: "date",
         },
+        {
+          label: "Name",
+          field: "name",
+        },
 
         {
-          label: "Role",
-          field: "quantity",
+          label: "Gender",
+          field: "gender",
+        },
+
+        {
+          label: "Phone",
+          field: "phone",
         },
 
         {
           label: "Email",
-          field: "amount",
+          field: "email",
         },
         {
-          label: "Phone",
-          field: "amount",
-        },
-
-        {
-          label: "Status",
-          field: "status",
+          label: "Address",
+          field: "address",
         },
         {
           label: "Action",

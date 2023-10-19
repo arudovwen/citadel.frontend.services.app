@@ -9,14 +9,14 @@
           >
             Recipient info-500
           </div>
-          <FromGroup label="Issued date" name="d1">
+          <FormGroup label="Issued date" name="d1">
             <flat-pickr
               v-model="dateDefault"
               class="form-control"
               id="d1"
               placeholder="yyyy, dd M"
             />
-          </FromGroup>
+          </FormGroup>
           <Textinput label="Name" type="text" placeholder="Add your name" />
           <Textinput label="Phone" type="text" placeholder="Add your phone" />
           <Textinput label="Email" type="email" placeholder="Add your email" />
@@ -75,7 +75,7 @@
 <script>
 import Button from "@/components/Button";
 import Card from "@/components/Card";
-import FromGroup from "@/components/FromGroup";
+import FormGroup from "@/components/FormGroup";
 import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
 import Repeater from "./module/repeater";
@@ -84,7 +84,7 @@ export default {
     Button,
     Card,
     Textinput,
-    FromGroup,
+    FormGroup,
     Textarea,
     Repeater,
   },

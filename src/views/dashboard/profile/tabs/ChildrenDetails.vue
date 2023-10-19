@@ -99,7 +99,7 @@
                 @update:modelValue="defaultSelectedValue = $event"
               />
 
-              <FromGroup label="DOB" name="d1">
+              <FormGroup label="DOB" name="d1">
                 <flat-pickr
                   v-model="DOB"
                   class="form-control"
@@ -107,7 +107,7 @@
                   placeholder="yyyy, dd M"
                   :error="DOBError"
                 />
-              </FromGroup>
+              </FormGroup>
             </div>
             <div class="flex justify-between items-end space-x-5">
               <div class="flex-none relative">
@@ -188,7 +188,7 @@
 import Icon from "@/components/Icon";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
-import FromGroup from "@/components/FromGroup";
+import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { titleMenu, genderMenu, childrenDetailstable } from "@/constant/data";

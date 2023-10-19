@@ -50,14 +50,14 @@
                 Members distribution by venue
               </h6>
               <div class="flex-none">
-                <FromGroup>
+                <FormGroup>
                   <flat-pickr
                     class="form-control bg-white"
                     placeholder="Select date range"
                     v-model="rangeDate"
                     :config="{ mode: 'range' }"
                   />
-                </FromGroup>
+                </FormGroup>
               </div>
             </header>
 
@@ -188,7 +188,7 @@
 <script>
 import Breadcrumb from "./Analytics-Component/Breadcrumbs";
 import Card from "@/components/Card";
-import FromGroup from "@/components/FromGroup";
+import FormGroup from "@/components/FormGroup";
 import Icon from "@/components/Icon";
 import CrmTable from "./Analytics-Component/CrmTable";
 import ProgressBar from "@/components/ProgressBar";
@@ -208,7 +208,7 @@ export default {
     Icon,
     CrmTable,
     DropEvent,
-    FromGroup,
+    FormGroup,
     Breadcrumb,
     ProgressBar,
   },

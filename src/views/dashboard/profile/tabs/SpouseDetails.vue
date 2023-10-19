@@ -78,23 +78,23 @@
         @update:modelValue="defaultSelectedValue = $event"
       />
 
-      <FromGroup label="DOB" name="d1">
+      <FormGroup label="DOB" name="d1">
         <flat-pickr
           v-model="DOB"
           class="form-control"
           id="d1"
           placeholder="yyyy, dd M"
         />
-      </FromGroup>
+      </FormGroup>
 
-      <FromGroup label="Wedding Anniversary" name="d2">
+      <FormGroup label="Wedding Anniversary" name="d2">
         <flat-pickr
           v-model="weddingAnniversary"
           class="form-control"
           id="d2"
           placeholder="yyyy, dd M"
         />
-      </FromGroup>
+      </FormGroup>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
@@ -107,7 +107,7 @@
 </template>
 
 <script setup>
-import FromGroup from "@/components/FromGroup";
+import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";

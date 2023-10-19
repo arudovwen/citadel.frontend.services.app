@@ -48,7 +48,7 @@
         <vue-good-table
           :columns="columns"
           styleClass=" vgt-table  centered "
-          :rows="advancedTable"
+          :rows="[]"
           :sort-options="{
             enabled: false,
           }"
@@ -277,33 +277,32 @@ export default {
           label: "Id",
           field: "id",
         },
-
-        {
-          label: "Customer",
-          field: "customer",
-        },
         {
           label: "Date",
           field: "date",
         },
+        {
+          label: "Name",
+          field: "name",
+        },
 
         {
-          label: "Role",
-          field: "quantity",
+          label: "Gender",
+          field: "gender",
+        },
+
+        {
+          label: "Phone",
+          field: "phone",
         },
 
         {
           label: "Email",
-          field: "amount",
+          field: "email",
         },
         {
-          label: "Phone",
-          field: "amount",
-        },
-
-        {
-          label: "Status",
-          field: "status",
+          label: "Address",
+          field: "address",
         },
         {
           label: "Action",

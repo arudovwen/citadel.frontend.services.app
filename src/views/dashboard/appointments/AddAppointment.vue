@@ -21,25 +21,25 @@
           classInput="h-[40px]"
         />
 
-        <FromGroup label="Date od Appointment" name="d1">
+        <FormGroup label="Date od Appointment" name="d1">
           <flat-pickr
             v-model="DOA"
             class="form-control"
             id="d1"
             placeholder="yyyy, dd M"
           />
-        </FromGroup>
+        </FormGroup>
 
-        <!-- <FromGroup label="Time of Appointment" name="d2">
+        <!-- <FormGroup label="Time of Appointment" name="d2">
           <flat-pickr
             v-model="timeOfAppointment"
             class="form-control"
             id="d2"
             placeholder="yyyy, dd M"
           />
-        </FromGroup> -->
+        </FormGroup> -->
 
-        <FromGroup label="Time of Appointment" name="d3">
+        <FormGroup label="Time of Appointment" name="d3">
           <flat-pickr
             class="form-control"
             id="d3"
@@ -47,7 +47,7 @@
             v-model="timeOfAppointment"
             :config="{ enableTime: true, noCalendar: true, dateFormat: 'H:i' }"
           />
-        </FromGroup>
+        </FormGroup>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
@@ -65,7 +65,7 @@
 
 <script setup>
 import Card from "@/components/Card";
-import FromGroup from "@/components/FromGroup";
+import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";

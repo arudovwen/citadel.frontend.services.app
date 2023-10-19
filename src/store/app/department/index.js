@@ -122,7 +122,7 @@ export default {
           state.editEndDate = data.endDate;
           state.editcta = data.category;
           state.editdesc = data.des;
-          state.editModal = !state.editModal;
+
           // set data to data
           item.name = data.name;
           item.des = data.des;
@@ -133,6 +133,7 @@ export default {
           item.category = data.category;
         }
       });
+      state.editModal = true;
     },
     // openDepartment
     openDepartment(state) {

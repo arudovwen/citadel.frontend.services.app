@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fromGroup relative"
+    class="formGroup relative"
     :class="`${error ? 'has-error' : ''}  ${horizontal ? 'flex' : ''}  ${
       validate ? 'is-valid' : ''
     } `"

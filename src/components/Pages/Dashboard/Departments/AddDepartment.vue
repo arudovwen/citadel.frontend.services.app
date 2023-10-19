@@ -3,21 +3,21 @@
     <Modal
       :activeModal="store.state.department.addmodal"
       @close="closeModal"
-      title="Create Project"
+      title="Create Department"
       centered
     >
-      <form @submit.prevent="addProject" class="space-y-4">
+      <form @submit.prevent="addDepartment" class="space-y-4">
         <Textinput
           label="title"
           type="text"
-          placeholder="Project Name"
+          placeholder="Department Name"
           name="title"
           v-model.trim="newTodoText"
           :error="newtodoError"
         />
         <div class="assagin space-y-4">
-          <div class="grid lg:grid-cols-2 gap-4 grid-cols-1">
-            <FromGroup label="Start Date" name="d1" :error="errorstartDate">
+          <!-- <div class="grid lg:grid-cols-2 gap-4 grid-cols-1">
+            <FormGroup label="Start Date" name="d1" :error="errorstartDate">
               <flat-pickr
                 v-model="startDate"
                 class="form-control"
@@ -29,8 +29,8 @@
                   dateFormat: 'Y-m-d',
                 }"
               />
-            </FromGroup>
-            <FromGroup label="End Date" name="d2" :error="errorendDate">
+            </FormGroup>
+            <FormGroup label="End Date" name="d2" :error="errorendDate">
               <flat-pickr
                 v-model="endDate"
                 class="form-control"
@@ -42,7 +42,7 @@
                   dateFormat: 'Y-m-d',
                 }"
               />
-            </FromGroup>
+            </FormGroup>
           </div>
           <VueSelect label="Assignee" :error="errorassign">
             <vSelect
@@ -84,10 +84,10 @@
 
           <VueSelect label="Tag" :error="errorCategory"
             ><vSelect :options="options" v-model="category" multiple
-          /></VueSelect>
+          /></VueSelect> -->
           <Textarea
-            label="Project description"
-            placeholder="Project description"
+            label="Department description"
+            placeholder="Department description"
             v-model="desc"
             :error="descoError"
           />
@@ -102,37 +102,37 @@
 </template>
 <script setup>
 import Button from "@/components/Button";
-import FromGroup from "@/components/FromGroup";
+// import FormGroup from "@/components/FormGroup";
 import Modal from "@/components/Modal";
-import VueSelect from "@/components/Select/VueSelect";
+// import VueSelect from "@/components/Select/VueSelect";
 import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
 import { v4 as uuidv4 } from "uuid";
 import { useField, useForm } from "vee-validate";
-import vSelect from "vue-select";
+// import vSelect from "vue-select";
 import { useStore } from "vuex";
 import * as yup from "yup";
-import { assignOption } from "@/constant/data";
+// import { assignOption } from "@/constant/data";
 let store = useStore();
 
-const options = [
-  {
-    value: "team",
-    label: "team",
-  },
-  {
-    value: "low",
-    label: "low",
-  },
-  {
-    value: "medium",
-    label: "medium",
-  },
-  {
-    value: "high",
-    label: "high",
-  },
-];
+// const options = [
+//   {
+//     value: "team",
+//     label: "team",
+//   },
+//   {
+//     value: "low",
+//     label: "low",
+//   },
+//   {
+//     value: "medium",
+//     label: "medium",
+//   },
+//   {
+//     value: "high",
+//     label: "high",
+//   },
+// ];
 
 const schema = yup.object({
   newTodoText: yup.string().required("Title is required"),
@@ -150,22 +150,22 @@ const { value: newTodoText, errorMessage: newtodoError } =
   useField("newTodoText");
 const { value: desc, errorMessage: descoError } = useField("desc");
 
-const { value: category, errorMessage: errorCategory } = useField("category");
+// const { value: category, errorMessage: errorCategory } = useField("category");
 
-const { value: assign, errorMessage: errorassign } = useField("assign");
-const { value: startDate, errorMessage: errorstartDate } =
-  useField("startDate");
-const { value: endDate, errorMessage: errorendDate } = useField("endDate");
+// const { value: assign, errorMessage: errorassign } = useField("assign");
+// const { value: startDate, errorMessage: errorstartDate } =
+//   useField("startDate");
+// const { value: endDate, errorMessage: errorendDate } = useField("endDate");
 
-const addProject = handleSubmit(() => {
-  store.dispatch("addProject", {
+const addDepartment = handleSubmit(() => {
+  store.dispatch("addDepartment", {
     id: uuidv4(),
     name: newTodoText.value,
     des: desc.value,
-    assignto: assign.value,
-    category: category.value.map((item) => item.value),
-    startDate: startDate.value,
-    endDate: endDate.value,
+    // assignto: assign.value,
+    // category: category.value.map((item) => item.value),
+    // startDate: startDate.value,
+    // endDate: endDate.value,
     progress: 40,
   });
 });

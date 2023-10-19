@@ -63,12 +63,40 @@
       </div>
     </Card>
   </div>
+  <Modal
+    title="Confirm action"
+    label="Small modal"
+    labelClass="btn-outline-dark"
+    ref="modal"
+    sizeClass="max-w-md"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure about this action?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm "
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Proceed"
+          btnClass="btn-dark btn-sm"
+          @click="handleDelete"
+        />
+      </div>
+    </template>
+  </Modal>
 </template>
 <script setup>
+import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Dropdown from "@/components/Dropdown";
 import Icon from "@/components/Icon";
 import { MenuItem } from "@headlessui/vue";
+import Modal from "@/components/Modal/Modal";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -76,7 +104,8 @@ const store = useStore();
 const router = useRouter();
 
 const projects = computed(() => store.getters.projects);
-
+const modal = ref(null);
+const detail = ref(null);
 const actions = ref([
   {
     name: "view",
@@ -96,10 +125,15 @@ const actions = ref([
     name: "Delete",
     icon: "heroicons-outline:trash",
     doit: (data) => {
-      store.dispatch("removeDepartment", data);
+      detail.value = data;
+      modal.value.openModal();
     },
   },
 ]);
+
+function handleDelete() {
+  store.dispatch("removeDepartment", detail.value);
+}
 </script>
 <style lang="scss" scoped>
 .date-label {

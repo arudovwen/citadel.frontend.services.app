@@ -4,7 +4,7 @@
       label="Email"
       type="email"
       placeholder="Type your email"
-      name="emil"
+      name="email"
       v-model="email"
       :error="emailError"
       classInput="h-[48px]"

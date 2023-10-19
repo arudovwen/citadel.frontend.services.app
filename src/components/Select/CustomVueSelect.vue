@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fromGroup relative"
+    class="formGroup relative"
     :class="`${error ? 'has-error' : ''}  ${horizontal ? 'flex' : ''}  ${
       validate ? 'is-valid' : ''
     } `"
@@ -139,7 +139,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.fromGroup {
+.formGroup {
   .vs__dropdown-toggle {
     @apply bg-transparent  dark:bg-slate-900 border-slate-200 dark:border-slate-700 dark:text-white min-h-[40px] text-slate-900 text-sm;
   }

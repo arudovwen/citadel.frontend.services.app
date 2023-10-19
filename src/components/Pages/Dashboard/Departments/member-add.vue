@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <Card title="">
+    <Card>
       <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
         <Textinput
           label="First Name"
@@ -125,7 +125,7 @@
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Update record" btnClass="btn-dark" />
+        <Button type="submit" text="Save record" btnClass="btn-dark" />
       </div>
     </Card>
   </form>

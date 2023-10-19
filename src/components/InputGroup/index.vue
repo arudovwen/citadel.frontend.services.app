@@ -39,7 +39,7 @@
       </span>
       <div class="flex-1">
         <div
-          class="relative fromGroup2"
+          class="relative formGroup2"
           :class="`${error ? 'has-error' : ''}  ${validate ? 'is-valid' : ''}`"
         >
           <input
@@ -238,7 +238,7 @@ export default {
 .input-label {
   @apply mb-2 text-slate-500 text-sm leading-6 capitalize cursor-pointer;
 }
-.fromGroup2 {
+.formGroup2 {
   &.has-error {
     .input-group-control {
       @apply border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1;

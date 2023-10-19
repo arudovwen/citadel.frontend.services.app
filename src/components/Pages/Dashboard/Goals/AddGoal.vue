@@ -17,7 +17,7 @@
         />
         <div class="assagin space-y-4">
           <div class="grid lg:grid-cols-2 gap-4 grid-cols-1">
-            <FromGroup label="Start Date" name="d1" :error="errorstartDate">
+            <FormGroup label="Start Date" name="d1" :error="errorstartDate">
               <flat-pickr
                 v-model="startDate"
                 class="form-control"
@@ -29,8 +29,8 @@
                   dateFormat: 'Y-m-d',
                 }"
               />
-            </FromGroup>
-            <FromGroup label="End Date" name="d2" :error="errorendDate">
+            </FormGroup>
+            <FormGroup label="End Date" name="d2" :error="errorendDate">
               <flat-pickr
                 v-model="endDate"
                 class="form-control"
@@ -42,7 +42,7 @@
                   dateFormat: 'Y-m-d',
                 }"
               />
-            </FromGroup>
+            </FormGroup>
           </div>
           <VueSelect label="Assignee" :error="errorassign">
             <vSelect
@@ -102,7 +102,7 @@
 </template>
 <script setup>
 import Button from "@/components/Button";
-import FromGroup from "@/components/FromGroup";
+import FormGroup from "@/components/FormGroup";
 import Modal from "@/components/Modal";
 import VueSelect from "@/components/Select/VueSelect";
 import Textarea from "@/components/Textarea";

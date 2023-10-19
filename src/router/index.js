@@ -133,7 +133,7 @@ const routes = [
           {
             path: "",
             name: "first timers",
-            component: () => import("@/components/Pages/Dashboard/Members"),
+            component: () => import("@/components/Pages/Dashboard/FirstTimers"),
             meta: {
               activeName: "first-timers",
             },

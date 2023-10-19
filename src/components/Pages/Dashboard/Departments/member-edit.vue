@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <Card title="">
+    <Card title="Edit First Timer Detail">
       <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
         <Textinput
           label="First Name"
