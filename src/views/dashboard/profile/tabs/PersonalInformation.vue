@@ -187,10 +187,10 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-      <div class="hidden sm:block"></div>
       <button type="submit" class="btn btn-primary block w-full text-center">
         Save Changes
       </button>
+      <div class="hidden sm:block"></div>
     </div>
   </form>
 </template>
