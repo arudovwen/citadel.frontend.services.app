@@ -1,8 +1,4 @@
 <template>
-  <button type="button" @click="openModal" :class="labelClass">
-    {{ label }}
-  </button>
-
   <TransitionRoot :show="isOpen" as="template">
     <Dialog
       as="div"
@@ -47,7 +43,7 @@
               >
                 <h2
                   v-if="title"
-                  class="capitalize leading-6 tracking-wider font-medium text-base text-white"
+                  class="capitalize leading-6 tracking-wider font-semibold text-lg text-white"
                 >
                   {{ title }}
                 </h2>

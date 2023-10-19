@@ -78,7 +78,7 @@
               </div>
               <div class="xl:mr-8 mr-4 mb-3 space-y-1">
                 <div class="font-semibold text-slate-500 dark:text-slate-400">
-                  Project brief
+                  Goal brief
                 </div>
                 <div
                   class="flex items-center space-x-2 text-xs font-normal text-primary-600 dark:text-slate-300"
@@ -95,7 +95,7 @@
                 <div
                   class="text-xs font-medium text-slate-600 dark:text-slate-300"
                 >
-                  Project owner
+                  Goal owner
                 </div>
                 <div class="text-xs text-slate-600 dark:text-slate-300">
                   John Doe

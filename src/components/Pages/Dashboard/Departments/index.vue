@@ -1,27 +1,20 @@
 <template>
   <div>
-    <div class="flex flex-wrap justify-end gap-x-4 items-center mb-4">
-      <Button
-        icon="heroicons-outline:filter"
-        text="On going"
-        btnClass="bg-white dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-900 hover:text-white btn-md  h-min text-sm font-normal"
-        iconClass=" text-lg"
-      />
+    <div class="flex flex-wrap justify-end items-center mb-4">
       <Button
         icon="heroicons-outline:plus"
-        text="Add Goal"
-        btnClass="btn-dark dark:bg-slate-800  h-min text-sm font-normal"
-        iconClass=" text-lg"
-        @click="openGoal"
-        :isLoading="store.state.goal.isLoading"
+        text="Add Department"
+        btnClass="btn-primary dark:bg-slate-800  h-min text-sm font-normal"
+        iconClass="text-lg"
+        @click="openDepartment"
+        :isLoading="store.state.project.isLoading"
       />
     </div>
-    <GridSkletion :count="goals.length" v-if="isSkeletion" />
-    <TableSkeltion :count="goals.length" v-if="isSkeletion2" />
-    <Grid v-if="fillter === 'grid' && !isSkeletion" />
-    <List v-if="fillter === 'list' && !isSkeletion2" />
+    <GridSkletion :count="projects.length" v-if="isSkeletion" />
 
-    <GoalAddmodal />
+    <Grid v-if="fillter === 'grid' && !isSkeletion" />
+
+    <DepartmentAddmodal />
     <updateModal />
   </div>
 </template>
@@ -29,18 +22,16 @@
 <script setup>
 import Button from "@/components/Button";
 import GridSkletion from "@/components/Skeleton/Project-grid";
-import TableSkeltion from "@/components/Skeleton/Table";
 import { computed, ref, watch, onMounted } from "vue";
-import GoalAddmodal from "./AddGoal";
-import updateModal from "./EditGoal";
-import List from "./Project-list";
-import Grid from "./Goals-grid";
+import DepartmentAddmodal from "./AddDepartment";
+import updateModal from "./EditDepartment";
+import Grid from "./Departments-grid";
 import { useStore } from "vuex";
 const store = useStore();
 
 let fillter = ref("grid");
-const openGoal = () => {
-  store.dispatch("openGoal");
+const openDepartment = () => {
+  store.dispatch("openDepartment");
 };
 
 const width = ref(0);
@@ -52,7 +43,7 @@ onMounted(() => {
   handleResize();
 });
 
-const goals = computed(() => store.getters.goals);
+const projects = computed(() => store.getters.projects);
 
 const isSkeletion = ref(true);
 const isSkeletion2 = ref(null);

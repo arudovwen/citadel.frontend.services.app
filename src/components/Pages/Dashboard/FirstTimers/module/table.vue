@@ -249,29 +249,32 @@ export default {
           label: "Id",
           field: "id",
         },
-
-        {
-          label: "Customer",
-          field: "customer",
-        },
         {
           label: "Date",
           field: "date",
         },
-
         {
-          label: "Quantity",
-          field: "quantity",
+          label: "Name",
+          field: "name",
         },
 
         {
-          label: "Amount",
-          field: "amount",
+          label: "Gender",
+          field: "gender",
         },
 
         {
-          label: "Status",
-          field: "status",
+          label: "Phone",
+          field: "phone",
+        },
+
+        {
+          label: "Email",
+          field: "email",
+        },
+        {
+          label: "Address",
+          field: "address",
         },
         {
           label: "Action",

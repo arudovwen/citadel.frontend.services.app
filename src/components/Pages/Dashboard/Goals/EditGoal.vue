@@ -1,25 +1,24 @@
 <template>
   <div>
     <Modal
-      :activeModal="store.state.project.addmodal"
-      @close="closeModal"
-      title="Create Project"
+      :activeModal="store.state.goal.editModal"
+      @close="closeEditModal"
+      title="Update Goal"
       centered
     >
-      <form @submit.prevent="addProject" class="space-y-4">
+      <form @submit.prevent="updateGoal" class="space-y-4">
         <Textinput
           label="title"
           type="text"
-          placeholder="Project Name"
+          placeholder="Task Name"
           name="title"
-          v-model.trim="newTodoText"
-          :error="newtodoError"
+          v-model.trim="store.state.goal.editName"
         />
         <div class="assagin space-y-4">
           <div class="grid lg:grid-cols-2 gap-4 grid-cols-1">
-            <FromGroup label="Start Date" name="d1" :error="errorstartDate">
+            <FromGroup label="Start Date" name="d1">
               <flat-pickr
-                v-model="startDate"
+                v-model="store.state.goal.editStartDate"
                 class="form-control"
                 id="d1"
                 placeholder="yyyy, dd M"
@@ -30,9 +29,9 @@
                 }"
               />
             </FromGroup>
-            <FromGroup label="End Date" name="d2" :error="errorendDate">
+            <FromGroup label="End Date" name="d2">
               <flat-pickr
-                v-model="endDate"
+                v-model="store.state.goal.editEndDate"
                 class="form-control"
                 id="d2"
                 placeholder="yyyy, dd M"
@@ -44,11 +43,11 @@
               />
             </FromGroup>
           </div>
-          <VueSelect label="Assignee" :error="errorassign">
+          <VueSelect label="Assignee">
             <vSelect
               :options="assignOption"
               label="title"
-              v-model="assign"
+              v-model="store.state.goal.editassignto"
               multiple
             >
               <template #option="{ title, image }">
@@ -82,19 +81,25 @@
             </vSelect>
           </VueSelect>
 
-          <VueSelect label="Tag" :error="errorCategory"
-            ><vSelect :options="options" v-model="category" multiple
+          <VueSelect label="Goal category"
+            ><vSelect
+              :options="projectCatagory"
+              v-model="store.state.goal.editcta"
+              multiple
           /></VueSelect>
           <Textarea
-            label="Project description"
-            placeholder="Project description"
-            v-model="desc"
-            :error="descoError"
+            label="Description"
+            placeholder="Description"
+            v-model="store.state.goal.editdesc"
           />
         </div>
 
         <div class="text-right">
-          <Button text="Add" btnClass="btn-dark"></Button>
+          <Button
+            text="Update"
+            btnClass="btn-dark"
+            :isDisabled="!isFromValid"
+          ></Button>
         </div>
       </form>
     </Modal>
@@ -107,71 +112,52 @@ import Modal from "@/components/Modal";
 import VueSelect from "@/components/Select/VueSelect";
 import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
-import { v4 as uuidv4 } from "uuid";
-import { useField, useForm } from "vee-validate";
+import { useForm } from "vee-validate";
+import { computed } from "vue";
 import vSelect from "vue-select";
+import { useToast } from "vue-toastification";
 import { useStore } from "vuex";
-import * as yup from "yup";
-import { assignOption } from "@/constant/data";
+import { assignOption, projectCatagory } from "@/constant/data";
+
 let store = useStore();
 
-const options = [
-  {
-    value: "team",
-    label: "team",
-  },
-  {
-    value: "low",
-    label: "low",
-  },
-  {
-    value: "medium",
-    label: "medium",
-  },
-  {
-    value: "high",
-    label: "high",
-  },
-];
+const { handleSubmit } = useForm();
 
-const schema = yup.object({
-  newTodoText: yup.string().required("Title is required"),
-  desc: yup.string().required("Description is required"),
+const toast = useToast();
 
-  category: yup.mixed().nullable().required("Please select category"),
-  assign: yup.mixed().nullable().required("Please select One"),
-  startDate: yup.string().required("Start date is required"),
-  endDate: yup.string().required("End date is required"),
-});
-const { handleSubmit } = useForm({
-  validationSchema: schema,
-});
-const { value: newTodoText, errorMessage: newtodoError } =
-  useField("newTodoText");
-const { value: desc, errorMessage: descoError } = useField("desc");
-
-const { value: category, errorMessage: errorCategory } = useField("category");
-
-const { value: assign, errorMessage: errorassign } = useField("assign");
-const { value: startDate, errorMessage: errorstartDate } =
-  useField("startDate");
-const { value: endDate, errorMessage: errorendDate } = useField("endDate");
-
-const addProject = handleSubmit(() => {
-  store.dispatch("addProject", {
-    id: uuidv4(),
-    name: newTodoText.value,
-    des: desc.value,
-    assignto: assign.value,
-    category: category.value.map((item) => item.value),
-    startDate: startDate.value,
-    endDate: endDate.value,
-    progress: 40,
-  });
+const isFromValid = computed(() => {
+  return (
+    store.state.goal.editName.length > 0 &&
+    store.state.goal.editassignto &&
+    store.state.goal.editcta &&
+    store.state.goal.editStartDate &&
+    store.state.goal.editEndDate &&
+    store.state.goal.editdesc
+  );
 });
 
-const closeModal = () => {
-  store.dispatch("closeModal");
+const updateGoal = handleSubmit(() => {
+  if (isFromValid.value) {
+    store.dispatch("updateGoal", {
+      id: store.state.goal.editId,
+      name: store.state.goal.editName,
+      des: store.state.goal.editdesc,
+      assignto: store.state.goal.editassignto,
+      catagory: store.state.goal.editcta,
+      startDate: store.state.goal.editStartDate,
+      endDate: store.state.goal.editEndDate,
+      progress: 60,
+    });
+    store.state.goal.editModal = false;
+    toast.success -
+      500("Task updated", {
+        timeout: 2000,
+      });
+  }
+});
+
+const closeEditModal = () => {
+  store.dispatch("closeEditModal");
 };
 </script>
 <style lang=""></style>

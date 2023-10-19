@@ -1,6 +1,6 @@
 <template>
   <div class="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
-    <Card bodyClass="p-6" v-for="(item, i) in projects" :key="i">
+    <Card bodyClass="p-6" v-for="(item, i) in goals" :key="i">
       <!-- header -->
       <header class="flex justify-between items-end">
         <div class="flex space-x-4 items-center">
@@ -121,7 +121,7 @@ import { useRouter } from "vue-router";
 const store = useStore();
 const router = useRouter();
 
-const projects = computed(() => store.getters.projects);
+const goals = computed(() => store.getters.goals);
 
 const totalDate = (start, end) => {
   const startDate = new Date(start);
@@ -135,21 +135,21 @@ const actions = ref([
     name: "view",
     icon: "heroicons:eye",
     doit: () => {
-      router.push("/app/project-details");
+      router.push("/app/goal-details");
     },
   },
   {
     name: "Edit",
     icon: "heroicons-outline:pencil-alt",
     doit: (data) => {
-      store.dispatch("updateProject", data);
+      store.dispatch("updateGoal", data);
     },
   },
   {
     name: "Delete",
     icon: "heroicons-outline:trash",
     doit: (data) => {
-      store.dispatch("removeProject", data);
+      store.dispatch("removeGoal", data);
     },
   },
 ]);

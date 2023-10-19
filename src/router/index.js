@@ -97,6 +97,35 @@ const routes = [
         ],
       },
       {
+        path: "/departments",
+        name: "departments",
+        component: () => import("@/views/dashboard/departments/index.vue"),
+        children: [
+          {
+            path: "",
+            name: "departments",
+            component: () => import("@/components/Pages/Dashboard/Departments"),
+            meta: {
+              activeName: "departments",
+            },
+          },
+          {
+            path: "view/:id",
+            name: "department",
+
+            component: () =>
+              import("@/components/Pages/Dashboard/Departments/department.vue"),
+            meta: {
+              activeName: "departments",
+              groupParent: {
+                name: "Departments",
+                url: "/departments",
+              },
+            },
+          },
+        ],
+      },
+      {
         path: "/first-timers",
         name: "first timers",
         component: () => import("@/views/dashboard/first-timers/index.vue"),

@@ -3,6 +3,16 @@ import chat from "./app/chat";
 import email from "./app/email";
 import kanban from "./app/kanban";
 import project from "./app/project";
+import member from "./app/member";
+import firsttimer from "./app/first-timer";
+import event from "./app/event";
+import outreach from "./app/outreach";
+import goal from "./app/goal";
+import attendance from "./app/attendance";
+import department from "./app/department";
+import meeting from "./app/meeting";
+import notification from "./app/notification";
+import venue from "./app/venue";
 import apptodo from "./app/todo";
 export default createStore({
   state: {
@@ -36,6 +46,7 @@ export default createStore({
       state.isDark = !state.isDark;
       state.theme = state.theme === "dark" ? "light" : "dark";
       document.body.classList.toggle(state.theme);
+      document.body.classList.remove(state.theme === "dark" ? "light" : "dark");
       localStorage.setItem("theme", state.theme);
     },
 
@@ -81,5 +92,15 @@ export default createStore({
     kanban,
     email,
     chat,
+    member,
+    firsttimer,
+    event,
+    outreach,
+    goal,
+    attendance,
+    department,
+    meeting,
+    notification,
+    venue,
   },
 });

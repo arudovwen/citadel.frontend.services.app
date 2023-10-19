@@ -23,6 +23,11 @@ export const menuItems = [
     icon: "heroicons-outline:user-group",
     link: "members-management",
   },
+  {
+    title: "Departments",
+    icon: "mingcute:department-line",
+    link: "departments",
+  },
 
   {
     title: "Outreach",
