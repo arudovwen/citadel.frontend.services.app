@@ -28,10 +28,9 @@
           />
           <Button
             icon="heroicons-outline:plus-sm"
-            text="Add Member"
+            text="Add Venue"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
-            link="member-add"
           />
         </div>
       </div>
@@ -39,7 +38,7 @@
         <vue-good-table
           :columns="columns"
           styleClass=" vgt-table  centered "
-          :rows="advancedTable"
+          :rows="venueTable"
           :sort-options="{
             enabled: false,
           }"
@@ -83,6 +82,16 @@
             </span>
             <span v-if="props.column.field == 'order'" class="font-medium">
               {{ "#" + props.row.order }}
+            </span>
+            <span
+              v-if="props.column.field == 'accessories'"
+              class="text-slate-500 dark:text-slate-300 text"
+            >
+              <ol>
+                <li v-for="item in props.row.accessories" :key="item.id">
+                  {{ item.name }}
+                </li>
+              </ol>
             </span>
             <span
               v-if="props.column.field == 'date'"
@@ -172,8 +181,9 @@ import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
-import { advancedTable } from "@/constant/basic-tablle-data";
+import { venueTable } from "@/constant/basic-tablle-data";
 import window from "@/mixins/window";
+
 export default {
   mixins: [window],
   components: {
@@ -188,7 +198,7 @@ export default {
 
   data() {
     return {
-      advancedTable,
+      venueTable,
       current: 1,
       perpage: 10,
       pageRange: 5,
@@ -196,20 +206,20 @@ export default {
       isOpen: false,
       id: null,
       actions: [
-        {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.$router.push("/app/member-add");
-          },
-        },
-        {
-          name: "Delist",
-          icon: "ph:x-light",
-          doit: () => {
-            this.$router.push("/app/member-add");
-          },
-        },
+        // {
+        //   name: "Approve",
+        //   icon: "ph:check",
+        //   doit: () => {
+        //     this.$router.push("/app/member-add");
+        //   },
+        // },
+        // {
+        //   name: "Delist",
+        //   icon: "ph:x-light",
+        //   doit: () => {
+        //     this.$router.push("/app/member-add");
+        //   },
+        // },
         {
           name: "view",
           icon: "heroicons-outline:eye",
@@ -249,24 +259,22 @@ export default {
           label: "Id",
           field: "id",
         },
-
         {
-          label: "Customer",
-          field: "customer",
+          label: "Name",
+          field: "name",
         },
         {
-          label: "Date",
-          field: "date",
+          label: "Capacity",
+          field: "capacity",
         },
-
         {
-          label: "Quantity",
-          field: "quantity",
+          label: "Description",
+          field: "description",
         },
 
         {
-          label: "Amount",
-          field: "amount",
+          label: "Accessories",
+          field: "accessories",
         },
 
         {

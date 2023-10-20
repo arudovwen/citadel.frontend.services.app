@@ -245,55 +245,55 @@ const routes = [
       //     },
       //   ],
       // },
-      // {
-      //   path: "/venue-management",
-      //   name: "venue-management",
-      //   component: () => import("@/views/dashboard/venues/index.vue"),
-      //   children: [
-      //     {
-      //       path: "",
-      //       name: "venue-management",
-      //       component: () => import("@/components/Pages/Dashboard/Members"),
-      //       meta: {
-      //         activeName: "venue-management",
-      //       },
-      //     },
-      //   ],
-      // },
       {
         path: "/venue-management",
         name: "venue-management",
-        meta: {
-          activeName: "venue-management",
-        },
         component: VenuesIndex,
         children: [
           {
             path: "",
-            name: "venue-list",
+            name: "venue-management",
+            component: () => import("@/components/Pages/Dashboard/Venues"),
             meta: {
               activeName: "venue-management",
             },
-            component: () => import("@/views/dashboard/venues/VenueList.vue"),
-          },
-          {
-            path: "/add-venue",
-            meta: {
-              activeName: "venue-management",
-            },
-            name: "add venue",
-            component: () => import("@/views/dashboard/venues/AddVenue.vue"),
-          },
-          {
-            path: "/edit-venue/:id",
-            name: "edit venue",
-            meta: {
-              activeName: "venue-management",
-            },
-            component: () => import("@/views/dashboard/venues/AddVenue.vue"),
           },
         ],
       },
+      // {
+      //   path: "/venue-management",
+      //   name: "venue-management",
+      //   meta: {
+      //     activeName: "venue-management",
+      //   },
+      //   component: VenuesIndex,
+      //   children: [
+      //     {
+      //       path: "",
+      //       name: "venue-list",
+      //       meta: {
+      //         activeName: "venue-management",
+      //       },
+      //       component: () => import("@/views/dashboard/venues/VenueList.vue"),
+      //     },
+      //     {
+      //       path: "/add-venue",
+      //       meta: {
+      //         activeName: "venue-management",
+      //       },
+      //       name: "add venue",
+      //       component: () => import("@/views/dashboard/venues/AddVenue.vue"),
+      //     },
+      //     {
+      //       path: "/edit-venue/:id",
+      //       name: "edit venue",
+      //       meta: {
+      //         activeName: "venue-management",
+      //       },
+      //       component: () => import("@/views/dashboard/venues/AddVenue.vue"),
+      //     },
+      //   ],
+      // },
       {
         path: "/appointments",
         name: "appointments",
