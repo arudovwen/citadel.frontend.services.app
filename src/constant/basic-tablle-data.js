@@ -1714,23 +1714,6 @@ export const venueTable = [
   },
 ];
 
-// export const appointmentTable = [
-//   {
-//     id: 1,
-//     date: "1/01/2023",
-//     title: "Appointment",
-//     description: "Meeting with Daddy G.O",
-//     recipient: "Daddy G.O",
-//   },
-//   {
-//     id: 2,
-//     date: "1/01/2023",
-//     title: "Appointment",
-//     description: "Meeting with Daddy G.O",
-//     recipient: "Daddy G.O",
-//   },
-// ];
-
 export const appointmentTable = [
   {
     id: "1",

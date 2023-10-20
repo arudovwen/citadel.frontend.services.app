@@ -5,15 +5,15 @@
 </template>
 
 <script setup>
-import { provide } from "vue";
-import { useRouter } from "vue-router";
+// import { provide } from "vue";
+// import { useRouter } from "vue-router";
 
-const router = useRouter();
-const addVenue = () => {
-  router.push("/add-venue");
-};
+// const router = useRouter();
+// const addVenue = () => {
+//   router.push("/add-venue");
+// };
 
-provide("addVenue", addVenue);
+// provide("addVenue", addVenue);
 </script>
 
 <style lang="scss" scoped></style>

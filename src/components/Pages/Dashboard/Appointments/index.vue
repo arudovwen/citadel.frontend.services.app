@@ -1,13 +1,13 @@
 <template>
   <div>
-    <Member />
+    <Appointments />
   </div>
 </template>
 <script>
-import Member from "./module/member-table";
+import Appointments from "./module/appointments-table";
 export default {
   components: {
-    Member,
+    Appointments,
   },
 };
 </script>
