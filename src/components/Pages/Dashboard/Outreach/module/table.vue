@@ -28,10 +28,13 @@
           />
           <Button
             icon="heroicons-outline:plus-sm"
-            text="Add Member"
+            text="Create outreach"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
-            link="member-add"
+            @click="
+              type = 'add';
+              $refs.modalChange.openModal();
+            "
           />
         </div>
       </div>
@@ -118,23 +121,18 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="generateAction(item.name, props.row.id).doit"
+                      @click="item.doit(item)"
                       :class="`
                 
                   ${
-                    generateAction(item.name, props.row.id).name === 'delete'
+                    item.name === 'delete'
                       ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
                       : 'hover:bg-slate-900 hover:text-white'
                   }
                    w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
                     >
-                      <span class="text-base"
-                        ><Icon
-                          :icon="generateAction(item.name, props.row.id).icon"
-                      /></span>
-                      <span>{{
-                        generateAction(item.name, props.row.id).name
-                      }}</span>
+                      <span class="text-base"><Icon :icon="item.icon" /></span>
+                      <span>{{ item.name }}</span>
                     </div>
                   </MenuItem>
                 </template>
@@ -163,8 +161,62 @@
       </div>
     </Card>
   </div>
+
+  <Modal
+    title="Confirm action"
+    label="Small modal"
+    labelClass="btn-outline-dark"
+    ref="modal"
+    sizeClass="max-w-md"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure about this action?
+    </div>
+    <div v-if="type.toLowerCase() === 'decline'">
+      <textarea
+        resize="none"
+        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
+        rows="4"
+        placeholder="Provide reason"
+      ></textarea>
+    </div>
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm "
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Proceed"
+          btnClass="btn-dark btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+      </div>
+    </template>
+  </Modal>
+  <Modal
+    :title="
+      type === 'add'
+        ? 'Create outreach'
+        : type === 'edit'
+        ? 'Edit outreach information'
+        : 'View outreach'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-3xl"
+  >
+    <AddRecord v-if="type === 'add'" />
+    <EditRecord v-if="type === 'edit'" />
+    <ViewRecord v-if="type === 'view'" />
+  </Modal>
 </template>
 <script>
+import Modal from "@/components/Modal/Modal";
+import AddRecord from "../member-add.vue";
+import EditRecord from "../member-edit.vue";
+import ViewRecord from "../member-preview.vue";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -184,6 +236,10 @@ export default {
     Card,
     MenuItem,
     Button,
+    Modal,
+    AddRecord,
+    EditRecord,
+    ViewRecord,
   },
 
   data() {
@@ -195,39 +251,47 @@ export default {
       searchTerm: "",
       isOpen: false,
       id: null,
+      type: "",
       actions: [
         {
           name: "Approve",
           icon: "ph:check",
-          doit: () => {
-            this.$router.push("/app/member-add");
+          doit: (data) => {
+            this.type = data.name;
+            this.$refs.modal.openModal();
           },
         },
         {
           name: "Decline",
           icon: "ph:x-light",
-          doit: () => {
-            this.$router.push("/app/member-add");
+          doit: (data) => {
+            this.type = data.name;
+            this.$refs.modal.openModal();
           },
         },
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: () => {
-            this.$router.push("/members/member-preview");
+          doit: (data) => {
+            this.type = data.name;
+            this.$refs.modalChange.openModal();
           },
         },
         {
           name: "edit",
           icon: "heroicons:pencil-square",
-          doit: () => {
-            this.$router.push("/app/member-edit");
+          doit: (data) => {
+            this.type = data.name;
+            this.$refs.modalChange.openModal();
           },
         },
         {
           name: "delete",
           icon: "heroicons-outline:trash",
-          doit: () => {},
+          doit: (data) => {
+            this.type = data.name;
+            this.$refs.modal.openModal();
+          },
         },
       ],
       options: [

@@ -1,14 +1,8 @@
 <template>
   <div>
     <div class="lg:flex justify-between flex-wrap items-center">
-      <Breadcrumb />
+      <h1 class="text-slate-900 font-semibold text-lg">John Doe</h1>
       <div class="flex lg:justify-end items-center flex-wrap">
-        <button
-          class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-        >
-          <span class="text-lg"><Icon icon="heroicons:pencil-square" /></span>
-          <span>Edit</span>
-        </button>
         <button
           type="button"
           @click="print"
@@ -17,128 +11,100 @@
           <span class="text-lg"><Icon icon="heroicons:printer" /></span>
           <span>Print</span>
         </button>
-        <button
+        <!-- <button
           class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
         >
           <span class="text-lg"><Icon icon="heroicons:arrow-down-tray" /></span>
           <span>Download</span>
-        </button>
-        <button
-          class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-        >
-          <span class="text-lg transform -rotate-45"
-            ><Icon icon="heroicons:paper-airplane"
-          /></span>
-          <span>Send invoice</span>
-        </button>
+        </button> -->
       </div>
     </div>
-    <Card bodyClass="p-0">
-      <div
-        class="flex justify-between flex-wrap space-y-4 px-6 pt-6 bg-slate-50 dark:bg-slate-800 pb-6 rounded-t-md"
-      >
-        <div>
-          <img
-            src="@/assets/images/logo/logo.svg"
-            alt=""
-            v-if="!this.$store.state.isDark"
-          />
-          <img
-            src="@/assets/images/logo/logo-white.svg"
-            alt=""
-            v-if="this.$store.state.isDark"
-          />
+    <Card bodyClass="p-6">
+      <div class="max-w-[980px] mx-auto my-6 rounded-md overflow-x-auto">
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">First name</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
 
-          <div
-            class="text-slate-500 dark:text-slate-300 font-normal leading-5 mt-4 text-sm"
-          >
-            Dashcode <br />
-            House# 339, New DOHS, Mohakhali, <br />
-            Dhaka - 1206, Bangladesh
-            <div class="flex space-x-2 mt-2 leading-[1]">
-              <Icon icon="heroicons-outline:phone" />
-              <span>(252) 555-0126,(201) 555-0124</span>
-            </div>
-            <div class="mt-[6px] flex space-x-2 leading-[1]">
-              <Icon icon="heroicons-outline:mail" />
-              <span>Dashcode@example.com</span>
-            </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">Middle name</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
           </div>
-        </div>
-        <div>
-          <span
-            class="block text-slate-900 dark:text-slate-300 font-medium leading-5 text-xl"
-          >
-            Bill to:</span
-          >
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">Surname</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
 
-          <div
-            class="text-slate-500 dark:text-slate-300 font-normal leading-5 mt-4 text-sm"
-          >
-            Annette black-500 <br />
-            4140 Parker Rd. Allentown, New <br />Mexico 31134
-            <div class="flex space-x-2 mt-2 leading-[1]">
-              <Icon icon="heroicons-outline:phone" />
-              <span>(252) 555-0126,(201) 555-0124</span>
-            </div>
-            <div class="mt-[6px] flex space-x-2 leading-[1]">
-              <Icon icon="heroicons-outline:mail" />
-              <span>Dashcode@example.com</span>
-            </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">Date of birth</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+          <div class="col-span-1 md:col-span-2">
+            <h6 class="text-xs font-semibold text-slate-400">Email</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">Gender</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">Phone number</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+          <div class="col-span-1 md:col-span-2">
+            <h6 class="text-xs font-semibold text-slate-400">
+              Residential Address
+            </h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">
+              Nearest bus-stop
+            </h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">
+              Purpose of visit
+            </h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">Place of visit</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">Date of visit</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">City</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">State</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
+          </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">Country</h6>
+            <p class="text-base font-semibold text-slate-900">John Doe</p>
           </div>
         </div>
-        <div class="space-y-[2px]">
-          <span
-            class="block text-slate-900 dark:text-slate-300 font-medium leading-5 text-xl mb-4"
-          >
-            Member:</span
-          >
-          <h4
-            class="text-slate-600 font-medium dark:text-slate-300 text-xs uppercase"
-          >
-            Member number:
-          </h4>
-          <div
-            class="text-slate-500 dark:text-slate-300 font-normal leading-5 text-sm"
-          >
-            #89572935Kh
-          </div>
-          <h4
-            class="text-slate-600 font-medium dark:text-slate-300 text-xs uppercase"
-          >
-            date
-          </h4>
-          <div
-            class="text-slate-500 dark:text-slate-300 font-normal leading-5 text-sm"
-          >
-            09 December 2021
-          </div>
-        </div>
-      </div>
-      <div
-        class="max-w-[980px] mx-auto shadow-base dark:shadow-none my-8 rounded-md overflow-x-auto"
-      >
-        <TotalTable />
-      </div>
-      <div
-        class="py-10 text-center md:text-2xl text-xl font-normal text-slate-600 dark:text-slate-300"
-      >
-        Thank you for your purchase!
       </div>
     </Card>
   </div>
 </template>
 <script>
 import Card from "@/components/Card";
-import Breadcrumb from "@/components/Breadcrumbs";
 import Icon from "@/components/Icon";
-import TotalTable from "./module/TotalTable.vue";
+
 export default {
   components: {
     Card,
     Icon,
-    TotalTable,
-    Breadcrumb,
   },
   methods: {
     print() {

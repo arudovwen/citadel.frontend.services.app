@@ -1,93 +1,83 @@
 <template>
-  <div>
-    <Card title="Edit invoice">
-      <h4 class="text-slate-900 dark:text-white text-xl mb-4">#89572935Kh</h4>
-      <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
-        <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
-          <div
-            class="lg:col-span-2 col-span-1 text-slate-600 dark:text-slate-300 text-xs font-medium"
-          >
-            Recipient info-500
-          </div>
-          <FormGroup label="Issued date" name="d1">
-            <flat-pickr
-              v-model="dateDefault"
-              class="form-control"
-              id="d1"
-              placeholder="yyyy, dd M"
-            />
-          </FormGroup>
-          <Textinput label="Name" type="text" placeholder="Add your name" />
-          <Textinput label="Phone" type="text" placeholder="Add your phone" />
-          <Textinput label="Email" type="email" placeholder="Add your email" />
-          <div class="lg:col-span-2 col-span-1">
-            <Textarea
-              label="Address"
-              type="email"
-              placeholder="address"
-              rows="2"
-            />
-          </div>
-        </div>
-        <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
-          <div
-            class="lg:col-span-2 col-span-1 text-slate-600 dark:text-slate-300 text-xs font-medium"
-          >
-            Owner info-500
-          </div>
+  <form @submit.prevent="onSubmit">
+    <Card title="">
+      <div class="grid gap-5">
+        <FormGroup
+          label="Date of outreach"
+          name="dateOfOutreach"
+          :error="dateOfOutreachError"
+        >
+          <flat-pickr
+            v-model="dateOfOutreach"
+            class="form-control"
+            id="d1"
+            placeholder="yyyy, dd M"
+          />
+        </FormGroup>
 
-          <Textinput label="Name" type="text" placeholder="Add your name" />
-          <Textinput label="Phone" type="text" placeholder="Add your phone" />
-          <div class="lg:col-span-2 col-span-1">
-            <Textinput
-              label="Email"
-              type="email"
-              placeholder="Add your email"
-            />
-          </div>
-
-          <div class="lg:col-span-2 col-span-1">
-            <Textarea
-              label="Address"
-              type="email"
-              placeholder="address"
-              rows="2"
-            />
-          </div>
+        <div class="lg:col-span-2 col-span-1">
+          <Textinput
+            label="Location"
+            v-model="location"
+            :error="locationError"
+            placeholder="Provide location for outreach"
+          />
         </div>
+
+        <Textarea
+          label="Description"
+          type="text"
+          rows="4"
+          resize="none"
+          v-model="description"
+          :error="descriptionError"
+          placeholder="Provide a description"
+          class=""
+        />
       </div>
-      <div class="my-6">
-        <Repeater />
-      </div>
-      <Textarea
-        label="Additional note"
-        type="text"
-        rows="2"
-        placeholder="Note"
-        class="lg:w-1/2"
-      />
-      <div class="text-right space-x-3">
-        <Button text="Save" btnClass="btn-dark" />
+
+      <div class="text-right space-x-3 mt-8">
+        <Button type="submit" text="Update record" btnClass="btn-dark" />
       </div>
     </Card>
-  </div>
+  </form>
 </template>
-<script>
+<script setup>
+import { reactive } from "vue";
+import { useField, useForm } from "vee-validate";
+import * as yup from "yup";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
-import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
-import Repeater from "./module/repeater";
-export default {
-  components: {
-    Button,
-    Card,
-    Textinput,
-    FormGroup,
-    Textarea,
-    Repeater,
-  },
-};
+import Textarea from "@/components/Textarea";
+
+const formData = reactive({
+  dateOfOutreach: "",
+  description: "",
+  location: "",
+});
+const formDataSchema = yup.object().shape({
+  dateOfOutreach: yup.date().required("Date of Birth is required"),
+
+  location: yup.string().required("Residential Address is required"),
+  description: yup.string().required("Nearest Bus Stop is required"),
+});
+
+const { handleSubmit } = useForm({
+  validationSchema: formDataSchema,
+  initialValues: formData,
+});
+
+const { value: location, errorMessage: locationError } = useField("location");
+const { value: description, errorMessage: descriptionError } =
+  useField("description");
+
+const { value: dateOfOutreach, errorMessage: dateOfOutreachError } =
+  useField("dateOfOutreach");
+
+const onSubmit = handleSubmit((values) => {
+  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
+});
 </script>
 <style lang=""></style>
