@@ -31,6 +31,12 @@
             text="Add Venue"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
+            @click="
+              () => {
+                type = 'add';
+                $refs.modalChange.openModal();
+              }
+            "
           />
         </div>
       </div>
@@ -259,6 +265,7 @@ export default {
       searchTerm: "",
       isOpen: false,
       id: null,
+      type: "",
       actions: [
         {
           name: "view",
