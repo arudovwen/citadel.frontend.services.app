@@ -2,10 +2,12 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex md:mb-0 mb-3 border border-gray-200 rounded text-sm">
+        <div
+          class="flex md:mb-0 mb-3 border border-gray-200 rounded-[6px] text-sm overflow-hidden"
+        >
           <span
             class="px-4 py-2 border-r border-gray-200 last:border-none capitalize min-w-[90px] text-center"
-            :class="activeFilter === n ? 'bg-gray-100' : ''"
+            :class="activeFilter === n ? 'bg-primary-500 text-white' : ''"
             @click="activeFilter = n"
             v-for="n in filters"
             :key="n"

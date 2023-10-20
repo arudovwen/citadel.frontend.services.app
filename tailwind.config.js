@@ -28,7 +28,7 @@ module.exports = {
     },
     extend: {
       colors: {
-        "vtd-primary": colors.sky,
+        "vtd-primary": colors.slate,
         "vtd-secondary": colors.gray,
         primary: {
           50: "#FFF6E0",

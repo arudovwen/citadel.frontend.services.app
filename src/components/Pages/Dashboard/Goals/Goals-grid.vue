@@ -3,18 +3,9 @@
     <Card bodyClass="p-6" v-for="(item, i) in goals" :key="i">
       <!-- header -->
       <header class="flex justify-between items-end">
-        <div class="flex space-x-4 items-center">
-          <div class="flex-none">
-            <div
-              class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal capitalize"
-            >
-              {{ item.name.charAt(0) + item.name.charAt(1) }}
-            </div>
-          </div>
+        <div class="flex space-x-4 items-center" @click="openPreview">
           <div class="font-medium text-base leading-6">
-            <div
-              class="dark:text-slate-200 text-slate-900 max-w-[160px] truncate"
-            >
+            <div class="dark:text-slate-200 text-slate-900">
               {{ item.name }}
             </div>
           </div>
@@ -42,35 +33,36 @@
           </Dropdown>
         </div>
       </header>
-      <!-- description -->
-      <div class="text-slate-600 dark:text-slate-400 text-sm pt-4 pb-8">
-        {{ item.des }}
-      </div>
-      <!--  date -->
-      <div class="flex space-x-4">
-        <!-- start date -->
-        <div>
-          <span class="block date-label">Start date</span>
-          <span class="block date-text">{{ item.startDate }}</span>
+      <div @click="openPreview">
+        <!-- description -->
+        <div class="text-slate-600 dark:text-slate-400 text-sm pt-4 pb-8">
+          {{ item.des }}
         </div>
-        <!-- end date -->
-        <div>
-          <span class="block date-label">Start date</span>
-          <span class="block date-text">{{ item.endDate }}</span>
+        <!--  date -->
+        <div class="flex space-x-4">
+          <!-- start date -->
+          <div>
+            <span class="block date-label">Start date</span>
+            <span class="block date-text">{{ item.startDate }}</span>
+          </div>
+          <!-- end date -->
+          <div>
+            <span class="block date-label">Achievement date</span>
+            <span class="block date-text">{{ item.endDate }}</span>
+          </div>
         </div>
-      </div>
-      <!-- progress -->
-      <div
-        class="text-right text-xs text-slate-600 dark:text-slate-300 mb-1 font-medium"
-      >
-        {{ item.progress }}%
-      </div>
-      <ProgressBar :value="item.progress" barColor="bg-primary-500" />
-      <!-- assign and time count -->
-      <div class="grid grid-cols-2 gap-4 mt-6">
-        <!-- assign -->
-        <div>
-          <!-- <div
+        <!-- progress -->
+        <div
+          class="text-right text-xs text-slate-600 dark:text-slate-300 mb-1 font-medium"
+        >
+          {{ item.progress }}%
+        </div>
+        <ProgressBar :value="item.progress" barColor="bg-primary-500" />
+        <!-- assign and time count -->
+        <div class="grid grid-cols-2 gap-4 mt-6">
+          <!-- assign -->
+          <div>
+            <!-- <div
             class="text-slate-400 dark:text-slate-400 text-sm font-normal mb-3"
           >
             Assigned to
@@ -93,23 +85,61 @@
               +2
             </div>
           </div> -->
-        </div>
+          </div>
 
-        <!-- total date -->
-        <div class="text-right">
-          <span
-            class="inline-flex items-center space-x-1 bg-danger-500 bg-opacity-[0.16] text-danger-500 text-xs font-normal px-2 py-1 rounded-full"
-          >
-            <span> <Icon icon="heroicons-outline:clock" /></span>
-            <span>{{ totalDate(item.startDate, item.endDate) }}</span>
-            <span>days left</span></span
-          >
+          <!-- total date -->
+          <div class="text-right">
+            <span
+              class="inline-flex items-center space-x-1 bg-danger-500 bg-opacity-[0.16] text-danger-500 text-xs font-normal px-2 py-1 rounded-full"
+            >
+              <span> <Icon icon="heroicons-outline:clock" /></span>
+              <span>{{ totalDate(item.startDate, item.endDate) }}</span>
+              <span>days left</span></span
+            >
+          </div>
         </div>
       </div>
     </Card>
   </div>
+  <Modal
+    title="Confirm action"
+    label="Small modal"
+    labelClass="btn-outline-dark"
+    ref="modal"
+    sizeClass="max-w-md"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure about this action?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm "
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Proceed"
+          btnClass="btn-dark btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+      </div>
+    </template>
+  </Modal>
+  <Modal
+    title="Goal Information"
+    labelClass="btn-outline-dark"
+    ref="goalPreview"
+    sizeClass="max-w-3xl"
+  >
+    <ViewDetail />
+  </Modal>
 </template>
 <script setup>
+import Button from "@/components/Button";
+import Modal from "@/components/Modal/Modal";
+import ViewDetail from "./goal-details";
 import Card from "@/components/Card";
 import Dropdown from "@/components/Dropdown";
 import Icon from "@/components/Icon";
@@ -117,12 +147,11 @@ import ProgressBar from "@/components/ProgressBar";
 import { MenuItem } from "@headlessui/vue";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
 const store = useStore();
-const router = useRouter();
 
 const goals = computed(() => store.getters.goals);
-
+const modal = ref(null);
+const goalPreview = ref(null);
 const totalDate = (start, end) => {
   const startDate = new Date(start);
   const endDate = new Date(end);
@@ -131,13 +160,6 @@ const totalDate = (start, end) => {
 };
 
 const actions = ref([
-  {
-    name: "view",
-    icon: "heroicons:eye",
-    doit: () => {
-      router.push("/app/goal-details");
-    },
-  },
   {
     name: "Edit",
     icon: "heroicons-outline:pencil-alt",
@@ -148,11 +170,14 @@ const actions = ref([
   {
     name: "Delete",
     icon: "heroicons-outline:trash",
-    doit: (data) => {
-      store.dispatch("removeGoal", data);
+    doit: () => {
+      modal.value.openModal();
     },
   },
 ]);
+function openPreview() {
+  goalPreview.value.openModal();
+}
 </script>
 <style lang="scss" scoped>
 .date-label {

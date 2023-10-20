@@ -5,6 +5,7 @@ export default {
   state: {
     addmodal: false,
     isLoading: null,
+    deletemodal: false,
     // for edit
     editModal: false,
     editName: "",
@@ -120,7 +121,7 @@ export default {
           state.editEndDate = data.endDate;
           state.editcta = data.category;
           state.editdesc = data.des;
-          state.editModal = !state.editModal;
+
           // set data to data
           item.name = data.name;
           item.des = data.des;
@@ -131,10 +132,17 @@ export default {
           item.category = data.category;
         }
       });
+      state.editModal = true;
     },
     // openGoal
     openGoal(state) {
       state.addmodal = true;
+    },
+    openDeleteModal(state) {
+      state.deletemodal = true;
+    },
+    closeDeleteModal(state) {
+      state.deletemodal = false;
     },
     // closeModal
     closeModal(state) {
@@ -168,6 +176,12 @@ export default {
     // closeEditModal
     closeEditModal({ commit }) {
       commit("closeEditModal");
+    },
+    openDeleteModal({ commit }) {
+      commit("openDeleteModal");
+    },
+    closeDeleteModal({ commit }) {
+      commit("closeDeleteModal");
     },
   },
 };

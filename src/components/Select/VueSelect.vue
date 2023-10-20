@@ -23,6 +23,8 @@
           :validate="validate"
           :multiple="multiple"
           :options="options"
+          :placeholder="placeholder"
+          v-model="selectedValue"
         >
         </vSelect>
       </div>
@@ -73,6 +75,11 @@ export default {
   components: {
     vSelect,
     Icon,
+  },
+  data() {
+    return {
+      selectedValue: "",
+    };
   },
   props: {
     placeholder: {
@@ -132,6 +139,11 @@ export default {
     },
     options: {
       type: Array,
+    },
+  },
+  watch: {
+    selectedValue(newValue) {
+      this.$emit("update:modelValue", newValue);
     },
   },
 };
