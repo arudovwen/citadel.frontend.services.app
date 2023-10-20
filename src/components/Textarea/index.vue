@@ -1,6 +1,6 @@
 <template>
   <div
-    class="formGroup relative"
+    class="fromGroup relative"
     :class="`${error ? 'has-error' : ''}  ${horizontal ? 'flex' : ''} ${
       validate ? 'is-valid' : ''
     } `"
@@ -18,7 +18,7 @@
       <textarea
         :name="name"
         :placeholder="placeholder"
-        :class="`${classInput} input-control block w-full focus:outline-none pt-3 `"
+        :class="`${classInput} input-control block w-full focus:outline-none pt-3 resize-none`"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         :error="error"
