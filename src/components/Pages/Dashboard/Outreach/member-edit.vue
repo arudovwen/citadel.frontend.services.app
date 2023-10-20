@@ -2,6 +2,14 @@
   <form @submit.prevent="onSubmit">
     <Card title="">
       <div class="grid gap-5">
+        <div class="">
+          <Textinput
+            label="Name"
+            v-model="name"
+            :error="nameError"
+            placeholder="Provide name for outreach"
+          />
+        </div>
         <FormGroup
           label="Date of outreach"
           name="dateOfOutreach"
@@ -15,7 +23,7 @@
           />
         </FormGroup>
 
-        <div class="lg:col-span-2 col-span-1">
+        <div class="">
           <Textinput
             label="Location"
             v-model="location"
@@ -27,17 +35,15 @@
         <Textarea
           label="Description"
           type="text"
-          rows="4"
-          resize="none"
+          :rows="4"
           v-model="description"
           :error="descriptionError"
           placeholder="Provide a description"
-          class=""
         />
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Update record" btnClass="btn-dark" />
+        <Button type="submit" text="Update info" btnClass="btn-dark" />
       </div>
     </Card>
   </form>
@@ -56,12 +62,15 @@ const formData = reactive({
   dateOfOutreach: "",
   description: "",
   location: "",
+  name: "",
 });
 const formDataSchema = yup.object().shape({
-  dateOfOutreach: yup.date().required("Date of Birth is required"),
+  name: yup.date().required("Please provie a name"),
 
-  location: yup.string().required("Residential Address is required"),
-  description: yup.string().required("Nearest Bus Stop is required"),
+  dateOfOutreach: yup.date().required("Date is required"),
+
+  location: yup.string().required("Location is required"),
+  description: yup.string().required("A short description is required"),
 });
 
 const { handleSubmit } = useForm({
@@ -69,6 +78,7 @@ const { handleSubmit } = useForm({
   initialValues: formData,
 });
 
+const { value: name, errorMessage: nameError } = useField("name");
 const { value: location, errorMessage: locationError } = useField("location");
 const { value: description, errorMessage: descriptionError } =
   useField("description");

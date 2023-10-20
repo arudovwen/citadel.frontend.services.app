@@ -21,9 +21,11 @@
             iconClass="text-lg"
           />
           <Button
+            @click="handleModal('iyuyf')"
             icon="heroicons-outline:filter"
             text="Filter"
-            btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+            btnClass=" btn-outline-secondary text-slate-600
+          dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
             iconClass="text-lg"
           />
           <Button
@@ -201,7 +203,11 @@
         ? 'Create outreach'
         : type === 'edit'
         ? 'Edit outreach information'
-        : 'View outreach'
+        : type === 'reportadd'
+        ? 'Add Report'
+        : type === 'reportedit'
+        ? 'Edit Report'
+        : 'View outreach information'
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
@@ -210,6 +216,8 @@
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />
     <ViewRecord v-if="type === 'view'" />
+    <AddReport v-if="type === 'reportadd'" />
+    <EditReport v-if="type === 'reportedit'" />
   </Modal>
 </template>
 <script>
@@ -217,6 +225,8 @@ import Modal from "@/components/Modal/Modal";
 import AddRecord from "../member-add.vue";
 import EditRecord from "../member-edit.vue";
 import ViewRecord from "../member-preview.vue";
+import AddReport from "../add-report.vue";
+import EditReport from "../edit-report.vue";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -240,8 +250,14 @@ export default {
     AddRecord,
     EditRecord,
     ViewRecord,
+    AddReport,
+    EditReport,
   },
-
+  provide() {
+    return {
+      handleModal: this.handleModal,
+    };
+  },
   data() {
     return {
       advancedTable,
@@ -251,24 +267,9 @@ export default {
       searchTerm: "",
       isOpen: false,
       id: null,
+      confirmType: "",
       type: "",
       actions: [
-        {
-          name: "Approve",
-          icon: "ph:check",
-          doit: (data) => {
-            this.type = data.name;
-            this.$refs.modal.openModal();
-          },
-        },
-        {
-          name: "Decline",
-          icon: "ph:x-light",
-          doit: (data) => {
-            this.type = data.name;
-            this.$refs.modal.openModal();
-          },
-        },
         {
           name: "view",
           icon: "heroicons-outline:eye",
@@ -318,7 +319,10 @@ export default {
           label: "Date",
           field: "date",
         },
-
+        {
+          label: "Name",
+          field: "date",
+        },
         {
           label: "Location",
           field: "quantity",
@@ -334,52 +338,29 @@ export default {
           field: "status",
         },
         {
+          label: "Report Added",
+          field: "status",
+        },
+        {
           label: "Action",
           field: "action",
         },
       ],
     };
   },
-  methods: {
-    generateAction(name, id) {
-      this.id = id;
-      const actions = {
-        Approve: {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.$router.push("/members-management/add");
-          },
-        },
-        Delist: {
-          name: "Delist",
-          icon: "ph:x-light",
-          doit: () => {
-            this.$router.push("/members-management/add");
-          },
-        },
-        view: {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: () => {
-            this.$router.push("/members-management/preview/" + id);
-          },
-        },
-        edit: {
-          name: "edit",
-          icon: "heroicons:pencil-square",
-          doit: () => {
-            this.$router.push("/members-management/edit/" + id);
-          },
-        },
-        delete: {
-          name: "delete",
-          icon: "heroicons-outline:trash",
-          doit: () => {},
-        },
-      };
 
-      return actions[name] || null;
+  methods: {
+    handleModal(type) {
+      this.$refs.modal.closeModal();
+      // this.$refs.modalChange.closeModal();
+      if (type === "decline" || type === "approve") {
+        this.confirmType = type;
+        this.$refs.modal.openModal();
+      } else {
+        this.type = type;
+
+        this.$refs.modalChange.openModal();
+      }
     },
   },
 };

@@ -21,7 +21,7 @@
     </div>
     <Card bodyClass="p-6">
       <div class="max-w-[980px] mx-auto my-6 rounded-md overflow-x-auto">
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h6 class="text-xs font-semibold text-slate-400">First name</h6>
             <p class="text-base font-semibold text-slate-900">John Doe</p>

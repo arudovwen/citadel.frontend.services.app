@@ -284,6 +284,10 @@ export default {
           label: "Name",
           field: "name",
         },
+        {
+          label: "Department",
+          field: "department",
+        },
 
         {
           label: "Gender",
