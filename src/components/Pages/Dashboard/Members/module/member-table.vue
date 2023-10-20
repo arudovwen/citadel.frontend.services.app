@@ -316,22 +316,6 @@ export default {
       this.id = id;
 
       const actions = {
-        Approve: {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        Delist: {
-          name: "Delist",
-          icon: "ph:x-light",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
         view: {
           name: "view",
           icon: "heroicons-outline:eye",

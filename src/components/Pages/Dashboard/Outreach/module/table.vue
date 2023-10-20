@@ -204,7 +204,7 @@ export default {
           },
         },
         {
-          name: "Delist",
+          name: "Decline",
           icon: "ph:x-light",
           doit: () => {
             this.$router.push("/app/member-add");
@@ -251,21 +251,17 @@ export default {
         },
 
         {
-          label: "Customer",
-          field: "customer",
-        },
-        {
           label: "Date",
           field: "date",
         },
 
         {
-          label: "Quantity",
+          label: "Location",
           field: "quantity",
         },
 
         {
-          label: "Amount",
+          label: "Description",
           field: "amount",
         },
 
