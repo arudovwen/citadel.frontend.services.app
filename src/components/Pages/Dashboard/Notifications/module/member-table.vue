@@ -31,7 +31,7 @@
             text="Add Member"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
-            link="member-add"
+          
           />
         </div>
       </div>

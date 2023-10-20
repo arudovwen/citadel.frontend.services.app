@@ -40,7 +40,6 @@
             text="Add Member"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
-            link="member-add"
           />
         </div>
       </div>
@@ -316,22 +315,6 @@ export default {
       this.id = id;
 
       const actions = {
-        Approve: {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        Delist: {
-          name: "Delist",
-          icon: "ph:x-light",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
         view: {
           name: "view",
           icon: "heroicons-outline:eye",
