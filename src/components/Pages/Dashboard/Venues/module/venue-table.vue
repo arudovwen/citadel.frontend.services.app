@@ -103,20 +103,24 @@
               <span
                 class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
                 :class="`${
-                  props.row.status === 'active'
+                  props.row.status === 'Available'
                     ? 'text-success-500 bg-success-500'
                     : ''
                 } 
-            ${
-              props.row.status === 'inactive'
-                ? 'text-warning-500 bg-warning-500'
-                : ''
-            }
-            ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
-            
-             `"
+              ${
+                props.row.status === 'due'
+                  ? 'text-warning-500 bg-warning-500'
+                  : ''
+              }
+              ${
+                props.row.status === 'Booked'
+                  ? 'text-danger-500 bg-danger-500'
+                  : ''
+              }
+              
+               `"
               >
-                {{ props.row.status }}
+                <span>{{ props.row.status }}</span>
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
@@ -172,6 +176,48 @@
       </div>
     </Card>
   </div>
+  <Modal
+    title="Confirm this action"
+    label="Small modal"
+    labelClass="btn-outline-dark"
+    ref="modal"
+    sizeClass="max-w-md"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure about this action?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Proceed"
+          btnClass="btn-dark btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+      </div>
+    </template>
+  </Modal>
+  <Modal
+    :title="
+      type === 'add'
+        ? 'Add Venue'
+        : type === 'edit'
+        ? 'Edit Venue'
+        : 'View Venue'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-3xl"
+  >
+    <AddVenue v-if="type === 'add'" />
+    <EditVenue v-if="type === 'edit'" />
+    <ViewVenue v-if="type === 'view'" />
+  </Modal>
 </template>
 <script>
 import Dropdown from "@/components/Dropdown";
@@ -183,10 +229,18 @@ import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
 import { venueTable } from "@/constant/basic-tablle-data";
 import window from "@/mixins/window";
+import Modal from "@/components/Modal/Modal";
+import AddVenue from "../venue-add.vue";
+import EditVenue from "../venue-edit.vue";
+import ViewVenue from "../venue-preview.vue";
 
 export default {
   mixins: [window],
   components: {
+    AddVenue,
+    EditVenue,
+    ViewVenue,
+    Modal,
     Pagination,
     InputGroup,
     Dropdown,
@@ -206,38 +260,29 @@ export default {
       isOpen: false,
       id: null,
       actions: [
-        // {
-        //   name: "Approve",
-        //   icon: "ph:check",
-        //   doit: () => {
-        //     this.$router.push("/app/member-add");
-        //   },
-        // },
-        // {
-        //   name: "Delist",
-        //   icon: "ph:x-light",
-        //   doit: () => {
-        //     this.$router.push("/app/member-add");
-        //   },
-        // },
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: () => {
-            this.$router.push("/members/member-preview");
+          doit: (name) => {
+            this.type = name;
+            this.$refs.modalChange.openModal();
           },
         },
         {
           name: "edit",
           icon: "heroicons:pencil-square",
-          doit: () => {
-            this.$router.push("/app/member-edit");
+          doit: (name) => {
+            this.type = name;
+            this.$refs.modalChange.openModal();
           },
         },
         {
           name: "delete",
           icon: "heroicons-outline:trash",
-          doit: () => {},
+          doit: (name) => {
+            this.type = name;
+            this.$refs.modal.openModal();
+          },
         },
       ],
       options: [
@@ -292,38 +337,43 @@ export default {
     generateAction(name, id) {
       this.id = id;
       const actions = {
-        Approve: {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.$router.push("/members-management/add");
-          },
-        },
-        Delist: {
-          name: "Delist",
-          icon: "ph:x-light",
-          doit: () => {
-            this.$router.push("/members-management/add");
-          },
-        },
+        // Approve: {
+        //   name: "Approve",
+        //   icon: "ph:check",
+        //   doit: () => {
+        //     this.$router.push("/members-management/add");
+        //   },
+        // },
+        // Delist: {
+        //   name: "Delist",
+        //   icon: "ph:x-light",
+        //   doit: () => {
+        //     this.$router.push("/members-management/add");
+        //   },
+        // },
         view: {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: () => {
-            this.$router.push("/members-management/preview/" + id);
+          doit: (name) => {
+            this.type = name;
+            this.$refs.modalChange.openModal();
           },
         },
         edit: {
           name: "edit",
           icon: "heroicons:pencil-square",
-          doit: () => {
-            this.$router.push("/members-management/edit/" + id);
+          doit: (name) => {
+            this.type = name;
+            this.$refs.modalChange.openModal();
           },
         },
         delete: {
           name: "delete",
           icon: "heroicons-outline:trash",
-          doit: () => {},
+          doit: (name) => {
+            this.type = name;
+            this.$refs.modal.openModal();
+          },
         },
       };
 
