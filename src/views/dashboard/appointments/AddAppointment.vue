@@ -21,7 +21,7 @@
           classInput="h-[40px]"
         />
 
-        <FormGroup label="Date od Appointment" name="d1">
+        <FormGroup label="Date of Appointment" name="d1">
           <flat-pickr
             v-model="DOA"
             class="form-control"
