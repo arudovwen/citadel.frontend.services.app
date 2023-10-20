@@ -1,228 +1,154 @@
 <template>
-  <form @submit.prevent="onSubmit">
-    <Card title="">
-      <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
+  <Card>
+    <form @submit.prevent="onSubmit" class="space-y-4 max-w-[700px]">
+      <div class="grid grid-cols-1 gap-4">
         <Textinput
-          label="First Name"
+          label="Name"
           type="text"
-          v-model="firstname"
-          :error="firstnameError"
-          placeholder="Add your first name"
-        />
-        <Textinput
-          label="Middle name"
-          type="text"
-          v-model="middlename"
-          :error="middlenameError"
-          placeholder="Add your middle name"
+          placeholder="Type your name"
+          name="name"
+          v-model="name"
+          :error="nameError"
+          classInput="h-[40px]"
         />
         <Textinput
-          label="Surname"
+          label="Location"
           type="text"
-          v-model="surname"
-          :error="surnameError"
-          placeholder="Add your surnanme"
+          placeholder="Type your location"
+          name="location"
+          v-model="location"
+          :error="locationError"
+          classInput="h-[40px]"
         />
-        <Select
-          label="Gender"
-          :options="genderOptions"
-          v-model="gender"
-          :error="genderError"
-        />
-        <FormGroup
-          label="Date of birth"
-          name="dateOfBirth"
-          :error="dateOfBirthError"
-        >
-          <flat-pickr
-            v-model="dateOfBirth"
-            class="form-control"
-            id="d1"
-            placeholder="yyyy, dd M"
-          />
-        </FormGroup>
         <Textinput
-          label="Phone"
-          type="text"
-          v-model="phoneNumber"
-          :error="phoneNumberError"
-          placeholder="Add your phone"
+          label="Capacity"
+          type="number"
+          placeholder="Type your capacity"
+          name="capacity"
+          v-model="capacity"
+          :error="capacityError"
+          classInput="h-[40px]"
         />
-        <div class="lg:col-span-2 col-span-1">
-          <Textinput
-            label="Email"
-            type="email"
-            v-model="emailAddress"
-            :error="emailAddressError"
-            placeholder="Add your email"
-          />
-        </div>
-        <FormGroup
-          label="Date of visit"
-          name="dateOfVisit"
-          :error="dateOfVisitError"
-        >
-          <flat-pickr
-            v-model="dateOfVisit"
-            class="form-control"
-            id="d1"
-            placeholder="yyyy, dd M"
-          />
-        </FormGroup>
+        <div class="">
+          <div class="gap-4 flex items-end justify-between">
+            <div class="flex-1">
+              <Textinput
+                label="Accessories/Equipment"
+                type="text"
+                placeholder="Type your accessories"
+                name="emil"
+                v-model="accessories"
+                :error="accessoriesError"
+                classInput="h-[40px] w-full"
+              />
+            </div>
 
-        <Select
-          label="Purpose of visit"
-          :options="purposeOptions"
-          v-model="purposeOfVisit"
-          :error="purposeOfVisitError"
-        />
-        <Select
-          label="Place of visit"
-          :options="placeOptions"
-          v-model="placeOfVisit"
-          :error="placeOfVisitError"
-        />
-        <div class="lg:col-span-2 col-span-1">
-          <Textinput
-            label="Residential Address"
-            v-model="residentialAddress"
-            :error="residentialAddressError"
-            placeholder="Enter our residential address"
-          />
+            <div
+              @click="pushAccessory(accessories)"
+              class="rounded px-4 btn-primary btn-sm h-[40px] flex items-center justify-center gap-2"
+            >
+              <Icon icon="heroicons-outline:plus" />
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <ol>
+              <li
+                class="text-sm mb-2"
+                v-for="(item, idx) in listOfAccessories"
+                :key="item"
+              >
+                <div class="flex items-center justify-between gap-4">
+                  <span> {{ item }}</span>
+                  <div
+                    @click="removeAccessory(idx)"
+                    class="inline-flex items-center justify-center h-10 w-10 bg-danger-500 text-lg border rounded border-danger-500 text-white"
+                  >
+                    <Icon icon="heroicons-outline:trash" />
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </div>
         </div>
 
-        <Textinput
-          label="Nearest Busstop"
-          type="ext"
-          v-model="nearestBusStop"
-          :error="nearestBusStopError"
-          placeholder="Add your nearest bus-stop"
-        />
-
-        <Textinput
-          label="City"
-          v-model="city"
-          :error="cityError"
+        <Textarea
+          label="Description"
           type="text"
-          placeholder="Enter your city"
-        />
-
-        <Textinput
-          label="State"
-          v-model="state"
-          :error="stateError"
-          type="text"
-          placeholder="Enter your state"
-        />
-
-        <Textinput
-          label="Country"
-          v-model="country"
-          :error="countryError"
-          type="text"
-          placeholder="Enter your country"
+          placeholder="Type your description"
+          name="description"
+          v-model="description"
+          :error="descriptionError"
+          classInput="h-[40px]"
         />
       </div>
 
-      <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Save record" btnClass="btn-dark" />
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
+        <!-- <div class="hidden sm:block"></div> -->
+        <button type="submit" class="btn btn-primary block w-full text-center">
+          Save Changes
+        </button>
       </div>
-    </Card>
-  </form>
+    </form>
+  </Card>
 </template>
+
 <script setup>
-import { reactive } from "vue";
+import Icon from "@/components/Icon";
+
+import Card from "@/components/Card";
+import Textinput from "@/components/Textinput";
+import Textarea from "@/components/Textarea";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import Button from "@/components/Button";
-import Card from "@/components/Card";
-import FormGroup from "@/components/FormGroup";
-import Textinput from "@/components/Textinput";
-import Select from "@/components/Select";
+import { ref } from "vue";
+// Define a validation schema
+const schema = yup.object({
+  name: yup.string().required("Name is required"),
+  location: yup.string().required("Location is required"),
+  capacity: yup.number(),
+  accessories: yup.string(),
+  description: yup.string(),
+});
 
-const formData = reactive({
-  dateOfVisit: "",
-  surname: "",
-  firstname: "",
-  middlename: "",
-  gender: "",
-  dateOfBirth: "",
-  phoneNumber: "",
-  emailAddress: "",
-  residentialAddress: "",
-  nearestBusStop: "",
-  city: "",
-  state: "",
-  country: "",
-  purposeOfVisit: "",
-  placeOfVisit: "",
-});
-const formDataSchema = yup.object().shape({
-  dateOfVisit: yup.date().required("Date of Visit is required"),
-  surname: yup.string().required("Surname is required"),
-  firstname: yup.string().required("Firstname is required"),
-  middlename: yup.string().required("Middlename is required"),
-  gender: yup.string().required("Gender is required"),
-  dateOfBirth: yup.date().required("Date of Birth is required"),
-  phoneNumber: yup.string().required("Phone Number is required"),
-  emailAddress: yup
-    .string()
-    .email("Invalid email format")
-    .required("Email Address is required"),
-  residentialAddress: yup.string().required("Residential Address is required"),
-  nearestBusStop: yup.string().required("Nearest Bus Stop is required"),
-  city: yup.string().required("City is required"),
-  state: yup.string().required("State is required"),
-  country: yup.string().required("Country is required"),
-  purposeOfVisit: yup.string().required("Purpose of Visit is required"),
-  placeOfVisit: yup.string().required("Place of Visit is required"),
-});
-const purposeOptions = [
-  { value: "become member", label: "Become Member" },
-  { value: "just visitation", label: "Just Visitation" },
-  { value: "other", label: "Other" },
-];
-const placeOptions = [
-  { value: "church", label: "The Church" },
-  { value: "cih", label: "CIH" },
-];
-const genderOptions = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
-];
+const listOfAccessories = ref([]);
+const pushAccessory = (accessory) => {
+  if (accessory.length > 0) {
+    listOfAccessories.value.push(accessory);
+  }
+};
+
+const removeAccessory = (idx) => {
+  console.log(idx);
+  listOfAccessories.value.splice(idx, 1);
+};
+
+const formValues = {
+  name: "",
+  location: "",
+  capacity: 0,
+  accessories: "dashcode@gmail.com",
+
+  description: "",
+};
+
 const { handleSubmit } = useForm({
-  validationSchema: formDataSchema,
-  initialValues: formData,
+  validationSchema: schema,
+  initialValues: formValues,
 });
+// No need to define rules for fields
 
-const { value: emailAddress, errorMessage: emailAddressError } =
-  useField("emailAddress");
-const { value: dateOfVisit, errorMessage: dateOfVisitError } =
-  useField("dateOfVisit");
-const { value: surname, errorMessage: surnameError } = useField("surname");
-const { value: firstname, errorMessage: firstnameError } =
-  useField("firstname");
-const { value: middlename, errorMessage: middlenameError } =
-  useField("middlename");
-const { value: gender, errorMessage: genderError } = useField("gender");
-const { value: dateOfBirth, errorMessage: dateOfBirthError } =
-  useField("dateOfBirth");
-const { value: phoneNumber, errorMessage: phoneNumberError } =
-  useField("phoneNumber");
-const { value: residentialAddress, errorMessage: residentialAddressError } =
-  useField("residentialAddress");
-const { value: nearestBusStop, errorMessage: nearestBusStopError } =
-  useField("nearestBusStop");
-const { value: city, errorMessage: cityError } = useField("city");
-const { value: state, errorMessage: stateError } = useField("state");
-const { value: country, errorMessage: countryError } = useField("country");
-const { value: purposeOfVisit, errorMessage: purposeOfVisitError } =
-  useField("purposeOfVisit");
-const { value: placeOfVisit, errorMessage: placeOfVisitError } =
-  useField("placeOfVisit");
+const { value: name, errorMessage: nameError } = useField("name");
+const { value: location, errorMessage: locationError } = useField("location");
+const { value: capacity, errorMessage: capacityError } = useField("capacity");
+const { value: accessories, errorMessage: accessoriesError } =
+  useField("accessories");
+const { value: description, errorMessage: descriptionError } =
+  useField("description");
 
 const onSubmit = handleSubmit((values) => {
-  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
+  console.log("PersonalDetails: " + JSON.stringify(values));
 });
 </script>
-<style lang=""></style>
+
+<style lang="scss" scoped></style>

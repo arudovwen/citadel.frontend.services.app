@@ -130,30 +130,26 @@
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
-              <Dropdown classMenuItems=" w-[140px]">
-                <span class="text-xl"
-                  ><Icon icon="heroicons-outline:dots-vertical"
-                /></span>
+              <Dropdown classMenuItems="w-[140px]">
+                <span class="text-xl">
+                  <Icon icon="heroicons-outline:dots-vertical" />
+                </span>
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="generateAction(item.name, props.row.id).doit"
-                      :class="`
-                
-                  ${
-                    generateAction(item.name, props.row.id).name === 'delete'
-                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
-                      : 'hover:bg-slate-900 hover:text-white'
-                  }
-                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
+                      @click="item.doit(item.name)"
+                      :class="{
+                        'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
+                          item.name === 'delete',
+                        'hover:bg-slate-900 hover:text-white':
+                          item.name !== 'delete',
+                      }"
+                      class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
                     >
-                      <span class="text-base"
-                        ><Icon
-                          :icon="generateAction(item.name, props.row.id).icon"
-                      /></span>
-                      <span>{{
-                        generateAction(item.name, props.row.id).name
-                      }}</span>
+                      <span class="text-base">
+                        <Icon :icon="item.icon" />
+                      </span>
+                      <span>{{ item.name }}</span>
                     </div>
                   </MenuItem>
                 </template>
@@ -344,20 +340,21 @@ export default {
     generateAction(name, id) {
       this.id = id;
       const actions = {
-        // Approve: {
-        //   name: "Approve",
-        //   icon: "ph:check",
-        //   doit: () => {
-        //     this.$router.push("/members-management/add");
-        //   },
-        // },
-        // Delist: {
-        //   name: "Delist",
-        //   icon: "ph:x-light",
-        //   doit: () => {
-        //     this.$router.push("/members-management/add");
-        //   },
-        // },
+        Approve: {
+          name: "Approve",
+          icon: "ph:check",
+          doit: () => {
+            this.type = "edit";
+            this.$refs.modalChange.openModal();
+          },
+        },
+        Delist: {
+          name: "Delist",
+          icon: "ph:x-light",
+          doit: () => {
+            this.$router.push("/members-management/add");
+          },
+        },
         view: {
           name: "view",
           icon: "heroicons-outline:eye",
