@@ -42,6 +42,12 @@
             text="Add Member"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
+            @click="
+              () => {
+                type = 'add';
+                $refs.modalChange.openModal();
+              }
+            "
           />
         </div>
       </div>
@@ -206,6 +212,22 @@
       </div>
     </template>
   </Modal>
+  <Modal
+    :title="
+      type === 'add'
+        ? 'Add record'
+        : type === 'edit'
+        ? 'Edit Record'
+        : 'View record'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-3xl"
+  >
+    <AddRecord v-if="type === 'add'" />
+    <EditRecord v-if="type === 'edit'" />
+    <ViewRecord v-if="type === 'view'" />
+  </Modal>
 </template>
 <script>
 import Dropdown from "@/components/Dropdown";
@@ -217,10 +239,17 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
+import AddRecord from "../member-add.vue";
+import EditRecord from "../member-edit.vue";
+import ViewRecord from "../member-preview.vue";
+
 import window from "@/mixins/window";
 export default {
   mixins: [window],
   components: {
+    AddRecord,
+    EditRecord,
+    ViewRecord,
     Pagination,
     InputGroup,
     Modal,
