@@ -6,7 +6,7 @@ export const menuItems = [
   {
     title: "Overview",
     icon: "heroicons-outline:home",
-    link: "overview",
+    link: "/overview",
   },
   // {
   //   title: "Profile",
@@ -16,34 +16,34 @@ export const menuItems = [
   {
     title: "First Timers",
     icon: "heroicons-outline:user-add",
-    link: "first-timers",
+    link: "/first-timers",
   },
   {
     title: "Members",
     icon: "heroicons-outline:user-group",
-    link: "members-management",
+    link: "/members-management",
   },
   {
     title: "Departments",
     icon: "mingcute:department-line",
-    link: "departments",
+    link: "/departments",
   },
 
   {
     title: "Outreach",
     icon: "bx:donate-heart",
-    link: "outreach",
+    link: "/outreach",
   },
   {
     title: "Attendance",
     icon: "heroicons-outline:clipboard-check",
-    link: "attendance",
+    link: "/attendance",
   },
   { title: "Goals", icon: "bx:football", link: "goals" },
   {
     title: "Meetings",
     icon: "bx:merge",
-    link: "meetings",
+    link: "/meetings",
   },
   // {
   //   title: "Issue Management",
@@ -53,12 +53,12 @@ export const menuItems = [
   {
     title: "Events",
     icon: "bx:server",
-    link: "events",
+    link: "/events",
   },
   {
     title: "Notifications",
     icon: "heroicons-outline:speakerphone",
-    link: "notifications",
+    link: "/notifications",
   },
   {
     title: "Appointments",
