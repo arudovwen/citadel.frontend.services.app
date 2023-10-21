@@ -152,21 +152,31 @@ const routes = [
             meta: {
               activeName: "cih management",
             },
-          },
-          {
-            path: "zones/view/:id",
-            name: "Centers",
+            children: [
+              {
+                path: "",
+                name: "Zones",
 
-            component: () =>
-              import("@/components/Pages/Dashboard/CIH/Zones/zone.vue"),
-            meta: {
-              activeName: "cih management",
-              groupParent: {
-                name: "CIH Zones",
-                url: "/cih/zones",
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Zones/zones"),
               },
-            },
+              {
+                path: "view-centers/:id",
+                name: "Centers",
+
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Zones/zone.vue"),
+                meta: {
+                  activeName: "cih management",
+                  groupParent: {
+                    name: "CIH Zones",
+                    url: "/cih/zones",
+                  },
+                },
+              },
+            ],
           },
+
           {
             path: "centers",
             name: "CIH Centers",
@@ -174,6 +184,31 @@ const routes = [
             meta: {
               activeName: "cih management",
             },
+            children: [
+              {
+                path: "",
+                name: "CIH Centers",
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Centers/centers"),
+                meta: {
+                  activeName: "cih management",
+                },
+              },
+              {
+                path: "center/:id",
+                name: "CIH Center",
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Centers/center"),
+                meta: {
+                  activeName: "cih management",
+
+                  groupParent: {
+                    name: "CIH Centers",
+                    url: "/cih/centers",
+                  },
+                },
+              },
+            ],
           },
           {
             path: "reports",

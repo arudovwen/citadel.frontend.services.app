@@ -3,7 +3,7 @@
     <Card bodyClass="p-6" v-for="(item, i) in projects" :key="i">
       <!-- header -->
       <header class="flex justify-between items-end">
-        <router-link :to="`/cih/zones/view/${item.id}`" class="flex-1">
+        <router-link :to="`/cih/zones/view-centers/${item.id}`" class="flex-1">
           <div class="flex space-x-4 items-center">
             <div class="flex-none">
               <div
@@ -42,7 +42,7 @@
           </Dropdown>
         </div>
       </header>
-      <router-link :to="`/cih/zones/view/${item.id}`">
+      <router-link :to="`/cih/zones/view-centers/${item.id}`">
         <!-- description -->
         <!-- <div class="text-slate-600 dark:text-slate-400 text-sm pt-4 pb-4">
           {{ item.des }}

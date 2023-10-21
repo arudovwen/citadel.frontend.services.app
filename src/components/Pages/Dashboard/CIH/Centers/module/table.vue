@@ -25,7 +25,13 @@
             placeholder="Select date"
             as-single
           /> -->
-
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto h-9"
+            v-model="zone"
+            :options="zoneOptions"
+            placeholder="Select zone"
+            name="zone"
+          />
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add center"
@@ -212,10 +218,10 @@
   >
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />
-    <ViewRecord v-if="type === 'view'" />
   </Modal>
 </template>
 <script>
+import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
@@ -226,9 +232,8 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
-import AddRecord from "../zone-add.vue";
-import EditRecord from "../edit-zone.vue";
-import ViewRecord from "../zone-preview.vue";
+import AddRecord from "../center-add.vue";
+import EditRecord from "../edit-center.vue";
 import window from "@/mixins/window";
 
 export default {
@@ -236,7 +241,7 @@ export default {
   components: {
     AddRecord,
     EditRecord,
-    ViewRecord,
+    VueSelect,
     Pagination,
     InputGroup,
     Modal,
@@ -265,6 +270,17 @@ export default {
         date: "DD MMM YYYY",
         month: "MMM",
       },
+      zone: "",
+      zoneOptions: [
+        {
+          value: "option2",
+          label: "Zone 1",
+        },
+        {
+          value: "option3",
+          label: "Zone 2",
+        },
+      ],
       actions: [
         {
           name: "Approve",
@@ -370,14 +386,14 @@ export default {
           name: "view",
           icon: "heroicons-outline:eye",
           doit: () => {
-            this.$router.push("/zones-management/preview/" + id);
+            this.$router.push("/centers-management/preview/" + id);
           },
         },
         edit: {
           name: "edit",
           icon: "heroicons:pencil-square",
           doit: () => {
-            this.$router.push("/zones-management/edit/" + id);
+            this.$router.push("/centers-management/edit/" + id);
           },
         },
         delete: {
