@@ -28,6 +28,11 @@ export const menuItems = [
     icon: "mingcute:department-line",
     link: "/departments",
   },
+  {
+    title: "CIH management",
+    icon: "mdi:home-group",
+    link: "/cih",
+  },
 
   {
     title: "Outreach",
