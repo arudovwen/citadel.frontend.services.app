@@ -1,126 +1,50 @@
 <template>
   <form @submit.prevent="onSubmit">
     <Card title="">
-      <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
+      <div class="flex flex-col gap-y-5">
         <Textinput
           label="First Name"
           type="text"
           v-model="firstname"
           :error="firstnameError"
-          placeholder="Add your first name"
+          placeholder="Provide a first name"
         />
         <Textinput
           label="Middle name"
           type="text"
           v-model="middlename"
           :error="middlenameError"
-          placeholder="Add your middle name"
+          placeholder="Provide a middle name"
         />
         <Textinput
           label="Surname"
           type="text"
           v-model="surname"
           :error="surnameError"
-          placeholder="Add your surnanme"
+          placeholder="Provide a surnanme"
         />
-        <Select
-          label="Gender"
-          :options="genderOptions"
-          v-model="gender"
-          :error="genderError"
-        />
-        <FormGroup
-          label="Date of birth"
-          name="dateOfBirth"
-          :error="dateOfBirthError"
-        >
-          <flat-pickr
-            v-model="dateOfBirth"
-            class="form-control"
-            id="d1"
-            placeholder="yyyy, dd M"
-          />
-        </FormGroup>
-        <Textinput
-          label="Phone"
-          type="text"
-          v-model="phoneNumber"
-          :error="phoneNumberError"
-          placeholder="Add your phone"
-        />
-        <div class="lg:col-span-2 col-span-1">
+        <div class="">
           <Textinput
             label="Email"
             type="email"
             v-model="emailAddress"
             :error="emailAddressError"
-            placeholder="Add your email"
+            placeholder="Provide an email address"
           />
         </div>
-        <FormGroup
-          label="Date of visit"
-          name="dateOfVisit"
-          :error="dateOfVisitError"
-        >
-          <flat-pickr
-            v-model="dateOfVisit"
-            class="form-control"
-            id="d1"
-            placeholder="yyyy, dd M"
-          />
-        </FormGroup>
-
         <Select
-          label="Purpose of visit"
-          :options="purposeOptions"
-          v-model="purposeOfVisit"
-          :error="purposeOfVisitError"
-        />
-        <Select
-          label="Place of visit"
-          :options="placeOptions"
-          v-model="placeOfVisit"
-          :error="placeOfVisitError"
-        />
-        <div class="lg:col-span-2 col-span-1">
-          <Textinput
-            label="Residential Address"
-            v-model="residentialAddress"
-            :error="residentialAddressError"
-            placeholder="Enter our residential address"
-          />
-        </div>
-
-        <Textinput
-          label="Nearest Busstop"
-          type="ext"
-          v-model="nearestBusStop"
-          :error="nearestBusStopError"
-          placeholder="Add your nearest bus-stop"
+          label="Role"
+          :options="roleOptions"
+          v-model="role"
+          :error="roleError"
         />
 
         <Textinput
-          label="City"
-          v-model="city"
-          :error="cityError"
+          label="Phone"
           type="text"
-          placeholder="Enter your city"
-        />
-
-        <Textinput
-          label="State"
-          v-model="state"
-          :error="stateError"
-          type="text"
-          placeholder="Enter your state"
-        />
-
-        <Textinput
-          label="Country"
-          v-model="country"
-          :error="countryError"
-          type="text"
-          placeholder="Enter your country"
+          v-model="phoneNumber"
+          :error="phoneNumberError"
+          placeholder="Provide a phone number"
         />
       </div>
 
@@ -136,60 +60,33 @@ import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
-import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import Select from "@/components/Select";
 
 const formData = reactive({
-  dateOfVisit: "",
   surname: "",
   firstname: "",
   middlename: "",
-  gender: "",
-  dateOfBirth: "",
+  role: "",
   phoneNumber: "",
   emailAddress: "",
-  residentialAddress: "",
-  nearestBusStop: "",
-  city: "",
-  state: "",
-  country: "",
-  purposeOfVisit: "",
-  placeOfVisit: "",
 });
 const formDataSchema = yup.object().shape({
-  dateOfVisit: yup.date().required("Date of Visit is required"),
   surname: yup.string().required("Surname is required"),
   firstname: yup.string().required("Firstname is required"),
-  middlename: yup.string().required("Middlename is required"),
-  gender: yup.string().required("Gender is required"),
-  dateOfBirth: yup.date().required("Date of Birth is required"),
+  middlename: yup.string(),
+  role: yup.string().required("Please select a role"),
   phoneNumber: yup.string().required("Phone Number is required"),
   emailAddress: yup
     .string()
     .email("Invalid email format")
     .required("Email Address is required"),
-  residentialAddress: yup.string().required("Residential Address is required"),
-  nearestBusStop: yup.string().required("Nearest Bus Stop is required"),
-  city: yup.string().required("City is required"),
-  state: yup.string().required("State is required"),
-  country: yup.string().required("Country is required"),
-  purposeOfVisit: yup.string().required("Purpose of Visit is required"),
-  placeOfVisit: yup.string().required("Place of Visit is required"),
 });
-const purposeOptions = [
-  { value: "become member", label: "Become Member" },
-  { value: "just visitation", label: "Just Visitation" },
-  { value: "other", label: "Other" },
+const roleOptions = [
+  { value: "admin", label: "Administrator" },
+  { value: "hod", label: "HOD" },
 ];
-const placeOptions = [
-  { value: "church", label: "The Church" },
-  { value: "cih", label: "CIH" },
-];
-const genderOptions = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
-];
+
 const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
@@ -197,29 +94,16 @@ const { handleSubmit } = useForm({
 
 const { value: emailAddress, errorMessage: emailAddressError } =
   useField("emailAddress");
-const { value: dateOfVisit, errorMessage: dateOfVisitError } =
-  useField("dateOfVisit");
+
 const { value: surname, errorMessage: surnameError } = useField("surname");
 const { value: firstname, errorMessage: firstnameError } =
   useField("firstname");
 const { value: middlename, errorMessage: middlenameError } =
   useField("middlename");
-const { value: gender, errorMessage: genderError } = useField("gender");
-const { value: dateOfBirth, errorMessage: dateOfBirthError } =
-  useField("dateOfBirth");
+const { value: role, errorMessage: roleError } = useField("role");
+
 const { value: phoneNumber, errorMessage: phoneNumberError } =
   useField("phoneNumber");
-const { value: residentialAddress, errorMessage: residentialAddressError } =
-  useField("residentialAddress");
-const { value: nearestBusStop, errorMessage: nearestBusStopError } =
-  useField("nearestBusStop");
-const { value: city, errorMessage: cityError } = useField("city");
-const { value: state, errorMessage: stateError } = useField("state");
-const { value: country, errorMessage: countryError } = useField("country");
-const { value: purposeOfVisit, errorMessage: purposeOfVisitError } =
-  useField("purposeOfVisit");
-const { value: placeOfVisit, errorMessage: placeOfVisitError } =
-  useField("placeOfVisit");
 
 const onSubmit = handleSubmit((values) => {
   console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);

@@ -13,21 +13,17 @@
             type="text"
             prependIcon="heroicons-outline:search"
             merged
+            classInput="min-w-[220px] !h-9"
           />
-          <Button
-            icon="heroicons-outline:calendar"
-            text="Select date"
-            btnClass=" btn-outline-secondary dark:border-slate-700  text-slate-600 btn-sm font-normal dark:text-slate-300 "
-            iconClass="text-lg"
+
+          <VueTailwindDatePicker
+            v-model="dateValue"
+            :formatter="formatter"
+            input-classes="form-control h-[36px]"
+            placeholder="Select date"
+            as-single
           />
-          <Button
-            @click="handleModal('iyuyf')"
-            icon="heroicons-outline:filter"
-            text="Filter"
-            btnClass=" btn-outline-secondary text-slate-600
-          dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-            iconClass="text-lg"
-          />
+
           <Button
             icon="heroicons-outline:plus-sm"
             text="Create outreach"
@@ -221,6 +217,7 @@
   </Modal>
 </template>
 <script>
+import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Modal from "@/components/Modal/Modal";
 import AddRecord from "../member-add.vue";
 import EditRecord from "../member-edit.vue";
@@ -252,6 +249,7 @@ export default {
     ViewRecord,
     AddReport,
     EditReport,
+    VueTailwindDatePicker,
   },
   provide() {
     return {
@@ -269,6 +267,11 @@ export default {
       id: null,
       confirmType: "",
       type: "",
+      dateValue: null,
+      formatter: {
+        date: "DD MMM YYYY",
+        month: "MMM",
+      },
       actions: [
         {
           name: "view",

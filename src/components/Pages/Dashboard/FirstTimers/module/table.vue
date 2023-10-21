@@ -13,19 +13,17 @@
             type="text"
             prependIcon="heroicons-outline:search"
             merged
+            classInput="min-w-[220px] !h-9"
           />
-          <Button
-            icon="heroicons-outline:calendar"
-            text="Select date"
-            btnClass="btn-outline-secondary dark:border-slate-700 text-slate-600 btn-sm font-normal dark:text-slate-300"
-            iconClass="text-lg"
+
+          <VueTailwindDatePicker
+            v-model="dateValue"
+            :formatter="formatter"
+            input-classes="form-control h-[36px]"
+            placeholder="Select date"
+            as-single
           />
-          <Button
-            icon="heroicons-outline:filter"
-            text="Filter"
-            btnClass="btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm"
-            iconClass="text-lg"
-          />
+
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Record"
@@ -204,6 +202,7 @@
 </template>
 
 <script>
+import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -221,6 +220,7 @@ import ViewRecord from "../member-preview.vue";
 export default {
   mixins: [window],
   components: {
+    VueTailwindDatePicker,
     AddRecord,
     EditRecord,
     ViewRecord,
@@ -244,6 +244,11 @@ export default {
       isOpen: false,
       id: null,
       type: "",
+      dateValue: null,
+      formatter: {
+        date: "DD MMM YYYY",
+        month: "MMM",
+      },
       actions: [
         {
           name: "view",
@@ -290,36 +295,33 @@ export default {
       ],
       columns: [
         {
-          label: "Id",
-          field: "id",
-        },
-        {
-          label: "Date",
-          field: "date",
-        },
-        {
           label: "Name",
           field: "name",
         },
-
         {
-          label: "Gender",
-          field: "gender",
+          label: "Email",
+          field: "email",
         },
 
         {
           label: "Phone",
           field: "phone",
         },
+        {
+          label: "Gender",
+          field: "gender",
+        },
 
         {
-          label: "Email",
-          field: "email",
+          label: "DOB",
+          field: "dob",
         },
+
         {
-          label: "Address",
-          field: "address",
+          label: "Department",
+          field: "department",
         },
+
         {
           label: "Action",
           field: "action",

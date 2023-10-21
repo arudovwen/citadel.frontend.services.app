@@ -3,14 +3,15 @@
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div class="flex md:mb-0 mb-3 border border-gray-200 rounded text-sm">
-          <span
+          <button
             class="px-4 py-2 border-r border-gray-200 last:border-none capitalize min-w-[90px] text-center"
             :class="activeFilter === n ? 'bg-gray-100' : ''"
             @click="activeFilter = n"
             v-for="n in filters"
             :key="n"
-            >{{ n }}</span
           >
+            {{ n }}
+          </button>
         </div>
         <div
           class="md:flex md:space-x-3 items-center flex-none"
@@ -22,19 +23,17 @@
             type="text"
             prependIcon="heroicons-outline:search"
             merged
+            classInput="min-w-[220px] !h-9"
           />
-          <Button
-            icon="heroicons-outline:calendar"
-            text="Select date"
-            btnClass=" btn-outline-secondary dark:border-slate-700  text-slate-600 btn-sm font-normal dark:text-slate-300 "
-            iconClass="text-lg"
+
+          <VueTailwindDatePicker
+            v-model="dateValue"
+            :formatter="formatter"
+            input-classes="form-control h-[36px]"
+            placeholder="Select date"
+            as-single
           />
-          <Button
-            icon="heroicons-outline:filter"
-            text="Filter"
-            btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-            iconClass="text-lg"
-          />
+
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Member"
@@ -130,7 +129,7 @@
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in actions" :key="i">
+                  <MenuItem v-for="(item, i) in filteredActions" :key="i">
                     <div
                       @click="item.doit(item.name)"
                       :class="{
@@ -225,6 +224,7 @@
   </Modal>
 </template>
 <script>
+import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -253,6 +253,7 @@ export default {
     Card,
     MenuItem,
     Button,
+    VueTailwindDatePicker,
   },
 
   data() {
@@ -265,7 +266,12 @@ export default {
       type: "",
       id: null,
       filters: ["all", "pending"],
-      activeFilter: "",
+      activeFilter: "all",
+      dateValue: null,
+      formatter: {
+        date: "DD MMM YYYY",
+        month: "MMM",
+      },
       actions: [
         {
           name: "Approve",
@@ -321,14 +327,6 @@ export default {
       ],
       columns: [
         {
-          label: "Id",
-          field: "id",
-        },
-        {
-          label: "Date",
-          field: "date",
-        },
-        {
           label: "Name",
           field: "name",
         },
@@ -347,10 +345,7 @@ export default {
           label: "Email",
           field: "email",
         },
-        {
-          label: "Address",
-          field: "address",
-        },
+
         {
           label: "Action",
           field: "action",
@@ -404,6 +399,17 @@ export default {
       };
 
       return actions[name] || null;
+    },
+  },
+  computed: {
+    filteredActions() {
+      return this.activeFilter === "all"
+        ? this.actions.filter(
+            (i) =>
+              i.name.toLowerCase() !== "approve" &&
+              i.name.toLowerCase() !== "delist"
+          )
+        : this.actions;
     },
   },
 };

@@ -4,14 +4,15 @@
       <div
         class="flex md:mb-0 mb-3 border border-gray-200 rounded-[6px] text-sm overflow-hidden w-full md:w-auto overflow-x-auto"
       >
-        <span
+        <button
           class="px-4 py-2 border-r border-gray-200 last:border-none capitalize min-w-[90px] text-center block w-full"
           :class="activeFilter === n ? 'bg-primary-500 text-white' : ''"
           @click="activeFilter = n"
           v-for="n in filters"
           :key="n"
-          >{{ n }}</span
         >
+          {{ n }}
+        </button>
       </div>
       <div
         class="flex flex-col md:flex-row justify-end gap-y-4 md:gap-y-0 md:gap-x-4 items-center w-full md:w-auto"

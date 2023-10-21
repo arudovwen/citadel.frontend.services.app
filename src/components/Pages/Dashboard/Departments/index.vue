@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="flex flex-wrap justify-end items-center mb-4">
+    <div class="flex justify-space-between items-center mb-4">
       <Button
         icon="heroicons-outline:plus"
         text="Add Department"
-        btnClass="btn-primary dark:bg-slate-800  h-min text-sm font-normal"
+        btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
         iconClass="text-lg"
         @click="openDepartment"
         :isLoading="store.state.project.isLoading"

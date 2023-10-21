@@ -39,7 +39,7 @@ export const menuItems = [
     icon: "heroicons-outline:clipboard-check",
     link: "/attendance",
   },
-  { title: "Goals", icon: "bx:football", link: "goals" },
+  { title: "Goals", icon: "bx:football", link: "/goals" },
   {
     title: "Meetings",
     icon: "bx:merge",
