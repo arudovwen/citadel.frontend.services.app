@@ -1,13 +1,13 @@
 <template>
   <div>
-    <Member />
+    <NotificationList />
   </div>
 </template>
 <script>
-import Member from "./module/member-table";
+import NotificationList from "./module/notification-list";
 export default {
   components: {
-    Member,
+    NotificationList,
   },
 };
 </script>
