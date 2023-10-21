@@ -311,7 +311,8 @@ const routes = [
           {
             path: "",
             name: "notifications",
-            component: () => import("@/components/Pages/Dashboard/Members"),
+            component: () =>
+              import("@/components/Pages/Dashboard/Notifications"),
             meta: {
               activeName: "notifications",
             },
