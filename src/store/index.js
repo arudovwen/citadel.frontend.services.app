@@ -13,7 +13,10 @@ import department from "./app/department";
 import meeting from "./app/meeting";
 import notification from "./app/notification";
 import venue from "./app/venue";
+import zone from "./app/zone";
+import center from "./app/center";
 import apptodo from "./app/todo";
+
 export default createStore({
   state: {
     sidebarCollasp: true,
@@ -102,5 +105,7 @@ export default createStore({
     meeting,
     notification,
     venue,
+    zone,
+    center,
   },
 });

@@ -141,6 +141,59 @@ const routes = [
         ],
       },
       {
+        path: "/cih",
+        name: "Church in house",
+        component: () => import("@/views/dashboard/cih/index.vue"),
+        children: [
+          {
+            path: "zones",
+            name: "CIH Zones",
+            component: () => import("@/components/Pages/Dashboard/CIH/Zones"),
+            meta: {
+              activeName: "cih management",
+            },
+          },
+          {
+            path: "zones/view/:id",
+            name: "Centers",
+
+            component: () =>
+              import("@/components/Pages/Dashboard/CIH/Zones/zone.vue"),
+            meta: {
+              activeName: "cih management",
+              groupParent: {
+                name: "CIH Zones",
+                url: "/cih/zones",
+              },
+            },
+          },
+          {
+            path: "centers",
+            name: "CIH Centers",
+            component: () => import("@/components/Pages/Dashboard/CIH/Centers"),
+            meta: {
+              activeName: "cih management",
+            },
+          },
+          {
+            path: "reports",
+            name: "CIH Reports",
+            component: () => import("@/components/Pages/Dashboard/CIH/Reports"),
+            meta: {
+              activeName: "cih management",
+            },
+          },
+          {
+            path: "events",
+            name: "CIH Events",
+            component: () => import("@/components/Pages/Dashboard/CIH/Events"),
+            meta: {
+              activeName: "cih management",
+            },
+          },
+        ],
+      },
+      {
         path: "/outreach",
         name: "outreach",
         component: () => import("@/views/dashboard/outreach/index.vue"),

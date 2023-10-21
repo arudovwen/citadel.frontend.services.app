@@ -31,7 +31,26 @@ export const menuItems = [
   {
     title: "CIH management",
     icon: "mdi:home-group",
-    link: "/cih",
+
+    isOpen: true,
+    child: [
+      {
+        childtitle: "Zones",
+        childlink: "/cih/zones",
+      },
+      {
+        childtitle: "Centers",
+        childlink: "/cih/centers",
+      },
+      {
+        childtitle: "Reports",
+        childlink: "/cih/reports",
+      },
+      {
+        childtitle: "Events",
+        childlink: "/cih/events",
+      },
+    ],
   },
 
   {
