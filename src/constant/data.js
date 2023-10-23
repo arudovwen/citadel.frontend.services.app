@@ -810,3 +810,25 @@ export const childrenDetailstable = [
     field: "action",
   },
 ];
+
+export const venueMenu = [
+  {
+    value: "Lekki",
+    label: "Lekki",
+  },
+  {
+    value: "Jakande",
+    label: "Jakande",
+  },
+];
+
+export const attendeeMenu = [
+  {
+    value: "Tayo Adegoke",
+    label: "Tayo Adegoke",
+  },
+  {
+    value: "Femi Falana",
+    label: "Femi Falana",
+  },
+];

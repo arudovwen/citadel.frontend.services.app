@@ -28,10 +28,15 @@
           />
           <Button
             icon="heroicons-outline:plus-sm"
-            text="Add Member"
+            text="Add Meeting"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
-          
+            @click="
+              () => {
+                type = 'add';
+                $refs.modalChange.openModal();
+              }
+            "
           />
         </div>
       </div>
@@ -39,7 +44,7 @@
         <vue-good-table
           :columns="columns"
           styleClass=" vgt-table  centered "
-          :rows="advancedTable"
+          :rows="meetingsTable"
           :sort-options="{
             enabled: false,
           }"
@@ -163,6 +168,22 @@
       </div>
     </Card>
   </div>
+  <Modal
+    :title="
+      type === 'add'
+        ? 'Add Meeting'
+        : type === 'edit'
+        ? 'Edit Meeting'
+        : 'View Meeting'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-3xl"
+  >
+    <AddMeeting v-if="type === 'add'" />
+    <EditMeeting v-if="type === 'edit'" />
+    <ViewMeeting v-if="type === 'view'" />
+  </Modal>
 </template>
 <script>
 import Dropdown from "@/components/Dropdown";
@@ -172,11 +193,19 @@ import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
-import { advancedTable } from "@/constant/basic-tablle-data";
+import { meetingsTable } from "@/constant/basic-tablle-data";
 import window from "@/mixins/window";
+import Modal from "@/components/Modal/Modal";
+import AddMeeting from "../meeting-add.vue";
+import EditMeeting from "../meeting-edit.vue";
+import ViewMeeting from "../meeting-preview.vue";
 export default {
   mixins: [window],
   components: {
+    Modal,
+    AddMeeting,
+    EditMeeting,
+    ViewMeeting,
     Pagination,
     InputGroup,
     Dropdown,
@@ -188,7 +217,8 @@ export default {
 
   data() {
     return {
-      advancedTable,
+      meetingsTable,
+      type: "",
       current: 1,
       perpage: 10,
       pageRange: 5,
@@ -231,7 +261,7 @@ export default {
         },
       ],
       options: [
-      {
+        {
           value: "25",
           label: "25",
         },
@@ -255,31 +285,22 @@ export default {
         },
 
         {
-          label: "Customer",
-          field: "customer",
-        },
-        {
           label: "Date",
           field: "date",
         },
-
         {
-          label: "Quantity",
-          field: "quantity",
+          label: "Time",
+          field: "time",
         },
 
         {
-          label: "Amount",
-          field: "amount",
+          label: "Meeting Title",
+          field: "title",
         },
 
         {
-          label: "Status",
-          field: "status",
-        },
-        {
-          label: "Action",
-          field: "action",
+          label: "Venue",
+          field: "venue",
         },
       ],
     };
