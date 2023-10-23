@@ -28,10 +28,9 @@
           />
           <Button
             icon="heroicons-outline:plus-sm"
-            text="Add Member"
+            text="Add Meeting"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
-          
           />
         </div>
       </div>
@@ -39,7 +38,7 @@
         <vue-good-table
           :columns="columns"
           styleClass=" vgt-table  centered "
-          :rows="advancedTable"
+          :rows="meetingsTable"
           :sort-options="{
             enabled: false,
           }"
@@ -172,7 +171,7 @@ import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
-import { advancedTable } from "@/constant/basic-tablle-data";
+import { meetingsTable } from "@/constant/basic-tablle-data";
 import window from "@/mixins/window";
 export default {
   mixins: [window],
@@ -188,7 +187,7 @@ export default {
 
   data() {
     return {
-      advancedTable,
+      meetingsTable,
       current: 1,
       perpage: 10,
       pageRange: 5,
@@ -231,7 +230,7 @@ export default {
         },
       ],
       options: [
-      {
+        {
           value: "25",
           label: "25",
         },
@@ -255,31 +254,22 @@ export default {
         },
 
         {
-          label: "Customer",
-          field: "customer",
-        },
-        {
           label: "Date",
           field: "date",
         },
-
         {
-          label: "Quantity",
-          field: "quantity",
+          label: "Time",
+          field: "time",
         },
 
         {
-          label: "Amount",
-          field: "amount",
+          label: "Meeting Title",
+          field: "title",
         },
 
         {
-          label: "Status",
-          field: "status",
-        },
-        {
-          label: "Action",
-          field: "action",
+          label: "Venue",
+          field: "venue",
         },
       ],
     };
