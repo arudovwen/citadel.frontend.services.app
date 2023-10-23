@@ -6,6 +6,8 @@ table.vgt-table {
 }
 .vgt-inner-wrap {
   @apply shadow-none;
+  border-radius: none;
+  box-shadow: none;
 }
 .vgt-wrap {
   .vgt-responsive {

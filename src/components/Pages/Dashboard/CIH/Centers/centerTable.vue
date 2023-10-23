@@ -38,6 +38,18 @@
               }
             "
           />
+          <Button
+            icon="heroicons-outline:plus-sm"
+            text="Assign role"
+            btnClass=" btn-dark font-normal btn-sm "
+            iconClass="text-lg"
+            @click="
+              () => {
+                type = 'assign';
+                $refs.modalChange.openModal();
+              }
+            "
+          />
         </div>
       </div>
       <div class="-mx-6">
@@ -204,10 +216,12 @@
   <Modal
     :title="
       type === 'add'
-        ? 'Add member'
+        ? 'Add record'
         : type === 'edit'
-        ? 'Edit member'
-        : 'View member'
+        ? 'Edit Record'
+        : type === 'assign'
+        ? 'Assign CIH role'
+        : 'View record'
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
@@ -216,6 +230,7 @@
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />
     <ViewRecord v-if="type === 'view'" />
+    <AssignRole v-if="type === 'assign'" />
   </Modal>
 </template>
 <script>
@@ -229,9 +244,10 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
-import AddRecord from "../member-add.vue";
-import EditRecord from "../member-edit.vue";
-import ViewRecord from "../member-preview.vue";
+import AddRecord from "./member-add.vue";
+import EditRecord from "./member-edit.vue";
+import ViewRecord from "./member-preview.vue";
+import AssignRole from "./assign-role.vue";
 
 import window from "@/mixins/window";
 export default {
@@ -243,6 +259,7 @@ export default {
     Pagination,
     InputGroup,
     Modal,
+    AssignRole,
     Dropdown,
     Icon,
     Card,
@@ -277,9 +294,7 @@ export default {
         {
           name: "view",
         },
-        {
-          name: "edit",
-        },
+
         {
           name: "delete",
         },
@@ -308,6 +323,10 @@ export default {
           field: "name",
         },
         {
+          label: "Role",
+          field: "role",
+        },
+        {
           label: "Email",
           field: "email",
         },
@@ -320,10 +339,7 @@ export default {
           label: "Gender",
           field: "gender",
         },
-        {
-          label: "Role",
-          field: "role",
-        },
+
         {
           label: "DOB",
           field: "dob",

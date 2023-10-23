@@ -38,6 +38,14 @@
               }
             "
           />
+          <router-link :to="`/cih/zones/zone-members/${route.params.id}`">
+            <Button
+              icon="heroicons-outline:plus-sm"
+              text="View members"
+              btnClass=" btn-dark font-normal btn-sm "
+              iconClass="text-lg"
+            />
+          </router-link>
         </div>
       </div>
       <div class="-mx-6">
@@ -230,6 +238,7 @@ import AddRecord from "../zone-add.vue";
 import EditRecord from "../edit-zone.vue";
 import ViewRecord from "../zone-preview.vue";
 import window from "@/mixins/window";
+import { useRoute } from "vue-router";
 
 export default {
   mixins: [window],
@@ -261,6 +270,7 @@ export default {
       filters: ["all", "pending"],
       activeFilter: "all",
       dateValue: null,
+      route: useRoute(),
       formatter: {
         date: "DD MMM YYYY",
         month: "MMM",

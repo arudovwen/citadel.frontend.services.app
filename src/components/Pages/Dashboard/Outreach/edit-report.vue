@@ -123,7 +123,7 @@ const formData = reactive({
     males: null,
     females: null,
   },
-  females: {
+  teenagers: {
     total: null,
     males: null,
     females: null,
@@ -177,7 +177,7 @@ const formDataSchema = yup.object().shape({
       .typeError("Male females must be a number")
       .required("Male females is required")
       .min(0, "Male females must be at least 0"),
-    females: yup
+    teenagers: yup
       .number()
       .typeError("Female females must be a number")
       .required("Female females is required")

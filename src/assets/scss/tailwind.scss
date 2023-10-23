@@ -4,6 +4,10 @@
 
 @tailwind utilities;
 
+.vgt-inner-wrap {
+  @apply shadow-none;
+}
+
 @layer base {
   body {
     @apply h-full overflow-x-hidden dark:text-slate-300 text-slate-600 font-normal;
@@ -144,13 +148,13 @@
   @variants responsive {
     /* Hide scrollbar for Chrome, Safari and Opera */
     .no-scrollbar::-webkit-scrollbar {
-        display: none;
+      display: none;
     }
 
     /* Hide scrollbar for IE, Edge and Firefox */
     .no-scrollbar {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
     }
   }
 }
