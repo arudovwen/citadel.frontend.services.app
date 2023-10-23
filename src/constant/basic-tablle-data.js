@@ -1288,3 +1288,13 @@ export const appointmentTable = [
     whoToSee: "Daddy G.O",
   },
 ];
+
+export const meetingsTable = [
+  {
+    id: "1",
+    date: "01/12/2024",
+    time: "01/12/2024",
+    title: "Choir practice",
+    venue: "Akoka",
+  },
+];

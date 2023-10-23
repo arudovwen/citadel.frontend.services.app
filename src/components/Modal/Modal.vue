@@ -1,6 +1,7 @@
 <template>
   <TransitionRoot :show="isOpen" as="template">
     <Dialog
+      @close="closeModal"
       as="div"
       class="relative z-[99999]"
       v-if="disableBackdrop === false"

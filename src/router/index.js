@@ -306,7 +306,7 @@ const routes = [
           {
             path: "",
             name: "meetings",
-            component: () => import("@/components/Pages/Dashboard/Members"),
+            component: () => import("@/components/Pages/Dashboard/Meetings"),
             meta: {
               activeName: "meetings",
             },
