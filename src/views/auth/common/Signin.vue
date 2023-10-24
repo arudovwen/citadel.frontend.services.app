@@ -4,15 +4,15 @@
       label="Email"
       type="email"
       placeholder="Type your email"
-      name="email"
-      v-model="email"
-      :error="emailError"
+      name="username"
+      v-model="username"
+      :error="usernameError"
       classInput="h-[48px]"
     />
     <Textinput
       label="Password"
       type="password"
-      placeholder="8+ characters, 1 capitat letter "
+      placeholder="Type your password"
       name="password"
       v-model="password"
       :error="passwordError"
@@ -53,12 +53,19 @@
       >
     </div>
 
-    <button type="submit" class="btn btn-primary block w-full text-center">
+    <button
+      :disabled="isLoading"
+      type="submit"
+      class="btn btn-primary block w-full text-center disabled:opacity-60"
+    >
       Sign in
     </button>
   </form>
 </template>
 <script>
+import { computed, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
@@ -75,22 +82,29 @@ export default {
     };
   },
   setup() {
+    // eslint-disable-next-line no-unused-vars
+    const route = useRoute();
+    const { state, dispatch } = useStore();
+    const isLoading = computed(() => state.auth.loading);
+    const success = computed(() => state.auth.success);
+    const error = computed(() => state.auth.error);
     // Define a validation schema
     const schema = yup.object({
-      email: yup.string().required("Email is required").email(),
-      password: yup.string().required("Password is required").min(8),
+      username: yup.string().required("Username is required").email(),
+      password: yup.string().required("Password is required"),
     });
 
     const toast = useToast();
     const router = useRouter();
 
+    // eslint-disable-next-line no-unused-vars
     const goToProfile = () => {
       router.push("/overview");
     };
 
     const formValues = {
-      email: "dashcode@gmail.com",
-      password: "dashcode",
+      username: "",
+      password: "",
     };
 
     const { handleSubmit } = useForm({
@@ -99,42 +113,28 @@ export default {
     });
     // No need to define rules for fields
 
-    const { value: email, errorMessage: emailError } = useField("email");
+    const { value: username, errorMessage: usernameError } =
+      useField("username");
     const { value: password, errorMessage: passwordError } =
       useField("password");
 
     const onSubmit = handleSubmit((values) => {
-      let isUser = localStorage.users;
-      isUser = JSON.parse(isUser);
-
-      let userIndex = isUser.findIndex((user) => user.email === values.email);
-
-      if (userIndex > -1) {
-        let activeUser = isUser.find((user) => user.email === values.email);
-        localStorage.setItem("activeUser", JSON.stringify(activeUser));
-
-        if (isUser[userIndex].password === values.password) {
-          router.push("/app/home");
-          toast.success(" Login  successfully", {
-            timeout: 2000,
-          });
-        } else {
-          toast.error(" Password not match ", {
-            timeout: 2000,
-          });
-        }
-      } else {
-        toast.error(" User not found", {
-          timeout: 2000,
-        });
-      }
-      goToProfile();
+      dispatch("login", { ...values, grantType: "password" });
     });
-
+    watch(success, () => {
+      toast.success("Login successful");
+      if (route.query.redirect_from) {
+        window.location.replace(route.query.redirect_from);
+      } else {
+        window.location.replace("/dashboard");
+        goToProfile();
+      }
+    });
     return {
-      email,
-
-      emailError,
+      username,
+      isLoading,
+      error,
+      usernameError,
       password,
       passwordError,
       onSubmit,

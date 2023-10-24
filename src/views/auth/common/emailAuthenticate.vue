@@ -1,33 +1,40 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
-    <div
-      style="display: flex; flex-direction: row"
-      class="justify-center mt-5 mb-8 gap-x-4"
-    >
-      <v-otp-input
-        ref="otpInput"
-        v-model:value="bindModal"
-        input-classes="w-12 h-12 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 text-center"
-        separator=" "
-        :num-inputs="6"
-        :should-auto-focus="true"
-        input-type="letter-numeric"
-        :conditionalClass="['mr-4', 'mr-4', 'mr-4', 'mr-4', 'mr-4']"
-        :placeholder="['*', '*', '*', '*', '*', '*']"
-        @on-change="handleOnChange"
-        @on-complete="handleOnComplete"
-      />
-    </div>
+    <Textinput
+      label="OTP token"
+      placeholder="Type your otp"
+      name="token"
+      v-model="token"
+      classInput="h-[48px]"
+      required
+      :error="tokenError"
+    />
 
-    <button type="submit" class="btn btn-primary block w-full text-center">
+    <Textinput
+      label="Password"
+      type="password"
+      placeholder="Type your password"
+      name="password"
+      v-model="password"
+      hasicon
+      classInput="h-[48px]"
+      required
+      :error="passwordError"
+    />
+
+    <button
+      :disabled="isLoading"
+      type="submit"
+      class="btn btn-primary block w-full text-center disabled:opacity-60"
+    >
       Verify Email
     </button>
 
     <button
       type="button"
       class="btn btn-light block w-full text-center"
-      @click="resendOTP"
-      :disabled="resendDisabled"
+      @click="handleOtp"
+      :disabled="resendDisabled || isOtpLoading"
     >
       Resend OTP
       <span v-if="resendDisabled">
@@ -38,21 +45,37 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
-import VOtpInput from "vue3-otp-input";
+import { useField, useForm } from "vee-validate";
+import * as yup from "yup";
+import { useRouter, useRoute } from "vue-router";
+import { ref, watch, onMounted, computed } from "vue";
+import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
+import Textinput from "@/components/Textinput";
 
-const otpInput = ref(null);
-const bindModal = ref("");
+const schema = yup.object({
+  token: yup.string().required("Token is required"),
+  password: yup.string().required("Password is required"),
+});
+
+const { handleSubmit } = useForm({
+  validationSchema: schema,
+});
+
+const { value: token, errorMessage: tokenError } = useField("token");
+const { value: password, errorMessage: passwordError } = useField("password");
+
+const router = useRouter();
+const route = useRoute();
+const { state, dispatch } = useStore();
+const emailAddress = route.params.email;
+const toast = useToast();
+const isLoading = computed(() => state.auth.loading);
+const isOtpLoading = computed(() => state.auth.loading);
+const isSuccess = computed(() => state.auth.success);
+const isOtpSuccess = computed(() => state.auth.success);
 const resendCountdown = ref(0);
 const resendDisabled = ref(false);
-
-const handleOnComplete = (value) => {
-  console.log("OTP completed: ", value);
-};
-
-const handleOnChange = (value) => {
-  console.log("OTP changed: ", value);
-};
 
 const resendOTP = () => {
   // Implement your OTP resend logic here
@@ -69,6 +92,14 @@ const resendOTP = () => {
       resendDisabled.value = false;
     }
   }, 1000);
+};
+
+const handleOtp = () => {
+  dispatch("validateEmailInitiate", {
+    emailAddress,
+    token: token.value,
+    password: password.value,
+  });
 };
 
 // Automatically start the countdown on component mount
@@ -88,6 +119,20 @@ onMounted(() => {
     },
     { immediate: true }
   );
+});
+
+const onSubmit = handleSubmit((values) => {
+  dispatch("validateEmailComplete", {
+    emailAddress,
+    ...values,
+  });
+});
+watch(isOtpSuccess, () => {
+  resendOTP();
+});
+watch(isSuccess, () => {
+  toast.success("Sign up successful");
+  isSuccess.value && router.push(`/login`);
 });
 </script>
 

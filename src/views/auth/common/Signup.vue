@@ -22,8 +22,8 @@
       label="Email"
       type="email"
       placeholder="Type your email"
-      name="emil"
-      v-model="email"
+      name="emailAddress"
+      v-model="emailAddress"
       :error="emailError"
       classInput="h-[48px]"
     />
@@ -39,7 +39,7 @@
     <Textinput
       label="Password"
       type="password"
-      placeholder="8+ characters, 1 capitat letter "
+      placeholder="8+ chars, 1 capital or lower letter,1 number, 1 special char "
       name="password"
       v-model="password"
       :error="passwordError"
@@ -85,7 +85,7 @@
     <button
       type="submit"
       class="btn btn-primary block w-full text-center disabled:opacity-60"
-      :disabled="!checkbox"
+      :disabled="!checkbox || isLoading"
     >
       Create an account
     </button>
@@ -96,14 +96,32 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 
-import { inject, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { computed, ref, watch } from "vue";
 import { useToast } from "vue-toastification";
 
+// eslint-disable-next-line no-unused-vars
+const { state, dispatch } = useStore();
+const isLoading = computed(() => state.auth.loading);
+const isSuccess = computed(() => state.auth.success);
+// const initialValues = {
+//   firstName: "string",
+//   middleName: "string",
+//   lastName: "string",
+//   gender: "string",
+//   avatarUrl: "string",
+//   emailAddress: "string",
+//   phoneNumber: "string",
+//   userRole: "administrator",
+//   status: "",
+//   dateOfBirth: "2023-10-24T15:14:35.483Z",
+//   password: "string",
+// };
 const checkbox = ref(false);
 // Define a validation schema
 const schema = yup.object({
-  email: yup.string().required("Email is required").email(),
+  emailAddress: yup.string().required("Email is required").email(),
   password: yup
     .string()
     .required("Password is required")
@@ -119,18 +137,17 @@ const schema = yup.object({
     .required("Phone number is required"),
 });
 
-const swal = inject("$swal");
+// eslint-disable-next-line no-unused-vars
 const toast = useToast();
 const router = useRouter();
 
-// Create a form context with the validation schema
-const users = [];
 const { handleSubmit } = useForm({
   validationSchema: schema,
 });
 // No need to define rules for fields
 
-const { value: email, errorMessage: emailError } = useField("email");
+const { value: emailAddress, errorMessage: emailError } =
+  useField("emailAddress");
 const { value: firstName, errorMessage: firstNameError } =
   useField("firstName");
 const { value: lastName, errorMessage: lastNameError } = useField("lastName");
@@ -139,25 +156,13 @@ const { value: phoneNumber, errorMessage: phoneNumberError } =
 const { value: password, errorMessage: passwordError } = useField("password");
 
 const onSubmit = handleSubmit((values) => {
-  // add value into user array if same email not found
-  if (!users.find((user) => user.email === values.email)) {
-    users.push(values);
-    localStorage.setItem("users", JSON.stringify(users));
-    router.push("/");
-    // use vue-toast-notification app use
-    toast.success -
-      500(" Account Create successfully", {
-        timeout: 2000,
-      });
-  } else {
-    // use sweetalert 2
-    swal.fire({
-      title: "Email already exists",
-      text: "Please try another email",
-      icon: "error",
-      confirmButtonText: "Ok",
-    });
-  }
+  dispatch("signup", values);
+});
+
+watch(isSuccess, () => {
+  // toast.success("Sign up successful")
+  isSuccess.value &&
+    router.push(`/validate-email/${encodeURIComponent(emailAddress)}`);
 });
 </script>
 <style lang="scss"></style>

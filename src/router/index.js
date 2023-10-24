@@ -26,7 +26,7 @@ const routes = [
     component: () => import("@/views/auth/forgot-password.vue"),
   },
   {
-    path: "/email-verify",
+    path: "/email-verify/:email",
     name: "email-verify",
     component: () => import("@/views/auth/email-authenticate.vue"),
   },

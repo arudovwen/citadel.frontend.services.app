@@ -94,10 +94,9 @@ export default {
       setTimeout(() => {
         state.appointments.unshift(data);
         state.isLoading = false;
-        toast.success -
-          500("Appointment added", {
-            timeout: 2000,
-          });
+        toast.success("Appointment added", {
+          timeout: 2000,
+        });
       }, 1500);
       state.addmodal = false;
     },
