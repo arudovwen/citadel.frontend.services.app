@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card noborder>
+    <Card bodyClass="!pb-0 !px-6 !pt-6" noborder>
       <div class="md:flex pb-6 items-center">
         <h6 class="flex-1 md:mb-0 mb-3"></h6>
         <div
