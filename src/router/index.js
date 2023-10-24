@@ -1,34 +1,48 @@
 import { createRouter, createWebHistory } from "vue-router";
+import store from "@/store";
 import ProfileIndex from "@/views/dashboard/profile/index.vue";
 import MembersIndex from "@/views/dashboard/members/index.vue";
 import VenuesIndex from "@/views/dashboard/venues/index.vue";
 import AppointmentsIndex from "@/views/dashboard/appointments/index.vue";
 
 function guard(to, from, next) {
-  if (localStorage.activeUser) {
+  if (store.state.auth.accessToken) {
     next();
   } else next({ name: "Login" });
+}
+function guardAuth(to, from, next) {
+  if (store.state.auth.accessToken) {
+    next({ name: "overview" });
+  } else next();
 }
 const routes = [
   {
     path: "/",
     name: "Login",
     component: () => import("@/views/auth/login/index.vue"),
+    meta: { auth: true },
+    beforeEnter: guardAuth,
   },
   {
     path: "/register",
     name: "reg",
     component: () => import("@/views/auth/register"),
+    meta: { auth: true },
+    beforeEnter: guardAuth,
   },
   {
     path: "/forgot-password",
     name: "forgot-password",
     component: () => import("@/views/auth/forgot-password.vue"),
+    meta: { auth: true },
+    beforeEnter: guardAuth,
   },
   {
     path: "/email-verify/:email",
     name: "email-verify",
     component: () => import("@/views/auth/email-authenticate.vue"),
+    meta: { auth: true },
+    beforeEnter: guardAuth,
   },
   {
     path: "/privacy",
@@ -447,6 +461,13 @@ const routes = [
       //   ],
       // },
     ],
+  },
+  //ends here
+  {
+    path: "/:catchAll(.*)",
+    name: "Not found",
+    component: () =>
+      import(/* webpackChunkName: "notfound" */ "../views/NotFound"),
   },
 ];
 

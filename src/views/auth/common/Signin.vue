@@ -86,11 +86,11 @@ export default {
     const route = useRoute();
     const { state, dispatch } = useStore();
     const isLoading = computed(() => state.auth.loading);
-    const success = computed(() => state.auth.success);
+    const success = computed(() => state.auth.loginsuccess);
     const error = computed(() => state.auth.error);
     // Define a validation schema
     const schema = yup.object({
-      username: yup.string().required("Username is required").email(),
+      username: yup.string().required("Email is required").email(),
       password: yup.string().required("Password is required"),
     });
 
@@ -99,7 +99,7 @@ export default {
 
     // eslint-disable-next-line no-unused-vars
     const goToProfile = () => {
-      router.push("/overview");
+      router.push("/profile");
     };
 
     const formValues = {
@@ -126,7 +126,7 @@ export default {
       if (route.query.redirect_from) {
         window.location.replace(route.query.redirect_from);
       } else {
-        window.location.replace("/dashboard");
+        window.location.replace("/overview");
         goToProfile();
       }
     });

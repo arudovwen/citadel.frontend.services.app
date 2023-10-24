@@ -22,7 +22,13 @@ function getRedirectFrom(url) {
 export default {
   state: {
     error: null,
-    success: false,
+    signupsuccess: false,
+    loginsuccess: false,
+    logoutsuccess: false,
+    resetsuccess: false,
+    forgotsuccess: false,
+    validendsuccess: false,
+    validinitsuccess: false,
     loading: null,
     accessToken: localStorage.getItem("accessToken") || null,
     avatar: localStorage.getItem("avatar") || null,
@@ -37,11 +43,11 @@ export default {
     loginBegin(state) {
       state.loading = true;
       state.error = null;
-      state.success = false;
+      state.loginsuccess = false;
     },
     loginSuccess(state, data) {
       state.loading = false;
-      state.success = true;
+      state.loginsuccess = true;
       state.login = data;
       state.accessToken = data;
     },
@@ -49,99 +55,99 @@ export default {
       state.loading = false;
       state.error = err;
       state.accessToken = null;
-      state.success = false;
+      state.loginsuccess = false;
     },
     logoutBegin(state) {
       state.loading = true;
       state.error = null;
-      state.success = false;
+      state.logoutsuccess = false;
     },
     logoutSuccess(state) {
       state.loading = false;
       state.login = false;
       state.accessToken = null;
-      state.success = true;
+      state.logoutsuccess = true;
     },
     logoutErr(state, err) {
       state.loading = false;
       state.error = err;
-      state.success = false;
+      state.logoutsuccess = false;
     },
     signupBegin(state) {
       state.loading = true;
       state.error = null;
-      state.success = false;
+      state.signupsuccess = false;
     },
     signupSuccess(state) {
       state.loading = false;
-      state.success = true;
+      state.signupsuccess = true;
     },
     signupErr(state, err) {
       state.loading = false;
       state.error = err;
-      state.success = false;
+      state.signnupsuccess = false;
     },
 
     validateInitiateBegin(state) {
       state.loading = true;
       state.error = null;
-      state.success = false;
+      state.validinitsuccess = false;
     },
     validateInitiateSuccess(state, data) {
       state.loading = false;
-      state.success = true;
+      state.validinitsuccess = true;
       state.token = data;
     },
     validateInitiateErr(state, err) {
       state.loading = false;
       state.error = err;
-      state.success = false;
+      state.validinitsuccess = false;
     },
 
     validatEndBegin(state) {
       state.loading = true;
       state.error = null;
-      state.success = false;
+      state.validendsuccess = false;
     },
     validateEndSuccess(state, data) {
       state.loading = false;
-      state.success = true;
+      state.validendsuccess = true;
       state.token = data;
     },
     validateEndErr(state, err) {
       state.loading = false;
       state.error = err;
-      state.success = false;
+      state.validendsuccess = false;
     },
 
     forgotBegin(state) {
       state.loading = true;
       state.error = null;
-      state.success = false;
+      state.forgotsuccess = false;
     },
     forgotSuccess(state, data) {
       state.loading = false;
-      state.success = true;
+      state.forgotsuccess = true;
       state.token = data;
     },
     forgotErr(state, err) {
       state.loading = false;
       state.error = err;
-      state.success = false;
+      state.forgotsuccess = false;
     },
     resetBegin(state) {
       state.loading = true;
       state.error = null;
-      state.success = false;
+      state.resetsuccess = false;
     },
     resetSuccess(state) {
       state.loading = false;
-      state.success = true;
+      state.resetsuccess = true;
     },
     resetErr(state, err) {
       state.loading = false;
       state.error = err;
-      state.success = false;
+      state.resetsuccess = false;
     },
   },
   actions: {
@@ -169,7 +175,7 @@ export default {
         if (getRedirectFrom(window.location.search)) {
           window.location.href = getRedirectFrom(window.location.search);
         } else {
-          window.location.href = "/login";
+          window.location.href = "/";
         }
       } catch (err) {
         console.error("Logout Error:", err);

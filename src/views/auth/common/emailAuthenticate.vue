@@ -72,8 +72,8 @@ const emailAddress = route.params.email;
 const toast = useToast();
 const isLoading = computed(() => state.auth.loading);
 const isOtpLoading = computed(() => state.auth.loading);
-const isSuccess = computed(() => state.auth.success);
-const isOtpSuccess = computed(() => state.auth.success);
+const isSuccess = computed(() => state.auth.validendsuccess);
+const isOtpSuccess = computed(() => state.auth.validinitsuccess);
 const resendCountdown = ref(0);
 const resendDisabled = ref(false);
 
@@ -81,7 +81,7 @@ const resendOTP = () => {
   // Implement your OTP resend logic here
   // Disable the button and start the countdown
   resendDisabled.value = true;
-  let countdown = 120; // 2 minutes
+  let countdown = 20; // 2 minutes
   resendCountdown.value = countdown;
 
   const interval = setInterval(() => {
@@ -97,11 +97,13 @@ const resendOTP = () => {
 const handleOtp = () => {
   dispatch("validateEmailInitiate", {
     emailAddress,
-    token: token.value,
-    password: password.value,
   });
 };
-
+onMounted(() => {
+  setTimeout(() => {
+    handleOtp();
+  }, 1000);
+});
 // Automatically start the countdown on component mount
 onMounted(() => {
   watch(

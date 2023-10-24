@@ -104,7 +104,7 @@ import { useToast } from "vue-toastification";
 // eslint-disable-next-line no-unused-vars
 const { state, dispatch } = useStore();
 const isLoading = computed(() => state.auth.loading);
-const isSuccess = computed(() => state.auth.success);
+const isSuccess = computed(() => state.auth.signupsuccess);
 // const initialValues = {
 //   firstName: "string",
 //   middleName: "string",
@@ -155,6 +155,7 @@ const { value: phoneNumber, errorMessage: phoneNumberError } =
   useField("phoneNumber");
 const { value: password, errorMessage: passwordError } = useField("password");
 
+// eslint-disable-next-line no-unused-vars
 const onSubmit = handleSubmit((values) => {
   dispatch("signup", values);
 });
@@ -162,7 +163,7 @@ const onSubmit = handleSubmit((values) => {
 watch(isSuccess, () => {
   // toast.success("Sign up successful")
   isSuccess.value &&
-    router.push(`/validate-email/${encodeURIComponent(emailAddress)}`);
+    router.push(`/email-verify/${encodeURIComponent(emailAddress.value)}`);
 });
 </script>
 <style lang="scss"></style>

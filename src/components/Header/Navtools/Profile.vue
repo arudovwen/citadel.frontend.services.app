@@ -49,6 +49,8 @@
 import { MenuItem } from "@headlessui/vue";
 import Dropdown from "@/components/Dropdown";
 import Icon from "@/components/Icon";
+import store from "@/store";
+
 export default {
   components: {
     Icon,
@@ -78,8 +80,7 @@ export default {
           label: "Logout",
           icon: "heroicons-outline:login",
           link: () => {
-            this.$router.push("/");
-            localStorage.removeItem("activeUser");
+            store.dispatch("logOut");
           },
         },
       ],
