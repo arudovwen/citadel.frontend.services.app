@@ -17,27 +17,6 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
-
-          <VueTailwindDatePicker
-            v-model="dateValue"
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="Select date"
-            as-single
-          />
-
-          <Button
-            icon="heroicons-outline:plus-sm"
-            text="Add Member"
-            btnClass=" btn-primary font-normal btn-sm "
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                $refs.modalChange.openModal();
-              }
-            "
-          />
         </div>
       </div>
       <div class="-mx-6">
@@ -168,87 +147,28 @@
       </div>
     </Card>
   </div>
-  <Modal
-    title="Confirm action"
-    label="Small modal"
-    labelClass="btn-outline-dark"
-    ref="modal"
-    sizeClass="max-w-md"
-  >
-    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure about this action?
-    </div>
-    <div v-if="type.toLowerCase() === 'delist'">
-      <textarea
-        resize="none"
-        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
-        rows="4"
-        placeholder="Provide reason"
-      ></textarea>
-    </div>
-    <template v-slot:footer>
-      <div class="flex gap-x-5">
-        <Button
-          text="Cancel"
-          btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modal.closeModal()"
-        />
-        <Button
-          text="Proceed"
-          btnClass="btn-dark btn-sm"
-          @click="$refs.modal.closeModal()"
-        />
-      </div>
-    </template>
-  </Modal>
-  <Modal
-    :title="
-      type === 'add'
-        ? 'Add member'
-        : type === 'edit'
-        ? 'Edit member'
-        : 'View member'
-    "
-    labelClass="btn-outline-dark"
-    ref="modalChange"
-    sizeClass="max-w-md"
-  >
-    <AddRecord v-if="type === 'add'" />
-    <EditRecord v-if="type === 'edit'" />
-    <ViewRecord v-if="type === 'view'" />
-  </Modal>
 </template>
 <script>
-import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
-import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
-import Modal from "@/components/Modal/Modal";
+
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
-import AddRecord from "../member-add.vue";
-import EditRecord from "../member-edit.vue";
-import ViewRecord from "../member-preview.vue";
 
 import window from "@/mixins/window";
 export default {
   mixins: [window],
   components: {
-    AddRecord,
-    EditRecord,
-    ViewRecord,
     Pagination,
     InputGroup,
-    Modal,
+
     Dropdown,
     Icon,
     Card,
     MenuItem,
-    Button,
-    VueTailwindDatePicker,
   },
 
   data() {
@@ -277,9 +197,7 @@ export default {
         {
           name: "view",
         },
-        {
-          name: "edit",
-        },
+
         {
           name: "delete",
         },
@@ -308,6 +226,10 @@ export default {
           field: "name",
         },
         {
+          label: "Role",
+          field: "role",
+        },
+        {
           label: "Email",
           field: "email",
         },
@@ -320,10 +242,7 @@ export default {
           label: "Gender",
           field: "gender",
         },
-        {
-          label: "Role",
-          field: "role",
-        },
+
         {
           label: "DOB",
           field: "dob",

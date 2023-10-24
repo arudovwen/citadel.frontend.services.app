@@ -35,7 +35,7 @@
 <script setup>
 // import Icon from "@/components/Icon";
 import Card from "@/components/Card";
-import Table from "./centerTable.vue";
+import Table from "./zoneMembersTable.vue";
 
 const content = [
   {

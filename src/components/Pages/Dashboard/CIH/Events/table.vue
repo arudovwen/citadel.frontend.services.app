@@ -2,13 +2,7 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div
-          class="flex md:mb-0 mb-3 border border-gray-200 rounded-[6px] text-sm overflow-hidden"
-        ></div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
+        <div class="flex md:mb-0 mb-3">
           <InputGroup
             v-model="searchTerm"
             placeholder="Search"
@@ -17,18 +11,41 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
-
+        </div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
           <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
             input-classes="form-control h-[36px]"
-            placeholder="Select date"
-            as-single
+            placeholder="Filter date range"
           />
-
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto"
+            v-model="filterType"
+            :options="eventsOption"
+            placeholder="Filter type"
+            name="filterType"
+          />
+          <VueSelect
+            class="min-w-[250px] w-full md:w-auto"
+            v-model="zone"
+            :options="membersOptions"
+            placeholder="Filter zone"
+            name="zone"
+          />
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto"
+            v-model="center"
+            :options="membersOptions"
+            placeholder="Filter center"
+            name="center"
+          />
           <Button
             icon="heroicons-outline:plus-sm"
-            text="Add Member"
+            text="Add Event"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
             @click="
@@ -204,21 +221,22 @@
   <Modal
     :title="
       type === 'add'
-        ? 'Add member'
+        ? 'Add event'
         : type === 'edit'
-        ? 'Edit member'
-        : 'View member'
+        ? 'Edit Event'
+        : 'View event'
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
-    sizeClass="max-w-md"
+    sizeClass="max-w-lg"
   >
-    <AddRecord v-if="type === 'add'" />
-    <EditRecord v-if="type === 'edit'" />
-    <ViewRecord v-if="type === 'view'" />
+    <AddEvent v-if="type === 'add'" />
+    <EditEvent v-if="type === 'edit'" />
+    <ViewEvent v-if="type === 'view'" />
   </Modal>
 </template>
 <script>
+import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
@@ -229,17 +247,17 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
-import AddRecord from "../member-add.vue";
-import EditRecord from "../member-edit.vue";
-import ViewRecord from "../member-preview.vue";
+import AddEvent from "./addevent.vue";
+import EditEvent from "./editevent.vue";
+import ViewEvent from "./preview.vue";
 
 import window from "@/mixins/window";
 export default {
   mixins: [window],
   components: {
-    AddRecord,
-    EditRecord,
-    ViewRecord,
+    AddEvent,
+    EditEvent,
+    ViewEvent,
     Pagination,
     InputGroup,
     Modal,
@@ -248,6 +266,7 @@ export default {
     Card,
     MenuItem,
     Button,
+    VueSelect,
     VueTailwindDatePicker,
   },
 
@@ -258,11 +277,41 @@ export default {
       perpage: 10,
       pageRange: 5,
       searchTerm: "",
+      filterType: "",
       type: "",
       id: null,
       filters: ["all", "pending"],
       activeFilter: "",
-      dateValue: null,
+      dateValue: [],
+      center: "",
+      zone: "",
+      eventsOption: [
+        {
+          value: "Baby Christening",
+          label: "Baby Christening",
+        },
+        {
+          value: "Baby Dedication",
+          label: "Baby Dedication",
+        },
+        {
+          value: "House Warming",
+          label: "House Warming",
+        },
+        {
+          value: "Special Thanksgiving",
+          label: "Special Thanksgiving",
+        },
+        {
+          value: "Burial Ceremony",
+          label: "Burial Ceremony",
+        },
+      ],
+      membersOptions: [
+        { value: "admin", label: "John Snow" },
+        { value: "hod", label: "Tony Starke" },
+      ],
+
       formatter: {
         date: "DD MMM YYYY",
         month: "MMM",
@@ -272,14 +321,12 @@ export default {
           name: "Approve",
         },
         {
-          name: "Delist",
+          name: "Decline",
         },
         {
           name: "view",
         },
-        {
-          name: "edit",
-        },
+
         {
           name: "delete",
         },
@@ -304,34 +351,33 @@ export default {
       ],
       columns: [
         {
-          label: "Name",
+          label: "Zone",
+          field: "zone",
+        },
+        {
+          label: "Center",
+          field: "center",
+        },
+        {
+          label: "Request Date",
+          field: "date",
+        },
+        {
+          label: "Requester Name",
           field: "name",
         },
         {
-          label: "Email",
-          field: "email",
+          label: "Event Type",
+          field: "type",
         },
 
         {
-          label: "Phone",
-          field: "phone",
+          label: "Event date",
+          field: "eventDate",
         },
         {
-          label: "Gender",
-          field: "gender",
-        },
-        {
-          label: "Role",
-          field: "role",
-        },
-        {
-          label: "DOB",
-          field: "dob",
-        },
-
-        {
-          label: "Department",
-          field: "department",
+          label: "Status",
+          field: "status",
         },
 
         {
@@ -350,14 +396,14 @@ export default {
           name: "view",
           icon: "heroicons-outline:eye",
           doit: () => {
-            this.$router.push("/members-management/preview/" + id);
+            this.$refs.modalChange.openModal();
           },
         },
         edit: {
           name: "edit",
           icon: "heroicons:pencil-square",
           doit: () => {
-            this.$router.push("/members-management/edit/" + id);
+            this.$refs.modalChange.openModal();
           },
         },
         delete: {

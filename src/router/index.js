@@ -174,6 +174,22 @@ const routes = [
                   },
                 },
               },
+              {
+                path: "zone-members/:id",
+                name: "Zone members",
+
+                component: () =>
+                  import(
+                    "@/components/Pages/Dashboard/CIH/Zones/zone-members.vue"
+                  ),
+                meta: {
+                  activeName: "cih management",
+                  groupParent: {
+                    name: "CIH Zones",
+                    url: "/cih/zones",
+                  },
+                },
+              },
             ],
           },
 
@@ -188,6 +204,15 @@ const routes = [
               {
                 path: "",
                 name: "CIH Centers",
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Centers/centers"),
+                meta: {
+                  activeName: "cih management",
+                },
+              },
+              {
+                path: "center",
+                name: "CIH Center",
                 component: () =>
                   import("@/components/Pages/Dashboard/CIH/Centers/centers"),
                 meta: {

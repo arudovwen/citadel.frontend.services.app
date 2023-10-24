@@ -123,7 +123,7 @@ const formData = reactive({
     males: null,
     females: null,
   },
-  females: {
+  teenagers: {
     total: null,
     males: null,
     females: null,
