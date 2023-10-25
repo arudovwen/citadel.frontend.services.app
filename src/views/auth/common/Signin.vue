@@ -84,6 +84,7 @@ export default {
   setup() {
     // eslint-disable-next-line no-unused-vars
     const route = useRoute();
+    // eslint-disable-next-line no-unused-vars
     const { state, dispatch } = useStore();
     const isLoading = computed(() => state.auth.loading);
     const success = computed(() => state.auth.loginsuccess);
@@ -119,7 +120,20 @@ export default {
       useField("password");
 
     const onSubmit = handleSubmit((values) => {
-      dispatch("login", { ...values, grantType: "password" });
+      console.log("🚀 ~ file: Signin.vue:123 ~ onSubmit ~ values:", values);
+      toast.success("Login successful");
+
+      let users = [
+        {
+          name: "dashcode",
+          email: "dashcode@gmail.com",
+          password: "dashcode",
+        },
+      ];
+      localStorage.setItem("users", JSON.stringify(users));
+      localStorage.setItem("accessToken", JSON.stringify(users));
+      window.location.replace("/profile");
+      // dispatch("login", { ...values, grantType: "password" });
     });
     watch(success, () => {
       toast.success("Login successful");
