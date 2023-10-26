@@ -91,6 +91,8 @@
 </template>
 
 <script setup>
+import { useToast } from "vue-toastification";
+
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
@@ -104,6 +106,7 @@ import {
   departmentMenu,
   CIHAddressMenu,
 } from "@/constant/data";
+const toast = useToast();
 // Define a validation schema
 const schema = yup.object({
   levelOfATS: yup
@@ -212,6 +215,7 @@ const { value: CIHAddress, errorMessage: CIHAddressError } =
 
 const onSubmit = handleSubmit((values) => {
   console.log("PersonalDetails: " + JSON.stringify(values));
+  toast.success("Update successful");
   goToProfile();
 });
 </script>

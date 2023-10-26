@@ -71,7 +71,9 @@ import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
 import Icon from "@/components/Icon";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const formValues = {
   highestQualification: "",
   lowestQualification: "",
@@ -100,5 +102,6 @@ const onSubmit = handleSubmit(() => {
   console.log(
     "Qualifications: " + JSON.stringify(values.qualifications, null, 2)
   );
+  toast.success("Successfully updated qualifications");
 });
 </script>
