@@ -1298,3 +1298,33 @@ export const meetingsTable = [
     venue: "Akoka",
   },
 ];
+
+export const firstTimersTable = [
+  {
+    id: "1",
+    name: "Tunde Famakinwa",
+    email: "Tfama@gmail.com",
+    phone: "08012345678",
+    gender: "Male",
+    dob: "01/12/2024",
+    department: "Logistics",
+  },
+  {
+    id: "2",
+    name: "Mike Okonkwo",
+    email: "MKO@gmail.com",
+    phone: "08012345678",
+    gender: "Male",
+    dob: "01/12/2024",
+    department: "Logistics",
+  },
+  {
+    id: "3",
+    name: "Minato Namikaze",
+    email: "flyineRaijin@gmail.com",
+    phone: "08012345678",
+    gender: "Male",
+    dob: "01/12/2024",
+    department: "Logistics",
+  },
+];

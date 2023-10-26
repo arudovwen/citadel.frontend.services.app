@@ -8,7 +8,7 @@
           <Button
             text="Add new"
             icon="heroicons-outline:plus"
-            btnClass="btn-dark"
+            btnClass="btn btn-primary "
             @click="push(formValues)"
           />
         </div>
@@ -56,7 +56,7 @@
           <div class="ltr:text-right rtl:text-left">
             <Button
               text="Submit"
-              btnClass="btn-dark"
+              btnClass="btn btn-primary "
               :isDisabled="fields.length === 0"
             />
           </div>
