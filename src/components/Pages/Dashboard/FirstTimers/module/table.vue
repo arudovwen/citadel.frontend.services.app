@@ -41,7 +41,7 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
-          styleClass="vgt-table centered"
+          styleClass="vgt-table "
           :rows="firstTimersTable"
           :sort-options="{
             enabled: false,

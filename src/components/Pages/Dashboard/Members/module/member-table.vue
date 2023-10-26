@@ -43,8 +43,8 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
-          styleClass=" vgt-table  centered "
-          :rows="advancedTable"
+          styleClass=" vgt-table   "
+          :rows="membersTable"
           :sort-options="{
             enabled: false,
           }"
@@ -228,7 +228,7 @@ import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
-import { advancedTable } from "@/constant/basic-tablle-data";
+import { membersTable } from "@/constant/basic-tablle-data";
 import AddRecord from "../member-add.vue";
 import EditRecord from "../member-edit.vue";
 import ViewRecord from "../member-preview.vue";
@@ -253,7 +253,7 @@ export default {
 
   data() {
     return {
-      advancedTable,
+      membersTable,
       current: 1,
       perpage: 10,
       pageRange: 5,
