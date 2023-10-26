@@ -27,11 +27,10 @@
             iconClass="text-lg"
           />
           <Button
-            icon="heroicons-outline:plus-sm"
+            icon="ri:user-add-line"
             text="Add Member"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
-          
           />
         </div>
       </div>
@@ -51,7 +50,6 @@
             enabled: true,
             externalQuery: searchTerm,
           }"
-       
         >
           <template v-slot:table-row="props">
             <span
@@ -223,7 +221,7 @@ export default {
         },
       ],
       options: [
-      {
+        {
           value: "25",
           label: "25",
         },
@@ -241,8 +239,6 @@ export default {
         },
       ],
       columns: [
-       
-
         {
           label: "Customer",
           field: "customer",
