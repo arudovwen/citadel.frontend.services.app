@@ -54,7 +54,6 @@
             enabled: true,
             externalQuery: searchTerm,
           }"
-       
         >
           <template v-slot:table-row="props">
             <span
@@ -304,7 +303,6 @@ export default {
         },
       ],
       columns: [
-       
         {
           label: "Date",
           field: "date",

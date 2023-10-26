@@ -13,7 +13,7 @@
           />
 
           <!-- <VueTailwindDatePicker
-            v-model="dateValue"
+            v-model="dateValue"mdi:house-group-add
             :formatter="formatter"
             input-classes="form-control h-[36px]"
             placeholder="Select date"
