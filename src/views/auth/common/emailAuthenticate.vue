@@ -134,7 +134,7 @@ watch(isOtpSuccess, () => {
 });
 watch(isSuccess, () => {
   toast.success("Sign up successful");
-  isSuccess.value && router.push(`/login`);
+  isSuccess.value && router.push(`/`);
 });
 </script>
 

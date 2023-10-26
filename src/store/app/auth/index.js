@@ -185,11 +185,13 @@ export default {
     async signup({ commit }, data) {
       try {
         commit("signupBegin");
-        const response = await DataService.post(urls.SIGN_UP_USER, data);
+        console.log(data);
+        // const response = await DataService.post(urls.SIGN_UP_USER, data);
 
-        if (response.status === 200) {
-          commit("signupSuccess");
-        }
+        // if (response.status === 200) {
+        //   commit("signupSuccess");
+        // }
+        commit("signupSuccess");
       } catch (err) {
         commit("signupErr", err);
       }
@@ -197,13 +199,16 @@ export default {
     async validateEmailInitiate({ commit }, data) {
       try {
         commit("validateInitiateBegin");
-        const response = await DataService.post(
-          urls.VALIDATE_EMAIL_INITIATE,
-          data
-        );
-        if (response.status === 200) {
-          commit("validateInitiateSuccess", response.data.message);
-        }
+        // const response = await DataService.post(
+        //   urls.VALIDATE_EMAIL_INITIATE,
+        //   data
+        // );
+        // if (response.status === 200) {
+        //   commit("validateInitiateSuccess", response.data.message);
+        // }
+
+        console.log(data);
+        commit("validateInitiateSuccess", "Successful");
       } catch (err) {
         commit("validateInitiateErr", err);
       }
@@ -211,14 +216,16 @@ export default {
     async validateEmailComplete({ commit }, data) {
       try {
         commit("validateEndBegin");
-        const response = await DataService.post(
-          urls.VALIDATE_EMAIL_COMPLETE,
-          data
-        );
+        // const response = await DataService.post(
+        //   urls.VALIDATE_EMAIL_COMPLETE,
+        //   data
+        // );
 
-        if (response.status === 200) {
-          commit("validateEndSuccess");
-        }
+        // if (response.status === 200) {
+        //   commit("validateEndSuccess");
+        // }
+        console.log(data);
+        commit("validateEndSuccess");
       } catch (err) {
         commit("validateEndErr", err);
       }
