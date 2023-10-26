@@ -66,27 +66,28 @@
     </Card>
   </div>
   <Modal
-    title="Confirm action"
+    title="Delete Zone"
     label="Small modal"
-    labelClass="btn-outline-dark"
+    labelClass="btn-outline-danger"
     ref="modal"
     sizeClass="max-w-md"
+    themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure about this action?
+      Are you sure you want to delete this zone?
     </div>
 
     <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
           text="Cancel"
-          btnClass="btn-outline-secondary btn-sm "
+          btnClass="btn-outline-secondary btn-sm"
           @click="$refs.modal.closeModal()"
         />
         <Button
-          text="Proceed"
-          btnClass="btn-dark btn-sm"
-          @click="handleDelete"
+          text="Delete"
+          btnClass="btn-danger btn-sm"
+          @click="$refs.modal.closeModal()"
         />
       </div>
     </template>
@@ -133,6 +134,7 @@ const actions = ref([
   },
 ]);
 
+// eslint-disable-next-line no-unused-vars
 function handleDelete() {
   store.dispatch("removeZone", detail.value);
 }

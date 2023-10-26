@@ -160,7 +160,7 @@
       </div>
     </Card>
   </div>
-  <Modal
+  <!-- <Modal
     title="Confirm action"
     label="Small modal"
     labelClass="btn-outline-dark"
@@ -188,6 +188,34 @@
         <Button
           text="Proceed"
           btnClass="btn-dark btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+      </div>
+    </template>
+  </Modal> -->
+
+  <Modal
+    title="Delete Member"
+    label="Small modal"
+    labelClass="btn-outline-danger"
+    ref="modal"
+    sizeClass="max-w-md"
+    themeClass="bg-danger-500"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure you want to delete this member?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Delete"
+          btnClass="btn-danger btn-sm"
           @click="$refs.modal.closeModal()"
         />
       </div>
