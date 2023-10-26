@@ -1,8 +1,9 @@
 <template>
   <div>
     <Card noborder>
-      <div class="md:flex pb-6 items-center">
-        <h6 class="flex-1 md:mb-0 mb-3"></h6>
+      <h6 class="flex-1 md:mb-0 mb-3"></h6>
+
+      <div class="md:flex pb-6 justify-between items-center">
         <div
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
@@ -23,7 +24,11 @@
             placeholder="Select date"
             as-single
           />
-
+        </div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Appointment"
@@ -38,6 +43,7 @@
           />
         </div>
       </div>
+
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
@@ -54,7 +60,6 @@
             enabled: true,
             externalQuery: searchTerm,
           }"
-       
         >
           <template v-slot:table-row="props">
             <span
@@ -169,14 +174,15 @@
     </Card>
   </div>
   <Modal
-    title="Confirm this action"
+    title="Delete Appointment"
     label="Small modal"
     labelClass="btn-outline-dark"
     ref="modal"
     sizeClass="max-w-md"
+    themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure about this action?
+      Are you sure you want to delete this appointment?
     </div>
 
     <template v-slot:footer>
@@ -187,8 +193,8 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          text="Proceed"
-          btnClass="btn-dark btn-sm"
+          text="Delete"
+          btnClass="btn-danger btn-sm"
           @click="$refs.modal.closeModal()"
         />
       </div>
@@ -304,7 +310,6 @@ export default {
         },
       ],
       columns: [
-       
         {
           label: "Date",
           field: "date",
