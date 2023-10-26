@@ -2,13 +2,7 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div
-          class="flex md:mb-0 mb-3 border border-gray-200 rounded text-sm"
-        ></div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
+        <div class="flex gap-x-4 rounded text-sm">
           <InputGroup
             v-model="searchTerm"
             placeholder="Search"
@@ -18,13 +12,6 @@
             classInput="min-w-[220px] !h-9"
           />
 
-          <!-- <VueTailwindDatePicker
-            v-model="dateValue"
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="Select date"
-            as-single
-          /> -->
           <VueSelect
             class="min-w-[200px] w-full md:w-auto h-9"
             v-model="zone"
@@ -32,6 +19,11 @@
             placeholder="Select zone"
             name="zone"
           />
+        </div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add center"
@@ -62,7 +54,6 @@
             enabled: true,
             externalQuery: searchTerm,
           }"
-       
         >
           <template v-slot:table-row="props">
             <span

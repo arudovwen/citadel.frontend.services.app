@@ -2,7 +2,7 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex md:mb-0 mb-3">
+        <div class="flex gap-x-4 items-center">
           <InputGroup
             v-model="searchTerm"
             placeholder="Search"
@@ -11,11 +11,6 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
-        </div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
           <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
@@ -43,6 +38,11 @@
             placeholder="Filter center"
             name="center"
           />
+        </div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Event"
@@ -73,7 +73,6 @@
             enabled: true,
             externalQuery: searchTerm,
           }"
-       
         >
           <template v-slot:table-row="props">
             <span

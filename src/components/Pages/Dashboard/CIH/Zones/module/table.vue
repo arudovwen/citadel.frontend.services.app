@@ -64,7 +64,6 @@
             enabled: true,
             externalQuery: searchTerm,
           }"
-       
         >
           <template v-slot:table-row="props">
             <span
@@ -322,17 +321,12 @@ export default {
       ],
       columns: [
         {
-          label: "Date created",
-          field: "date",
-        },
-        {
-          label: "Name",
+          label: "Center Name",
           field: "name",
         },
-
         {
-          label: "Total members",
-          field: "total",
+          label: "Coordinator",
+          field: "coordinator",
         },
 
         {
@@ -340,6 +334,14 @@ export default {
           field: "location",
         },
 
+        {
+          label: "Total members",
+          field: "total",
+        },
+        {
+          label: "Date created",
+          field: "date",
+        },
         {
           label: "Action",
           field: "action",

@@ -52,7 +52,7 @@
             </div>
           </div>
           <div class="auth-footer text-center">
-            Copyright {{ new Date().getFullYear() }}, Dashcode All Rights
+            Copyright {{ new Date().getFullYear() }}, Citadel All Rights
             Reserved.
           </div>
         </div>
