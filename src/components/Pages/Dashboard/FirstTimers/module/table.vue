@@ -41,8 +41,8 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
-          styleClass="vgt-table centered"
-          :rows="advancedTable"
+          styleClass="vgt-table "
+          :rows="firstTimersTable"
           :sort-options="{
             enabled: false,
           }"
@@ -211,7 +211,7 @@ import Modal from "@/components/Modal/Modal";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
-import { advancedTable } from "@/constant/basic-tablle-data";
+import { firstTimersTable } from "@/constant/basic-tablle-data";
 import window from "@/mixins/window";
 import AddRecord from "../member-add.vue";
 import EditRecord from "../member-edit.vue";
@@ -236,7 +236,7 @@ export default {
 
   data() {
     return {
-      advancedTable,
+      firstTimersTable,
       current: 1,
       perpage: 10,
       pageRange: 5,
