@@ -177,7 +177,7 @@
           @click="addDetail"
           class="mt-6 ltr:text-right rtl:text-left"
         >
-          <Button text="Submit" btnClass="btn-dark" />
+          <Button text="Submit" btnClass="btn btn-primary" />
         </div>
       </div>
     </Card>
@@ -193,12 +193,13 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { titleMenu, genderMenu, childrenDetailstable } from "@/constant/data";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
-
+import { useToast } from "vue-toastification";
 import * as yup from "yup";
 import { ref } from "vue";
 // import { useRouter } from "vue-router";
 
 // Define a validation schema
+const toast = useToast();
 const childrenDetails = ref([]);
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
@@ -307,6 +308,7 @@ const pushDetails = handleSubmit((values) => {
 });
 
 const addDetail = () => {
+  toast.success("Update successful");
   console.log("PersonalDetails: " + JSON.stringify(childrenDetails.value));
 };
 </script>

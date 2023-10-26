@@ -107,6 +107,7 @@
 </template>
 
 <script setup>
+import { useToast } from "vue-toastification";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
@@ -114,6 +115,8 @@ import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useRouter } from "vue-router";
 import { titleMenu, genderMenu } from "@/constant/data";
+
+const toast = useToast();
 // Define a validation schema
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
@@ -193,6 +196,7 @@ const { value: weddingAnniversary } = useField("weddingAnniversary");
 
 const onSubmit = handleSubmit((values) => {
   console.log("PersonalDetails: " + JSON.stringify(values));
+  toast.success("Update successful");
   goToProfile();
 });
 </script>

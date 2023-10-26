@@ -105,6 +105,9 @@ import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useRouter } from "vue-router";
 import { LGAMenu, stateMenu, countryMenu, industryMenu } from "@/constant/data";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 // Define a validation schema
 const schema = yup.object({
   employerName: yup.string(),
@@ -201,6 +204,7 @@ const { value: subSector, errorMessage: subSectorError } =
 
 const onSubmit = handleSubmit((values) => {
   console.log("PersonalDetails: " + JSON.stringify(values));
+  toast.success("Update successful");
   goToProfile();
 });
 </script>

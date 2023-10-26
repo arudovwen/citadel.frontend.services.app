@@ -200,7 +200,9 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
+
 import {
   titleMenu,
   LGAMenu,
@@ -212,6 +214,9 @@ import {
   stateOfOriginMenu,
   maritalStatusMenu,
 } from "@/constant/data";
+
+const toast = useToast();
+// const router = useRouter();
 // Define a validation schema
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
@@ -290,11 +295,9 @@ const schema = yup.object({
     .nullable(),
 });
 
-const router = useRouter();
-
-const goToProfile = () => {
-  router.push("/profile");
-};
+// const goToProfile = () => {
+//   router.push("/profile");
+// };
 
 const formValues = {
   firstName: "",
@@ -383,7 +386,8 @@ const { value: maritalStatus, errorMessage: maritalStatusError } =
 
 const onSubmit = handleSubmit((values) => {
   console.log("PersonalDetails: " + JSON.stringify(values));
-  goToProfile();
+  // goToProfile();
+  toast.success("Profile update successful");
 });
 </script>
 
