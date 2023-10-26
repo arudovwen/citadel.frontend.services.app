@@ -23,13 +23,10 @@
             as-single
           />
         </div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
+        <div class="md:flex md:space-x-3 items-center flex-none">
           <Button
-            icon="heroicons-outline:plus-sm"
-            text="Add Record"
+            icon="ri:user-add-line"
+            text="Add Member"
             btnClass="btn-primary font-normal btn-sm"
             iconClass="text-lg"
             @click="

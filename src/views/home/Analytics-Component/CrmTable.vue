@@ -172,7 +172,7 @@ export default {
         {
           id: 1,
           order: 951,
-          name: "Jenny Wilson",
+          name: "Welfare",
           date: "3/26/2022",
           hod: "John Woo",
           members: "53",
@@ -181,7 +181,7 @@ export default {
         {
           id: 1,
           order: 951,
-          name: "Frank Jlop",
+          name: "Choir",
           date: "3/26/2022",
           hod: "Chris Kyle",
           members: "53",
@@ -190,7 +190,7 @@ export default {
         {
           id: 1,
           order: 951,
-          name: "Faith Asemota",
+          name: "Visitation",
           date: "3/26/2022",
           hod: "Janne joane",
           members: "53",
