@@ -1,5 +1,5 @@
 <template>
-  <div class="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+  <div class="grid xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
     <Card bodyClass="p-6" v-for="(item, i) in projects" :key="i">
       <!-- header -->
       <header class="flex justify-between items-end">
