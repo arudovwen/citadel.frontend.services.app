@@ -1279,6 +1279,8 @@ export const appointmentTable = [
     time: "1/01/2023",
     purpose: "Meeting with Daddy G.O",
     whoToSee: "Daddy G.O",
+    status: "Approved",
+    name: "David Collins",
   },
   {
     id: "2",
@@ -1286,6 +1288,8 @@ export const appointmentTable = [
     time: "1/01/2023",
     purpose: "Meeting with Daddy G.O",
     whoToSee: "Daddy G.O",
+    status: "Rejected",
+    name: "Femi Asiwaju",
   },
 ];
 

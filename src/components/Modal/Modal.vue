@@ -168,6 +168,8 @@ export default defineComponent({
     themeClass: {
       type: String,
       default:
+        // "bg-[#CE9A22] dark:bg-slate-800 dark:border-b dark:border-slate-700",
+
         "bg-slate-900 dark:bg-slate-800 dark:border-b dark:border-slate-700",
     },
     sizeClass: {

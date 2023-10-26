@@ -149,14 +149,15 @@
     </Card>
   </div>
   <Modal
-    title="Confirm this action"
+    title="Delete First Timer"
     label="Small modal"
-    labelClass="btn-outline-dark"
+    labelClass="btn-outline-danger"
     ref="modal"
     sizeClass="max-w-md"
+    themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure about this action?
+      Are you sure you want to delete this first timer?
     </div>
 
     <template v-slot:footer>
@@ -167,8 +168,8 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          text="Proceed"
-          btnClass="btn-dark btn-sm"
+          text="Delete"
+          btnClass="btn-danger btn-sm"
           @click="$refs.modal.closeModal()"
         />
       </div>
