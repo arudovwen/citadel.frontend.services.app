@@ -11,15 +11,6 @@
       :sort-options="{
         enabled: false,
       }"
-      :select-options="{
-        enabled: true,
-        selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
-        selectioninfoClass: 'custom-class',
-        selectionText: 'rows selected',
-        clearSelectionText: 'clear',
-        disableSelectinfo: true, // disable the select info-500 panel on top
-        selectAllByGroup: true, // when used in combination with a grouped table, add a checkbox in the header row to check/uncheck the entire group
-      }"
     >
       <template v-slot:table-row="props">
         <span v-if="props.column.field == 'customer'" class="flex items-center">
@@ -71,7 +62,7 @@
           </span>
         </span>
         <span v-if="props.column.field == 'action'">
-          <div class="flex space-x-3 justify-center">
+          <div class="flex space-x-3 justify-start">
             <Tooltip placement="top" arrow theme="dark">
               <template #button>
                 <div class="action-btn">
@@ -99,9 +90,9 @@
           </div>
         </span>
       </template>
-      <template #pagination-bottom="props">
+      <template #pagination-bottom="">
         <div class="py-4 px-3 flex justify-center">
-          <Pagination
+          <!-- <Pagination
             :total="50"
             :current="current"
             :per-page="perpage"
@@ -111,7 +102,7 @@
             :perPageChanged="props.perPageChanged"
           >
             >
-          </Pagination>
+          </Pagination> -->
         </div>
       </template>
     </vue-good-table>
@@ -120,25 +111,23 @@
 <script>
 import Icon from "@/components/Icon";
 import Tooltip from "@/components/Tooltip";
-import Pagination from "@/components/Pagination";
-import { advancedTable } from "../../../constant/basic-tablle-data";
+// import Pagination from "@/components/Pagination";
 export default {
   components: {
-    Pagination,
+    // Pagination,
     Icon,
     Tooltip,
   },
 
   data() {
     return {
-      advancedTable,
       current: 1,
       perpage: 10,
       pageRange: 5,
       searchTerm: "",
 
       options: [
-      {
+        {
           value: "25",
           label: "25",
         },
@@ -156,37 +145,56 @@ export default {
         },
       ],
       columns: [
-       
         {
-          label: "Order",
-          field: "order",
+          label: "Department name",
+          field: "name",
         },
         {
-          label: "Customer",
-          field: "customer",
+          label: "Hod",
+          field: "hod",
         },
         {
-          label: "Date",
+          label: "Total members",
+          field: "members",
+        },
+
+        {
+          label: "Date created",
           field: "date",
         },
 
         {
-          label: "Quantity",
-          field: "quantity",
-        },
-
-        {
-          label: "Amount",
-          field: "amount",
-        },
-
-        {
-          label: "Status",
-          field: "status",
-        },
-        {
           label: "Action",
           field: "action",
+        },
+      ],
+      advancedTable: [
+        {
+          id: 1,
+          order: 951,
+          name: "Jenny Wilson",
+          date: "3/26/2022",
+          hod: "John Woo",
+          members: "53",
+          action: null,
+        },
+        {
+          id: 1,
+          order: 951,
+          name: "Frank Jlop",
+          date: "3/26/2022",
+          hod: "Chris Kyle",
+          members: "53",
+          action: null,
+        },
+        {
+          id: 1,
+          order: 951,
+          name: "Faith Asemota",
+          date: "3/26/2022",
+          hod: "Janne joane",
+          members: "53",
+          action: null,
         },
       ],
     };

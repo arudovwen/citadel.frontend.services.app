@@ -49,11 +49,11 @@
         </div> -->
 
         <!-- assign and time count -->
-        <div class="flex justify-end mt-6">
+        <div class="flex justify-start mt-6">
           <!-- assign -->
 
           <!-- total date -->
-          <div class="text-right">
+          <div class="text-left">
             <span
               class="inline-flex items-center space-x-1 bg-gray-500 bg-opacity-[0.16] text-gray-500 text-xs font-normal px-2 py-1 rounded-full"
             >
