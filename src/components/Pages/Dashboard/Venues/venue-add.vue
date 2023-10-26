@@ -5,7 +5,7 @@
         <Textinput
           label="Name"
           type="text"
-          placeholder="Type your name"
+          placeholder="Type name of venue"
           name="name"
           v-model="name"
           :error="nameError"
