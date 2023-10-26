@@ -163,10 +163,10 @@ export default {
           field: "date",
         },
 
-        {
-          label: "Action",
-          field: "action",
-        },
+        // {
+        //   label: "Action",
+        //   field: "action",
+        // },
       ],
       advancedTable: [
         {

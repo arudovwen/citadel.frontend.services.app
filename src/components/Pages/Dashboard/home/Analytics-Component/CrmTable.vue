@@ -183,10 +183,10 @@ export default {
           label: "Status",
           field: "status",
         },
-        {
-          label: "Action",
-          field: "action",
-        },
+        // {
+        //   label: "Action",
+        //   field: "action",
+        // },
       ],
     };
   },
