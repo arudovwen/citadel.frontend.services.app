@@ -151,33 +151,7 @@ export const ProfileMenu = [
     link: "/",
   },
 ];
-export const notifications = [
-  {
-    title: "Your order is placed",
-    desc: "Amet minim mollit non deser unt ullamco est sit aliqua.",
-    image: "user.png",
-    link: "#",
-  },
-  {
-    title: "Congratulations Darlene  🎉",
-    desc: "Won the monthly best seller badge",
-    unread: true,
-    image: "user2.png",
-    link: "#",
-  },
-  {
-    title: "Revised Order 👋",
-    desc: "Won the monthly best seller badge",
-    image: "user3.png",
-    link: "#",
-  },
-  {
-    title: "Brooklyn Simmons",
-    desc: "Added you to Top Secret Project group...",
-    image: "user4.png",
-    link: "#",
-  },
-];
+export const notifications = [];
 export const message = [
   {
     title: "Wade Warren",
