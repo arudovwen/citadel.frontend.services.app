@@ -156,10 +156,7 @@ export default {
         },
       ],
       columns: [
-        {
-          label: "Id",
-          field: "id",
-        },
+       
         {
           label: "Order",
           field: "order",

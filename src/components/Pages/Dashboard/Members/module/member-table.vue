@@ -2,13 +2,7 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div
-          class="flex md:mb-0 mb-3 border border-gray-200 rounded-[6px] text-sm overflow-hidden"
-        ></div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
+        <div class="flex rounded-[6px] text-sm overflow-hidden gap-x-4">
           <InputGroup
             v-model="searchTerm"
             placeholder="Search"
@@ -25,7 +19,11 @@
             placeholder="Select date"
             as-single
           />
-
+        </div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Member"
@@ -55,15 +53,6 @@
           :search-options="{
             enabled: true,
             externalQuery: searchTerm,
-          }"
-          :select-options="{
-            enabled: true,
-            selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
-            selectioninfoClass: 'table-input-checkbox',
-            selectionText: 'rows selected',
-            clearSelectionText: 'clear',
-            disableSelectinfo: true, // disable the select info-500 panel on top
-            selectAllByGroup: true, // when used in combination with a grouped table, add a checkbox in the header row to check/uncheck the entire group
           }"
         >
           <template v-slot:table-row="props">
@@ -123,7 +112,10 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="generateAction(item.name, props.row.id).doit"
+                      @click="
+                        generateAction(item.name.toLowerCase(), props.row.id)
+                          .doit
+                      "
                       :class="`
                 
                   ${
@@ -269,12 +261,6 @@ export default {
       },
       actions: [
         {
-          name: "Approve",
-        },
-        {
-          name: "Delist",
-        },
-        {
           name: "view",
         },
         {
@@ -350,14 +336,14 @@ export default {
           name: "view",
           icon: "heroicons-outline:eye",
           doit: () => {
-            this.$router.push("/members-management/preview/" + id);
+            this.$router.push("/profile");
           },
         },
         edit: {
           name: "edit",
           icon: "heroicons:pencil-square",
           doit: () => {
-            this.$router.push("/members-management/edit/" + id);
+            this.$router.push("/profile");
           },
         },
         delete: {

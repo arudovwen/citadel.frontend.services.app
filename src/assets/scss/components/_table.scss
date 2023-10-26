@@ -35,7 +35,7 @@ table.vgt-table {
   &.centered {
     td,
     th {
-      @apply text-center;
+      @apply text-left;
     }
   }
   &.table-head,
