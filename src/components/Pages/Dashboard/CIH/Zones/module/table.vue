@@ -2,13 +2,7 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div
-          class="flex md:mb-0 mb-3 border border-gray-200 rounded text-sm"
-        ></div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
+        <div class="flex gap-x-4 rounded text-sm">
           <InputGroup
             v-model="searchTerm"
             placeholder="Search"
@@ -25,9 +19,13 @@
             placeholder="Select date"
             as-single
           /> -->
-
+        </div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
           <Button
-            icon="heroicons-outline:plus-sm"
+            icon="mdi:house-group-add"
             text="Add center"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"

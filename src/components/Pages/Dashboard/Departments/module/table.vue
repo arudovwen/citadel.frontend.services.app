@@ -35,7 +35,7 @@
           />
 
           <Button
-            icon="heroicons-outline:plus-sm"
+            icon="ri:user-add-line"
             text="Add Member"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"

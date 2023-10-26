@@ -25,7 +25,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
-            icon="heroicons-outline:plus-sm"
+            icon="mdi:house-group-add"
             text="Add center"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
