@@ -51,7 +51,7 @@
         </div>
 
         <!-- assign and time count -->
-        <div class="flex justify-end mt-6">
+        <div class="flex justify-start mt-6">
           <!-- assign -->
 
           <!-- total date -->

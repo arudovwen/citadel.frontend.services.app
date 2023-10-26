@@ -91,6 +91,13 @@
             v-model="desc"
             :error="descoError"
           />
+
+          <Select
+            label="HOD"
+            :options="roleOptions"
+            v-model="hod"
+            :error="hodError"
+          />
         </div>
 
         <div class="text-right">
@@ -101,6 +108,7 @@
   </div>
 </template>
 <script setup>
+import Select from "@/components/Select";
 import Button from "@/components/Button";
 // import FormGroup from "@/components/FormGroup";
 import Modal from "@/components/Modal";
@@ -150,7 +158,7 @@ const { value: newTodoText, errorMessage: newtodoError } =
   useField("newTodoText");
 const { value: desc, errorMessage: descoError } = useField("desc");
 
-// const { value: category, errorMessage: errorCategory } = useField("category");
+const { value: hod, errorMessage: hodError } = useField("hod");
 
 // const { value: assign, errorMessage: errorassign } = useField("assign");
 // const { value: startDate, errorMessage: errorstartDate } =
@@ -169,6 +177,10 @@ const addDepartment = handleSubmit(() => {
     progress: 40,
   });
 });
+const roleOptions = [
+  { value: "admin", label: "John Jones" },
+  { value: "hod", label: "Jane Jone" },
+];
 
 const closeModal = () => {
   store.dispatch("closeModal");

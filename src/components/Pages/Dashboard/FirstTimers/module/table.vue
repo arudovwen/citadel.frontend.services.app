@@ -1,8 +1,7 @@
 <template>
   <div>
     <Card noborder>
-      <div class="md:flex pb-6 items-center">
-        <h6 class="flex-1 md:mb-0 mb-3"></h6>
+      <div class="md:flex pb-6 justify-between items-center">
         <div
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
@@ -23,7 +22,11 @@
             placeholder="Select date"
             as-single
           />
-
+        </div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Record"
@@ -53,15 +56,6 @@
           :search-options="{
             enabled: true,
             externalQuery: searchTerm,
-          }"
-          :select-options="{
-            enabled: true,
-            selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
-            selectioninfoClass: 'table-input-checkbox',
-            selectionText: 'rows selected',
-            clearSelectionText: 'clear',
-            disableSelectinfo: true, // disable the select info-500 panel on top
-            selectAllByGroup: true, // when used in combination with a grouped table, add a checkbox in the header row to check/uncheck the entire group
           }"
         >
           <template v-slot:table-row="props">
@@ -255,7 +249,7 @@ export default {
           icon: "heroicons-outline:eye",
           doit: (name) => {
             this.type = name;
-            this.$refs.modalChange.openModal();
+            this.$router.push("/profile");
           },
         },
         {
@@ -263,7 +257,7 @@ export default {
           icon: "heroicons:pencil-square",
           doit: (name) => {
             this.type = name;
-            this.$refs.modalChange.openModal();
+            this.$router.push("/profile");
           },
         },
         {
@@ -315,11 +309,6 @@ export default {
         {
           label: "DOB",
           field: "dob",
-        },
-
-        {
-          label: "Department",
-          field: "department",
         },
 
         {

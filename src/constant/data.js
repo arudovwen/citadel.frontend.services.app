@@ -75,16 +75,16 @@ export const menuItems = [
   //   icon: "heroicons-outline:user",
   //   link: "issue-management",
   // },
-  {
-    title: "Events",
-    icon: "bx:server",
-    link: "/events",
-  },
-  {
-    title: "Notifications",
-    icon: "heroicons-outline:speakerphone",
-    link: "/notifications",
-  },
+  // {
+  //   title: "Events",
+  //   icon: "bx:server",
+  //   link: "/events",
+  // },
+  // {
+  //   title: "Notifications",
+  //   icon: "heroicons-outline:speakerphone",
+  //   link: "/notifications",
+  // },
   {
     title: "Appointments",
     icon: "bx:calendar-plus",

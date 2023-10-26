@@ -32,13 +32,6 @@
             placeholder="Provide an email address"
           />
         </div>
-        <Select
-          label="Role"
-          :options="roleOptions"
-          v-model="role"
-          :error="roleError"
-        />
-
         <Textinput
           label="Phone"
           type="text"
@@ -46,10 +39,16 @@
           :error="phoneNumberError"
           placeholder="Provide a phone number"
         />
+        <Select
+          label="Role"
+          :options="roleOptions"
+          v-model="role"
+          :error="roleError"
+        />
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Save record" btnClass="btn-dark" />
+        <Button type="submit" text="Add member" btnClass="btn-dark" />
       </div>
     </Card>
   </form>
