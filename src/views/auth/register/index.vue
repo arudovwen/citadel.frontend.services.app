@@ -52,8 +52,8 @@
             </div>
           </div>
           <div class="auth-footer text-center">
-            Copyright {{ new Date().getFullYear() }}, Dashcode All Rights
-            Reserved.
+            Copyright {{ new Date().getFullYear() }}, The Citadel Global
+            Community Church, All Rights Reserved.
           </div>
         </div>
       </div>

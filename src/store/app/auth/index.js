@@ -38,8 +38,12 @@ export default {
   },
   getters: {
     appointments: (state) => state.appointments,
+    userData: (state) => state.userData,
   },
   mutations: {
+    setUserData(state, payload) {
+      state.userData = payload;
+    },
     loginBegin(state) {
       state.loading = true;
       state.error = null;
@@ -159,8 +163,11 @@ export default {
         if (response.status === 200) {
           const accessToken = response.data.data.token;
           const userData = response.data.data.user;
+          commit("setUserData", userData);
+          // console.log("UserData:" + JSON.stringify(userData));
+
+          // localStorage.setItem("userData", JSON.stringify(userData));
           localStorage.setItem("accessToken", accessToken);
-          localStorage.setItem("userData", JSON.stringify(userData));
           commit("loginSuccess", accessToken);
         }
       } catch (err) {

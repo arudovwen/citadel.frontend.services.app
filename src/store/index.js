@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import createPersistedState from "vuex-persistedstate";
 import chat from "./app/chat";
 import email from "./app/email";
 import kanban from "./app/kanban";
@@ -17,6 +18,7 @@ import zone from "./app/zone";
 import center from "./app/center";
 import apptodo from "./app/todo";
 import auth from "./app/auth";
+import profile from "./app/profile";
 
 export default createStore({
   state: {
@@ -109,5 +111,7 @@ export default createStore({
     zone,
     center,
     auth,
+    profile,
   },
+  plugins: [createPersistedState()],
 });

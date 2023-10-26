@@ -87,14 +87,14 @@ client.interceptors.response.use(
 
     if (response) {
       if (response.status === 500) {
-        toast.error(response.data.message || "Smething went wrong");
+        toast.error(response.data.message || "Something went wrong");
       } else if (response.status === 401) {
         toast.error("Token expired");
 
         localStorage.clear();
         window.location.href = `/auth/login?redirect_from=${window.location.href}`;
       } else if (response.status > 399 && response.status < 500) {
-        toast.error(response.data.message || "Smething went wrong");
+        toast.error(response.data.message || "Something went wrong");
       } else {
         return originalRequest;
       }

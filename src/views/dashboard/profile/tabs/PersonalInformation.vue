@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
+    <!-- <span>UserData: {{ userData }}</span> -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
         label="First Name"
@@ -187,7 +188,11 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-      <button type="submit" class="btn btn-primary block w-full text-center">
+      <button
+        :disabled="createProfileLoading"
+        type="submit"
+        class="btn btn-primary block w-full text-center"
+      >
         Save Changes
       </button>
       <div class="hidden sm:block"></div>
@@ -200,7 +205,7 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 import {
   titleMenu,
   LGAMenu,
@@ -212,6 +217,21 @@ import {
   stateOfOriginMenu,
   maritalStatusMenu,
 } from "@/constant/data";
+import { useStore } from "vuex";
+import { computed, onMounted, watch } from "vue";
+import { useToast } from "vue-toastification";
+onMounted(() => {
+  // console.log("Store: " + store.getters["auth/userData"]);
+  // console.log("Store2: " + userData.value);
+  // console.log("Store3: " + JSON.stringify(store.getters.auth));
+});
+const store = useStore();
+const toast = useToast();
+const createProfileLoading = computed(
+  () => store.getters["profile/creatingProfile"]
+);
+// const userData = computed(() => store.getters["auth/userData"]);
+const creationSuccess = computed(() => store.getters["profile/profileCreated"]);
 // Define a validation schema
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
@@ -289,12 +309,6 @@ const schema = yup.object({
     })
     .nullable(),
 });
-
-const router = useRouter();
-
-const goToProfile = () => {
-  router.push("/profile");
-};
 
 const formValues = {
   firstName: "",
@@ -380,10 +394,39 @@ const { value: maritalStatus, errorMessage: maritalStatusError } =
   useField("maritalStatus");
 
 // const { value: email, errorMessage: emailError } = useField("email");
+const prepareDetails = (values) => {
+  const obj = {
+    title: values.title.value,
+    userId: "string",
+    firstName: values.firstName,
+    middleName: values.middleName,
+    surName: values.lastName,
+    mobile1: values.mobile1,
+    mobile2: values.mobile2,
+    email: values.email,
+    address: values.address1,
+    nearestBusStop: values.nearestBusStop,
+    lga: values.LGA.value,
+    state: values.state.value,
+    country: values.country.value,
+    gender: values.gender.value,
+    employmentStatus: values.employmentStatus.value,
+    dateOfBirth: "2023-10-24T21:35:06.954Z",
+    placeOfBirth: values.placeOfBirth,
+    nationality: values.nationality.value,
+    stateOfOrigin: values.stateOfOrigin.value,
+    maritalStatus: values.maritalStatus.value,
+  };
 
+  return obj;
+};
 const onSubmit = handleSubmit((values) => {
-  console.log("PersonalDetails: " + JSON.stringify(values));
-  goToProfile();
+  store.dispatch("createProfile", prepareDetails(values));
+  console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
+});
+
+watch(creationSuccess, () => {
+  toast.success("Successfully created profile");
 });
 </script>
 
