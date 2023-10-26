@@ -1,12 +1,8 @@
 <template>
   <div>
     <Card noborder>
-      <div class="md:flex pb-6 items-center">
-        <h6 class="flex-1 md:mb-0 mb-3"></h6>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
+      <div class="md:flex pb-6 items-center justify-between">
+        <div class="flex gap-x-4">
           <InputGroup
             v-model="searchTerm"
             placeholder="Search"
@@ -26,6 +22,11 @@
             btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
             iconClass="text-lg"
           />
+        </div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Meeting"
