@@ -3,7 +3,7 @@
     <Dialog
       @close="closeModal"
       as="div"
-      class="relative z-[99999]"
+      class="relative z-[999]"
       v-if="disableBackdrop === false"
     >
       <TransitionChild

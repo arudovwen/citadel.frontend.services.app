@@ -92,9 +92,16 @@ client.interceptors.response.use(
         toast.error("Token expired");
 
         localStorage.clear();
-        window.location.href = `/auth/login?redirect_from=${window.location.href}`;
+        window.location.href = `?redirect_from=${window.location.href}`;
       } else if (response.status > 399 && response.status < 500) {
-        toast.error(response.data.message || "Smething went wrong");
+        toast.error(response.data.message || "Something went wrong");
+        if (
+          response.data.message.includes("Your profile has not been activated")
+        ) {
+          const email = JSON.parse(originalRequest.data).username;
+
+          window.location.href = `/email-verify/${encodeURIComponent(email)}`;
+        }
       } else {
         return originalRequest;
       }
