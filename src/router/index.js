@@ -38,6 +38,13 @@ const routes = [
     beforeEnter: guardAuth,
   },
   {
+    path: "/reset-password",
+    name: "reset-password",
+    component: () => import("@/views/auth/reset-password.vue"),
+    meta: { auth: true },
+    beforeEnter: guardAuth,
+  },
+  {
     path: "/email-verify/:email",
     name: "email-verify",
     component: () => import("@/views/auth/email-authenticate.vue"),

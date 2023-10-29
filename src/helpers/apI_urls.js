@@ -75,4 +75,6 @@ export const urls = {
   GET_ALL_USERS: "/UserManagement/GetAllUsers",
   SIGN_UP_USER: "/UserManagement/SignUpUser",
   GET_USER_AVATAR: "/UserManagement/GetUserAvatar",
+
+  REQUEST_OTP: "/auth/requestotp",
 };

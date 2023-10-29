@@ -73,9 +73,9 @@ const toast = useToast();
 const isLoading = computed(() => state.auth.loading);
 const isOtpLoading = computed(() => state.auth.loading);
 const isSuccess = computed(() => state.auth.validendsuccess);
-const isOtpSuccess = computed(() => state.auth.validinitsuccess);
-const resendCountdown = ref(0);
-const resendDisabled = ref(false);
+const isOtpSuccess = computed(() => state.auth.requestsuccess);
+const resendCountdown = ref(20);
+const resendDisabled = ref(true);
 
 const resendOTP = () => {
   // Implement your OTP resend logic here
@@ -95,8 +95,9 @@ const resendOTP = () => {
 };
 
 const handleOtp = () => {
-  dispatch("validateEmailInitiate", {
+  dispatch("requestOtp", {
     emailAddress,
+    grantType: "password",
   });
 };
 onMounted(() => {

@@ -29,7 +29,9 @@ export default {
     forgotsuccess: false,
     validendsuccess: false,
     validinitsuccess: false,
+    requestsuccess: false,
     loading: null,
+    otp: "",
     accessToken: localStorage.getItem("accessToken") || null,
     avatar: localStorage.getItem("avatar") || null,
     userData: JSON.parse(localStorage.getItem("userData")) || null,
@@ -149,6 +151,21 @@ export default {
       state.error = err;
       state.resetsuccess = false;
     },
+    requestBegin(state) {
+      state.loading = true;
+      state.error = null;
+      state.requestsuccess = false;
+    },
+    requestSuccess(state, data) {
+      state.loading = false;
+      state.requestsuccess = true;
+      state.otp = data;
+    },
+    requestErr(state, err) {
+      state.loading = false;
+      state.error = err;
+      state.requestsuccess = false;
+    },
   },
   actions: {
     async login({ commit }, data) {
@@ -185,12 +202,12 @@ export default {
     async signup({ commit }, data) {
       try {
         commit("signupBegin");
-        console.log(data);
-        // const response = await DataService.post(urls.SIGN_UP_USER, data);
 
-        // if (response.status === 200) {
-        //   commit("signupSuccess");
-        // }
+        const response = await DataService.post(urls.SIGN_UP_USER, data);
+
+        if (response.status === 200) {
+          commit("signupSuccess");
+        }
         commit("signupSuccess");
       } catch (err) {
         commit("signupErr", err);
@@ -199,15 +216,14 @@ export default {
     async validateEmailInitiate({ commit }, data) {
       try {
         commit("validateInitiateBegin");
-        // const response = await DataService.post(
-        //   urls.VALIDATE_EMAIL_INITIATE,
-        //   data
-        // );
-        // if (response.status === 200) {
-        //   commit("validateInitiateSuccess", response.data.message);
-        // }
+        const response = await DataService.post(
+          urls.VALIDATE_EMAIL_INITIATE,
+          data
+        );
+        if (response.status === 200) {
+          commit("validateInitiateSuccess", response.data.message);
+        }
 
-        console.log(data);
         commit("validateInitiateSuccess", "Successful");
       } catch (err) {
         commit("validateInitiateErr", err);
@@ -216,21 +232,22 @@ export default {
     async validateEmailComplete({ commit }, data) {
       try {
         commit("validateEndBegin");
-        // const response = await DataService.post(
-        //   urls.VALIDATE_EMAIL_COMPLETE,
-        //   data
-        // );
+        const response = await DataService.post(
+          urls.VALIDATE_EMAIL_COMPLETE,
+          data
+        );
 
-        // if (response.status === 200) {
-        //   commit("validateEndSuccess");
-        // }
-        console.log(data);
+        if (response.status === 200) {
+          commit("validateEndSuccess");
+        }
+
         commit("validateEndSuccess");
       } catch (err) {
         commit("validateEndErr", err);
       }
     },
     async forgotPassword({ commit }, data) {
+      console.log("🚀 ~ file: index.js:250 ~ forgotPassword ~ data:", data);
       try {
         commit("forgotBegin");
         const response = await DataService.post(
@@ -258,6 +275,19 @@ export default {
         }
       } catch (err) {
         commit("resetErr", err);
+      }
+    },
+
+    async requestOtp({ commit }, data) {
+      try {
+        commit("requestBegin");
+        const response = await DataService.post(urls.REQUEST_OTP, data);
+
+        if (response.status === 200) {
+          commit("requestSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("requestErr", err);
       }
     },
   },
