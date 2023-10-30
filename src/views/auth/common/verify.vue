@@ -1,13 +1,15 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
     <Textinput
-      label="OTP token"
-      placeholder="Type your otp"
-      name="token"
-      v-model="token"
+      label="Password"
+      type="password"
+      placeholder="Type your password"
+      name="password"
+      v-model="password"
+      hasicon
       classInput="h-[48px]"
       required
-      :error="tokenError"
+      :error="passwordError"
     />
 
     <button
@@ -15,7 +17,7 @@
       type="submit"
       class="btn btn-primary block w-full text-center disabled:opacity-60"
     >
-      Verify Email
+      Verify
     </button>
 
     <button
@@ -35,26 +37,14 @@
 <script setup>
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 import { ref, watch, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 import Textinput from "@/components/Textinput";
 
-const schema = yup.object({
-  token: yup.string().required("Token is required"),
-});
-
-const { handleSubmit } = useForm({
-  validationSchema: schema,
-});
-
-const { value: token, errorMessage: tokenError } = useField("token");
-
-const router = useRouter();
 const route = useRoute();
 const { state, dispatch } = useStore();
-const emailAddress = route.params.email;
 const toast = useToast();
 const isLoading = computed(() => state.auth.loading);
 const isOtpLoading = computed(() => state.auth.loading);
@@ -80,17 +70,41 @@ const resendOTP = () => {
   }, 1000);
 };
 
+const formValues = {
+  emailAddress: route.params.email,
+  password: "",
+};
+// Define a validation schema
+const schema = yup.object({
+  emailAddress: yup.string().required("Email is required").email(),
+  password: yup.string().required("Password is required"),
+});
+
+const { handleSubmit } = useForm({
+  validationSchema: schema,
+  initialValues: formValues,
+});
+// No need to define rules for fields
+
+// eslint-disable-next-line no-unused-vars
+const { value: emailAddress, errorMessage: emailAddressError } =
+  useField("emailAddress");
+const { value: password, errorMessage: passwordError } = useField("password");
+
 const handleOtp = () => {
   dispatch("requestOtp", {
     emailAddress,
     grantType: "password",
   });
 };
-onMounted(() => {
-  setTimeout(() => {
-    handleOtp();
-  }, 1000);
+const onSubmit = handleSubmit((values) => {
+  dispatch("login", {
+    ...values,
+    username: values.emailAddress,
+    grantType: "password",
+  });
 });
+
 // Automatically start the countdown on component mount
 onMounted(() => {
   watch(
@@ -110,19 +124,16 @@ onMounted(() => {
   );
 });
 
-const onSubmit = handleSubmit((values) => {
-  dispatch("validateEmailComplete", {
-    emailAddress,
-    password: values.token,
-    ...values,
-  });
-});
 watch(isOtpSuccess, () => {
   resendOTP();
 });
 watch(isSuccess, () => {
-  toast.success("Sign up successful");
-  isSuccess.value && router.push(`/`);
+  toast.success("Login successful");
+  if (route.query.redirect_from) {
+    window.location.replace(route.query.redirect_from);
+  } else {
+    window.location.replace("/overview");
+  }
 });
 </script>
 

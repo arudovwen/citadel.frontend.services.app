@@ -99,7 +99,6 @@ client.interceptors.response.use(
           response.data.message.includes("Your profile has not been activated")
         ) {
           const email = JSON.parse(originalRequest.data).username;
-
           window.location.href = `/email-verify/${encodeURIComponent(email)}`;
         }
       } else {
