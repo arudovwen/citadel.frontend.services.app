@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
+    <!-- <span>UserData: {{ userData }}</span> -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
         label="First Name"
@@ -28,7 +29,6 @@
         :error="middleNameError"
         classInput="h-[40px]"
       />
-
       <Textinput
         label="Email"
         type="email"
@@ -47,7 +47,6 @@
         :error="mobile1Error"
         classInput="h-[40px]"
       />
-
       <Textinput
         label="Mobile 2"
         type="text"
@@ -75,7 +74,6 @@
         :error="address2Error"
         classInput="h-[40px]"
       />
-
       <CustomVueSelect
         name="title"
         v-model="title"
@@ -85,7 +83,6 @@
         label="Title"
         @update:modelValue="defaultSelectedValue = $event"
       />
-
       <CustomVueSelect
         name="LGA"
         v-model="LGA"
@@ -104,7 +101,6 @@
         label="State"
         @update:modelValue="defaultSelectedValue = $event"
       />
-
       <CustomVueSelect
         name="country"
         v-model="country"
@@ -114,7 +110,6 @@
         label="Country"
         @update:modelValue="defaultSelectedValue = $event"
       />
-
       <CustomVueSelect
         name="gender"
         v-model="gender"
@@ -124,7 +119,6 @@
         label="Gender"
         @update:modelValue="defaultSelectedValue = $event"
       />
-
       <CustomVueSelect
         name="employmentStatus"
         v-model="employmentStatus"
@@ -134,7 +128,6 @@
         label="Employment Status"
         @update:modelValue="defaultSelectedValue = $event"
       />
-
       <CustomVueSelect
         name="nationality"
         v-model="nationality"
@@ -144,7 +137,6 @@
         label="Nationality"
         @update:modelValue="defaultSelectedValue = $event"
       />
-
       <CustomVueSelect
         name="stateOfOrigin"
         v-model="stateOfOrigin"
@@ -154,7 +146,6 @@
         label="State of Origin"
         @update:modelValue="defaultSelectedValue = $event"
       />
-
       <CustomVueSelect
         name="maritalStatus"
         v-model="maritalStatus"
@@ -164,7 +155,6 @@
         label="Marital Status"
         @update:modelValue="defaultSelectedValue = $event"
       />
-
       <Textinput
         label="Nearest Bus Stop"
         type="text"
@@ -174,7 +164,6 @@
         :error="nearestBusStopError"
         classInput="h-[40px]"
       />
-
       <Textinput
         label="Place Of Birth"
         type="text"
@@ -185,24 +174,24 @@
         classInput="h-[40px]"
       />
     </div>
-
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-      <button type="submit" class="btn btn-primary block w-full text-center">
+      <button
+        :disabled="createProfileLoading"
+        type="submit"
+        class="btn btn-primary block w-full text-center"
+      >
         Save Changes
       </button>
       <div class="hidden sm:block"></div>
     </div>
   </form>
 </template>
-
 <script setup>
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
-import { useToast } from "vue-toastification";
-
 import {
   titleMenu,
   LGAMenu,
@@ -214,9 +203,21 @@ import {
   stateOfOriginMenu,
   maritalStatusMenu,
 } from "@/constant/data";
-
+import { useStore } from "vuex";
+import { computed, onMounted, watch } from "vue";
+import { useToast } from "vue-toastification";
+onMounted(() => {
+  // console.log("Store: " + store.getters["auth/userData"]);
+  // console.log("Store2: " + userData.value);
+  // console.log("Store3: " + JSON.stringify(store.getters.auth));
+});
+const store = useStore();
 const toast = useToast();
-// const router = useRouter();
+const createProfileLoading = computed(
+  () => store.getters["profile/creatingProfile"]
+);
+// const userData = computed(() => store.getters["auth/userData"]);
+const creationSuccess = computed(() => store.getters["profile/profileCreated"]);
 // Define a validation schema
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
@@ -294,11 +295,6 @@ const schema = yup.object({
     })
     .nullable(),
 });
-
-// const goToProfile = () => {
-//   router.push("/profile");
-// };
-
 const formValues = {
   firstName: "",
   lastName: "",
@@ -347,13 +343,11 @@ const formValues = {
     label: "",
   },
 };
-
 const { handleSubmit } = useForm({
   validationSchema: schema,
   initialValues: formValues,
 });
 // No need to define rules for fields
-
 const { value: firstName, errorMessage: firstNameError } =
   useField("firstName");
 const { value: lastName, errorMessage: lastNameError } = useField("lastName");
@@ -381,14 +375,38 @@ const { value: stateOfOrigin, errorMessage: stateOfOriginError } =
   useField("stateOfOrigin");
 const { value: maritalStatus, errorMessage: maritalStatusError } =
   useField("maritalStatus");
-
 // const { value: email, errorMessage: emailError } = useField("email");
-
+const prepareDetails = (values) => {
+  const obj = {
+    title: values.title.value,
+    userId: "string",
+    firstName: values.firstName,
+    middleName: values.middleName,
+    surName: values.lastName,
+    mobile1: values.mobile1,
+    mobile2: values.mobile2,
+    email: values.email,
+    address: values.address1,
+    nearestBusStop: values.nearestBusStop,
+    lga: values.LGA.value,
+    state: values.state.value,
+    country: values.country.value,
+    gender: values.gender.value,
+    employmentStatus: values.employmentStatus.value,
+    dateOfBirth: "2023-10-24T21:35:06.954Z",
+    placeOfBirth: values.placeOfBirth,
+    nationality: values.nationality.value,
+    stateOfOrigin: values.stateOfOrigin.value,
+    maritalStatus: values.maritalStatus.value,
+  };
+  return obj;
+};
 const onSubmit = handleSubmit((values) => {
-  console.log("PersonalDetails: " + JSON.stringify(values));
-  // goToProfile();
-  toast.success("Profile update successful");
+  store.dispatch("createProfile", prepareDetails(values));
+  console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
+});
+watch(creationSuccess, () => {
+  toast.success("Successfully created profile");
 });
 </script>
-
 <style lang="scss" scoped></style>
