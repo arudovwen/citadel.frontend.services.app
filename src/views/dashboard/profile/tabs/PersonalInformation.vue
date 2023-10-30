@@ -207,6 +207,7 @@ import { useStore } from "vuex";
 import { computed, onMounted, watch } from "vue";
 import { useToast } from "vue-toastification";
 onMounted(() => {
+  getBiodata();
   // console.log("Store: " + store.getters["auth/userData"]);
   // console.log("Store2: " + userData.value);
   // console.log("Store3: " + JSON.stringify(store.getters.auth));
@@ -216,6 +217,12 @@ const toast = useToast();
 const createProfileLoading = computed(
   () => store.getters["profile/creatingProfile"]
 );
+
+const id = computed(() => "");
+
+const getBiodata = () => {
+  store.dispatch("getBiodataById", id.value);
+};
 // const userData = computed(() => store.getters["auth/userData"]);
 const creationSuccess = computed(() => store.getters["profile/profileCreated"]);
 // Define a validation schema

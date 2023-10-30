@@ -3,9 +3,13 @@ import { urls } from "@/helpers/apI_urls";
 export default {
   state: {
     //personal Info
+    biodata: null,
     creatingProfile: false,
     profileCreated: false,
     createProfileError: null,
+    getBiodataloading: false,
+    getBiodatasuccess: false,
+    getBiodataerror: null,
   },
   getters: {
     creatingProfile(state) {
@@ -34,6 +38,23 @@ export default {
       state.profileCreated = false;
       state.createProfileError = err;
     },
+    getBiodataBegin(state) {
+      state.getBiodataloading = true;
+      state.getBiodatasuccess = false;
+      state.getBiodataerror = null;
+    },
+
+    getBiodataSuccess(state, data) {
+      state.getBiodataloading = false;
+      state.getBiodatasuccess = true;
+      state.biodata = data;
+    },
+
+    getBiodataErr(state, err) {
+      state.getBiodataloading = false;
+      state.getBiodataerror = err;
+      state.getBiodatasuccess = false;
+    },
   },
   actions: {
     async createProfile({ commit }, data) {
@@ -46,6 +67,19 @@ export default {
         }
       } catch (err) {
         commit("createProfileError", err);
+      }
+    },
+    async getBiodataById({ commit }, id) {
+      try {
+        commit("getBiodataBegin");
+        const response = await DataService.get(
+          `${urls.GET_BIODATA_BY_ID}?Id=${id}`
+        );
+        if (response.status === 200) {
+          commit("getBiodataSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("getBiodataErr", err);
       }
     },
   },
