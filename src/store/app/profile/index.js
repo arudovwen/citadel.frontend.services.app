@@ -3,10 +3,34 @@ import { urls } from "@/helpers/apI_urls";
 export default {
   state: {
     //personal Info
+
+    //post methods
     biodata: null,
     creatingProfile: false,
     profileCreated: false,
     createProfileError: null,
+
+    createQualificationDataloading: false,
+    createQualificationDatasuccess: false,
+    createQualificationDataerror: null,
+
+    createEmployerDataloading: false,
+    createEmployerDatasuccess: false,
+    createEmployerDataerror: null,
+
+    createSpouseDataloading: false,
+    createSpouseDatasuccess: false,
+    createSpouseDataerror: null,
+
+    createChildrenDataloading: false,
+    createChildrenDatasuccess: false,
+    createChildrenDataerror: null,
+
+    createChurchAffiliationDataloading: false,
+    createChurchAffiliationDatasuccess: false,
+    createChurchAffiliationDataerror: null,
+
+    //get
     getBiodataloading: false,
     getBiodatasuccess: false,
     getBiodataerror: null,
@@ -43,6 +67,7 @@ export default {
     },
   },
   mutations: {
+    //post
     creatingProfile(state) {
       state.creatingProfile = true;
       state.profileCreated = false;
@@ -58,6 +83,92 @@ export default {
       state.profileCreated = false;
       state.createProfileError = err;
     },
+
+    createQualificationDataBegin(state) {
+      state.createQualificationDataloading = true;
+      state.createQualificationDatasuccess = false;
+      state.createQualificationDataerror = null;
+    },
+
+    createQualificationDataSuccess(state) {
+      state.createQualificationDataloading = false;
+      state.createQualificationDatasuccess = true;
+    },
+
+    createQualificationDataErr(state, err) {
+      state.createQualificationDataloading = false;
+      state.createQualificationDataerror = err;
+      state.createQualificationDatasuccess = false;
+    },
+    createEmployerDataBegin(state) {
+      state.createEmployerDataloading = true;
+      state.createEmployerDatasuccess = false;
+      state.createEmployerDataerror = null;
+    },
+
+    createEmployerDataSuccess(state) {
+      state.createEmployerDataloading = false;
+      state.createEmployerDatasuccess = true;
+    },
+
+    createEmployerDataErr(state, err) {
+      state.createEmployerDataloading = false;
+      state.createEmployerDataerror = err;
+      state.createEmployerDatasuccess = false;
+    },
+
+    createSpouseDataBegin(state) {
+      state.createSpouseDataloading = true;
+      state.createSpouseDatasuccess = false;
+      state.createSpouseDataerror = null;
+    },
+
+    createSpouseDataSuccess(state) {
+      state.createSpouseDataloading = false;
+      state.createSpouseDatasuccess = true;
+    },
+
+    createSpouseDataErr(state, err) {
+      state.createSpouseDataloading = false;
+      state.createSpouseDataerror = err;
+      state.createSpouseDatasuccess = false;
+    },
+
+    createChildrenDataBegin(state) {
+      state.createChildrenDataloading = true;
+      state.createChildrenDatasuccess = false;
+      state.createChildrenDataerror = null;
+    },
+
+    createChildrenDataSuccess(state) {
+      state.createChildrenDataloading = false;
+      state.createChildrenDatasuccess = true;
+    },
+
+    createChildrenDataErr(state, err) {
+      state.createChildrenDataloading = false;
+      state.createChildrenDataerror = err;
+      state.createChildrenDatasuccess = false;
+    },
+
+    createChurchAffiliationDataBegin(state) {
+      state.createChurchAffiliationDataloading = true;
+      state.createChurchAffiliationDatasuccess = false;
+      state.createChurchAffiliationDataerror = null;
+    },
+
+    createChurchAffiliationDataSuccess(state) {
+      state.createChurchAffiliationDataloading = false;
+      state.createChurchAffiliationDatasuccess = true;
+    },
+
+    createChurchAffiliationDataErr(state, err) {
+      state.createChurchAffiliationDataloading = false;
+      state.createChurchAffiliationDataerror = err;
+      state.createChurchAffiliationDatasuccess = false;
+    },
+
+    //get
     getBiodataBegin(state) {
       state.getBiodataloading = true;
       state.getBiodatasuccess = false;
@@ -165,6 +276,7 @@ export default {
     },
   },
   actions: {
+    //post
     async createProfile({ commit }, data) {
       try {
         commit("creatingProfile");
@@ -177,6 +289,82 @@ export default {
         commit("createProfileError", err);
       }
     },
+    async createQualification({ commit }, data) {
+      try {
+        commit("createQualificationDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_QUALIFICATION,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("createQualificationDatasuccess");
+        }
+      } catch (err) {
+        commit("createQualificationDataerror", err);
+      }
+    },
+
+    async createEmployer({ commit }, data) {
+      try {
+        commit("createEmployerDataBegin");
+        const response = await DataService.post(urls.CREATE_EMPLOYER, data);
+
+        if (response.status === 200) {
+          commit("createEmployerDatasuccess");
+        }
+      } catch (err) {
+        commit("createEmployerDataerror", err);
+      }
+    },
+
+    async createSpouse({ commit }, data) {
+      try {
+        commit("createSpouseDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_SPOUSE_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("createSpouseDatasuccess");
+        }
+      } catch (err) {
+        commit("createSpouseDataerror", err);
+      }
+    },
+    async createChildren({ commit }, data) {
+      try {
+        commit("createChildrenDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_CHILDREN_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("createChildrenDatasuccess");
+        }
+      } catch (err) {
+        commit("createChildrenDataerror", err);
+      }
+    },
+    async createChurchAffiliation({ commit }, data) {
+      try {
+        commit("createChurchAffiliationDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_CHURCH_AFFILIATION,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("createChurchAffiliationDatasuccess");
+        }
+      } catch (err) {
+        commit("createChurchAffiliationDataerror", err);
+      }
+    },
+
+    //get
     async getBiodataById({ commit }, id) {
       try {
         commit("getBiodataBegin");
