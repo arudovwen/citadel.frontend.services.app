@@ -71,12 +71,10 @@ const resendOTP = () => {
 };
 
 const formValues = {
-  emailAddress: route.params.email,
   password: "",
 };
 // Define a validation schema
 const schema = yup.object({
-  emailAddress: yup.string().required("Email is required").email(),
   password: yup.string().required("Password is required"),
 });
 
@@ -86,21 +84,18 @@ const { handleSubmit } = useForm({
 });
 // No need to define rules for fields
 
-// eslint-disable-next-line no-unused-vars
-const { value: emailAddress, errorMessage: emailAddressError } =
-  useField("emailAddress");
 const { value: password, errorMessage: passwordError } = useField("password");
 
 const handleOtp = () => {
   dispatch("requestOtp", {
-    emailAddress,
+    emailAddress: route.params.email,
     grantType: "password",
   });
 };
 const onSubmit = handleSubmit((values) => {
   dispatch("login", {
     ...values,
-    username: values.emailAddress,
+    username: route.params.email,
     grantType: "password",
   });
 });

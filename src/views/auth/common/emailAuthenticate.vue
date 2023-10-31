@@ -121,8 +121,10 @@ watch(isOtpSuccess, () => {
   resendOTP();
 });
 watch(isSuccess, () => {
-  toast.success("Sign up successful");
-  isSuccess.value && router.push(`/`);
+  if (isSuccess.value) {
+    toast.success("Sign up successful");
+    isSuccess.value && router.push(`/`);
+  }
 });
 </script>
 
