@@ -224,7 +224,16 @@ const { value: CIHAddress, errorMessage: CIHAddressError } =
   useField("CIHAddress");
 
 const prepareDetails = (values) => {
+  const currentDatetime = new Date();
+  const nigerianTime = new Date(currentDatetime.getTime() + 60 * 60 * 1000); // Subtract 1 hour
+
   const data = {
+    createdBy: "string",
+    modifiedBy: "string",
+    createdAt: "2023-10-31T16:32:14.775Z",
+    modifiedAt: nigerianTime,
+    id: 0,
+    isDeleted: true,
     userId: id.value,
     levelOfATS: String(values.levelOfATS.value),
     charteredMember: values.isCharterMember.value,
@@ -238,9 +247,9 @@ const prepareDetails = (values) => {
   return data;
 };
 const onSubmit = handleSubmit((values) => {
-  // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
+  console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
 
-  store.dispatch("createChurchAffiliation", prepareDetails(values));
+  store.dispatch("updateChurchAffiliation", prepareDetails(values));
 });
 </script>
 

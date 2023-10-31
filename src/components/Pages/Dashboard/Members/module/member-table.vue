@@ -235,6 +235,8 @@ import {
   getCurrentInstance,
 } from "vue";
 import window from "@/mixins/window";
+import store from "@/store";
+
 export default {
   mixins: [window],
   components: {
@@ -348,6 +350,7 @@ export default {
           name: "view",
           icon: "heroicons-outline:eye",
           doit: () => {
+            store.dispatch("getUserById", id);
             this.$router.push("/profile");
           },
         },
@@ -355,6 +358,7 @@ export default {
           name: "edit",
           icon: "heroicons:pencil-square",
           doit: () => {
+            store.dispatch("getUserById", id);
             this.$router.push("/profile");
           },
         },

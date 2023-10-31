@@ -70,6 +70,7 @@ export default {
           label: "Profile",
           icon: "heroicons-outline:user",
           link: () => {
+            store.dispatch("getUserById", store.state.auth.userData.id);
             this.$router.push("profile");
           },
         },
@@ -96,7 +97,7 @@ export default {
   setup() {
     const { state } = useStore();
     const profile = computed(() => state.auth.userData);
-
+    // console.log(state.auth.accessToken);
     return {
       profile,
     };

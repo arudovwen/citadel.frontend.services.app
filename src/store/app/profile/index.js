@@ -10,25 +10,25 @@ export default {
     profileCreated: false,
     createProfileError: null,
 
-    createQualificationDataloading: false,
-    createQualificationDatasuccess: false,
-    createQualificationDataerror: null,
+    updateQualificationDataloading: false,
+    updateQualificationDatasuccess: false,
+    updateQualificationDataerror: null,
 
-    createEmployerDataloading: false,
-    createEmployerDatasuccess: false,
-    createEmployerDataerror: null,
+    updateEmployerDataloading: false,
+    updateEmployerDatasuccess: false,
+    updateEmployerDataerror: null,
 
-    createSpouseDataloading: false,
-    createSpouseDatasuccess: false,
-    createSpouseDataerror: null,
+    updateSpouseDataloading: false,
+    updateSpouseDatasuccess: false,
+    updateSpouseDataerror: null,
 
-    createChildrenDataloading: false,
-    createChildrenDatasuccess: false,
-    createChildrenDataerror: null,
+    updateChildrenDataloading: false,
+    updateChildrenDatasuccess: false,
+    updateChildrenDataerror: null,
 
-    createChurchAffiliationDataloading: false,
-    createChurchAffiliationDatasuccess: false,
-    createChurchAffiliationDataerror: null,
+    updateChurchAffiliationDataloading: false,
+    updateChurchAffiliationDatasuccess: false,
+    updateChurchAffiliationDataerror: null,
 
     //get
     getBiodataloading: false,
@@ -84,88 +84,88 @@ export default {
       state.createProfileError = err;
     },
 
-    createQualificationDataBegin(state) {
-      state.createQualificationDataloading = true;
-      state.createQualificationDatasuccess = false;
-      state.createQualificationDataerror = null;
+    updateQualificationDataBegin(state) {
+      state.updateQualificationDataloading = true;
+      state.updateQualificationDatasuccess = false;
+      state.updateQualificationDataerror = null;
     },
 
-    createQualificationDataSuccess(state) {
-      state.createQualificationDataloading = false;
-      state.createQualificationDatasuccess = true;
+    updateQualificationDataSuccess(state) {
+      state.updateQualificationDataloading = false;
+      state.updateQualificationDatasuccess = true;
     },
 
-    createQualificationDataErr(state, err) {
-      state.createQualificationDataloading = false;
-      state.createQualificationDataerror = err;
-      state.createQualificationDatasuccess = false;
+    updateQualificationDataErr(state, err) {
+      state.updateQualificationDataloading = false;
+      state.updateQualificationDataerror = err;
+      state.updateQualificationDatasuccess = false;
     },
-    createEmployerDataBegin(state) {
-      state.createEmployerDataloading = true;
-      state.createEmployerDatasuccess = false;
-      state.createEmployerDataerror = null;
-    },
-
-    createEmployerDataSuccess(state) {
-      state.createEmployerDataloading = false;
-      state.createEmployerDatasuccess = true;
+    updateEmployerDataBegin(state) {
+      state.updateEmployerDataloading = true;
+      state.updateEmployerDatasuccess = false;
+      state.updateEmployerDataerror = null;
     },
 
-    createEmployerDataErr(state, err) {
-      state.createEmployerDataloading = false;
-      state.createEmployerDataerror = err;
-      state.createEmployerDatasuccess = false;
+    updateEmployerDataSuccess(state) {
+      state.updateEmployerDataloading = false;
+      state.updateEmployerDatasuccess = true;
     },
 
-    createSpouseDataBegin(state) {
-      state.createSpouseDataloading = true;
-      state.createSpouseDatasuccess = false;
-      state.createSpouseDataerror = null;
+    updateEmployerDataErr(state, err) {
+      state.updateEmployerDataloading = false;
+      state.updateEmployerDataerror = err;
+      state.updateEmployerDatasuccess = false;
     },
 
-    createSpouseDataSuccess(state) {
-      state.createSpouseDataloading = false;
-      state.createSpouseDatasuccess = true;
+    updateSpouseDataBegin(state) {
+      state.updateSpouseDataloading = true;
+      state.updateSpouseDatasuccess = false;
+      state.updateSpouseDataerror = null;
     },
 
-    createSpouseDataErr(state, err) {
-      state.createSpouseDataloading = false;
-      state.createSpouseDataerror = err;
-      state.createSpouseDatasuccess = false;
+    updateSpouseDataSuccess(state) {
+      state.updateSpouseDataloading = false;
+      state.updateSpouseDatasuccess = true;
     },
 
-    createChildrenDataBegin(state) {
-      state.createChildrenDataloading = true;
-      state.createChildrenDatasuccess = false;
-      state.createChildrenDataerror = null;
+    updateSpouseDataErr(state, err) {
+      state.updateSpouseDataloading = false;
+      state.updateSpouseDataerror = err;
+      state.updateSpouseDatasuccess = false;
     },
 
-    createChildrenDataSuccess(state) {
-      state.createChildrenDataloading = false;
-      state.createChildrenDatasuccess = true;
+    updateChildrenDataBegin(state) {
+      state.updateChildrenDataloading = true;
+      state.updateChildrenDatasuccess = false;
+      state.updateChildrenDataerror = null;
     },
 
-    createChildrenDataErr(state, err) {
-      state.createChildrenDataloading = false;
-      state.createChildrenDataerror = err;
-      state.createChildrenDatasuccess = false;
+    updateChildrenDataSuccess(state) {
+      state.updateChildrenDataloading = false;
+      state.updateChildrenDatasuccess = true;
     },
 
-    createChurchAffiliationDataBegin(state) {
-      state.createChurchAffiliationDataloading = true;
-      state.createChurchAffiliationDatasuccess = false;
-      state.createChurchAffiliationDataerror = null;
+    updateChildrenDataErr(state, err) {
+      state.updateChildrenDataloading = false;
+      state.updateChildrenDataerror = err;
+      state.updateChildrenDatasuccess = false;
     },
 
-    createChurchAffiliationDataSuccess(state) {
-      state.createChurchAffiliationDataloading = false;
-      state.createChurchAffiliationDatasuccess = true;
+    updateChurchAffiliationDataBegin(state) {
+      state.updateChurchAffiliationDataloading = true;
+      state.updateChurchAffiliationDatasuccess = false;
+      state.updateChurchAffiliationDataerror = null;
     },
 
-    createChurchAffiliationDataErr(state, err) {
-      state.createChurchAffiliationDataloading = false;
-      state.createChurchAffiliationDataerror = err;
-      state.createChurchAffiliationDatasuccess = false;
+    updateChurchAffiliationDataSuccess(state) {
+      state.updateChurchAffiliationDataloading = false;
+      state.updateChurchAffiliationDatasuccess = true;
+    },
+
+    updateChurchAffiliationDataErr(state, err) {
+      state.updateChurchAffiliationDataloading = false;
+      state.updateChurchAffiliationDataerror = err;
+      state.updateChurchAffiliationDatasuccess = false;
     },
 
     //get
@@ -280,7 +280,7 @@ export default {
     async createProfile({ commit }, data) {
       try {
         commit("creatingProfile");
-        const response = await DataService.post(urls.CREATE_BIODATA, data);
+        const response = await DataService.post(urls.UPDATE_BIODATA, data);
         if (response.status === 200) {
           commit("profileCreated");
           console.log("SuccessResponse:" + response);
@@ -289,78 +289,78 @@ export default {
         commit("createProfileError", err);
       }
     },
-    async createQualification({ commit }, data) {
+    async updateQualification({ commit }, data) {
       try {
-        commit("createQualificationDataBegin");
+        commit("updateQualificationDataBegin");
         const response = await DataService.post(
-          urls.CREATE_QUALIFICATION,
+          urls.UPDATE_QUALIFICATION,
           data
         );
 
         if (response.status === 200) {
-          commit("createQualificationDatasuccess");
+          commit("updateQualificationDatasuccess");
         }
       } catch (err) {
-        commit("createQualificationDataerror", err);
+        commit("updateQualificationDataerror", err);
       }
     },
 
-    async createEmployer({ commit }, data) {
+    async updateEmployer({ commit }, data) {
       try {
-        commit("createEmployerDataBegin");
-        const response = await DataService.post(urls.CREATE_EMPLOYER, data);
+        commit("updateEmployerDataBegin");
+        const response = await DataService.post(urls.UPDATE_EMPLOYER, data);
 
         if (response.status === 200) {
-          commit("createEmployerDatasuccess");
+          commit("updateEmployerDatasuccess");
         }
       } catch (err) {
-        commit("createEmployerDataerror", err);
+        commit("updateEmployerDataerror", err);
       }
     },
 
-    async createSpouse({ commit }, data) {
+    async updateSpouse({ commit }, data) {
       try {
-        commit("createSpouseDataBegin");
+        commit("updateSpouseDataBegin");
         const response = await DataService.post(
-          urls.CREATE_SPOUSE_DETAIL,
+          urls.UPDATE_SPOUSE_DETAIL,
           data
         );
 
         if (response.status === 200) {
-          commit("createSpouseDatasuccess");
+          commit("updateSpouseDatasuccess");
         }
       } catch (err) {
-        commit("createSpouseDataerror", err);
+        commit("updateSpouseDataerror", err);
       }
     },
-    async createChildren({ commit }, data) {
+    async updateChildren({ commit }, data) {
       try {
-        commit("createChildrenDataBegin");
+        commit("updateChildrenDataBegin");
         const response = await DataService.post(
-          urls.CREATE_CHILDREN_DETAIL,
+          urls.UPDATE_CHILDREN_DETAIL,
           data
         );
 
         if (response.status === 200) {
-          commit("createChildrenDatasuccess");
+          commit("updateChildrenDatasuccess");
         }
       } catch (err) {
-        commit("createChildrenDataerror", err);
+        commit("updateChildrenDataerror", err);
       }
     },
-    async createChurchAffiliation({ commit }, data) {
+    async updateChurchAffiliation({ commit }, data) {
       try {
-        commit("createChurchAffiliationDataBegin");
+        commit("updateChurchAffiliationDataBegin");
         const response = await DataService.post(
-          urls.CREATE_CHURCH_AFFILIATION,
+          urls.UPDATE_CHURCH_AFFILIATION,
           data
         );
 
         if (response.status === 200) {
-          commit("createChurchAffiliationDatasuccess");
+          commit("updateChurchAffiliationDatasuccess");
         }
       } catch (err) {
-        commit("createChurchAffiliationDataerror", err);
+        commit("updateChurchAffiliationDataerror", err);
       }
     },
 

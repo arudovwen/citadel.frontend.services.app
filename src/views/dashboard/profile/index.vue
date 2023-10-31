@@ -26,7 +26,7 @@
                 </svg>
               </span>
               <router-link
-                to="/app/profile-setting"
+                to="#"
                 class="absolute right-2 h-8 w-8 bg-slate-50 text-slate-600 rounded-full shadow-sm flex flex-col items-center justify-center md:top-[140px] top-[100px]"
                 ><Icon icon="heroicons:pencil-square" />
               </router-link>
@@ -68,7 +68,7 @@
                   href="mailto:someone@example.com"
                   class="text-base text-slate-600 dark:text-slate-50"
                 >
-                  info-500@dashcode.com
+                  {{ profileData.email }}
                 </a>
               </div>
             </li>
@@ -89,12 +89,15 @@
                   href="tel:0189749676767"
                   class="text-base text-slate-600 dark:text-slate-50"
                 >
-                  +1-202-555-0151
+                  {{ profileData.phoneNumber }}
                 </a>
               </div>
             </li>
             <!-- end single list -->
-            <li class="flex space-x-3 rtl:space-x-reverse">
+            <li
+              v-if="profileData.location"
+              class="flex space-x-3 rtl:space-x-reverse"
+            >
               <div
                 class="flex-none text-2xl text-slate-600 dark:text-slate-300"
               >
@@ -107,7 +110,7 @@
                   LOCATION
                 </div>
                 <div class="text-base text-slate-600 dark:text-slate-50">
-                  Home# 320/N, Road# 71/B, Mohakhali, Dhaka-1207, Bangladesh
+                  {{ profileData.location }}
                 </div>
               </div>
             </li>
@@ -129,7 +132,8 @@ import { provide, ref, computed } from "vue";
 import Tab from "./tabs/index.vue";
 import { useStore } from "vuex";
 const { state } = useStore();
-const profileData = computed(() => state.auth.userData);
+// console.log("Member:" + JSON.stringify(state.member.profile));
+const profileData = computed(() => state.member.profile);
 const id = computed(() => profileData.value.id);
 const isMarried = ref(false);
 
