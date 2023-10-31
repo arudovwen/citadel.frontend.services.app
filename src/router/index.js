@@ -52,7 +52,7 @@ const routes = [
     beforeEnter: guardAuth,
   },
   {
-    path: "/verify/:email",
+    path: "/verify/:email/:type",
     name: "verify",
     component: () => import("@/views/auth/verify.vue"),
     meta: { auth: true },

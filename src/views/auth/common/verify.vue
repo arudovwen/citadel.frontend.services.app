@@ -1,9 +1,13 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
     <Textinput
-      label="Password"
+      :label="`${
+        route.params.type.toLowerCase() === 'otp' ? 'OTP password' : 'Password'
+      }`"
       type="password"
-      placeholder="Type your password"
+      :placeholder="`Type your ${
+        route.params.type.toLowerCase() === 'otp' ? 'otp' : 'password'
+      }`"
       name="password"
       v-model="password"
       hasicon
@@ -21,6 +25,7 @@
     </button>
 
     <button
+      v-if="route.params.type.toLowerCase() === 'otp'"
       type="button"
       class="btn btn-light block w-full text-center"
       @click="handleOtp"
@@ -102,6 +107,9 @@ const onSubmit = handleSubmit((values) => {
 
 // Automatically start the countdown on component mount
 onMounted(() => {
+  if (route.params.type.toLowerCase() === "otp") {
+    handleOtp();
+  }
   watch(
     resendDisabled,
     (newValue) => {

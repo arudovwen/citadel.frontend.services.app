@@ -21,6 +21,7 @@ function getRedirectFrom(url) {
 }
 export default {
   state: {
+    logincheckdata: null,
     error: null,
     signupsuccess: false,
     loginsuccess: false,
@@ -30,6 +31,7 @@ export default {
     validendsuccess: false,
     validinitsuccess: false,
     requestsuccess: false,
+    checksuccess: false,
     loading: null,
     otp: "",
     accessToken: localStorage.getItem("accessToken") || null,
@@ -58,6 +60,21 @@ export default {
       state.error = err;
       state.accessToken = null;
       state.loginsuccess = false;
+    },
+    loginCheckBegin(state) {
+      state.loading = true;
+      state.error = null;
+      state.loginchecksuccess = false;
+    },
+    loginCheckSuccess(state, data) {
+      state.loading = false;
+      state.loginchecksuccess = true;
+      state.logincheckdata = data;
+    },
+    loginCheckErr(state, err) {
+      state.loading = false;
+      state.error = err;
+      state.loginchecksuccess = false;
     },
     logoutBegin(state) {
       state.loading = true;
@@ -168,6 +185,18 @@ export default {
     },
   },
   actions: {
+    async loginCheck({ commit }, data) {
+      try {
+        commit("loginCheckBegin");
+        const response = await DataService.post(urls.LOGIN_CHECK, data);
+
+        if (response.status === 200) {
+          commit("loginCheckSuccess", response.data);
+        }
+      } catch (err) {
+        commit("loginCheckErr", err);
+      }
+    },
     async login({ commit }, data) {
       try {
         commit("loginBegin");
