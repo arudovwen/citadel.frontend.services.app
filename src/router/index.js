@@ -138,7 +138,7 @@ const routes = [
             },
           },
           {
-            path: "view/:id",
+            path: "view/:name/:id",
             name: "department",
 
             component: () =>

@@ -114,7 +114,7 @@
                 :current="query.pageNumber"
                 :per-page="query.pageSize"
                 :pageRange="pageRange"
-                @page-changed="current = $event"
+                @page-changed="query.pageNumber = $event"
                 :pageChanged="props.pageChanged"
                 :perPageChanged="props.perPageChanged"
                 enableSearch
@@ -434,7 +434,12 @@ export default {
     watch(search, () => {
       debouncedSearch(search.value);
     });
-
+    watch(
+      () => query.pageNumber,
+      () => {
+        dispatch("getUsers", query);
+      }
+    );
     return {
       query,
       total,
