@@ -195,10 +195,18 @@ import { titleMenu, genderMenu, childrenDetailstable } from "@/constant/data";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useToast } from "vue-toastification";
 import * as yup from "yup";
-import { ref } from "vue";
+import { inject, onMounted, ref } from "vue";
+import { useStore } from "vuex";
 // import { useRouter } from "vue-router";
 
-// Define a validation schema
+onMounted(() => {
+  getChildrensData();
+});
+const id = inject("id");
+const store = useStore();
+const getChildrensData = () => {
+  store.dispatch("getChildrenDetailById", id.value);
+};
 const toast = useToast();
 const childrenDetails = ref([]);
 const schema = yup.object({

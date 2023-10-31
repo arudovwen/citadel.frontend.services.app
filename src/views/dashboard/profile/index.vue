@@ -36,10 +36,10 @@
             <div
               class="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]"
             >
-              Albert Flores
+              {{ profileData.fullName }}
             </div>
             <div class="text-sm font-light text-slate-600 dark:text-slate-400">
-              Role
+              {{ profileData.userRole }}
             </div>
           </div>
         </div>
@@ -125,11 +125,17 @@
 <script setup>
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
-import { provide, ref } from "vue";
+import { provide, ref, computed } from "vue";
 import Tab from "./tabs/index.vue";
+import { useStore } from "vuex";
+const { state } = useStore();
+const profileData = computed(() => state.auth.userData);
+const id = computed(() => profileData.value.id);
 const isMarried = ref(false);
 
 provide("isMarried", isMarried);
+provide("profileData", profileData);
+provide("id", id);
 </script>
 
 <style lang="scss" scoped></style>

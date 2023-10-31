@@ -115,7 +115,17 @@ import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useRouter } from "vue-router";
 import { titleMenu, genderMenu } from "@/constant/data";
+import { inject, onMounted } from "vue";
+import { useStore } from "vuex";
 
+onMounted(() => {
+  getSpouseData();
+});
+const id = inject("id");
+const store = useStore();
+const getSpouseData = () => {
+  store.dispatch("getSpouseDetailById", id.value);
+};
 const toast = useToast();
 // Define a validation schema
 const schema = yup.object({

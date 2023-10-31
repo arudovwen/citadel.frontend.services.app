@@ -106,7 +106,17 @@ import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useRouter } from "vue-router";
 import { LGAMenu, stateMenu, countryMenu, industryMenu } from "@/constant/data";
 import { useToast } from "vue-toastification";
+import { inject, onMounted } from "vue";
+import { useStore } from "vuex";
 
+onMounted(() => {
+  getEmployerData();
+});
+const id = inject("id");
+const store = useStore();
+const getEmployerData = () => {
+  store.dispatch("getEmployerDetailById", id.value);
+};
 const toast = useToast();
 // Define a validation schema
 const schema = yup.object({
