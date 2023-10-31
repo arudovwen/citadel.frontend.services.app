@@ -365,11 +365,11 @@ export default {
     },
 
     //get
-    async getBiodataById({ commit }, id) {
+    async getBiodataByUserId({ commit }, id) {
       try {
         commit("getBiodataBegin");
         const response = await DataService.get(
-          `${urls.GET_BIODATA_BY_ID}?id=${id}`
+          `${urls.GET_BIODATA_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getBiodataSuccess", response.data.data);

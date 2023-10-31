@@ -19,6 +19,7 @@ export const urls = {
   CREATE_BIODATA: "/Biodata/CreateBiodata",
   UPDATE_BIODATA: "/Biodata/UpdateBiodata",
   GET_BIODATA_BY_ID: "/Biodata/GetBiodataById",
+  GET_BIODATA_BY_USERID: "/Biodata/GetBiodataByUserId",
   GET_ALL_BIODATA: "/Biodata/GetAllBiodata",
   DELETE_BIODATA: "/Biodata/DeleteBiodata",
 

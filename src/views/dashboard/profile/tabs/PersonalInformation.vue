@@ -204,7 +204,7 @@ import {
   maritalStatusMenu,
 } from "@/constant/data";
 import { useStore } from "vuex";
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted, reactive, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { inject } from "vue";
 onMounted(() => {
@@ -225,7 +225,7 @@ const getBiodata = () => {
   // if (id.value !== 1) {
   //   return;
   // }
-  store.dispatch("getBiodataById", id.value);
+  store.dispatch("getBiodataByUserId", id.value);
 };
 
 const creationSuccess = computed(() => store.getters["profile/profileCreated"]);
@@ -306,11 +306,15 @@ const schema = yup.object({
     })
     .nullable(),
 });
-const formValues = {
-  firstName: "",
-  lastName: "",
-  middleName: "",
-  email: "dashcode@gmail.com",
+
+const fillData = () => {
+  formValues.firstName = profileData.value?.firstName;
+};
+const formValues = reactive({
+  firstName: profileData.value.firstName,
+  lastName: profileData.value.lastName,
+  middleName: profileData.value.middleName,
+  email: profileData.value.email,
   address1: "",
   address2: "",
   title: {
@@ -353,7 +357,7 @@ const formValues = {
     value: "",
     label: "",
   },
-};
+});
 const { handleSubmit } = useForm({
   validationSchema: schema,
   initialValues: formValues,
@@ -418,6 +422,11 @@ const onSubmit = handleSubmit((values) => {
 });
 watch(creationSuccess, () => {
   toast.success("Successfully created profile");
+});
+
+watch(profileData, () => {
+  console.log("filling Data");
+  fillData();
 });
 </script>
 <style lang="scss" scoped></style>
