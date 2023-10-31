@@ -3,7 +3,8 @@
     <!-- <span>{{ createProfileLoading }}</span>
     <span>{{  }}</span> -->
     <!-- <span>UserData: {{ profileData }}</span> -->
-    <span>FormVal: {{ formValues }}</span>
+    <!-- <span>FormVal: {{ formValues }}</span> -->
+    <!-- {{ firstName }} -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
         id="firstName"
@@ -211,13 +212,10 @@ import {
 import { useStore } from "vuex";
 import { computed, onMounted, ref, watch } from "vue";
 import { useToast } from "vue-toastification";
-import { inject } from "vue";
+// import { inject } from "vue";
 import { useRoute } from "vue-router";
 onMounted(() => {
   getBiodata();
-  // console.log("Store: " + store.getters["auth/userData"]);
-  // console.log("Store2: " + userData.value);
-  // console.log("Store3: " + JSON.stringify(store.getters.auth));
 });
 const store = useStore();
 const route = useRoute();
@@ -229,7 +227,7 @@ const createProfileLoading = computed(
 const getBiodataError = computed(() => store.state.profile.getBiodataerror);
 
 console.log("dataError: " + JSON.stringify(getBiodataError.value));
-const profileData = inject("profileData");
+const profileData = computed(() => store.state.member.profile);
 const id = computed(() => route.params.userId);
 
 const getBiodata = () => {
@@ -366,7 +364,7 @@ const formValues = ref({
     label: "",
   },
 });
-const { handleSubmit } = useForm({
+const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
   initialValues: profileData.value,
 });
@@ -401,12 +399,6 @@ const { value: maritalStatus, errorMessage: maritalStatusError } =
   useField("maritalStatus");
 // const { value: email, errorMessage: emailError } = useField("email");
 
-const fillData = () => {
-  console.log("filling Profile Data");
-  console.log("Profile:" + JSON.stringify(profileData.value));
-  formValues.value.firstName = profileData.value?.firstName;
-  formValues.value.lastName = profileData.value?.lastName;
-};
 const prepareDetails = (values) => {
   const obj = {
     title: values.title.value,
@@ -443,14 +435,18 @@ watch(creationSuccess, () => {
   toast.success("Successfully created profile");
 });
 
-watch(
-  profileData,
-  (newValue) => {
-    if (newValue !== null) {
-      fillData();
-    }
-  },
-  { immediate: true }
-);
+// watch(
+//   profileData,
+//   (newValue) => {
+//     if (newValue !== null) {
+//       fillData();
+//     }
+//   },
+//   { immediate: true }
+// );
+
+watch(profileData, () => {
+  setValues(profileData.value);
+});
 </script>
 <style lang="scss" scoped></style>
