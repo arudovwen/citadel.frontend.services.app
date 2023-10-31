@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-[400px] items-center justify-center text-center">
+  <div class="flex h-[250px] items-center justify-center text-center">
     {{ message }}
   </div>
 </template>

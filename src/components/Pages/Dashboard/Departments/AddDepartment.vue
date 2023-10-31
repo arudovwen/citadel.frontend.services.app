@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="state.department.addmodal">
     <Modal
       :activeModal="state.department.addmodal"
       @close="closeModal"
@@ -94,7 +94,7 @@
 
           <Select
             label="HOD"
-            :options="roleOptions"
+            :options="membersOptions"
             v-model.value="hod"
             :error="hodError"
           />
@@ -124,13 +124,20 @@ import { useField, useForm } from "vee-validate";
 // import vSelect from "vue-select";
 import { useStore } from "vuex";
 import * as yup from "yup";
-// import { assignOption } from "@/constant/data";
+
 let { dispatch, state } = useStore();
 const toast = useToast();
-const userId = computed(() => state.auth.userData.id);
-console.log("🚀 ~ file: AddDepartment.vue:132 ~ userId:", userId.value);
+const membersOptions = computed(() =>
+  state?.member?.data.map((i) => {
+    return {
+      label: i.fullName,
+      value: i.userId,
+    };
+  })
+);
 const success = computed(() => state.department.addsuccess);
 const loading = computed(() => state.department.loading);
+
 const schema = yup.object({
   departmentName: yup.string().required("Name is required"),
   description: yup.string().required("Please provide a short description"),
@@ -146,22 +153,14 @@ const { value: description, errorMessage: descriptionError } =
   useField("description");
 const { value: hod, errorMessage: hodError } = useField("hod");
 const createDepartment = handleSubmit((values) => {
-  console.log(
-    "🚀 ~ file: AddDepartment.vue:169 ~ addDepartment ~ value:",
-    values
-  );
   dispatch("addDepartment", {
-    userId: userId.value,
+    userId: hod,
     departmentCode:
       values.departmentName.slice(0, 2).toUpperCase() +
       Math.floor(Math.random() * 100 + 100),
     ...values,
   });
 });
-const roleOptions = [
-  { value: "admin", label: "John Jones" },
-  { value: "hod", label: "Jane Jone" },
-];
 
 const closeModal = () => {
   dispatch("closeModal");

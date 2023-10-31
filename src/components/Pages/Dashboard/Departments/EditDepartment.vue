@@ -25,7 +25,7 @@
 
           <Select
             label="HOD"
-            :options="roleOptions"
+            :options="membersOptions"
             v-model.value="hod"
             :error="hodError"
           />
@@ -68,7 +68,14 @@ const schema = yup.object({
   description: yup.string().required("Please provide a short description"),
   hod: yup.string().required("Please select a HOD"),
 });
-
+const membersOptions = computed(() =>
+  state?.member?.data.map((i) => {
+    return {
+      label: i.fullName,
+      value: i.userId,
+    };
+  })
+);
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
   initialValues: department.value,
@@ -82,10 +89,6 @@ const { value: hod, errorMessage: hodError } = useField("hod");
 const updateDepartment = handleSubmit((values) => {
   dispatch("editDepartment", values);
 });
-const roleOptions = [
-  { value: "admin", label: "John Jones" },
-  { value: "hod", label: "Jane Jone" },
-];
 
 const closeModal = () => {
   dispatch("closeModal");
