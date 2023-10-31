@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
-    <!-- <span>UserData: {{ userData }}</span> -->
+    <!-- <span>UserData: {{ profileData }}</span> -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
         label="First Name"
@@ -206,6 +206,7 @@ import {
 import { useStore } from "vuex";
 import { computed, onMounted, watch } from "vue";
 import { useToast } from "vue-toastification";
+import { inject } from "vue";
 onMounted(() => {
   getBiodata();
   // console.log("Store: " + store.getters["auth/userData"]);
@@ -217,13 +218,13 @@ const toast = useToast();
 const createProfileLoading = computed(
   () => store.getters["profile/creatingProfile"]
 );
-
-const id = computed(() => "");
+const profileData = inject("profileData");
+const id = computed(() => profileData.value.id);
 
 const getBiodata = () => {
   store.dispatch("getBiodataById", id.value);
 };
-// const userData = computed(() => store.getters["auth/userData"]);
+
 const creationSuccess = computed(() => store.getters["profile/profileCreated"]);
 // Define a validation schema
 const schema = yup.object({

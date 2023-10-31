@@ -106,6 +106,18 @@ import {
   departmentMenu,
   CIHAddressMenu,
 } from "@/constant/data";
+
+import { inject, onMounted } from "vue";
+import { useStore } from "vuex";
+
+onMounted(() => {
+  getChurchAffiliationsData();
+});
+const id = inject("id");
+const store = useStore();
+const getChurchAffiliationsData = () => {
+  store.dispatch("getChurchAffiliationsById", id.value);
+};
 const toast = useToast();
 // Define a validation schema
 const schema = yup.object({

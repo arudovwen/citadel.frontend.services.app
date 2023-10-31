@@ -72,7 +72,17 @@ import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
 import Icon from "@/components/Icon";
 import { useToast } from "vue-toastification";
+import { inject, onMounted } from "vue";
+import { useStore } from "vuex";
 
+onMounted(() => {
+  getQualificationData();
+});
+const id = inject("id");
+const store = useStore();
+const getQualificationData = () => {
+  store.dispatch("getQualificationsById", id.value);
+};
 const toast = useToast();
 const formValues = {
   highestQualification: "",
