@@ -48,7 +48,7 @@ const { state, dispatch } = useStore();
 const toast = useToast();
 const isLoading = computed(() => state.auth.loading);
 const isOtpLoading = computed(() => state.auth.loading);
-const isSuccess = computed(() => state.auth.validendsuccess);
+const isSuccess = computed(() => state.auth.loginsuccess);
 const isOtpSuccess = computed(() => state.auth.requestsuccess);
 const resendCountdown = ref(20);
 const resendDisabled = ref(true);
