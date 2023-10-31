@@ -54,7 +54,9 @@
             </Dropdown>
           </div>
         </header>
-        <router-link :to="`/departments/view/${item.id}`">
+        <router-link
+          :to="`/departments/view/${item?.departmentName}/${item.id}`"
+        >
           <!-- description -->
           <div class="text-slate-600 dark:text-slate-400 text-sm mb-2">
             {{ item.description }}
@@ -237,7 +239,7 @@ watch(
   }
 );
 watch(
-  () => query.pageNumber,
+  () => [query.pageNumber, query.sortOrder],
   () => {
     dispatch("getDepartments", query);
   }
