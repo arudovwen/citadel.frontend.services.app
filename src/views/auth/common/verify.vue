@@ -1,9 +1,13 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
     <Textinput
-      label="Password"
+      :label="`${
+        route.params.type.toLowerCase() === 'otp' ? 'OTP password' : 'Password'
+      }`"
       type="password"
-      placeholder="Type your password"
+      :placeholder="`Type your ${
+        route.params.type.toLowerCase() === 'otp' ? 'otp' : 'password'
+      }`"
       name="password"
       v-model="password"
       hasicon
@@ -21,6 +25,7 @@
     </button>
 
     <button
+      v-if="route.params.type.toLowerCase() === 'otp'"
       type="button"
       class="btn btn-light block w-full text-center"
       @click="handleOtp"
@@ -71,12 +76,10 @@ const resendOTP = () => {
 };
 
 const formValues = {
-  emailAddress: route.params.email,
   password: "",
 };
 // Define a validation schema
 const schema = yup.object({
-  emailAddress: yup.string().required("Email is required").email(),
   password: yup.string().required("Password is required"),
 });
 
@@ -86,27 +89,27 @@ const { handleSubmit } = useForm({
 });
 // No need to define rules for fields
 
-// eslint-disable-next-line no-unused-vars
-const { value: emailAddress, errorMessage: emailAddressError } =
-  useField("emailAddress");
 const { value: password, errorMessage: passwordError } = useField("password");
 
 const handleOtp = () => {
   dispatch("requestOtp", {
-    emailAddress,
+    emailAddress: route.params.email,
     grantType: "password",
   });
 };
 const onSubmit = handleSubmit((values) => {
   dispatch("login", {
     ...values,
-    username: values.emailAddress,
+    username: route.params.email,
     grantType: "password",
   });
 });
 
 // Automatically start the countdown on component mount
 onMounted(() => {
+  if (route.params.type.toLowerCase() === "otp") {
+    handleOtp();
+  }
   watch(
     resendDisabled,
     (newValue) => {
@@ -125,7 +128,10 @@ onMounted(() => {
 });
 
 watch(isOtpSuccess, () => {
-  resendOTP();
+  if (isOtpSuccess.value) {
+    toast.success("Otp sent");
+    resendOTP();
+  }
 });
 watch(isSuccess, () => {
   toast.success("Login successful");

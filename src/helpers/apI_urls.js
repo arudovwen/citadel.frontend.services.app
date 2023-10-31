@@ -14,6 +14,7 @@ export const urls = {
   CHANGE_PASSWORD: "/Auth/ChangePasswordCompleteInside",
   VALIDATE_EMAIL_INITIATE: "/Auth/ValidateEmailInitiate",
   VALIDATE_EMAIL_COMPLETE: "/Auth/ValidateEmailComplete",
+  LOGIN_CHECK: "/Auth/GetUserLoginMethod",
 
   // Biodata
   CREATE_BIODATA: "/Biodata/CreateBiodata",

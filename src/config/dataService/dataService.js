@@ -96,10 +96,14 @@ client.interceptors.response.use(
       } else if (response.status > 399 && response.status < 500) {
         toast.error(response.data.message || "Something went wrong");
         if (
+          response.data &&
+          response.data.message &&
           response.data.message.includes("Your profile has not been activated")
         ) {
           const email = JSON.parse(originalRequest.data).username;
-          window.location.href = `/email-verify/${encodeURIComponent(email)}`;
+          setTimeout(() => {
+            window.location.href = `/email-verify/${encodeURIComponent(email)}`;
+          }, 2000);
         }
       } else {
         return originalRequest;

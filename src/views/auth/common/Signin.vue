@@ -83,7 +83,8 @@ export default {
     // eslint-disable-next-line no-unused-vars
     const { state, dispatch } = useStore();
     const isLoading = computed(() => state.auth.loading);
-    const success = computed(() => state.auth.requestsuccess);
+    const success = computed(() => state.auth.loginchecksuccess);
+    const data = computed(() => state.auth.logincheckdata);
     const error = computed(() => state.auth.error);
     // Define a validation schema
     const schema = yup.object({
@@ -115,16 +116,16 @@ export default {
       useField("password");
 
     const onSubmit = handleSubmit((values) => {
-      dispatch("requestOtp", {
-        emailAddress: values.emailAddress,
-        grantType: "password",
+      dispatch("loginCheck", {
+        username: values.emailAddress,
       });
-      // dispatch("login", { ...values, grantType: "password" });
     });
     watch(success, () => {
       // toast.success("Sign up successful")
       success.value &&
-        router.push(`/verify/${encodeURIComponent(emailAddress.value)}`);
+        router.push(
+          `/verify/${encodeURIComponent(emailAddress.value)}/${data.value}`
+        );
     });
 
     return {
