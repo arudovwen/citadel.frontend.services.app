@@ -375,6 +375,7 @@ export default {
           commit("getBiodataSuccess", response.data.data);
         }
       } catch (err) {
+        console.log("getBiodataErr", JSON.stringify(err));
         commit("getBiodataErr", err);
       }
     },

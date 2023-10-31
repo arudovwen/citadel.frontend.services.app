@@ -1,13 +1,18 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
+    <!-- <span>{{ createProfileLoading }}</span>
+    <span>{{  }}</span> -->
     <!-- <span>UserData: {{ profileData }}</span> -->
+    <span>FormVal: {{ formValues }}</span>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
+        id="firstName"
         label="First Name"
         type="text"
         placeholder="Type your first name"
         name="firstName"
         v-model="firstName"
+        :modelValue="firstName"
         :error="firstNameError"
         classInput="h-[40px]"
       />
@@ -204,7 +209,7 @@ import {
   maritalStatusMenu,
 } from "@/constant/data";
 import { useStore } from "vuex";
-import { computed, onMounted, reactive, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { inject } from "vue";
 import { useRoute } from "vue-router";
@@ -218,8 +223,12 @@ const store = useStore();
 const route = useRoute();
 const toast = useToast();
 const createProfileLoading = computed(
-  () => store.getters["profile/creatingProfile"]
+  () => store.state.profile.getBiodataloading
 );
+
+const getBiodataError = computed(() => store.state.profile.getBiodataerror);
+
+console.log("dataError: " + JSON.stringify(getBiodataError.value));
 const profileData = inject("profileData");
 const id = computed(() => route.params.userId);
 
@@ -309,10 +318,7 @@ const schema = yup.object({
     .nullable(),
 });
 
-// const fillData = () => {
-//   formValues.firstName = profileData.value?.firstName;
-// };
-const formValues = reactive({
+const formValues = ref({
   firstName: "",
   lastName: "",
   middleName: "",
@@ -362,8 +368,9 @@ const formValues = reactive({
 });
 const { handleSubmit } = useForm({
   validationSchema: schema,
-  initialValues: formValues,
+  initialValues: profileData.value,
 });
+
 // No need to define rules for fields
 const { value: firstName, errorMessage: firstNameError } =
   useField("firstName");
@@ -393,6 +400,13 @@ const { value: stateOfOrigin, errorMessage: stateOfOriginError } =
 const { value: maritalStatus, errorMessage: maritalStatusError } =
   useField("maritalStatus");
 // const { value: email, errorMessage: emailError } = useField("email");
+
+const fillData = () => {
+  console.log("filling Profile Data");
+  console.log("Profile:" + JSON.stringify(profileData.value));
+  formValues.value.firstName = profileData.value?.firstName;
+  formValues.value.lastName = profileData.value?.lastName;
+};
 const prepareDetails = (values) => {
   const obj = {
     title: values.title.value,
@@ -419,16 +433,24 @@ const prepareDetails = (values) => {
   return obj;
 };
 const onSubmit = handleSubmit((values) => {
-  store.dispatch("createProfile", prepareDetails(values));
+  const hasBiodataError = getBiodataError.value !== null;
+  if (hasBiodataError) {
+    store.dispatch("createProfile", prepareDetails(values));
+  }
   console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
 });
 watch(creationSuccess, () => {
   toast.success("Successfully created profile");
 });
 
-watch(profileData, () => {
-  console.log("filling Data");
-  // fillData();
-});
+watch(
+  profileData,
+  (newValue) => {
+    if (newValue !== null) {
+      fillData();
+    }
+  },
+  { immediate: true }
+);
 </script>
 <style lang="scss" scoped></style>

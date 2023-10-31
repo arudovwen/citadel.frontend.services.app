@@ -354,7 +354,7 @@ export default {
           name: "view",
           icon: "heroicons-outline:eye",
           doit: () => {
-            store.dispatch("getUserById", id);
+            // store.dispatch("getUserById", id);
             this.$router.push("/profile/" + id);
           },
         },
