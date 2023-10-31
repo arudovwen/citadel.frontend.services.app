@@ -222,6 +222,9 @@ const profileData = inject("profileData");
 const id = computed(() => profileData.value.id);
 
 const getBiodata = () => {
+  // if (id.value !== 1) {
+  //   return;
+  // }
   store.dispatch("getBiodataById", id.value);
 };
 
