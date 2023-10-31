@@ -128,7 +128,10 @@ onMounted(() => {
 });
 
 watch(isOtpSuccess, () => {
-  resendOTP();
+  if (isOtpSuccess.value) {
+    toast.success("Otp sent");
+    resendOTP();
+  }
 });
 watch(isSuccess, () => {
   toast.success("Login successful");

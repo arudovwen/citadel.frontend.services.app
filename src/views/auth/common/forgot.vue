@@ -37,6 +37,7 @@ export default {
     };
   },
   setup() {
+    // eslint-disable-next-line no-unused-vars
     const router = useRouter();
     const { state, dispatch } = useStore();
     const isLoading = computed(() => state.auth.loading);
@@ -44,7 +45,7 @@ export default {
 
     // Define a validation schema
     const schema = yup.object({
-      emailAddress: yup.string().required().email(),
+      emailAddress: yup.string().required("Email is required").email(),
     });
     const formState = reactive({
       emailAddress: "",
@@ -63,7 +64,11 @@ export default {
     });
 
     watch(success, () => {
-      router.push(`/reset-password?email=${encodeURIComponent(emailAddress)}`);
+      if (success.value) {
+        router.push(
+          `/reset-password/${encodeURIComponent(emailAddress.value)}`
+        );
+      }
     });
     return {
       emailAddress,
