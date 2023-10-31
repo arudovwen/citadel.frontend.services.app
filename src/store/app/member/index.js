@@ -1,5 +1,6 @@
 import { DataService } from "@/config/dataService/dataService";
 import { urls } from "@/helpers/apI_urls";
+import { cleanObject } from "@/util/cleanObject";
 
 export default {
   state: {
@@ -102,19 +103,19 @@ export default {
       state.avatarsuccess = false;
     },
 
-    fetchBegin(state) {
+    fetchUserBegin(state) {
       state.loading = true;
       state.error = null;
       state.success = false;
       state.data = [];
     },
-    fetchSuccess(state, { data, totalCount }) {
+    fetchUserSuccess(state, { data, totalCount }) {
       state.loading = false;
       state.success = true;
       state.data = data;
       state.total = totalCount;
     },
-    fetchErr(state, err) {
+    fetchUserErr(state, err) {
       state.loading = false;
       state.error = err;
       state.success = false;
@@ -195,20 +196,19 @@ export default {
         commit("rolesSuccess", response.data);
       }
     },
-    async getUsers(
-      { commit },
-      { pageNumber, pageSize, name, email, mobileNo }
-    ) {
+    async getUsers({ commit }, data) {
       try {
-        commit("fetchBegin");
+        commit("fetchUserBegin");
         const response = await DataService.get(
-          `${urls.ADMIN_GET_ALL_USERS}?pageNumber=${pageNumber}&pageSize=${pageSize}&name=${name}&email=${email}&mobileNo=${mobileNo}`
+          `${urls.ADMIN_GET_ALL_USERS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
         );
         if (response.status === 200) {
-          commit("fetchSuccess", response.data);
+          commit("fetchUserSuccess", response.data);
         }
       } catch (err) {
-        commit("fetchErr", err);
+        commit("fetchUserErr", err);
       }
     },
     async getUserById({ commit }, id) {

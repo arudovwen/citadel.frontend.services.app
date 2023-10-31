@@ -131,7 +131,7 @@
                 :per-page="query.pageSize"
                 :pageRange="pageRange"
                 @page-changed="query.pageNumber = $event"
-                :pageChanged="props.pageChanged"
+                :pageChanged="perPage"
                 :perPageChanged="props.perPageChanged"
                 enableSearch
                 enableSelect
@@ -366,7 +366,9 @@ export default {
     function handleDelete() {
       dispatch("disableUser", id.value);
     }
-
+    function perPage({ currentPage }) {
+      query.pageNumber = currentPage;
+    }
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
@@ -405,6 +407,7 @@ export default {
       handleDelete,
       modal,
       modalChange,
+      perPage,
     };
   },
 };

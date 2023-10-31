@@ -115,7 +115,7 @@
                 :per-page="query.pageSize"
                 :pageRange="pageRange"
                 @page-changed="query.pageNumber = $event"
-                :pageChanged="props.pageChanged"
+                :pageChanged="perPage"
                 :perPageChanged="props.perPageChanged"
                 enableSearch
                 enableSelect
@@ -281,6 +281,10 @@ export default {
       ],
       options: [
         {
+          value: "5",
+          label: "5",
+        },
+        {
           value: "25",
           label: "25",
         },
@@ -391,6 +395,10 @@ export default {
     function fetchRecords(page) {
       dispatch("getUsers", { ...query, pageNumber: page });
     }
+
+    function perPage({ currentPage }) {
+      query.pageNumber = currentPage;
+    }
     const search = ref("");
     const loading = computed(() => state.member.loading);
     const members = computed(() => {
@@ -452,6 +460,7 @@ export default {
       handleDelete,
       modal,
       modalChange,
+      perPage,
     };
   },
 };
