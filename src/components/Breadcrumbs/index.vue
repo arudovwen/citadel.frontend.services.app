@@ -31,7 +31,11 @@
         </span>
       </li>
       <li class="capitalize text-slate-500 dark:text-slate-400">
-        {{ this.$route.name.replace("-", " ") }}
+        {{
+          this.$route.params.name
+            ? this.$route.params.name.replace("-", " ")
+            : this.$route.name.replace("-", " ")
+        }}
       </li>
     </ul>
   </div>

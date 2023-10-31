@@ -7,7 +7,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <InputGroup
-            v-model="searchTerm"
+            v-model="search"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
@@ -41,18 +41,15 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
-          styleClass="vgt-table "
-          :rows="firstTimersTable"
+          styleClass="vgt-table"
+          :isLoading="loading"
+          :rows="members || []"
           :sort-options="{
             enabled: false,
           }"
           :pagination-options="{
             enabled: true,
-            perPage: perpage,
-          }"
-          :search-options="{
-            enabled: true,
-            externalQuery: searchTerm,
+            perPage: query.pageSize,
           }"
         >
           <template v-slot:table-row="props">
@@ -129,11 +126,11 @@
           <template #pagination-bottom="props">
             <div class="py-4 px-3">
               <Pagination
-                :total="50"
-                :current="current"
-                :per-page="perpage"
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
                 :pageRange="pageRange"
-                @page-changed="current = $event"
+                @page-changed="query.pageNumber = $event"
                 :pageChanged="props.pageChanged"
                 :perPageChanged="props.perPageChanged"
                 enableSearch
@@ -208,6 +205,17 @@ import window from "@/mixins/window";
 import AddRecord from "../member-add.vue";
 import EditRecord from "../member-edit.vue";
 import ViewRecord from "../member-preview.vue";
+import moment from "moment";
+import { useStore } from "vuex";
+import { debounce } from "lodash";
+import {
+  computed,
+  onMounted,
+  watch,
+  reactive,
+  ref,
+  getCurrentInstance,
+} from "vue";
 
 export default {
   mixins: [window],
@@ -288,16 +296,16 @@ export default {
       columns: [
         {
           label: "Name",
-          field: "name",
+          field: "fullName",
         },
         {
           label: "Email",
-          field: "email",
+          field: "emailAddress",
         },
 
         {
           label: "Phone",
-          field: "phone",
+          field: "mobileNo",
         },
         {
           label: "Gender",
@@ -314,6 +322,89 @@ export default {
           field: "action",
         },
       ],
+    };
+  },
+  setup() {
+    const id = ref(null);
+    const modal = ref(null);
+    const modalChange = ref(null);
+    const query = reactive({
+      pageNumber: 1,
+      pageSize: 10,
+      name: "",
+      email: "",
+      mobileNo: "",
+    });
+    const { state, dispatch } = useStore();
+    onMounted(() => {
+      dispatch("getUsers", query);
+      dispatch("getRoles");
+      id.value = getCurrentInstance().data.id;
+    });
+    function fetchRecords(page) {
+      dispatch("getUsers", { ...query, pageNumber: page });
+    }
+    const search = ref("");
+    const loading = computed(() => state.member.loading);
+    const members = computed(() => {
+      if (state?.member?.data) {
+        return state?.member?.data.map((item) => {
+          item.dob = item?.dob ? moment(item?.dob).format("ll") : "-";
+          item.department = item?.department ? item?.department : "-";
+
+          return item;
+        });
+      }
+      return [];
+    });
+    const total = computed(() => state.member.total);
+    const roles = computed(() => state.member.roles);
+    const addsuccess = computed(() => state.member.addsuccess);
+    const deleteloading = computed(() => state.member.deleteloading);
+    const deletesuccess = computed(() => state.member.deletesuccess);
+
+    function handleDelete() {
+      dispatch("disableUser", id.value);
+    }
+
+    // Define a debounce delay (e.g., 500 milliseconds)
+    const debounceDelay = 800;
+    const debouncedSearch = debounce((searchValue) => {
+      dispatch("getUsers", { ...query, name: searchValue });
+    }, debounceDelay);
+    watch(addsuccess, () => {
+      addsuccess.value && dispatch("getUsers", query);
+      modalChange.value.closeModal();
+    });
+
+    watch(deletesuccess, () => {
+      if (deletesuccess.value) {
+        dispatch("getUsers", query);
+        modal.value.closeModal();
+      }
+    });
+
+    watch(search, () => {
+      debouncedSearch(search.value);
+    });
+    watch(
+      () => query.pageNumber,
+      () => {
+        dispatch("getUsers", query);
+      }
+    );
+    return {
+      query,
+      total,
+      fetchRecords,
+      loading,
+      deleteloading,
+      members,
+      roles,
+      search,
+      handleDelete,
+      modal,
+      modalChange,
     };
   },
 };
