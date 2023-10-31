@@ -24,7 +24,7 @@
               </div>
               <div class="font-medium text-base leading-6">
                 <div
-                  class="dark:text-slate-200 text-slate-900 max-w-[160px] truncate"
+                  class="dark:text-slate-200 text-slate-900 max-w-[200px] truncate"
                 >
                   {{ item?.departmentName }} Department
                 </div>
@@ -61,7 +61,7 @@
           </div>
           <div
             v-if="handleHod(item.userId)"
-            class="text-slate-600 dark:text-slate-400 text-xs"
+            class="text-slate-600 dark:text-slate-400 text-xs font-medium"
           >
             <span>HOD</span>:
             <span class="font-medium">{{ handleHod(item.userId) }}</span>
