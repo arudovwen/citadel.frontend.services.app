@@ -207,6 +207,7 @@ import { useStore } from "vuex";
 import { computed, onMounted, reactive, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { inject } from "vue";
+import { useRoute } from "vue-router";
 onMounted(() => {
   getBiodata();
   // console.log("Store: " + store.getters["auth/userData"]);
@@ -214,12 +215,13 @@ onMounted(() => {
   // console.log("Store3: " + JSON.stringify(store.getters.auth));
 });
 const store = useStore();
+const route = useRoute();
 const toast = useToast();
 const createProfileLoading = computed(
   () => store.getters["profile/creatingProfile"]
 );
 const profileData = inject("profileData");
-const id = computed(() => profileData.value.id);
+const id = computed(() => route.params.userId);
 
 const getBiodata = () => {
   // if (id.value !== 1) {
@@ -307,14 +309,14 @@ const schema = yup.object({
     .nullable(),
 });
 
-const fillData = () => {
-  formValues.firstName = profileData.value?.firstName;
-};
+// const fillData = () => {
+//   formValues.firstName = profileData.value?.firstName;
+// };
 const formValues = reactive({
-  firstName: profileData.value.firstName,
-  lastName: profileData.value.lastName,
-  middleName: profileData.value.middleName,
-  email: profileData.value.email,
+  firstName: "",
+  lastName: "",
+  middleName: "",
+  email: "",
   address1: "",
   address2: "",
   title: {
@@ -426,7 +428,7 @@ watch(creationSuccess, () => {
 
 watch(profileData, () => {
   console.log("filling Data");
-  fillData();
+  // fillData();
 });
 </script>
 <style lang="scss" scoped></style>

@@ -1,5 +1,4 @@
 <template>
-  <!-- <div v-if="!profileData.fullName">Loading...</div> -->
   <div class="space-y-5 profile-page">
     <div
       class="profiel-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0 space-y-6 justify-between items-end relative z-[1]"
@@ -27,7 +26,7 @@
                 </svg>
               </span>
               <router-link
-                to="#"
+                to="/app/profile-setting"
                 class="absolute right-2 h-8 w-8 bg-slate-50 text-slate-600 rounded-full shadow-sm flex flex-col items-center justify-center md:top-[140px] top-[100px]"
                 ><Icon icon="heroicons:pencil-square" />
               </router-link>
@@ -37,10 +36,10 @@
             <div
               class="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]"
             >
-              {{ profileData.fullName }}
+              {{ profileData?.fullName }}
             </div>
             <div class="text-sm font-light text-slate-600 dark:text-slate-400">
-              {{ profileData.userRole }}
+              {{ profileData?.userRole }}
             </div>
           </div>
         </div>
@@ -69,7 +68,7 @@
                   href="mailto:someone@example.com"
                   class="text-base text-slate-600 dark:text-slate-50"
                 >
-                  {{ profileData.email }}
+                  {{ profileData?.email }}
                 </a>
               </div>
             </li>
@@ -90,13 +89,13 @@
                   href="tel:0189749676767"
                   class="text-base text-slate-600 dark:text-slate-50"
                 >
-                  {{ profileData.phoneNumber }}
+                  {{ profileData?.phoneNumber }}
                 </a>
               </div>
             </li>
             <!-- end single list -->
             <li
-              v-if="profileData.location"
+              v-if="profileData?.location"
               class="flex space-x-3 rtl:space-x-reverse"
             >
               <div
@@ -111,7 +110,7 @@
                   LOCATION
                 </div>
                 <div class="text-base text-slate-600 dark:text-slate-50">
-                  {{ profileData.location }}
+                  {{ profileData?.location }}
                 </div>
               </div>
             </li>
@@ -129,18 +128,34 @@
 <script setup>
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
-import { provide, ref, computed } from "vue";
+import { provide, ref, computed, onMounted, watch } from "vue";
 import Tab from "./tabs/index.vue";
 import { useStore } from "vuex";
-const { state } = useStore();
+import { useRoute } from "vue-router";
+onMounted(() => {
+  fetchUser();
+});
+const { state, dispatch } = useStore();
+const route = useRoute();
+
 // console.log("Member:" + JSON.stringify(state.member.profile));
 const profileData = computed(() => state.member.profile);
-const id = computed(() => profileData.value.id);
+const userId = computed(() => route.params.userId);
 const isMarried = ref(false);
+
+console.log("route" + userId.value);
+const fetchUser = () => {
+  dispatch("getUserById", userId.value);
+};
+
+watch(userId, () => {
+  console.log("isBringCalled");
+  fetchUser();
+});
 
 provide("isMarried", isMarried);
 provide("profileData", profileData);
-provide("id", id);
+provide("id", userId);
 </script>
 
 <style lang="scss" scoped></style>

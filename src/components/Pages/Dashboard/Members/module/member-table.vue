@@ -355,7 +355,7 @@ export default {
           icon: "heroicons-outline:eye",
           doit: () => {
             store.dispatch("getUserById", id);
-            this.$router.push("/profile");
+            this.$router.push("/profile/" + id);
           },
         },
         edit: {
@@ -363,7 +363,7 @@ export default {
           icon: "heroicons:pencil-square",
           doit: () => {
             store.dispatch("getUserById", id);
-            this.$router.push("/profile");
+            this.$router.push("/profile/" + id);
           },
         },
         delete: {

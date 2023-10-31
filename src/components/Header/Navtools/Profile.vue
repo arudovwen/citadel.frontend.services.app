@@ -70,8 +70,9 @@ export default {
           label: "Profile",
           icon: "heroicons-outline:user",
           link: () => {
-            store.dispatch("getUserById", store.state.auth.userData.id);
-            this.$router.push("profile");
+            const userId = store.state.auth.userData.id;
+            // store.dispatch("getUserById", userId);
+            this.$router.push("/profile/" + userId);
           },
         },
 

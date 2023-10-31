@@ -90,7 +90,7 @@ const routes = [
         },
       },
       {
-        path: "/profile",
+        path: "/profile/:userId",
         name: "profile",
         component: ProfileIndex,
       },
