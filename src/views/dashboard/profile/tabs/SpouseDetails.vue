@@ -186,7 +186,7 @@ const schema = yup.object({
 //   weddingAnniversary: "",
 // };
 
-const { handleSubmit, setValues, values } = useForm({
+const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
   initialValues: spouseData.value,
 });
