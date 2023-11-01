@@ -23,9 +23,6 @@
             </div>
             <div class="text-center 2xl:mb-10 mb-5">
               <h4 class="font-medium mb-4">Reset Your Password?</h4>
-              <div class="text-slate-500 dark:text-slate-400 text-base">
-                Reset Password
-              </div>
             </div>
             <div
               class="font-normal text-base text-slate-500 dark:text-slate-400 text-center px-2 bg-slate-100 dark:bg-slate-600 rounded py-3 mb-4 mt-10"

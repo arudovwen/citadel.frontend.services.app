@@ -40,6 +40,7 @@ export const urls = {
     "/ChurchAffiliation/GetChurchAffiliationByUserId",
   GET_ALL_CHURCH_AFFILIATION: "/ChurchAffiliation/GetAllChurchAffiliation",
   DELETE_CHURCH_AFFILIATION: "/ChurchAffiliation/DeleteChurchAffiliation",
+  GET_CHURCH_AFFILIATION_BY_MEMBER: "/ChurchAffiliation/GetMemberQuery",
 
   // Department
   CREATE_DEPARTMENT: "/Department/CreateDepartment",

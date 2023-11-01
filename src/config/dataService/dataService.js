@@ -87,7 +87,7 @@ client.interceptors.response.use(
 
     if (response) {
       if (response.status === 500) {
-        toast.error(response.data.message || "Smething went wrong");
+        toast.error(response.data.message || "Something went wrong");
       } else if (response.status === 401) {
         toast.error("Token expired");
 

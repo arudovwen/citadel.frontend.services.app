@@ -7,7 +7,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <InputGroup
-            v-model="search"
+            v-model="query.searchParameter"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
@@ -300,7 +300,7 @@ export default {
         },
         {
           label: "Email",
-          field: "emailAddress",
+          field: "email",
         },
 
         {
@@ -314,7 +314,7 @@ export default {
 
         {
           label: "DOB",
-          field: "dob",
+          field: "dateOfBirth",
         },
 
         {
@@ -331,26 +331,30 @@ export default {
     const query = reactive({
       pageNumber: 1,
       pageSize: 10,
-      name: "",
-      email: "",
-      mobileNo: "",
+      searchParameter: "",
+      sortOrder: "",
     });
     const { state, dispatch } = useStore();
+    const profileCreated = computed(() => state.profile.profileCreated);
     onMounted(() => {
-      dispatch("getUsers", query);
+      dispatch("getAffiliationByMemberQuery", query);
       dispatch("getRoles");
       id.value = getCurrentInstance().data.id;
     });
     function fetchRecords(page) {
-      dispatch("getUsers", { ...query, pageNumber: page });
+      dispatch("getAffiliationByMemberQuery", { ...query, pageNumber: page });
     }
-    const search = ref("");
+
     const loading = computed(() => state.member.loading);
     const members = computed(() => {
       if (state?.member?.data) {
         return state?.member?.data.map((item) => {
-          item.dob = item?.dob ? moment(item?.dob).format("ll") : "-";
-          item.department = item?.department ? item?.department : "-";
+          item.fullName = `${item.firstName} ${item.surName}`;
+          item.dateOfBirth = item?.dateOfBirth
+            ? moment(item?.dateOfBirth).format("ll")
+            : "-";
+
+          item.phone = item.phone ? item.phone : "-";
 
           return item;
         });
@@ -372,27 +376,34 @@ export default {
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
-      dispatch("getUsers", { ...query, name: searchValue });
+      dispatch("getAffiliationByMemberQuery", { ...query, name: searchValue });
     }, debounceDelay);
     watch(addsuccess, () => {
-      addsuccess.value && dispatch("getUsers", query);
+      addsuccess.value && dispatch("getAffiliationByMemberQuery", query);
       modalChange.value.closeModal();
     });
-
+    watch(profileCreated, () => {
+      if (profileCreated.value) {
+        modalChange.value.closeModal();
+      }
+    });
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
-        dispatch("getUsers", query);
+        dispatch("getAffiliationByMemberQuery", query);
         modal.value.closeModal();
       }
     });
 
-    watch(search, () => {
-      debouncedSearch(search.value);
-    });
+    watch(
+      () => query.searchParameter,
+      () => {
+        debouncedSearch(query.searchParameter);
+      }
+    );
     watch(
       () => query.pageNumber,
       () => {
-        dispatch("getUsers", query);
+        dispatch("getAffiliationByMemberQuery", query);
       }
     );
     return {
@@ -403,7 +414,7 @@ export default {
       deleteloading,
       members,
       roles,
-      search,
+
       handleDelete,
       modal,
       modalChange,
