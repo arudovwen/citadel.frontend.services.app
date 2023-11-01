@@ -97,7 +97,7 @@ export default {
       }, 1000);
     };
     const handleOtp = () => {
-      dispatch("requestOtp", {
+      dispatch("forgotPassword", {
         emailAddress: route.params.email,
         grantType: "password",
       });
@@ -132,8 +132,6 @@ export default {
     });
 
     onMounted(() => {
-      handleOtp();
-
       watch(
         resendDisabled,
         (newValue) => {

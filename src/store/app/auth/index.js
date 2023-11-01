@@ -276,7 +276,6 @@ export default {
       }
     },
     async forgotPassword({ commit }, data) {
-      console.log("🚀 ~ file: index.js:250 ~ forgotPassword ~ data:", data);
       try {
         commit("forgotBegin");
         const response = await DataService.post(
