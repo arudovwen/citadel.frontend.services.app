@@ -23,7 +23,7 @@ export default {
     updateSpouseDataerror: null,
 
     updateChildrenDataloading: false,
-    updateChildrenDatasuccess: false,
+    updateChildrenDataSuccess: false,
     updateChildrenDataerror: null,
 
     updateChurchAffiliationDataloading: false,
@@ -36,7 +36,7 @@ export default {
     getBiodataerror: null,
     childrensData: null,
     getChildrensDataloading: false,
-    getChildrensDatasuccess: false,
+    getChildrensDataSuccess: false,
     getChildrensDataerror: null,
     spouseData: null,
     getSpouseDataloading: false,
@@ -136,19 +136,19 @@ export default {
 
     updateChildrenDataBegin(state) {
       state.updateChildrenDataloading = true;
-      state.updateChildrenDatasuccess = false;
+      state.updateChildrenDataSuccess = false;
       state.updateChildrenDataerror = null;
     },
 
     updateChildrenDataSuccess(state) {
       state.updateChildrenDataloading = false;
-      state.updateChildrenDatasuccess = true;
+      state.updateChildrenDataSuccess = true;
     },
 
     updateChildrenDataErr(state, err) {
       state.updateChildrenDataloading = false;
       state.updateChildrenDataerror = err;
-      state.updateChildrenDatasuccess = false;
+      state.updateChildrenDataSuccess = false;
     },
 
     updateChurchAffiliationDataBegin(state) {
@@ -189,20 +189,20 @@ export default {
 
     getChildrensDataBegin(state) {
       state.getChildrensDataloading = true;
-      state.getChildrensDatasuccess = false;
+      state.getChildrensDataSuccess = false;
       state.getChildrensDataerror = null;
     },
 
     getChildrensDataSuccess(state, data) {
       state.getChildrensDataloading = false;
-      state.getChildrensDatasuccess = true;
+      state.getChildrensDataSuccess = true;
       state.childrensData = data;
     },
 
     getChildrensDataErr(state, err) {
       state.getChildrensDataloading = false;
       state.getChildrensDataerror = err;
-      state.getChildrensDatasuccess = false;
+      state.getChildrensDataSuccess = false;
     },
 
     getSpouseDataBegin(state) {
@@ -382,6 +382,21 @@ export default {
         commit("updateSpouseDataerror", err);
       }
     },
+    async createChildren({ commit }, data) {
+      try {
+        commit("updateChildrenDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_CHILDREN_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateChildrenDataSuccess");
+        }
+      } catch (err) {
+        commit("updateChildrenDataerror", err);
+      }
+    },
     async updateChildren({ commit }, data) {
       try {
         commit("updateChildrenDataBegin");
@@ -391,7 +406,7 @@ export default {
         );
 
         if (response.status === 200) {
-          commit("updateChildrenDatasuccess");
+          commit("updateChildrenDataSuccess");
         }
       } catch (err) {
         commit("updateChildrenDataerror", err);
