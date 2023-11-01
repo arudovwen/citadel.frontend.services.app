@@ -92,10 +92,10 @@
         @update:modelValue="defaultSelectedValue = $event"
       />
       <CustomVueSelect
-        name="LGA"
-        v-model="LGA"
-        :modelValue="LGA"
-        :error="LGAError"
+        name="lga"
+        v-model="lga"
+        :modelValue="lga"
+        :error="lgaError"
         :options="LGAMenu"
         label="LGA"
         @update:modelValue="defaultSelectedValue = $event"
@@ -237,7 +237,7 @@ const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
 const success = computed(() => store.state.profile.profileCreated);
-const getBiodataError = computed(() => store.state.profile.getBiodataerror);
+// const getBiodataloading = computed(() => store.state.profile.getBiodataloading);
 const biodata = computed(() => store.state.profile.biodata);
 // const profileData = computed(() => store.state.member.profile);
 const id = computed(() => route.params.userId);
@@ -266,7 +266,7 @@ const schema = yup.object({
     })
     .nullable(),
   nearestBusStop: yup.string(),
-  LGA: yup
+  lga: yup
     .object()
     .shape({
       value: yup.string(),
@@ -340,7 +340,7 @@ const schema = yup.object({
 //   mobile1: "",
 //   mobile2: "",
 //   nearestBusStop: "",
-//   LGA: {
+//   lga: {
 //     value: "",
 //     label: "",
 //   },
@@ -393,7 +393,7 @@ const { value: address2, errorMessage: address2Error } = useField("address2");
 const { value: title, errorMessage: titleError } = useField("title");
 const { value: nearestBusStop, errorMessage: nearestBusStopError } =
   useField("nearestBusStop");
-const { value: LGA, errorMessage: LGAError } = useField("LGA");
+const { value: lga, errorMessage: lgaError } = useField("lga");
 const { value: state, errorMessage: stateError } = useField("state");
 const { value: country, errorMessage: countryError } = useField("country");
 const { value: gender, errorMessage: genderError } = useField("gender");
@@ -415,7 +415,7 @@ const { value: dateOfBirth, errorMessage: dateOfBirthError } =
 
 const prepareDetails = (values, type) => {
   const updateObj = {
-    title: values.title.value,
+    title: values.title.value ? values.title.value : values.title,
     userId: id.value,
     firstName: values.firstName,
     middleName: values.middleName,
@@ -425,16 +425,24 @@ const prepareDetails = (values, type) => {
     email: values.email,
     address: values.address,
     nearestBusStop: values.nearestBusStop,
-    lga: values.LGA.value,
-    state: values.state.value,
-    country: values.country.value,
-    gender: values.gender.value,
-    employmentStatus: values.employmentStatus.value,
+    lga: values.lga.value,
+    state: values.state.value ? values.state.value : values.state,
+    country: values.country.value ? values.country.value : values.country,
+    gender: values.gender.value ? values.gender.value : values.gender,
+    employmentStatus: values.employmentStatus.value
+      ? values.employmentStatus.value
+      : values.employmentStatus,
     dateOfBirth: values.dateOfBirth,
     placeOfBirth: values.placeOfBirth,
-    nationality: values.nationality.value,
-    stateOfOrigin: values.stateOfOrigin.value,
-    maritalStatus: values.maritalStatus.value,
+    nationality: values.nationality.value
+      ? values.nationality.value
+      : values.nationality,
+    stateOfOrigin: values.stateOfOrigin.value
+      ? values.stateOfOrigin.value
+      : values.stateOfOrigin,
+    maritalStatus: values.maritalStatus.value
+      ? values.maritalStatus.value
+      : values.maritalStatus,
   };
   const createObj = {
     title: values.title.value,
@@ -447,7 +455,7 @@ const prepareDetails = (values, type) => {
     email: values.email,
     address: values.address,
     nearestBusStop: values.nearestBusStop,
-    lga: values.LGA.value,
+    lga: values.lga.value,
     state: values.state.value,
     country: values.country.value,
     gender: values.gender.value,
@@ -463,8 +471,7 @@ const prepareDetails = (values, type) => {
   return obj;
 };
 const onSubmit = handleSubmit((values) => {
-  const hasBiodataError = getBiodataError.value !== null;
-  console.log("dataErrorVal: " + JSON.stringify(getBiodataError.value));
+  const hasBiodataError = biodata.value == null;
 
   if (hasBiodataError) {
     store.dispatch("createProfile", prepareDetails(values, "create"));
@@ -490,55 +497,24 @@ watch(creationSuccess, () => {
 //   }
 // });
 watch(biodata, () => {
-  // const obj = {
-  //   userId: "f7557c35-9ba7-4cb3-ac3a-b333b156c3ec",
-  //   title: "Master",
-  //   firstName: "Baba",
-  //   middleName: "Fama",
-  //   surName: "Bola",
-  //   mobile1: "09049074411",
-  //   mobile2: "11111111111",
-  //   email: "tunde.famakinwa@gmail.com",
-  //   address: "Ajj",
-  //   nearestBusStop: "Jakande",
-  //   lga: "Ideato South",
-  //   state: "Lagos",
-  //   country: "Nigeria",
-  //   gender: "Male",
-  //   employmentStatus: "Employed",
-  //   dateOfBirth: "1995-12-07T00:00:00",
-  //   placeOfBirth: "Somolu",
-  //   nationality: "Nigeria",
-  //   stateOfOrigin: "Imo ",
-  //   maritalStatus: "Married",
-  //   isFirstTime: false,
-  //   id: 2,
-  //   isDeleted: false,
-  //   createdAt: "2023-11-01T00:03:14.446863",
-  //   modifiedAt: "0001-01-01T00:00:00",
-  // };
-  // console.log("Biodata: " + newValue);
-  // if (newValue == null) {
-  //   setValues({
-  //     firstName: profileData.value.firstName,
-  //     surName: profileData.value.surName,
-  //     middleName: profileData.value.middleName,
-  //     email: profileData.value.email,
-  //     // mobile1: profileData.value.phoneNumber,
-  //   });
-  // } else {
-  // setValues({
-  //   firstName: profileData.value?.firstName,
-  //   surName: profileData.value?.surName,
-  //   middleName: profileData.value?.middleName,
-  //   email: profileData.value?.email,
-  //   mobile1: biodata.value?.mobile1,
-  //   mobile2: biodata.value?.mobile2,
-  //   address: biodata.value?.address,
-  // });
-  // }
   setValues(biodata.value);
 });
+
+// watch(getBiodataloading, (newValue) => {
+//   if (newValue == false) {
+//     if (biodata.value !== null && biodata.value !== undefined) {
+//       setValues(biodata.value);
+//     } else {
+//       setValues({
+//         firstName: profileData.value.firstName,
+//         surName: profileData.value.surName,
+//         middleName: profileData.value.middleName,
+//         email: profileData.value.email,
+//         mobile1: profileData.value.phoneNumber,
+//       });
+//     }
+//   }
+// });
 
 watch(success, () => {
   if (success.value) {
