@@ -15,7 +15,7 @@ export default {
     updateQualificationDataerror: null,
 
     updateEmployerDataloading: false,
-    updateEmployerDatasuccess: false,
+    updateEmployerDataSuccess: false,
     updateEmployerDataerror: null,
 
     updateSpouseDataloading: false,
@@ -102,19 +102,19 @@ export default {
     },
     updateEmployerDataBegin(state) {
       state.updateEmployerDataloading = true;
-      state.updateEmployerDatasuccess = false;
+      state.updateEmployerDataSuccess = false;
       state.updateEmployerDataerror = null;
     },
 
     updateEmployerDataSuccess(state) {
       state.updateEmployerDataloading = false;
-      state.updateEmployerDatasuccess = true;
+      state.updateEmployerDataSuccess = true;
     },
 
     updateEmployerDataErr(state, err) {
       state.updateEmployerDataloading = false;
       state.updateEmployerDataerror = err;
-      state.updateEmployerDatasuccess = false;
+      state.updateEmployerDataSuccess = false;
     },
 
     updateSpouseDataBegin(state) {
@@ -283,7 +283,7 @@ export default {
         const response = await DataService.post(urls.CREATE_BIODATA, data);
         if (response.status === 200) {
           commit("profileCreated");
-          console.log("SuccessResponse:" + response);
+          // console.log("SuccessResponse:" + response);
         }
       } catch (err) {
         commit("createProfileError", err);
@@ -296,7 +296,7 @@ export default {
         const response = await DataService.put(urls.UPDATE_BIODATA, data);
         if (response.status === 200) {
           commit("profileCreated");
-          console.log("SuccessResponse:" + response);
+          // console.log("SuccessResponse:" + response);
         }
       } catch (err) {
         commit("createProfileError", err);
@@ -305,10 +305,7 @@ export default {
     async updateQualification({ commit }, data) {
       try {
         commit("updateQualificationDataBegin");
-        const response = await DataService.post(
-          urls.UPDATE_QUALIFICATION,
-          data
-        );
+        const response = await DataService.put(urls.UPDATE_QUALIFICATION, data);
 
         if (response.status === 200) {
           commit("updateQualificationDatasuccess");
@@ -323,23 +320,23 @@ export default {
         const response = await DataService.post(urls.CREATE_EMPLOYER, data);
 
         if (response.status === 200) {
-          commit("updateEmployerDatasuccess");
+          commit("updateEmployerDataSuccess");
         }
       } catch (err) {
-        commit("updateEmployerDataerror", err);
+        commit("updateEmployerDataErr", err);
       }
     },
 
     async updateEmployer({ commit }, data) {
       try {
         commit("updateEmployerDataBegin");
-        const response = await DataService.post(urls.UPDATE_EMPLOYER, data);
+        const response = await DataService.put(urls.UPDATE_EMPLOYER, data);
 
         if (response.status === 200) {
-          commit("updateEmployerDatasuccess");
+          commit("updateEmployerDataSuccess");
         }
       } catch (err) {
-        commit("updateEmployerDataerror", err);
+        commit("updateEmployerDataErr", err);
       }
     },
     async createSpouse({ commit }, data) {
@@ -361,10 +358,7 @@ export default {
     async updateSpouse({ commit }, data) {
       try {
         commit("updateSpouseDataBegin");
-        const response = await DataService.post(
-          urls.UPDATE_SPOUSE_DETAIL,
-          data
-        );
+        const response = await DataService.put(urls.UPDATE_SPOUSE_DETAIL, data);
 
         if (response.status === 200) {
           commit("updateSpouseDatasuccess");
@@ -376,7 +370,7 @@ export default {
     async updateChildren({ commit }, data) {
       try {
         commit("updateChildrenDataBegin");
-        const response = await DataService.post(
+        const response = await DataService.put(
           urls.UPDATE_CHILDREN_DETAIL,
           data
         );
@@ -406,7 +400,7 @@ export default {
     async updateChurchAffiliation({ commit }, data) {
       try {
         commit("updateChurchAffiliationDataBegin");
-        const response = await DataService.post(
+        const response = await DataService.put(
           urls.UPDATE_CHURCH_AFFILIATION,
           data
         );

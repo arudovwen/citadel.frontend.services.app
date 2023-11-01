@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
     <!-- {{ values }} -->
+
     <ProfileInputSkeleton v-if="employerDataLoading" />
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
@@ -41,43 +42,39 @@
         classInput="h-[40px]"
       />
 
-      <CustomVueSelect
-        name="LGA"
-        v-model="lga"
+      <Select
+        label="LGA"
+        :options="LGAMenu"
+        v-model.value="lga"
         :modelValue="lga"
         :error="lgaError"
-        :options="LGAMenu"
-        label="lga"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
-      <CustomVueSelect
-        name="state"
-        v-model="state"
+
+      <Select
+        label="State"
+        :options="stateMenu"
+        v-model.value="state"
         :modelValue="state"
         :error="stateError"
-        :options="stateMenu"
-        label="State"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
 
-      <CustomVueSelect
-        name="country"
-        v-model="country"
+      <Select
+        label="Country"
+        :options="countryMenu"
+        v-model.value="country"
         :modelValue="country"
         :error="countryError"
-        :options="countryMenu"
-        label="Country"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
-
-      <CustomVueSelect
-        name="sector"
-        v-model="sector"
+      <Select
+        label="Industry"
+        :options="industryMenu"
+        v-model.value="sector"
         :modelValue="sector"
         :error="sectorError"
-        :options="industryMenu"
-        label="Industry"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
 
       <Textinput
@@ -101,10 +98,10 @@
 </template>
 
 <script setup>
+import Select from "@/components/Select";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { LGAMenu, stateMenu, countryMenu, industryMenu } from "@/constant/data";
 import { useToast } from "vue-toastification";
 import { inject, onMounted, computed, watch } from "vue";
@@ -124,7 +121,7 @@ const employerDataLoading = computed(
 );
 
 const employerData = computed(() => store.state.profile.employerData);
-const success = computed(() => store.state.profile.updateEmployerDatasuccess);
+const success = computed(() => store.state.profile.updateEmployerDataSuccess);
 
 const toast = useToast();
 // Define a validation schema
@@ -133,62 +130,13 @@ const schema = yup.object({
   employerAddress: yup.string(),
   employerAddress2: yup.string(),
   positionHeld: yup.string(),
-  lga: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
-  state: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
-  country: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
-  sector: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
+  lga: yup.string(),
+  state: yup.string(),
+  country: yup.string(),
+  sector: yup.string(),
 
   subSector: yup.string(),
 });
-
-// const formValues = {
-//   employerName: "",
-//   employerAddress: "",
-//   employerAddress2: "",
-//   positionHeld: "",
-//   lga: {
-//     value: "",
-//     label: "",
-//   },
-//   state: {
-//     value: "",
-//     label: "",
-//   },
-//   country: {
-//     value: "",
-//     label: "",
-//   },
-//   sector: {
-//     value: "",
-//     label: "",
-//   },
-
-//   subSector: "",
-// };
 
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
@@ -219,19 +167,13 @@ const prepareDetails = (values, type) => {
     userId: id.value,
     employerName: values.employerName,
     employerAddress: values.employerAddress,
-    lga: values.lga?.value ? values.lga.value : values.lga,
-    state: values.state?.value ? values.state.value : values.state,
+    lga: values.lga,
+    state: values.state,
     positionHeld: values.positionHeld,
-    sector: values.sector?.value ? values.sector.value : values.sector,
+    sector: values.sector,
     subSector: values.subSector,
-    country: values.country?.value ? values.country.value : values.country,
-
-    // createdBy: "string",
-    // modifiedBy: "string",
-    // createdAt: "2023-11-01T03:44:32.216Z",
-    // modifiedAt: "2023-11-01T03:44:32.216Z",
+    country: values.country,
     id: employerData.value.id,
-    // isDeleted: true,
   };
   const createObj = {
     userId: id.value,
