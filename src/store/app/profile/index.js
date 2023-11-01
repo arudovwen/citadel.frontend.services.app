@@ -317,6 +317,18 @@ export default {
         commit("updateQualificationDataerror", err);
       }
     },
+    async createEmployer({ commit }, data) {
+      try {
+        commit("updateEmployerDataBegin");
+        const response = await DataService.post(urls.CREATE_EMPLOYER, data);
+
+        if (response.status === 200) {
+          commit("updateEmployerDatasuccess");
+        }
+      } catch (err) {
+        commit("updateEmployerDataerror", err);
+      }
+    },
 
     async updateEmployer({ commit }, data) {
       try {
@@ -374,6 +386,21 @@ export default {
         }
       } catch (err) {
         commit("updateChildrenDataerror", err);
+      }
+    },
+    async createChurchAffiliation({ commit }, data) {
+      try {
+        commit("updateChurchAffiliationDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_CHURCH_AFFILIATION,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateChurchAffiliationDatasuccess");
+        }
+      } catch (err) {
+        commit("updateChurchAffiliationDataerror", err);
       }
     },
     async updateChurchAffiliation({ commit }, data) {

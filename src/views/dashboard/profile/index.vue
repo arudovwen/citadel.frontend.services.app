@@ -149,7 +149,6 @@ const fetchUser = () => {
 };
 
 watch(userId, () => {
-  console.log("isBringCalled");
   fetchUser();
 });
 

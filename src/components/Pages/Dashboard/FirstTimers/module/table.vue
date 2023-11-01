@@ -104,7 +104,7 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="item.doit(item.name)"
+                      @click="item.doit(item.name, props.row.userId)"
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -253,17 +253,17 @@ export default {
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: (name) => {
+          doit: (name, userId) => {
             this.type = name;
-            this.$router.push("/profile");
+            this.$router.push("/profile/" + userId);
           },
         },
         {
           name: "edit",
           icon: "heroicons:pencil-square",
-          doit: (name) => {
+          doit: (name, userId) => {
             this.type = name;
-            this.$router.push("/profile");
+            this.$router.push("/profile/" + userId);
           },
         },
         {

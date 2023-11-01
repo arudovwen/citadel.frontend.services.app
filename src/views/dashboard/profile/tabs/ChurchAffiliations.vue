@@ -12,17 +12,17 @@
       />
 
       <CustomVueSelect
-        name="isCharterMember"
-        v-model="isCharterMember"
-        :modelValue="isCharterMember"
-        :error="isCharterMemberError"
-        :options="isCharterMemberMenu"
+        name="charteredMember"
+        v-model="charteredMember"
+        :modelValue="charteredMember"
+        :error="charteredMemberError"
+        :options="charteredMemberMenu"
         label="Charter Member"
         @update:modelValue="defaultSelectedValue = $event"
       />
 
       <Textinput
-        v-if="Number(levelOfATS.value) >= 2 && isCharterMember.value"
+        v-if="Number(levelOfATS?.value) >= 2 && charteredMember.value"
         label="Charter Member Number"
         type="number"
         placeholder="Type your charter number"
@@ -33,11 +33,11 @@
       />
 
       <CustomVueSelect
-        name="CIHZone"
-        v-model="CIHZone"
-        :modelValue="CIHZone"
-        :error="CIHZoneError"
-        :options="CIHZoneMenu"
+        name="cihZone"
+        v-model="cihZone"
+        :modelValue="cihZone"
+        :error="cihZoneError"
+        :options="cihZoneMenu"
         label="CIH Zone"
         @update:modelValue="defaultSelectedValue = $event"
       />
@@ -46,9 +46,9 @@
         label="Mountain of Evidence"
         type="text"
         placeholder="Type your charter number"
-        name="MOE"
-        v-model="MOE"
-        :error="MOEError"
+        name="mountainOfInfluence"
+        v-model="mountainOfInfluence"
+        :error="mountainOfInfluenceError"
         classInput="h-[40px]"
       />
 
@@ -71,11 +71,11 @@
         @update:modelValue="defaultSelectedValue = $event"
       />
       <CustomVueSelect
-        name="CIHAddress"
-        v-model="CIHAddress"
-        :modelValue="CIHAddress"
-        :error="CIHAddressError"
-        :options="CIHAddressMenu"
+        name="cihAddress"
+        v-model="cihAddress"
+        :modelValue="cihAddress"
+        :error="cihAddressError"
+        :options="cihAddressMenu"
         label="CIH Address"
         @update:modelValue="defaultSelectedValue = $event"
       />
@@ -91,6 +91,7 @@
 </template>
 
 <script setup>
+import { computed, watch } from "vue";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
@@ -98,26 +99,34 @@ import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
 import {
   levelOfATSMenu,
-  isCharterMemberMenu,
-  CIHZoneMenu,
+  charteredMemberMenu,
+  cihZoneMenu,
   affinityGroupMenu,
   departmentMenu,
-  CIHAddressMenu,
+  cihAddressMenu,
 } from "@/constant/data";
 
 import { inject, onMounted } from "vue";
 import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
 
 onMounted(() => {
   getChurchAffiliationsData();
 });
 const id = inject("id");
 const store = useStore();
+const toast = useToast();
 const getChurchAffiliationsData = () => {
   store.dispatch("getChurchAffiliationsById", id.value);
 };
-// const toast = useToast();
-// Define a validation schema
+const churchAffiliationsData = computed(
+  () => store.state.profile.churchAffiliationsData
+);
+
+const success = computed(
+  () => store.state.profile.updateChurchAffiliationDatasuccess
+);
+
 const schema = yup.object({
   levelOfATS: yup
     .object()
@@ -126,7 +135,7 @@ const schema = yup.object({
       label: yup.string(),
     })
     .nullable(),
-  isCharterMember: yup
+  charteredMember: yup
     .object()
     .shape({
       value: yup.bool(),
@@ -134,14 +143,14 @@ const schema = yup.object({
     })
     .nullable(),
   charterMemberNumber: yup.string(),
-  CIHZone: yup
+  cihZone: yup
     .object()
     .shape({
       value: yup.string(),
       label: yup.string(),
     })
     .nullable(),
-  MOE: yup.string(),
+  mountainOfInfluence: yup.string(),
   affinityGroup: yup
     .object()
     .shape({
@@ -156,7 +165,7 @@ const schema = yup.object({
       label: yup.string(),
     })
     .nullable(),
-  CIHAddress: yup
+  cihAddress: yup
     .object()
     .shape({
       value: yup.string(),
@@ -171,63 +180,64 @@ const schema = yup.object({
 //   router.push("/profile");
 // };
 
-const formValues = {
-  levelOfATS: {
-    value: "",
-    label: "",
-  },
-  isCharterMember: {
-    value: false,
-    label: "false",
-  },
-  charterMemberNumber: "",
-  CIHZone: {
-    value: "",
-    label: "",
-  },
-  MOE: "",
-  affinityGroup: {
-    value: "",
-    label: "",
-  },
-  department: {
-    value: "",
-    label: "",
-  },
-  CIHAddress: {
-    value: "",
-    label: "",
-  },
-};
+// const formValues = {
+//   levelOfATS: {
+//     value: "",
+//     label: "",
+//   },
+//   charteredMember: {
+//     value: false,
+//     label: "false",
+//   },
+//   charterMemberNumber: "",
+//   cihZone: {
+//     value: "",
+//     label: "",
+//   },
+//   mountainOfInfluence: "",
+//   affinityGroup: {
+//     value: "",
+//     label: "",
+//   },
+//   department: {
+//     value: "",
+//     label: "",
+//   },
+//   cihAddress: {
+//     value: "",
+//     label: "",
+//   },
+// };
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: formValues,
+  initialValues: churchAffiliationsData.value,
 });
 // No need to define rules for fields
 
 const { value: levelOfATS, errorMessage: levelOfATSError } =
   useField("levelOfATS");
-const { value: isCharterMember, errorMessage: isCharterMemberError } =
-  useField("isCharterMember");
+const { value: charteredMember, errorMessage: charteredMemberError } =
+  useField("charteredMember");
 const { value: charterMemberNumber, errorMessage: charterMemberNumberError } =
   useField("charterMemberNumber");
-const { value: CIHZone, errorMessage: CIHZoneError } = useField("CIHZone");
-const { value: MOE, errorMessage: MOEError } = useField("MOE");
+const { value: cihZone, errorMessage: cihZoneError } = useField("cihZone");
+const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
+  useField("mountainOfInfluence");
 const { value: affinityGroup, errorMessage: affinityGroupError } =
   useField("affinityGroup");
 
 const { value: department, errorMessage: departmentError } =
   useField("department");
 
-const { value: CIHAddress, errorMessage: CIHAddressError } =
-  useField("CIHAddress");
+const { value: cihAddress, errorMessage: cihAddressError } =
+  useField("cihAddress");
 
-const prepareDetails = (values) => {
+const prepareDetails = (values, type) => {
   const currentDatetime = new Date();
   const nigerianTime = new Date(currentDatetime.getTime() + 60 * 60 * 1000); // Subtract 1 hour
 
-  const data = {
+  const updateObj = {
     createdBy: "string",
     modifiedBy: "string",
     createdAt: "2023-10-31T16:32:14.775Z",
@@ -236,20 +246,47 @@ const prepareDetails = (values) => {
     isDeleted: true,
     userId: id.value,
     levelOfATS: String(values.levelOfATS.value),
-    charteredMember: values.isCharterMember.value,
+    charteredMember: values.charteredMember.value,
     charteredMemberNumber: String(values.charterMemberNumber),
-    cihZone: values.CIHZone.value,
-    mountainOfInfluence: values.MOE,
+    cihZone: values.cihZone.value,
+    mountainOfInfluence: values.mountainOfInfluence,
     affinityGroup: values.affinityGroup.value,
     department: values.department.value,
-    cihAddress: values.CIHAddress.value,
+    cihAddress: values.cihAddress.value,
   };
-  return data;
+  const createObj = {
+    userId: id.value,
+    levelOfATS: String(values.levelOfATS.value),
+    charteredMember: values.charteredMember.value,
+    charteredMemberNumber: String(values.charterMemberNumber),
+    cihZone: values.cihZone.value,
+    mountainOfInfluence: values.mountainOfInfluence,
+    affinityGroup: values.affinityGroup.value,
+    department: values.department.value,
+    cihAddress: values.cihAddress.value,
+  };
+  const obj = type == "create" ? createObj : updateObj;
+  return obj;
 };
 const onSubmit = handleSubmit((values) => {
-  console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
+  // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
+  const hasDataError = churchAffiliationsData.value == null;
+  if (hasDataError) {
+    store.dispatch("createChurchAffiliation", prepareDetails(values, "create"));
+  }
+  if (!hasDataError) {
+    store.dispatch("updateChurchAffiliation", prepareDetails(values, "edit"));
+  }
+});
 
-  store.dispatch("updateChurchAffiliation", prepareDetails(values));
+watch(churchAffiliationsData, () => {
+  setValues(churchAffiliationsData.value);
+});
+
+watch(success, () => {
+  if (success.value) {
+    toast.success("Successful");
+  }
 });
 </script>
 
