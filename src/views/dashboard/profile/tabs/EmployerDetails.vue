@@ -191,16 +191,11 @@ const prepareDetails = (values, type) => {
   return obj;
 };
 const onSubmit = handleSubmit((values) => {
-  // console.log("PersonalDetails: " + JSON.stringify(values));
   const hasDataError = employerData.value == null;
   if (hasDataError) {
     store.dispatch("createEmployer", prepareDetails(values, "create"));
   }
   if (!hasDataError) {
-    console.log(
-      "PersonalDetails: " + JSON.stringify(prepareDetails(values, "edit"))
-    );
-
     store.dispatch("updateEmployer", prepareDetails(values, "edit"));
   }
 });

@@ -1,6 +1,7 @@
 <template>
   <div>
     <Card bodyClass="p-0">
+      <span class="hidden"> {{ values }}</span>
       <!-- <header
         class="border-b px-4 border-slate-100 dark:border-slate-700 pt-4 pb-3 flex justify-end items-center"
       >
@@ -79,35 +80,31 @@
                 classInput="h-[40px]"
               />
 
-              <CustomVueSelect
-                :id="title"
+              <Select
                 label="Title"
-                v-model="title"
-                name="title"
+                :options="titleMenu"
+                v-model.value="title"
                 :modelValue="title"
                 :error="titleError"
-                :options="titleMenu"
-                @update:modelValue="defaultSelectedValue = $event"
+                classInput="!h-[40px]"
               />
 
-              <CustomVueSelect
-                :id="gender"
+              <Select
                 label="Gender"
-                v-model="gender"
-                name="gender"
+                :options="genderMenu"
+                v-model.value="gender"
                 :modelValue="gender"
                 :error="genderError"
-                :options="genderMenu"
-                @update:modelValue="defaultSelectedValue = $event"
+                classInput="!h-[40px]"
               />
 
               <FormGroup label="DOB" name="d1">
                 <flat-pickr
-                  v-model="DOB"
+                  v-model="dateOfBirth"
                   class="form-control"
                   id="d1"
                   placeholder="yyyy, dd M"
-                  :error="DOBError"
+                  :error="dateOfBirthError"
                 />
               </FormGroup>
             </div>
@@ -149,7 +146,13 @@
                 v-if="props.column.field == 'gender'"
                 class="text-slate-500 dark:text-slate-300"
               >
-                {{ props.row.gender.value }}
+                {{ props.row.gender }}
+              </span>
+              <span
+                v-if="props.column.field == 'DOB'"
+                class="text-slate-500 dark:text-slate-300"
+              >
+                {{ props.row.dateOfBirth }}
               </span>
               <span v-if="props.column.field == 'action'">
                 <div class="flex space-x-3 rtl:space-x-reverse justify-center">
@@ -194,7 +197,7 @@ import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { titleMenu, genderMenu, childrenDetailstable } from "@/constant/data";
-import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
+import Select from "@/components/Select";
 import { useToast } from "vue-toastification";
 import * as yup from "yup";
 import { inject, onMounted, ref, computed } from "vue";
@@ -225,40 +228,23 @@ const schema = yup.object({
   mobile1: yup.string(),
   mobile2: yup.string(),
 
-  title: yup
-    .object()
-    .shape({
-      value: yup.string().required("Title text is required"),
-      label: yup.string(),
-    })
-    .nullable(),
+  title: yup.string(),
 
-  gender: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
-  DOB: yup.string(),
+  gender: yup.string(),
+  dateOfBirth: yup.string(),
 });
 
 const formValues = {
+  userId: id.value,
   firstName: "",
   lastName: "",
   middleName: "",
   email: "",
-  title: {
-    value: "",
-    label: "",
-  },
+  title: "",
   mobile1: "",
   mobile2: "",
-  gender: {
-    value: "",
-    label: "",
-  },
-  DOB: "",
+  gender: "",
+  dateOfBirth: "",
 };
 
 const removeChild = (idx) => {
@@ -271,7 +257,7 @@ const removeChild = (idx) => {
 
 // const router = useRouter();
 
-const { handleSubmit } = useForm({
+const { handleSubmit, values, setValues } = useForm({
   validationSchema: schema,
   initialValues: formValues,
 });
@@ -290,30 +276,17 @@ const { value: title, errorMessage: titleError } = useField("title");
 
 const { value: gender, errorMessage: genderError } = useField("gender");
 
-const { value: DOB, errorMessage: DOBError } = useField("DOB");
+const { value: dateOfBirth, errorMessage: dateOfBirthError } =
+  useField("dateOfBirth");
 
 // const { remove, push, fields } = useFieldArray("childrenDetails");
 
 // console.log(
-//   firstName + lastName + middleName + email + mobile1 + mobile2 + title + DOB
+//   firstName + lastName + middleName + email + mobile1 + mobile2 + title + dateOfBirth
 // );
 
 const resetForm = () => {
-  formValues.firstName = "";
-  formValues.lastName = "";
-  formValues.middleName = "";
-  formValues.email = "";
-  formValues.title = {
-    value: "",
-    label: "",
-  };
-  formValues.mobile1 = "";
-  formValues.mobile2 = "";
-  formValues.gender = {
-    value: "",
-    label: "",
-  };
-  formValues.DOB = "";
+  setValues(formValues);
 };
 
 const pushDetails = handleSubmit((values) => {
