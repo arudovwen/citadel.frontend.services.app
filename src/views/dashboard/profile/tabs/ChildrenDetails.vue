@@ -284,20 +284,20 @@ const { value: dateOfBirth, errorMessage: dateOfBirthError } =
 //   setValues(formValues);
 // };
 
-const prepareDetails = (values, type) => {
-  const updateObj = {
-    userId: id.value,
-    firstName: values.firstName,
-    surName: values.surName,
-    middleName: values.middleName,
-    email: values.email,
-    title: values.title,
-    mobile1: values.mobile1,
-    mobile2: values.mobile2,
-    gender: values.gender,
-    dateOfBirth: values.dateOfBirth,
-    id: childrensData.value?.id,
-  };
+const prepareDetails = (values) => {
+  // const updateObj = {
+  //   userId: id.value,
+  //   firstName: values.firstName,
+  //   surName: values.surName,
+  //   middleName: values.middleName,
+  //   email: values.email,
+  //   title: values.title,
+  //   mobile1: values.mobile1,
+  //   mobile2: values.mobile2,
+  //   gender: values.gender,
+  //   dateOfBirth: values.dateOfBirth,
+  //   id: childrensData.value?.id,
+  // };
   const createObj = {
     userId: id.value,
     firstName: values.firstName,
@@ -310,18 +310,18 @@ const prepareDetails = (values, type) => {
     gender: values.gender,
     dateOfBirth: values.dateOfBirth,
   };
-  const obj = type == "create" ? createObj : updateObj;
-  return obj;
+  // const obj = type == "create" ? createObj : updateObj;
+  return createObj;
 };
 
 const onSubmit = handleSubmit((values) => {
-  const hasDataError = childrensData.value == null;
-  if (hasDataError) {
-    store.dispatch("createChildren", prepareDetails(values, "create"));
-  }
-  if (!hasDataError) {
-    store.dispatch("updateChildren", prepareDetails(values, "edit"));
-  }
+  // const hasDataError = childrensData.value == null;
+  // if (hasDataError) {
+  store.dispatch("createChildren", prepareDetails(values, "create"));
+  // }
+  // if (!hasDataError) {
+  //   store.dispatch("updateChildren", prepareDetails(values, "edit"));
+  // }
 });
 
 // const addDetail = () => {

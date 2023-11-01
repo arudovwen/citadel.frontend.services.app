@@ -34,6 +34,7 @@ export default {
     getBiodataloading: false,
     getBiodatasuccess: false,
     getBiodataerror: null,
+    childData: null,
     childrensData: null,
     getChildrensDataloading: false,
     getChildrensDataSuccess: false,
