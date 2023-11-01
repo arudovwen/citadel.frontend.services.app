@@ -596,7 +596,7 @@ export const assignOption = [
 
 export const titleMenu = [
   {
-    value: "Master",
+    value: "Mr",
     label: "Mr",
   },
   {

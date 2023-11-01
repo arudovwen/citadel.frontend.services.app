@@ -23,9 +23,9 @@
         label="Last Name"
         type="text"
         placeholder="Type your last name"
-        name="lastName"
-        v-model="lastName"
-        :error="lastNameError"
+        name="surName"
+        v-model="surName"
+        :error="surNameError"
         classInput="h-[40px]"
       />
       <Textinput
@@ -250,7 +250,7 @@ const creationSuccess = computed(() => store.getters["profile/profileCreated"]);
 // Define a validation schema
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
-  lastName: yup.string().required("Last name is required"),
+  surName: yup.string().required("Last name is required"),
   middleName: yup.string(),
   email: yup.string().required("Email is required").email(),
   mobile1: yup.string().required("Mobile 1 is required"),
@@ -328,7 +328,7 @@ const schema = yup.object({
 
 // const formValues = {
 //   firstName: "",
-//   lastName: "",
+//   surName: "",
 //   middleName: "",
 //   email: "",
 //   address: "",
@@ -382,7 +382,7 @@ const { handleSubmit, setValues } = useForm({
 // No need to define rules for fields
 const { value: firstName, errorMessage: firstNameError } =
   useField("firstName");
-const { value: lastName, errorMessage: lastNameError } = useField("lastName");
+const { value: surName, errorMessage: surNameError } = useField("surName");
 const { value: middleName, errorMessage: middleNameError } =
   useField("middleName");
 const { value: email, errorMessage: emailError } = useField("email");
@@ -419,7 +419,7 @@ const prepareDetails = (values, type) => {
     userId: id.value,
     firstName: values.firstName,
     middleName: values.middleName,
-    surName: values.lastName,
+    surName: values.surName,
     mobile1: values.mobile1,
     mobile2: values.mobile2,
     email: values.email,
@@ -441,7 +441,7 @@ const prepareDetails = (values, type) => {
     userId: id.value,
     firstName: values.firstName,
     middleName: values.middleName,
-    surName: values.lastName,
+    surName: values.surName,
     mobile1: values.mobile1,
     mobile2: values.mobile2,
     email: values.email,
@@ -482,7 +482,7 @@ watch(creationSuccess, () => {
 //   if (newValue !== null) {
 //     setValues({
 //       firstName: profileData.value.firstName,
-//       lastName: profileData.value.lastName,
+//       surName: profileData.value.surName,
 //       middleName: profileData.value.middleName,
 //       email: profileData.value.email,
 //       mobile1: profileData.value.phoneNumber,
@@ -521,7 +521,7 @@ watch(biodata, () => {
   // if (newValue == null) {
   //   setValues({
   //     firstName: profileData.value.firstName,
-  //     lastName: profileData.value.lastName,
+  //     surName: profileData.value.surName,
   //     middleName: profileData.value.middleName,
   //     email: profileData.value.email,
   //     // mobile1: profileData.value.phoneNumber,
@@ -529,7 +529,7 @@ watch(biodata, () => {
   // } else {
   // setValues({
   //   firstName: profileData.value?.firstName,
-  //   lastName: profileData.value?.lastName,
+  //   surName: profileData.value?.surName,
   //   middleName: profileData.value?.middleName,
   //   email: profileData.value?.email,
   //   mobile1: biodata.value?.mobile1,

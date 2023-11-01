@@ -330,6 +330,21 @@ export default {
         commit("updateEmployerDataerror", err);
       }
     },
+    async createSpouse({ commit }, data) {
+      try {
+        commit("updateSpouseDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_SPOUSE_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateSpouseDatasuccess");
+        }
+      } catch (err) {
+        commit("updateSpouseDataerror", err);
+      }
+    },
 
     async updateSpouse({ commit }, data) {
       try {
