@@ -11,7 +11,7 @@ export default {
     createProfileError: null,
 
     updateQualificationDataloading: false,
-    updateQualificationDatasuccess: false,
+    updateQualificationDataSuccess: false,
     updateQualificationDataerror: null,
 
     updateEmployerDataloading: false,
@@ -86,19 +86,19 @@ export default {
 
     updateQualificationDataBegin(state) {
       state.updateQualificationDataloading = true;
-      state.updateQualificationDatasuccess = false;
+      state.updateQualificationDataSuccess = false;
       state.updateQualificationDataerror = null;
     },
 
     updateQualificationDataSuccess(state) {
       state.updateQualificationDataloading = false;
-      state.updateQualificationDatasuccess = true;
+      state.updateQualificationDataSuccess = true;
     },
 
     updateQualificationDataErr(state, err) {
       state.updateQualificationDataloading = false;
       state.updateQualificationDataerror = err;
-      state.updateQualificationDatasuccess = false;
+      state.updateQualificationDataSuccess = false;
     },
     updateEmployerDataBegin(state) {
       state.updateEmployerDataloading = true;
@@ -302,13 +302,28 @@ export default {
         commit("createProfileError", err);
       }
     },
+    async createQualification({ commit }, data) {
+      try {
+        commit("updateQualificationDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_QUALIFICATION,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateQualificationDataSuccess");
+        }
+      } catch (err) {
+        commit("updateQualificationDataerror", err);
+      }
+    },
     async updateQualification({ commit }, data) {
       try {
         commit("updateQualificationDataBegin");
         const response = await DataService.put(urls.UPDATE_QUALIFICATION, data);
 
         if (response.status === 200) {
-          commit("updateQualificationDatasuccess");
+          commit("updateQualificationDataSuccess");
         }
       } catch (err) {
         commit("updateQualificationDataerror", err);
