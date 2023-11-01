@@ -91,13 +91,11 @@
 </template>
 
 <script setup>
-import { useToast } from "vue-toastification";
-
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 import {
   levelOfATSMenu,
   isCharterMemberMenu,
@@ -118,7 +116,7 @@ const store = useStore();
 const getChurchAffiliationsData = () => {
   store.dispatch("getChurchAffiliationsById", id.value);
 };
-const toast = useToast();
+// const toast = useToast();
 // Define a validation schema
 const schema = yup.object({
   levelOfATS: yup
@@ -167,11 +165,11 @@ const schema = yup.object({
     .nullable(),
 });
 
-const router = useRouter();
+// const router = useRouter();
 
-const goToProfile = () => {
-  router.push("/profile");
-};
+// const goToProfile = () => {
+//   router.push("/profile");
+// };
 
 const formValues = {
   levelOfATS: {
@@ -225,10 +223,33 @@ const { value: department, errorMessage: departmentError } =
 const { value: CIHAddress, errorMessage: CIHAddressError } =
   useField("CIHAddress");
 
+const prepareDetails = (values) => {
+  const currentDatetime = new Date();
+  const nigerianTime = new Date(currentDatetime.getTime() + 60 * 60 * 1000); // Subtract 1 hour
+
+  const data = {
+    createdBy: "string",
+    modifiedBy: "string",
+    createdAt: "2023-10-31T16:32:14.775Z",
+    modifiedAt: nigerianTime,
+    id: 0,
+    isDeleted: true,
+    userId: id.value,
+    levelOfATS: String(values.levelOfATS.value),
+    charteredMember: values.isCharterMember.value,
+    charteredMemberNumber: String(values.charterMemberNumber),
+    cihZone: values.CIHZone.value,
+    mountainOfInfluence: values.MOE,
+    affinityGroup: values.affinityGroup.value,
+    department: values.department.value,
+    cihAddress: values.CIHAddress.value,
+  };
+  return data;
+};
 const onSubmit = handleSubmit((values) => {
-  console.log("PersonalDetails: " + JSON.stringify(values));
-  toast.success("Update successful");
-  goToProfile();
+  console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
+
+  store.dispatch("updateChurchAffiliation", prepareDetails(values));
 });
 </script>
 

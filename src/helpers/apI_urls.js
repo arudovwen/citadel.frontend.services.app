@@ -20,6 +20,7 @@ export const urls = {
   CREATE_BIODATA: "/Biodata/CreateBiodata",
   UPDATE_BIODATA: "/Biodata/UpdateBiodata",
   GET_BIODATA_BY_ID: "/Biodata/GetBiodataById",
+  GET_BIODATA_BY_USERID: "/Biodata/GetBiodataByUserId",
   GET_ALL_BIODATA: "/Biodata/GetAllBiodata",
   DELETE_BIODATA: "/Biodata/DeleteBiodata",
 
@@ -27,6 +28,7 @@ export const urls = {
   CREATE_CHILDREN_DETAIL: "/ChildrenDetail/CreateChildrenDetail",
   UPDATE_CHILDREN_DETAIL: "/ChildrenDetail/UpdateChildrenDetail",
   GET_CHILDREN_DETAIL_BY_ID: "/ChildrenDetail/GetChildrenDetailById",
+  GET_CHILDREN_DETAIL_BY_USERID: "/ChildrenDetail/GetChildrenDetailByUserId",
   GET_ALL_CHILDREN_DETAIL: "/ChildrenDetail/GetAllChildrenDetail",
   DELETE_CHILDREN_DETAIL: "/ChildrenDetail/DeleteChildrenDetail",
 
@@ -34,6 +36,8 @@ export const urls = {
   CREATE_CHURCH_AFFILIATION: "/ChurchAffiliation/CreateChurchAffiliation",
   UPDATE_CHURCH_AFFILIATION: "/ChurchAffiliation/UpdateChurchAffiliation",
   GET_CHURCH_AFFILIATION_BY_ID: "/ChurchAffiliation/GetChurchAffiliationById",
+  GET_CHURCH_AFFILIATION_BY_USERID:
+    "/ChurchAffiliation/GetChurchAffiliationByUserId",
   GET_ALL_CHURCH_AFFILIATION: "/ChurchAffiliation/GetAllChurchAffiliation",
   DELETE_CHURCH_AFFILIATION: "/ChurchAffiliation/DeleteChurchAffiliation",
 
@@ -48,6 +52,7 @@ export const urls = {
   CREATE_EMPLOYER: "/Employer/CreateEmployer",
   UPDATE_EMPLOYER: "/Employer/UpdateEmployer",
   GET_EMPLOYER_BY_ID: "/Employer/GetEmployerById",
+  GET_EMPLOYER_BY_USERID: "/Employer/GetEmployerByUserId",
   GET_ALL_EMPLOYER: "/Employer/GetAllEmployer",
   DELETE_EMPLOYER: "/Employer/DeleteEmployer",
 
@@ -58,6 +63,7 @@ export const urls = {
   CREATE_QUALIFICATION: "/Qualification/CreateQualification",
   UPDATE_QUALIFICATION: "/Qualification/UpdateQualification",
   GET_QUALIFICATION_BY_ID: "/Qualification/GetQualificationById",
+  GET_QUALIFICATION_BY_USERID: "/Qualification/GetQualificationByUserId",
   GET_ALL_QUALIFICATION: "/Qualification/GetAllQualification",
   DELETE_QUALIFICATION: "/Qualification/DeleteQualification",
 
@@ -65,6 +71,7 @@ export const urls = {
   CREATE_SPOUSE_DETAIL: "/SpouseDetail/CreateSpouseDetail",
   UPDATE_SPOUSE_DETAIL: "/SpouseDetail/UpdateSpouseDetail",
   GET_SPOUSE_DETAIL_BY_ID: "/SpouseDetail/GetSpouseDetailById",
+  GET_SPOUSE_DETAIL_BY_USERID: "/SpouseDetail/GetSpouseDetailByUserId",
   GET_ALL_SPOUSE_DETAIL: "/SpouseDetail/GetAllSpouseDetail",
   DELETE_SPOUSE_DETAIL: "/SpouseDetail/DeleteSpouseDetail",
 

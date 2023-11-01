@@ -36,10 +36,10 @@
             <div
               class="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]"
             >
-              {{ profileData.fullName }}
+              {{ profileData?.fullName }}
             </div>
             <div class="text-sm font-light text-slate-600 dark:text-slate-400">
-              {{ profileData.userRole }}
+              {{ profileData?.userRole }}
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
                   href="mailto:someone@example.com"
                   class="text-base text-slate-600 dark:text-slate-50"
                 >
-                  info-500@dashcode.com
+                  {{ profileData?.email }}
                 </a>
               </div>
             </li>
@@ -89,12 +89,15 @@
                   href="tel:0189749676767"
                   class="text-base text-slate-600 dark:text-slate-50"
                 >
-                  +1-202-555-0151
+                  {{ profileData?.phoneNumber }}
                 </a>
               </div>
             </li>
             <!-- end single list -->
-            <li class="flex space-x-3 rtl:space-x-reverse">
+            <li
+              v-if="profileData?.location"
+              class="flex space-x-3 rtl:space-x-reverse"
+            >
               <div
                 class="flex-none text-2xl text-slate-600 dark:text-slate-300"
               >
@@ -107,7 +110,7 @@
                   LOCATION
                 </div>
                 <div class="text-base text-slate-600 dark:text-slate-50">
-                  Home# 320/N, Road# 71/B, Mohakhali, Dhaka-1207, Bangladesh
+                  {{ profileData?.location }}
                 </div>
               </div>
             </li>
@@ -125,17 +128,34 @@
 <script setup>
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
-import { provide, ref, computed } from "vue";
+import { provide, ref, computed, onMounted, watch } from "vue";
 import Tab from "./tabs/index.vue";
 import { useStore } from "vuex";
-const { state } = useStore();
-const profileData = computed(() => state.auth.userData);
-const id = computed(() => profileData.value.id);
+import { useRoute } from "vue-router";
+onMounted(() => {
+  fetchUser();
+});
+const { state, dispatch } = useStore();
+const route = useRoute();
+
+// console.log("Member:" + JSON.stringify(state.member.profile));
+const profileData = computed(() => state.member.profile);
+const userId = computed(() => route.params.userId);
 const isMarried = ref(false);
+
+console.log("route" + userId.value);
+const fetchUser = () => {
+  dispatch("getUserById", userId.value);
+};
+
+watch(userId, () => {
+  console.log("isBringCalled");
+  fetchUser();
+});
 
 provide("isMarried", isMarried);
 provide("profileData", profileData);
-provide("id", id);
+provide("id", userId);
 </script>
 
 <style lang="scss" scoped></style>

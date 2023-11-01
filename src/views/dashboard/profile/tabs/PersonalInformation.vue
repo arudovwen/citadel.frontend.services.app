@@ -1,13 +1,21 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
+    <!-- {{ biodata }} -->
+    <!-- {{ getBiodataError !== null }} -->
+    <!-- <span>{{ createProfileLoading }}</span>
+    <span>{{  }}</span> -->
     <!-- <span>UserData: {{ profileData }}</span> -->
+    <!-- <span>FormVal: {{ formValues }}</span> -->
+    <!-- {{ firstName }} -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
+        id="firstName"
         label="First Name"
         type="text"
         placeholder="Type your first name"
         name="firstName"
         v-model="firstName"
+        :modelValue="firstName"
         :error="firstNameError"
         classInput="h-[40px]"
       />
@@ -15,9 +23,9 @@
         label="Last Name"
         type="text"
         placeholder="Type your last name"
-        name="lastName"
-        v-model="lastName"
-        :error="lastNameError"
+        name="surName"
+        v-model="surName"
+        :error="surNameError"
         classInput="h-[40px]"
       />
       <Textinput
@@ -60,9 +68,9 @@
         label="Address 1"
         type="text"
         placeholder="Type your address 1"
-        name="address1"
-        v-model="address1"
-        :error="address1Error"
+        name="address"
+        v-model="address"
+        :error="addressError"
         classInput="h-[40px]"
       />
       <Textinput
@@ -173,6 +181,15 @@
         :error="placeOfBirthError"
         classInput="h-[40px]"
       />
+      <FormGroup label="DOB" name="d1">
+        <flat-pickr
+          v-model="dateOfBirth"
+          class="form-control"
+          id="d1"
+          placeholder="yyyy, dd M"
+          :error="dateOfBirthError"
+        />
+      </FormGroup>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
       <button
@@ -187,6 +204,7 @@
   </form>
 </template>
 <script setup>
+import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
@@ -206,35 +224,38 @@ import {
 import { useStore } from "vuex";
 import { computed, onMounted, watch } from "vue";
 import { useToast } from "vue-toastification";
-import { inject } from "vue";
+// import { inject } from "vue";
+import { useRoute } from "vue-router";
 onMounted(() => {
   getBiodata();
-  // console.log("Store: " + store.getters["auth/userData"]);
-  // console.log("Store2: " + userData.value);
-  // console.log("Store3: " + JSON.stringify(store.getters.auth));
 });
+
 const store = useStore();
+const route = useRoute();
 const toast = useToast();
 const createProfileLoading = computed(
-  () => store.getters["profile/creatingProfile"]
+  () => store.state.profile.getBiodataloading
 );
-const profileData = inject("profileData");
-const id = computed(() => profileData.value.id);
+const success = computed(() => store.state.profile.profileCreated);
+const getBiodataError = computed(() => store.state.profile.getBiodataerror);
+const biodata = computed(() => store.state.profile.biodata);
+// const profileData = computed(() => store.state.member.profile);
+const id = computed(() => route.params.userId);
 
 const getBiodata = () => {
-  store.dispatch("getBiodataById", id.value);
+  store.dispatch("getBiodataByUserId", id.value);
 };
 
 const creationSuccess = computed(() => store.getters["profile/profileCreated"]);
 // Define a validation schema
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
-  lastName: yup.string().required("Last name is required"),
+  surName: yup.string().required("Last name is required"),
   middleName: yup.string(),
   email: yup.string().required("Email is required").email(),
   mobile1: yup.string().required("Mobile 1 is required"),
   mobile2: yup.string(),
-  address1: yup.string(),
+  address: yup.string(),
   address2: yup.string(),
   // title: yup.string(),
   title: yup
@@ -302,69 +323,72 @@ const schema = yup.object({
       label: yup.string(),
     })
     .nullable(),
+  dateOfBirth: yup.string(),
 });
-const formValues = {
-  firstName: "",
-  lastName: "",
-  middleName: "",
-  email: "dashcode@gmail.com",
-  address1: "",
-  address2: "",
-  title: {
-    value: "",
-    label: "",
-  },
-  mobile1: "",
-  mobile2: "",
-  nearestBusStop: "",
-  LGA: {
-    value: "",
-    label: "",
-  },
-  state: {
-    value: "",
-    label: "",
-  },
-  country: {
-    value: "",
-    label: "",
-  },
-  gender: {
-    value: "",
-    label: "",
-  },
-  employmentStatus: {
-    value: "",
-    label: "",
-  },
-  placeOfBirth: "",
-  nationality: {
-    value: "",
-    label: "",
-  },
-  stateOfOrigin: {
-    value: "",
-    label: "",
-  },
-  maritalStatus: {
-    value: "",
-    label: "",
-  },
-};
-const { handleSubmit } = useForm({
+
+// const formValues = {
+//   firstName: "",
+//   surName: "",
+//   middleName: "",
+//   email: "",
+//   address: "",
+//   address2: "",
+//   title: {
+//     value: "",
+//     label: "",
+//   },
+//   mobile1: "",
+//   mobile2: "",
+//   nearestBusStop: "",
+//   LGA: {
+//     value: "",
+//     label: "",
+//   },
+//   state: {
+//     value: "",
+//     label: "",
+//   },
+//   country: {
+//     value: "",
+//     label: "",
+//   },
+//   gender: {
+//     value: "",
+//     label: "",
+//   },
+//   employmentStatus: {
+//     value: "",
+//     label: "",
+//   },
+//   placeOfBirth: "",
+//   nationality: {
+//     value: "",
+//     label: "",
+//   },
+//   stateOfOrigin: {
+//     value: "",
+//     label: "",
+//   },
+//   maritalStatus: {
+//     value: "",
+//     label: "",
+//   },
+// };
+const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: formValues,
+  initialValues: null,
 });
+
 // No need to define rules for fields
 const { value: firstName, errorMessage: firstNameError } =
   useField("firstName");
-const { value: lastName, errorMessage: lastNameError } = useField("lastName");
+const { value: surName, errorMessage: surNameError } = useField("surName");
 const { value: middleName, errorMessage: middleNameError } =
   useField("middleName");
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
 const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
-const { value: address1, errorMessage: address1Error } = useField("address1");
+const { value: address, errorMessage: addressError } = useField("address");
 const { value: address2, errorMessage: address2Error } = useField("address2");
 const { value: title, errorMessage: titleError } = useField("title");
 const { value: nearestBusStop, errorMessage: nearestBusStopError } =
@@ -383,38 +407,149 @@ const { value: stateOfOrigin, errorMessage: stateOfOriginError } =
   useField("stateOfOrigin");
 const { value: maritalStatus, errorMessage: maritalStatusError } =
   useField("maritalStatus");
+
+const { value: dateOfBirth, errorMessage: dateOfBirthError } =
+  useField("dateOfBirth");
+
 // const { value: email, errorMessage: emailError } = useField("email");
-const prepareDetails = (values) => {
-  const obj = {
+
+const prepareDetails = (values, type) => {
+  const updateObj = {
     title: values.title.value,
-    userId: "string",
+    userId: id.value,
     firstName: values.firstName,
     middleName: values.middleName,
-    surName: values.lastName,
+    surName: values.surName,
     mobile1: values.mobile1,
     mobile2: values.mobile2,
     email: values.email,
-    address: values.address1,
+    address: values.address,
     nearestBusStop: values.nearestBusStop,
     lga: values.LGA.value,
     state: values.state.value,
     country: values.country.value,
     gender: values.gender.value,
     employmentStatus: values.employmentStatus.value,
-    dateOfBirth: "2023-10-24T21:35:06.954Z",
+    dateOfBirth: values.dateOfBirth,
     placeOfBirth: values.placeOfBirth,
     nationality: values.nationality.value,
     stateOfOrigin: values.stateOfOrigin.value,
     maritalStatus: values.maritalStatus.value,
   };
+  const createObj = {
+    title: values.title.value,
+    userId: id.value,
+    firstName: values.firstName,
+    middleName: values.middleName,
+    surName: values.surName,
+    mobile1: values.mobile1,
+    mobile2: values.mobile2,
+    email: values.email,
+    address: values.address,
+    nearestBusStop: values.nearestBusStop,
+    lga: values.LGA.value,
+    state: values.state.value,
+    country: values.country.value,
+    gender: values.gender.value,
+    employmentStatus: values.employmentStatus.value,
+    dateOfBirth: values.dateOfBirth,
+    placeOfBirth: values.placeOfBirth,
+    nationality: values.nationality.value,
+    stateOfOrigin: values.stateOfOrigin.value,
+    maritalStatus: values.maritalStatus.value,
+  };
+
+  const obj = type == "create" ? createObj : updateObj;
   return obj;
 };
 const onSubmit = handleSubmit((values) => {
-  store.dispatch("createProfile", prepareDetails(values));
-  console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
+  const hasBiodataError = getBiodataError.value !== null;
+  console.log("dataErrorVal: " + JSON.stringify(getBiodataError.value));
+
+  if (hasBiodataError) {
+    store.dispatch("createProfile", prepareDetails(values, "create"));
+  }
+  if (!hasBiodataError) {
+    store.dispatch("updateProfile", prepareDetails(values, "edit"));
+  }
+  // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
 });
 watch(creationSuccess, () => {
   toast.success("Successfully created profile");
+});
+
+// watch(profileData, (newValue) => {
+//   if (newValue !== null) {
+//     setValues({
+//       firstName: profileData.value.firstName,
+//       surName: profileData.value.surName,
+//       middleName: profileData.value.middleName,
+//       email: profileData.value.email,
+//       mobile1: profileData.value.phoneNumber,
+//     });
+//   }
+// });
+watch(biodata, () => {
+  // const obj = {
+  //   userId: "f7557c35-9ba7-4cb3-ac3a-b333b156c3ec",
+  //   title: "Master",
+  //   firstName: "Baba",
+  //   middleName: "Fama",
+  //   surName: "Bola",
+  //   mobile1: "09049074411",
+  //   mobile2: "11111111111",
+  //   email: "tunde.famakinwa@gmail.com",
+  //   address: "Ajj",
+  //   nearestBusStop: "Jakande",
+  //   lga: "Ideato South",
+  //   state: "Lagos",
+  //   country: "Nigeria",
+  //   gender: "Male",
+  //   employmentStatus: "Employed",
+  //   dateOfBirth: "1995-12-07T00:00:00",
+  //   placeOfBirth: "Somolu",
+  //   nationality: "Nigeria",
+  //   stateOfOrigin: "Imo ",
+  //   maritalStatus: "Married",
+  //   isFirstTime: false,
+  //   id: 2,
+  //   isDeleted: false,
+  //   createdAt: "2023-11-01T00:03:14.446863",
+  //   modifiedAt: "0001-01-01T00:00:00",
+  // };
+  // console.log("Biodata: " + newValue);
+  // if (newValue == null) {
+  //   setValues({
+  //     firstName: profileData.value.firstName,
+  //     surName: profileData.value.surName,
+  //     middleName: profileData.value.middleName,
+  //     email: profileData.value.email,
+  //     // mobile1: profileData.value.phoneNumber,
+  //   });
+  // } else {
+  // setValues({
+  //   firstName: profileData.value?.firstName,
+  //   surName: profileData.value?.surName,
+  //   middleName: profileData.value?.middleName,
+  //   email: profileData.value?.email,
+  //   mobile1: biodata.value?.mobile1,
+  //   mobile2: biodata.value?.mobile2,
+  //   address: biodata.value?.address,
+  // });
+  // }
+  setValues(biodata.value);
+});
+
+watch(success, () => {
+  if (success.value) {
+    toast.success("Successful");
+  }
+});
+
+watch(id, (newValue) => {
+  if (newValue !== null && newValue !== undefined) {
+    getBiodata();
+  }
 });
 </script>
 <style lang="scss" scoped></style>

@@ -3,10 +3,34 @@ import { urls } from "@/helpers/apI_urls";
 export default {
   state: {
     //personal Info
+
+    //post methods
     biodata: null,
     creatingProfile: false,
     profileCreated: false,
     createProfileError: null,
+
+    updateQualificationDataloading: false,
+    updateQualificationDatasuccess: false,
+    updateQualificationDataerror: null,
+
+    updateEmployerDataloading: false,
+    updateEmployerDatasuccess: false,
+    updateEmployerDataerror: null,
+
+    updateSpouseDataloading: false,
+    updateSpouseDatasuccess: false,
+    updateSpouseDataerror: null,
+
+    updateChildrenDataloading: false,
+    updateChildrenDatasuccess: false,
+    updateChildrenDataerror: null,
+
+    updateChurchAffiliationDataloading: false,
+    updateChurchAffiliationDatasuccess: false,
+    updateChurchAffiliationDataerror: null,
+
+    //get
     getBiodataloading: false,
     getBiodatasuccess: false,
     getBiodataerror: null,
@@ -43,6 +67,7 @@ export default {
     },
   },
   mutations: {
+    //post
     creatingProfile(state) {
       state.creatingProfile = true;
       state.profileCreated = false;
@@ -58,6 +83,92 @@ export default {
       state.profileCreated = false;
       state.createProfileError = err;
     },
+
+    updateQualificationDataBegin(state) {
+      state.updateQualificationDataloading = true;
+      state.updateQualificationDatasuccess = false;
+      state.updateQualificationDataerror = null;
+    },
+
+    updateQualificationDataSuccess(state) {
+      state.updateQualificationDataloading = false;
+      state.updateQualificationDatasuccess = true;
+    },
+
+    updateQualificationDataErr(state, err) {
+      state.updateQualificationDataloading = false;
+      state.updateQualificationDataerror = err;
+      state.updateQualificationDatasuccess = false;
+    },
+    updateEmployerDataBegin(state) {
+      state.updateEmployerDataloading = true;
+      state.updateEmployerDatasuccess = false;
+      state.updateEmployerDataerror = null;
+    },
+
+    updateEmployerDataSuccess(state) {
+      state.updateEmployerDataloading = false;
+      state.updateEmployerDatasuccess = true;
+    },
+
+    updateEmployerDataErr(state, err) {
+      state.updateEmployerDataloading = false;
+      state.updateEmployerDataerror = err;
+      state.updateEmployerDatasuccess = false;
+    },
+
+    updateSpouseDataBegin(state) {
+      state.updateSpouseDataloading = true;
+      state.updateSpouseDatasuccess = false;
+      state.updateSpouseDataerror = null;
+    },
+
+    updateSpouseDataSuccess(state) {
+      state.updateSpouseDataloading = false;
+      state.updateSpouseDatasuccess = true;
+    },
+
+    updateSpouseDataErr(state, err) {
+      state.updateSpouseDataloading = false;
+      state.updateSpouseDataerror = err;
+      state.updateSpouseDatasuccess = false;
+    },
+
+    updateChildrenDataBegin(state) {
+      state.updateChildrenDataloading = true;
+      state.updateChildrenDatasuccess = false;
+      state.updateChildrenDataerror = null;
+    },
+
+    updateChildrenDataSuccess(state) {
+      state.updateChildrenDataloading = false;
+      state.updateChildrenDatasuccess = true;
+    },
+
+    updateChildrenDataErr(state, err) {
+      state.updateChildrenDataloading = false;
+      state.updateChildrenDataerror = err;
+      state.updateChildrenDatasuccess = false;
+    },
+
+    updateChurchAffiliationDataBegin(state) {
+      state.updateChurchAffiliationDataloading = true;
+      state.updateChurchAffiliationDatasuccess = false;
+      state.updateChurchAffiliationDataerror = null;
+    },
+
+    updateChurchAffiliationDataSuccess(state) {
+      state.updateChurchAffiliationDataloading = false;
+      state.updateChurchAffiliationDatasuccess = true;
+    },
+
+    updateChurchAffiliationDataErr(state, err) {
+      state.updateChurchAffiliationDataloading = false;
+      state.updateChurchAffiliationDataerror = err;
+      state.updateChurchAffiliationDatasuccess = false;
+    },
+
+    //get
     getBiodataBegin(state) {
       state.getBiodataloading = true;
       state.getBiodatasuccess = false;
@@ -165,6 +276,7 @@ export default {
     },
   },
   actions: {
+    //post
     async createProfile({ commit }, data) {
       try {
         commit("creatingProfile");
@@ -177,16 +289,121 @@ export default {
         commit("createProfileError", err);
       }
     },
-    async getBiodataById({ commit }, id) {
+
+    async updateProfile({ commit }, data) {
+      try {
+        commit("creatingProfile");
+        const response = await DataService.post(urls.UPDATE_BIODATA, data);
+        if (response.status === 200) {
+          commit("profileCreated");
+          console.log("SuccessResponse:" + response);
+        }
+      } catch (err) {
+        commit("createProfileError", err);
+      }
+    },
+    async updateQualification({ commit }, data) {
+      try {
+        commit("updateQualificationDataBegin");
+        const response = await DataService.post(
+          urls.UPDATE_QUALIFICATION,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateQualificationDatasuccess");
+        }
+      } catch (err) {
+        commit("updateQualificationDataerror", err);
+      }
+    },
+
+    async updateEmployer({ commit }, data) {
+      try {
+        commit("updateEmployerDataBegin");
+        const response = await DataService.post(urls.UPDATE_EMPLOYER, data);
+
+        if (response.status === 200) {
+          commit("updateEmployerDatasuccess");
+        }
+      } catch (err) {
+        commit("updateEmployerDataerror", err);
+      }
+    },
+    async createSpouse({ commit }, data) {
+      try {
+        commit("updateSpouseDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_SPOUSE_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateSpouseDatasuccess");
+        }
+      } catch (err) {
+        commit("updateSpouseDataerror", err);
+      }
+    },
+
+    async updateSpouse({ commit }, data) {
+      try {
+        commit("updateSpouseDataBegin");
+        const response = await DataService.post(
+          urls.UPDATE_SPOUSE_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateSpouseDatasuccess");
+        }
+      } catch (err) {
+        commit("updateSpouseDataerror", err);
+      }
+    },
+    async updateChildren({ commit }, data) {
+      try {
+        commit("updateChildrenDataBegin");
+        const response = await DataService.post(
+          urls.UPDATE_CHILDREN_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateChildrenDatasuccess");
+        }
+      } catch (err) {
+        commit("updateChildrenDataerror", err);
+      }
+    },
+    async updateChurchAffiliation({ commit }, data) {
+      try {
+        commit("updateChurchAffiliationDataBegin");
+        const response = await DataService.post(
+          urls.UPDATE_CHURCH_AFFILIATION,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateChurchAffiliationDatasuccess");
+        }
+      } catch (err) {
+        commit("updateChurchAffiliationDataerror", err);
+      }
+    },
+
+    //get
+    async getBiodataByUserId({ commit }, id) {
       try {
         commit("getBiodataBegin");
         const response = await DataService.get(
-          `${urls.GET_BIODATA_BY_ID}?id=${id}`
+          `${urls.GET_BIODATA_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getBiodataSuccess", response.data.data);
         }
       } catch (err) {
+        console.log("getBiodataErr", JSON.stringify(err));
         commit("getBiodataErr", err);
       }
     },
@@ -195,7 +412,7 @@ export default {
       try {
         commit("getChildrensDataBegin");
         const response = await DataService.get(
-          `${urls.GET_CHILDREN_DETAIL_BY_ID}?id=${id}`
+          `${urls.GET_CHILDREN_DETAIL_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getChildrensDataSuccess", response.data.data);
@@ -209,7 +426,7 @@ export default {
       try {
         commit("getSpouseDataBegin");
         const response = await DataService.get(
-          `${urls.GET_SPOUSE_DETAIL_BY_ID}?id=${id}`
+          `${urls.GET_SPOUSE_DETAIL_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getSpouseDataSuccess", response.data.data);
@@ -222,7 +439,7 @@ export default {
       try {
         commit("getEmployerDataBegin");
         const response = await DataService.get(
-          `${urls.GET_EMPLOYER_BY_ID}?id=${id}`
+          `${urls.GET_EMPLOYER_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getEmployerDataSuccess", response.data.data);
@@ -236,7 +453,7 @@ export default {
       try {
         commit("getChurchAffiliationsDataBegin");
         const response = await DataService.get(
-          `${urls.GET_CHURCH_AFFILIATION_BY_ID}?id=${id}`
+          `${urls.GET_CHURCH_AFFILIATION_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getChurchAffiliationsDataSuccess", response.data.data);
@@ -250,7 +467,7 @@ export default {
       try {
         commit("getQualificationDataBegin");
         const response = await DataService.get(
-          `${urls.GET_QUALIFICATION_BY_ID}?id=${id}`
+          `${urls.GET_QUALIFICATION_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getQualificationDataSuccess", response.data.data);
