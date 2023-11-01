@@ -376,6 +376,21 @@ export default {
         commit("updateChildrenDataerror", err);
       }
     },
+    async createChurchAffiliation({ commit }, data) {
+      try {
+        commit("updateChurchAffiliationDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_CHURCH_AFFILIATION,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateChurchAffiliationDatasuccess");
+        }
+      } catch (err) {
+        commit("updateChurchAffiliationDataerror", err);
+      }
+    },
     async updateChurchAffiliation({ commit }, data) {
       try {
         commit("updateChurchAffiliationDataBegin");
