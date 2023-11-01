@@ -195,7 +195,7 @@ const prepareDetails = (values, type) => {
     dateOfBirth: values.dateOfBirth,
     weddingAnniversary: values.weddingAnniversary,
 
-    id: spouseData.value.id,
+    id: spouseData.value?.id,
   };
   const createObj = {
     userId: id.value,
