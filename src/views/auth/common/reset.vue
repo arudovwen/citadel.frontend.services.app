@@ -23,9 +23,9 @@
       label="Confirm Password"
       type="password"
       placeholder="Type your password"
-      name="comfirmPassword"
-      v-model="comfirmPassword"
-      :error="comfirmPasswordError"
+      name="confirmPassword"
+      v-model="confirmPassword"
+      :error="confirmPasswordError"
       hasicon
       classInput="h-[48px]"
     />
@@ -75,7 +75,7 @@ export default {
     const route = useRoute();
 
     const isOtpLoading = computed(() => state.auth.loading);
-    const isSuccess = computed(() => state.auth.loginsuccess);
+    const isSuccess = computed(() => state.auth.resetsuccess);
     const isOtpSuccess = computed(() => state.auth.requestsuccess);
     const resendCountdown = ref(20);
     const resendDisabled = ref(true);
@@ -104,9 +104,9 @@ export default {
     };
     // Define a validation schema
     const schema = yup.object({
-      password: yup.string().required(),
-      confirmPassword: yup.string().required(),
-      otp: yup.string().required(),
+      password: yup.string().required("Password is required"),
+      confirmPassword: yup.string().required("Confirm your password"),
+      otp: yup.string().required("Provide your otp"),
     });
 
     const { handleSubmit } = useForm({
@@ -114,16 +114,21 @@ export default {
     });
     // No need to define rules for fields
 
-    const { value: comfirmPassword, errorMessage: comfirmPasswordError } =
-      useField("comfirmPassword");
+    const { value: confirmPassword, errorMessage: confirmPasswordError } =
+      useField("confirmPassword");
     const { value: password, errorMessage: passwordError } =
       useField("password");
     const { value: otp, errorMessage: otpError } = useField("otp");
 
     const onSubmit = handleSubmit((values) => {
-      console.warn(values);
-      const val = { ...values, username: route.params.email };
-      console.log("🚀 ~ file: reset.vue:76 ~ onSubmit ~ val:", val);
+      const val = {
+        ...values,
+        username: route.params.email,
+        token: values.otp,
+        newPassword: values.password,
+      };
+
+      dispatch("resetPassword", val);
     });
 
     onMounted(() => {
@@ -161,8 +166,8 @@ export default {
       otp,
       otpError,
       password,
-      comfirmPasswordError,
-      comfirmPassword,
+      confirmPasswordError,
+      confirmPassword,
       passwordError,
       onSubmit,
       resendDisabled,
