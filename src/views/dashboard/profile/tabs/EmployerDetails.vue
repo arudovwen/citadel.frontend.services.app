@@ -221,12 +221,12 @@ const prepareDetails = (values, type) => {
     subSector: values.subSector,
     country: values.country?.value ? values.country.value : values.country,
 
-    createdBy: "string",
-    modifiedBy: "string",
-    createdAt: "2023-11-01T03:44:32.216Z",
-    modifiedAt: "2023-11-01T03:44:32.216Z",
+    // createdBy: "string",
+    // modifiedBy: "string",
+    // createdAt: "2023-11-01T03:44:32.216Z",
+    // modifiedAt: "2023-11-01T03:44:32.216Z",
     id: employerData.value.id,
-    isDeleted: true,
+    // isDeleted: true,
   };
   const createObj = {
     userId: id.value,
@@ -249,6 +249,10 @@ const onSubmit = handleSubmit((values) => {
     store.dispatch("createEmployer", prepareDetails(values, "create"));
   }
   if (!hasDataError) {
+    console.log(
+      "PersonalDetails: " + JSON.stringify(prepareDetails(values, "edit"))
+    );
+
     store.dispatch("updateEmployer", prepareDetails(values, "edit"));
   }
 });
