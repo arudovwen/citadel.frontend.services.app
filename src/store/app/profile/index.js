@@ -317,6 +317,18 @@ export default {
         commit("updateQualificationDataerror", err);
       }
     },
+    async createEmployer({ commit }, data) {
+      try {
+        commit("updateEmployerDataBegin");
+        const response = await DataService.post(urls.CREATE_EMPLOYER, data);
+
+        if (response.status === 200) {
+          commit("updateEmployerDatasuccess");
+        }
+      } catch (err) {
+        commit("updateEmployerDataerror", err);
+      }
+    },
 
     async updateEmployer({ commit }, data) {
       try {

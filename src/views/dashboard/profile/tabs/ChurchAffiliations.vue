@@ -108,17 +108,23 @@ import {
 
 import { inject, onMounted } from "vue";
 import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
 
 onMounted(() => {
   getChurchAffiliationsData();
 });
 const id = inject("id");
 const store = useStore();
+const toast = useToast();
 const getChurchAffiliationsData = () => {
   store.dispatch("getChurchAffiliationsById", id.value);
 };
 const churchAffiliationsData = computed(
   () => store.state.profile.churchAffiliationsData
+);
+
+const success = computed(
+  () => store.state.profile.updateChurchAffiliationDatasuccess
 );
 
 const schema = yup.object({
@@ -275,6 +281,12 @@ const onSubmit = handleSubmit((values) => {
 
 watch(churchAffiliationsData, () => {
   setValues(churchAffiliationsData.value);
+});
+
+watch(success, () => {
+  if (success.value) {
+    toast.success("Successful");
+  }
 });
 </script>
 

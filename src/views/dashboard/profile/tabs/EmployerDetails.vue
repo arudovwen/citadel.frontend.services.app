@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
+    <!-- {{ values }} -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
         label="Employer Name"
@@ -15,9 +16,9 @@
         label="Employer Address 1"
         type="text"
         placeholder="Type your address 1"
-        name="employerAddress1"
-        v-model="employerAddress1"
-        :error="employerAddress1Error"
+        name="employerAddress"
+        v-model="employerAddress"
+        :error="employerAddressError"
         classInput="h-[40px]"
       />
       <Textinput
@@ -41,11 +42,11 @@
 
       <CustomVueSelect
         name="LGA"
-        v-model="LGA"
-        :modelValue="LGA"
-        :error="LGAError"
+        v-model="lga"
+        :modelValue="lga"
+        :error="lgaError"
         :options="LGAMenu"
-        label="LGA"
+        label="lga"
         @update:modelValue="defaultSelectedValue = $event"
       />
       <CustomVueSelect
@@ -69,10 +70,10 @@
       />
 
       <CustomVueSelect
-        name="industry"
-        v-model="industry"
-        :modelValue="industry"
-        :error="industryError"
+        name="sector"
+        v-model="sector"
+        :modelValue="sector"
+        :error="sectorError"
         :options="industryMenu"
         label="Industry"
         @update:modelValue="defaultSelectedValue = $event"
@@ -103,10 +104,9 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
-import { useRouter } from "vue-router";
 import { LGAMenu, stateMenu, countryMenu, industryMenu } from "@/constant/data";
 import { useToast } from "vue-toastification";
-import { inject, onMounted } from "vue";
+import { inject, onMounted, computed, watch } from "vue";
 import { useStore } from "vuex";
 
 onMounted(() => {
@@ -117,14 +117,18 @@ const store = useStore();
 const getEmployerData = () => {
   store.dispatch("getEmployerDetailById", id.value);
 };
+
+const employerData = computed(() => store.state.profile.employerData);
+const success = computed(() => store.state.profile.updateEmployerDatasuccess);
+
 const toast = useToast();
 // Define a validation schema
 const schema = yup.object({
   employerName: yup.string(),
-  employerAddress1: yup.string(),
+  employerAddress: yup.string(),
   employerAddress2: yup.string(),
   positionHeld: yup.string(),
-  LGA: yup
+  lga: yup
     .object()
     .shape({
       value: yup.string(),
@@ -145,7 +149,7 @@ const schema = yup.object({
       label: yup.string(),
     })
     .nullable(),
-  industry: yup
+  sector: yup
     .object()
     .shape({
       value: yup.string(),
@@ -156,66 +160,107 @@ const schema = yup.object({
   subSector: yup.string(),
 });
 
-const router = useRouter();
+// const formValues = {
+//   employerName: "",
+//   employerAddress: "",
+//   employerAddress2: "",
+//   positionHeld: "",
+//   lga: {
+//     value: "",
+//     label: "",
+//   },
+//   state: {
+//     value: "",
+//     label: "",
+//   },
+//   country: {
+//     value: "",
+//     label: "",
+//   },
+//   sector: {
+//     value: "",
+//     label: "",
+//   },
 
-const goToProfile = () => {
-  router.push("/profile");
-};
+//   subSector: "",
+// };
 
-const formValues = {
-  employerName: "",
-  employerAddress1: "",
-  employerAddress2: "",
-  positionHeld: "",
-  LGA: {
-    value: "",
-    label: "",
-  },
-  state: {
-    value: "",
-    label: "",
-  },
-  country: {
-    value: "",
-    label: "",
-  },
-  industry: {
-    value: "",
-    label: "",
-  },
-
-  subSector: "",
-};
-
-const { handleSubmit } = useForm({
+const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: formValues,
+  initialValues: employerData.value,
 });
 // No need to define rules for fields
 
 const { value: employerName, errorMessage: employerNameError } =
   useField("employerName");
 
-const { value: employerAddress1, errorMessage: employerAddress1Error } =
-  useField("employerAddress1");
+const { value: employerAddress, errorMessage: employerAddressError } =
+  useField("employerAddress");
 const { value: employerAddress2, errorMessage: employerAddress2Error } =
   useField("employerAddress2");
 const { value: positionHeld, errorMessage: positionHeldError } =
   useField("positionHeld");
-const { value: LGA, errorMessage: LGAError } = useField("LGA");
+const { value: lga, errorMessage: lgaError } = useField("lga");
 const { value: state, errorMessage: stateError } = useField("state");
 const { value: country, errorMessage: countryError } = useField("country");
-const { value: industry, errorMessage: industryError } = useField("industry");
+const { value: sector, errorMessage: sectorError } = useField("sector");
 
 const { value: subSector, errorMessage: subSectorError } =
   useField("subSector");
 
 // const { value: email, errorMessage: emailError } = useField("email");
+const prepareDetails = (values, type) => {
+  const updateObj = {
+    userId: id.value,
+    employerName: values.employerName,
+    employerAddress: values.employerAddress,
+    lga: values.lga?.value ? values.lga.value : values.lga,
+    state: values.state?.value ? values.state.value : values.state,
+    positionHeld: values.positionHeld,
+    sector: values.sector?.value ? values.sector.value : values.sector,
+    subSector: values.subSector,
+    country: values.country?.value ? values.country.value : values.country,
 
+    createdBy: "string",
+    modifiedBy: "string",
+    createdAt: "2023-11-01T03:44:32.216Z",
+    modifiedAt: "2023-11-01T03:44:32.216Z",
+    id: employerData.value.id,
+    isDeleted: true,
+  };
+  const createObj = {
+    userId: id.value,
+    employerName: values.employerName,
+    employerAddress: values.employerAddress,
+    lga: values.lga.value,
+    state: values.state.value,
+    positionHeld: values.positionHeld,
+    sector: values.sector.value,
+    subSector: values.subSector,
+    country: values.country.value,
+  };
+  const obj = type == "create" ? createObj : updateObj;
+  return obj;
+};
 const onSubmit = handleSubmit((values) => {
-  console.log("PersonalDetails: " + JSON.stringify(values));
-  toast.success("Update successful");
-  goToProfile();
+  // console.log("PersonalDetails: " + JSON.stringify(values));
+  const hasDataError = employerData.value == null;
+  if (hasDataError) {
+    store.dispatch("createEmployer", prepareDetails(values, "create"));
+  }
+  if (!hasDataError) {
+    store.dispatch("updateEmployer", prepareDetails(values, "edit"));
+  }
+});
+
+watch(employerData, () => {
+  setValues(employerData.value);
+});
+
+watch(success, () => {
+  if (success.value) {
+    toast.success("Successful");
+  }
 });
 </script>
 
