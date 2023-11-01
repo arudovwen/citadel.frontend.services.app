@@ -36,7 +36,7 @@
         label="Email"
         type="email"
         placeholder="Type your email"
-        name="emil"
+        name="email"
         v-model="email"
         :error="emailError"
         classInput="h-[40px]"
@@ -61,24 +61,22 @@
         classInput="h-[40px]"
       />
 
-      <CustomVueSelect
-        name="title"
-        v-model="title"
+      <Select
+        label="Title"
+        :options="titleMenu"
+        v-model.value="title"
         :modelValue="title"
         :error="titleError"
-        :options="titleMenu"
-        label="Title"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
 
-      <CustomVueSelect
-        name="gender"
-        v-model="gender"
+      <Select
+        label="Gender"
+        :options="genderMenu"
+        v-model.value="gender"
         :modelValue="gender"
         :error="genderError"
-        :options="genderMenu"
-        label="Gender"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
 
       <FormGroup label="dateOfBirth" name="d1">
@@ -110,13 +108,14 @@
 </template>
 
 <script setup>
+import Select from "@/components/Select";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 import { useToast } from "vue-toastification";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
+// import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
 import { titleMenu, genderMenu } from "@/constant/data";
 import { inject, onMounted, computed, watch } from "vue";
@@ -134,7 +133,7 @@ const spouseDataLoading = computed(
   () => store.state.profile.getSpouseDataloading
 );
 
-const success = computed(() => store.state.profile.updateSpouseDatasuccess);
+const success = computed(() => store.state.profile.updateSpouseDataSuccess);
 
 // const getSpouseDataloading = computed(
 //   () => store.state.profile.getSpouseDataloading
@@ -152,45 +151,11 @@ const schema = yup.object({
   mobile1: yup.string().required("Mobile 1 is required"),
   mobile2: yup.string(),
 
-  title: yup
-    .object()
-    .shape({
-      value: yup.string().required("Title text is required"),
-      label: yup.string(),
-    })
-    .nullable(),
-
-  gender: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
+  title: yup.string().required("Title text is required"),
+  gender: yup.string(),
   dateOfBirth: yup.string(),
   weddingAnniversary: yup.string(),
 });
-
-// const router = useRouter();
-
-// const formValues = {
-//   firstName: "",
-//   surName: "",
-//   middleName: "",
-//   email: "dashcode@gmail.com",
-//   title: {
-//     value: "",
-//     label: "",
-//   },
-//   mobile1: "",
-//   mobile2: "",
-//   gender: {
-//     value: "",
-//     label: "",
-//   },
-//   dateOfBirth: "",
-//   weddingAnniversary: "",
-// };
 
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
@@ -219,33 +184,29 @@ const { value: weddingAnniversary } = useField("weddingAnniversary");
 const prepareDetails = (values, type) => {
   const updateObj = {
     userId: id.value,
-    title: values.title.value,
-    firstName: values.firstName,
-    middleName: values.middleName,
-    surName: values.surName,
-    mobile1: values.mobile1,
-    mobile2: values.mobile2,
-    email: values.title,
-    gender: values.gender.value,
-    dateOfBirth: values.dateOfBirth,
-    weddingAnniversary: values.weddingAnniversary,
-    createdBy: "",
-    modifiedBy: store.state.auth.userData.userName,
-    createdAt: spouseData.value.createdAt,
-    modifiedAt: spouseData.value.modifiedAt,
-    id: spouseData.value.id,
-    isDeleted: spouseData.value.isDeleted,
-  };
-  const createObj = {
-    userId: id.value,
-    title: values.title.value,
+    title: values.title,
     firstName: values.firstName,
     middleName: values.middleName,
     surName: values.surName,
     mobile1: values.mobile1,
     mobile2: values.mobile2,
     email: values.email,
-    gender: values.gender.value,
+    gender: values.gender,
+    dateOfBirth: values.dateOfBirth,
+    weddingAnniversary: values.weddingAnniversary,
+
+    id: spouseData.value.id,
+  };
+  const createObj = {
+    userId: id.value,
+    title: values.title,
+    firstName: values.firstName,
+    middleName: values.middleName,
+    surName: values.surName,
+    mobile1: values.mobile1,
+    mobile2: values.mobile2,
+    email: values.email,
+    gender: values.gender,
     dateOfBirth: values.dateOfBirth,
     weddingAnniversary: values.weddingAnniversary,
   };

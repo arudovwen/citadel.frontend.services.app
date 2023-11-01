@@ -19,7 +19,7 @@ export default {
     updateEmployerDataerror: null,
 
     updateSpouseDataloading: false,
-    updateSpouseDatasuccess: false,
+    updateSpouseDataSuccess: false,
     updateSpouseDataerror: null,
 
     updateChildrenDataloading: false,
@@ -119,19 +119,19 @@ export default {
 
     updateSpouseDataBegin(state) {
       state.updateSpouseDataloading = true;
-      state.updateSpouseDatasuccess = false;
+      state.updateSpouseDataSuccess = false;
       state.updateSpouseDataerror = null;
     },
 
     updateSpouseDataSuccess(state) {
       state.updateSpouseDataloading = false;
-      state.updateSpouseDatasuccess = true;
+      state.updateSpouseDataSuccess = true;
     },
 
     updateSpouseDataErr(state, err) {
       state.updateSpouseDataloading = false;
       state.updateSpouseDataerror = err;
-      state.updateSpouseDatasuccess = false;
+      state.updateSpouseDataSuccess = false;
     },
 
     updateChildrenDataBegin(state) {
@@ -348,7 +348,7 @@ export default {
         );
 
         if (response.status === 200) {
-          commit("updateSpouseDatasuccess");
+          commit("updateSpouseDataSuccess");
         }
       } catch (err) {
         commit("updateSpouseDataerror", err);
@@ -361,7 +361,7 @@ export default {
         const response = await DataService.put(urls.UPDATE_SPOUSE_DETAIL, data);
 
         if (response.status === 200) {
-          commit("updateSpouseDatasuccess");
+          commit("updateSpouseDataSuccess");
         }
       } catch (err) {
         commit("updateSpouseDataerror", err);
