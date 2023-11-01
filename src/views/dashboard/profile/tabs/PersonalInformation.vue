@@ -68,9 +68,9 @@
         label="Address 1"
         type="text"
         placeholder="Type your address 1"
-        name="address1"
-        v-model="address1"
-        :error="address1Error"
+        name="address"
+        v-model="address"
+        :error="addressError"
         classInput="h-[40px]"
       />
       <Textinput
@@ -229,16 +229,17 @@ import { useRoute } from "vue-router";
 onMounted(() => {
   getBiodata();
 });
+
 const store = useStore();
 const route = useRoute();
 const toast = useToast();
 const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
-
+const success = computed(() => store.state.profile.profileCreated);
 const getBiodataError = computed(() => store.state.profile.getBiodataerror);
 const biodata = computed(() => store.state.profile.biodata);
-const profileData = computed(() => store.state.member.profile);
+// const profileData = computed(() => store.state.member.profile);
 const id = computed(() => route.params.userId);
 
 const getBiodata = () => {
@@ -254,7 +255,7 @@ const schema = yup.object({
   email: yup.string().required("Email is required").email(),
   mobile1: yup.string().required("Mobile 1 is required"),
   mobile2: yup.string(),
-  address1: yup.string(),
+  address: yup.string(),
   address2: yup.string(),
   // title: yup.string(),
   title: yup
@@ -330,7 +331,7 @@ const schema = yup.object({
 //   lastName: "",
 //   middleName: "",
 //   email: "",
-//   address1: "",
+//   address: "",
 //   address2: "",
 //   title: {
 //     value: "",
@@ -387,7 +388,7 @@ const { value: middleName, errorMessage: middleNameError } =
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
 const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
-const { value: address1, errorMessage: address1Error } = useField("address1");
+const { value: address, errorMessage: addressError } = useField("address");
 const { value: address2, errorMessage: address2Error } = useField("address2");
 const { value: title, errorMessage: titleError } = useField("title");
 const { value: nearestBusStop, errorMessage: nearestBusStopError } =
@@ -422,7 +423,7 @@ const prepareDetails = (values, type) => {
     mobile1: values.mobile1,
     mobile2: values.mobile2,
     email: values.email,
-    address: values.address1,
+    address: values.address,
     nearestBusStop: values.nearestBusStop,
     lga: values.LGA.value,
     state: values.state.value,
@@ -444,7 +445,7 @@ const prepareDetails = (values, type) => {
     mobile1: values.mobile1,
     mobile2: values.mobile2,
     email: values.email,
-    address: values.address1,
+    address: values.address,
     nearestBusStop: values.nearestBusStop,
     lga: values.LGA.value,
     state: values.state.value,
@@ -488,7 +489,7 @@ watch(creationSuccess, () => {
 //     });
 //   }
 // });
-watch(biodata, (newValue) => {
+watch(biodata, () => {
   // const obj = {
   //   userId: "f7557c35-9ba7-4cb3-ac3a-b333b156c3ec",
   //   title: "Master",
@@ -517,24 +518,37 @@ watch(biodata, (newValue) => {
   //   modifiedAt: "0001-01-01T00:00:00",
   // };
   // console.log("Biodata: " + newValue);
-  if (newValue == null) {
-    setValues({
-      firstName: profileData.value.firstName,
-      lastName: profileData.value.lastName,
-      middleName: profileData.value.middleName,
-      email: profileData.value.email,
-      // mobile1: profileData.value.phoneNumber,
-    });
-  } else {
-    setValues({
-      firstName: profileData.value.firstName,
-      lastName: profileData.value.lastName,
-      middleName: profileData.value.middleName,
-      email: profileData.value.email,
-      mobile1: biodata.value.mobile1,
-      mobile2: biodata.value.mobile2,
-      address1: biodata.value.address,
-    });
+  // if (newValue == null) {
+  //   setValues({
+  //     firstName: profileData.value.firstName,
+  //     lastName: profileData.value.lastName,
+  //     middleName: profileData.value.middleName,
+  //     email: profileData.value.email,
+  //     // mobile1: profileData.value.phoneNumber,
+  //   });
+  // } else {
+  // setValues({
+  //   firstName: profileData.value?.firstName,
+  //   lastName: profileData.value?.lastName,
+  //   middleName: profileData.value?.middleName,
+  //   email: profileData.value?.email,
+  //   mobile1: biodata.value?.mobile1,
+  //   mobile2: biodata.value?.mobile2,
+  //   address: biodata.value?.address,
+  // });
+  // }
+  setValues(biodata.value);
+});
+
+watch(success, () => {
+  if (success.value) {
+    toast.success("Successful");
+  }
+});
+
+watch(id, (newValue) => {
+  if (newValue !== null && newValue !== undefined) {
+    getBiodata();
   }
 });
 </script>

@@ -115,7 +115,7 @@ import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useRouter } from "vue-router";
 import { titleMenu, genderMenu } from "@/constant/data";
-import { inject, onMounted } from "vue";
+import { inject, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 
 onMounted(() => {
@@ -126,6 +126,14 @@ const store = useStore();
 const getSpouseData = () => {
   store.dispatch("getSpouseDetailById", id.value);
 };
+const getEmployerDataloading = computed(
+  () => store.state.profile.getEmployerDataloading
+);
+
+const getEmployerDataErr = computed(
+  () => store.state.profile.getEmployerDataErr
+);
+const employerData = computed(() => store.state.profile.employerData);
 const toast = useToast();
 // Define a validation schema
 const schema = yup.object({
@@ -161,28 +169,28 @@ const goToProfile = () => {
   router.push("/profile");
 };
 
-const formValues = {
-  firstName: "",
-  lastName: "",
-  middleName: "",
-  email: "dashcode@gmail.com",
-  title: {
-    value: "",
-    label: "",
-  },
-  mobile1: "",
-  mobile2: "",
-  gender: {
-    value: "",
-    label: "",
-  },
-  DOB: "",
-  weddingAnniversary: "",
-};
+// const formValues = {
+//   firstName: "",
+//   lastName: "",
+//   middleName: "",
+//   email: "dashcode@gmail.com",
+//   title: {
+//     value: "",
+//     label: "",
+//   },
+//   mobile1: "",
+//   mobile2: "",
+//   gender: {
+//     value: "",
+//     label: "",
+//   },
+//   DOB: "",
+//   weddingAnniversary: "",
+// };
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: formValues,
+  initialValues: employerData.value,
 });
 // No need to define rules for fields
 
@@ -208,6 +216,10 @@ const onSubmit = handleSubmit((values) => {
   console.log("PersonalDetails: " + JSON.stringify(values));
   toast.success("Update successful");
   goToProfile();
+});
+
+watch(employerData, () => {
+  setValues(employerData.value);
 });
 </script>
 
