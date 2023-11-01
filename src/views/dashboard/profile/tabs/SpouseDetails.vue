@@ -1,5 +1,6 @@
 <template>
-  <form @submit.prevent="onSubmit" class="space-y-4">
+  <ProfileInputSkeleton v-if="spouseDataLoading" />
+  <form v-else @submit.prevent="onSubmit" class="space-y-4">
     <!-- {{ values }} -->
     <!-- {{ $store.state.auth.userData.userName }} -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -109,6 +110,7 @@
 </template>
 
 <script setup>
+import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 import { useToast } from "vue-toastification";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
@@ -128,6 +130,10 @@ const store = useStore();
 const getSpouseData = () => {
   store.dispatch("getSpouseDetailById", id.value);
 };
+const spouseDataLoading = computed(
+  () => store.state.profile.getSpouseDataloading
+);
+
 const success = computed(() => store.state.profile.updateSpouseDatasuccess);
 
 // const getSpouseDataloading = computed(

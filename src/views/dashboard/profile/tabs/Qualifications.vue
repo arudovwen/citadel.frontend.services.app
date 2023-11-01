@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Card bodyClass="p-0">
+    <ProfileInputSkeleton v-if="gqualificationDataLoading" />
+    <Card v-else bodyClass="p-0">
       <header
         class="border-b px-4 border-slate-100 dark:border-slate-700 pt-4 pb-3 flex justify-end items-center"
       >
@@ -72,8 +73,9 @@ import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
 import Icon from "@/components/Icon";
 import { useToast } from "vue-toastification";
-import { inject, onMounted } from "vue";
+import { inject, onMounted, computed } from "vue";
 import { useStore } from "vuex";
+import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 
 onMounted(() => {
   getQualificationData();
@@ -83,6 +85,10 @@ const store = useStore();
 const getQualificationData = () => {
   store.dispatch("getQualificationsById", id.value);
 };
+const gqualificationDataLoading = computed(
+  () => store.state.profile.getQualificationDataloading
+);
+
 const toast = useToast();
 const formValues = {
   highestQualification: "",

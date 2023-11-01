@@ -1,7 +1,8 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
     <!-- {{ values }} -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <ProfileInputSkeleton v-if="employerDataLoading" />
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
         label="Employer Name"
         type="text"
@@ -108,6 +109,7 @@ import { LGAMenu, stateMenu, countryMenu, industryMenu } from "@/constant/data";
 import { useToast } from "vue-toastification";
 import { inject, onMounted, computed, watch } from "vue";
 import { useStore } from "vuex";
+import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 
 onMounted(() => {
   getEmployerData();
@@ -117,6 +119,9 @@ const store = useStore();
 const getEmployerData = () => {
   store.dispatch("getEmployerDetailById", id.value);
 };
+const employerDataLoading = computed(
+  () => store.state.profile.getEmployerDataloading
+);
 
 const employerData = computed(() => store.state.profile.employerData);
 const success = computed(() => store.state.profile.updateEmployerDatasuccess);

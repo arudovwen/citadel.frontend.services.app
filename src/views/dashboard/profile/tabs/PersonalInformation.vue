@@ -7,7 +7,8 @@
     <!-- <span>UserData: {{ profileData }}</span> -->
     <!-- <span>FormVal: {{ formValues }}</span> -->
     <!-- {{ firstName }} -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <ProfileInputSkeleton v-if="biodataLoading" />
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
         id="firstName"
         label="First Name"
@@ -226,6 +227,7 @@ import { computed, onMounted, watch } from "vue";
 import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
+import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 onMounted(() => {
   getBiodata();
 });
@@ -236,6 +238,8 @@ const toast = useToast();
 const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
+
+const biodataLoading = computed(() => store.state.profile.getBiodataloading);
 const success = computed(() => store.state.profile.profileCreated);
 // const getBiodataloading = computed(() => store.state.profile.getBiodataloading);
 const biodata = computed(() => store.state.profile.biodata);
