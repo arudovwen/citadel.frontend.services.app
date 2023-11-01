@@ -1,12 +1,13 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
     <!-- {{ biodata }} -->
+
     <!-- {{ getBiodataError !== null }} -->
     <!-- <span>{{ createProfileLoading }}</span>
     <span>{{  }}</span> -->
     <!-- <span>UserData: {{ profileData }}</span> -->
     <!-- <span>FormVal: {{ formValues }}</span> -->
-    <!-- {{ firstName }} -->
+    {{ values }}
     <ProfileInputSkeleton v-if="biodataLoading" />
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
@@ -83,7 +84,15 @@
         :error="address2Error"
         classInput="h-[40px]"
       />
-      <CustomVueSelect
+      <Select
+        label="Title Test"
+        :options="titleMenu"
+        v-model.value="title"
+        :modelValue="title"
+        :error="titleError"
+        classInput="!h-[40px]"
+      />
+      <!-- <CustomVueSelect
         name="title"
         v-model="title"
         :modelValue="title"
@@ -91,7 +100,7 @@
         :options="titleMenu"
         label="Title"
         @update:modelValue="defaultSelectedValue = $event"
-      />
+      /> -->
       <CustomVueSelect
         name="lga"
         v-model="lga"
@@ -205,6 +214,7 @@
   </form>
 </template>
 <script setup>
+import Select from "@/components/Select";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
@@ -241,9 +251,8 @@ const createProfileLoading = computed(
 
 const biodataLoading = computed(() => store.state.profile.getBiodataloading);
 const success = computed(() => store.state.profile.profileCreated);
-// const getBiodataloading = computed(() => store.state.profile.getBiodataloading);
 const biodata = computed(() => store.state.profile.biodata);
-// const profileData = computed(() => store.state.member.profile);
+const profileData = computed(() => store.state.member.profile);
 const id = computed(() => route.params.userId);
 
 const getBiodata = () => {
@@ -261,14 +270,11 @@ const schema = yup.object({
   mobile2: yup.string(),
   address: yup.string(),
   address2: yup.string(),
-  // title: yup.string(),
-  title: yup
-    .object()
-    .shape({
-      value: yup.string().required("Title text is required"),
-      label: yup.string(),
-    })
-    .nullable(),
+  title: yup.string().required("Title text is required"),
+  // title: yup.object().shape({
+  //   value: yup.string().required("Title text is required"),
+  //   label: yup.string(),
+  // }),
   nearestBusStop: yup.string(),
   lga: yup
     .object()
@@ -378,7 +384,7 @@ const schema = yup.object({
 //     label: "",
 //   },
 // };
-const { handleSubmit, setValues } = useForm({
+const { handleSubmit, setValues, values } = useForm({
   validationSchema: schema,
   initialValues: null,
 });
@@ -419,7 +425,7 @@ const { value: dateOfBirth, errorMessage: dateOfBirthError } =
 
 const prepareDetails = (values, type) => {
   const updateObj = {
-    title: values.title.value ? values.title.value : values.title,
+    title: values.title,
     userId: id.value,
     firstName: values.firstName,
     middleName: values.middleName,
@@ -429,27 +435,27 @@ const prepareDetails = (values, type) => {
     email: values.email,
     address: values.address,
     nearestBusStop: values.nearestBusStop,
-    lga: values.lga.value,
-    state: values.state.value ? values.state.value : values.state,
-    country: values.country.value ? values.country.value : values.country,
-    gender: values.gender.value ? values.gender.value : values.gender,
-    employmentStatus: values.employmentStatus.value
+    lga: values.lga?.value,
+    state: values.state?.value ? values.state?.value : values.state,
+    country: values.country?.value ? values.country?.value : values.country,
+    gender: values.gender?.value ? values.gender?.value : values.gender,
+    employmentStatus: values.employmentStatus?.value
       ? values.employmentStatus.value
       : values.employmentStatus,
     dateOfBirth: values.dateOfBirth,
     placeOfBirth: values.placeOfBirth,
-    nationality: values.nationality.value
+    nationality: values.nationality?.value
       ? values.nationality.value
       : values.nationality,
-    stateOfOrigin: values.stateOfOrigin.value
+    stateOfOrigin: values.stateOfOrigin?.value
       ? values.stateOfOrigin.value
       : values.stateOfOrigin,
-    maritalStatus: values.maritalStatus.value
+    maritalStatus: values.maritalStatus?.value
       ? values.maritalStatus.value
       : values.maritalStatus,
   };
   const createObj = {
-    title: values.title.value,
+    title: values.title,
     userId: id.value,
     firstName: values.firstName,
     middleName: values.middleName,
@@ -459,16 +465,16 @@ const prepareDetails = (values, type) => {
     email: values.email,
     address: values.address,
     nearestBusStop: values.nearestBusStop,
-    lga: values.lga.value,
-    state: values.state.value,
-    country: values.country.value,
-    gender: values.gender.value,
-    employmentStatus: values.employmentStatus.value,
+    lga: values.lga?.value,
+    state: values.state?.value,
+    country: values.country?.value,
+    gender: values.gender?.value,
+    employmentStatus: values.employmentStatus?.value,
     dateOfBirth: values.dateOfBirth,
     placeOfBirth: values.placeOfBirth,
-    nationality: values.nationality.value,
-    stateOfOrigin: values.stateOfOrigin.value,
-    maritalStatus: values.maritalStatus.value,
+    nationality: values.nationality?.value,
+    stateOfOrigin: values.stateOfOrigin?.value,
+    maritalStatus: values.maritalStatus?.value,
   };
 
   const obj = type == "create" ? createObj : updateObj;
@@ -500,8 +506,18 @@ watch(creationSuccess, () => {
 //     });
 //   }
 // });
-watch(biodata, () => {
-  setValues(biodata.value);
+watch(biodataLoading, () => {
+  if (biodata.value !== null) {
+    setValues(biodata.value);
+  } else {
+    setValues({
+      firstName: profileData.value.firstName,
+      surName: profileData.value.lastName,
+      middleName: profileData.value.middleName,
+      email: profileData.value.email,
+      mobile1: profileData.value.phoneNumber,
+    });
+  }
 });
 
 // watch(getBiodataloading, (newValue) => {
