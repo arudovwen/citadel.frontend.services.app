@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
-    {{ biodata }}
+    <!-- {{ biodata }} -->
     <!-- {{ getBiodataError !== null }} -->
     <!-- <span>{{ createProfileLoading }}</span>
     <span>{{  }}</span> -->
@@ -325,57 +325,57 @@ const schema = yup.object({
   dateOfBirth: yup.string(),
 });
 
-const formValues = {
-  firstName: "",
-  lastName: "",
-  middleName: "",
-  email: "",
-  address1: "",
-  address2: "",
-  title: {
-    value: "",
-    label: "",
-  },
-  mobile1: "",
-  mobile2: "",
-  nearestBusStop: "",
-  LGA: {
-    value: "",
-    label: "",
-  },
-  state: {
-    value: "",
-    label: "",
-  },
-  country: {
-    value: "",
-    label: "",
-  },
-  gender: {
-    value: "",
-    label: "",
-  },
-  employmentStatus: {
-    value: "",
-    label: "",
-  },
-  placeOfBirth: "",
-  nationality: {
-    value: "",
-    label: "",
-  },
-  stateOfOrigin: {
-    value: "",
-    label: "",
-  },
-  maritalStatus: {
-    value: "",
-    label: "",
-  },
-};
+// const formValues = {
+//   firstName: "",
+//   lastName: "",
+//   middleName: "",
+//   email: "",
+//   address1: "",
+//   address2: "",
+//   title: {
+//     value: "",
+//     label: "",
+//   },
+//   mobile1: "",
+//   mobile2: "",
+//   nearestBusStop: "",
+//   LGA: {
+//     value: "",
+//     label: "",
+//   },
+//   state: {
+//     value: "",
+//     label: "",
+//   },
+//   country: {
+//     value: "",
+//     label: "",
+//   },
+//   gender: {
+//     value: "",
+//     label: "",
+//   },
+//   employmentStatus: {
+//     value: "",
+//     label: "",
+//   },
+//   placeOfBirth: "",
+//   nationality: {
+//     value: "",
+//     label: "",
+//   },
+//   stateOfOrigin: {
+//     value: "",
+//     label: "",
+//   },
+//   maritalStatus: {
+//     value: "",
+//     label: "",
+//   },
+// };
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: formValues,
+  initialValues: null,
 });
 
 // No need to define rules for fields
@@ -477,18 +477,18 @@ watch(creationSuccess, () => {
   toast.success("Successfully created profile");
 });
 
-watch(profileData, (newValue) => {
-  if (newValue !== null) {
-    setValues({
-      firstName: profileData.value.firstName,
-      lastName: profileData.value.lastName,
-      middleName: profileData.value.middleName,
-      email: profileData.value.email,
-      mobile1: profileData.value.phoneNumber,
-    });
-  }
-});
-watch(biodata, () => {
+// watch(profileData, (newValue) => {
+//   if (newValue !== null) {
+//     setValues({
+//       firstName: profileData.value.firstName,
+//       lastName: profileData.value.lastName,
+//       middleName: profileData.value.middleName,
+//       email: profileData.value.email,
+//       mobile1: profileData.value.phoneNumber,
+//     });
+//   }
+// });
+watch(biodata, (newValue) => {
   // const obj = {
   //   userId: "f7557c35-9ba7-4cb3-ac3a-b333b156c3ec",
   //   title: "Master",
@@ -516,15 +516,26 @@ watch(biodata, () => {
   //   createdAt: "2023-11-01T00:03:14.446863",
   //   modifiedAt: "0001-01-01T00:00:00",
   // };
-  setValues({
-    firstName: profileData.value.firstName,
-    lastName: profileData.value.lastName,
-    middleName: profileData.value.middleName,
-    email: profileData.value.email,
-    mobile1: biodata.value.mobile1,
-    mobile2: biodata.value.mobile2,
-    address1: biodata.value.address,
-  });
+  // console.log("Biodata: " + newValue);
+  if (newValue == null) {
+    setValues({
+      firstName: profileData.value.firstName,
+      lastName: profileData.value.lastName,
+      middleName: profileData.value.middleName,
+      email: profileData.value.email,
+      // mobile1: profileData.value.phoneNumber,
+    });
+  } else {
+    setValues({
+      firstName: profileData.value.firstName,
+      lastName: profileData.value.lastName,
+      middleName: profileData.value.middleName,
+      email: profileData.value.email,
+      mobile1: biodata.value.mobile1,
+      mobile2: biodata.value.mobile2,
+      address1: biodata.value.address,
+    });
+  }
 });
 </script>
 <style lang="scss" scoped></style>

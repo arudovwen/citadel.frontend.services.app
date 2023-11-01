@@ -397,7 +397,7 @@ export default {
       try {
         commit("getChildrensDataBegin");
         const response = await DataService.get(
-          `${urls.GET_CHILDREN_DETAIL_BY_ID}?id=${id}`
+          `${urls.GET_CHILDREN_DETAIL_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getChildrensDataSuccess", response.data.data);
@@ -411,7 +411,7 @@ export default {
       try {
         commit("getSpouseDataBegin");
         const response = await DataService.get(
-          `${urls.GET_SPOUSE_DETAIL_BY_ID}?id=${id}`
+          `${urls.GET_SPOUSE_DETAIL_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getSpouseDataSuccess", response.data.data);
@@ -424,7 +424,7 @@ export default {
       try {
         commit("getEmployerDataBegin");
         const response = await DataService.get(
-          `${urls.GET_EMPLOYER_BY_ID}?id=${id}`
+          `${urls.GET_EMPLOYER_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getEmployerDataSuccess", response.data.data);
@@ -438,7 +438,7 @@ export default {
       try {
         commit("getChurchAffiliationsDataBegin");
         const response = await DataService.get(
-          `${urls.GET_CHURCH_AFFILIATION_BY_ID}?id=${id}`
+          `${urls.GET_CHURCH_AFFILIATION_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getChurchAffiliationsDataSuccess", response.data.data);
@@ -452,7 +452,7 @@ export default {
       try {
         commit("getQualificationDataBegin");
         const response = await DataService.get(
-          `${urls.GET_QUALIFICATION_BY_ID}?id=${id}`
+          `${urls.GET_QUALIFICATION_BY_USERID}?id=${id}`
         );
         if (response.status === 200) {
           commit("getQualificationDataSuccess", response.data.data);
