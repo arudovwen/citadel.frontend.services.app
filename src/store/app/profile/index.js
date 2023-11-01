@@ -280,6 +280,19 @@ export default {
     async createProfile({ commit }, data) {
       try {
         commit("creatingProfile");
+        const response = await DataService.post(urls.CREATE_BIODATA, data);
+        if (response.status === 200) {
+          commit("profileCreated");
+          console.log("SuccessResponse:" + response);
+        }
+      } catch (err) {
+        commit("createProfileError", err);
+      }
+    },
+
+    async updateProfile({ commit }, data) {
+      try {
+        commit("creatingProfile");
         const response = await DataService.post(urls.UPDATE_BIODATA, data);
         if (response.status === 200) {
           commit("profileCreated");

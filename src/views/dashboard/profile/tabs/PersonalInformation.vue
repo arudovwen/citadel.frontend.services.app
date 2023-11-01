@@ -1,5 +1,7 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
+    {{ biodata }}
+    <!-- {{ getBiodataError !== null }} -->
     <!-- <span>{{ createProfileLoading }}</span>
     <span>{{  }}</span> -->
     <!-- <span>UserData: {{ profileData }}</span> -->
@@ -179,6 +181,15 @@
         :error="placeOfBirthError"
         classInput="h-[40px]"
       />
+      <FormGroup label="DOB" name="d1">
+        <flat-pickr
+          v-model="dateOfBirth"
+          class="form-control"
+          id="d1"
+          placeholder="yyyy, dd M"
+          :error="dateOfBirthError"
+        />
+      </FormGroup>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
       <button
@@ -193,6 +204,7 @@
   </form>
 </template>
 <script setup>
+import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
@@ -210,7 +222,7 @@ import {
   maritalStatusMenu,
 } from "@/constant/data";
 import { useStore } from "vuex";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
@@ -225,15 +237,11 @@ const createProfileLoading = computed(
 );
 
 const getBiodataError = computed(() => store.state.profile.getBiodataerror);
-
-console.log("dataError: " + JSON.stringify(getBiodataError.value));
+const biodata = computed(() => store.state.profile.biodata);
 const profileData = computed(() => store.state.member.profile);
 const id = computed(() => route.params.userId);
 
 const getBiodata = () => {
-  // if (id.value !== 1) {
-  //   return;
-  // }
   store.dispatch("getBiodataByUserId", id.value);
 };
 
@@ -314,9 +322,10 @@ const schema = yup.object({
       label: yup.string(),
     })
     .nullable(),
+  dateOfBirth: yup.string(),
 });
 
-const formValues = ref({
+const formValues = {
   firstName: "",
   lastName: "",
   middleName: "",
@@ -363,10 +372,10 @@ const formValues = ref({
     value: "",
     label: "",
   },
-});
+};
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: profileData.value,
+  initialValues: formValues,
 });
 
 // No need to define rules for fields
@@ -397,12 +406,16 @@ const { value: stateOfOrigin, errorMessage: stateOfOriginError } =
   useField("stateOfOrigin");
 const { value: maritalStatus, errorMessage: maritalStatusError } =
   useField("maritalStatus");
+
+const { value: dateOfBirth, errorMessage: dateOfBirthError } =
+  useField("dateOfBirth");
+
 // const { value: email, errorMessage: emailError } = useField("email");
 
-const prepareDetails = (values) => {
-  const obj = {
+const prepareDetails = (values, type) => {
+  const updateObj = {
     title: values.title.value,
-    userId: "string",
+    userId: id.value,
     firstName: values.firstName,
     middleName: values.middleName,
     surName: values.lastName,
@@ -416,37 +429,102 @@ const prepareDetails = (values) => {
     country: values.country.value,
     gender: values.gender.value,
     employmentStatus: values.employmentStatus.value,
-    dateOfBirth: "2023-10-24T21:35:06.954Z",
+    dateOfBirth: values.dateOfBirth,
     placeOfBirth: values.placeOfBirth,
     nationality: values.nationality.value,
     stateOfOrigin: values.stateOfOrigin.value,
     maritalStatus: values.maritalStatus.value,
   };
+  const createObj = {
+    title: values.title.value,
+    userId: id.value,
+    firstName: values.firstName,
+    middleName: values.middleName,
+    surName: values.lastName,
+    mobile1: values.mobile1,
+    mobile2: values.mobile2,
+    email: values.email,
+    address: values.address1,
+    nearestBusStop: values.nearestBusStop,
+    lga: values.LGA.value,
+    state: values.state.value,
+    country: values.country.value,
+    gender: values.gender.value,
+    employmentStatus: values.employmentStatus.value,
+    dateOfBirth: values.dateOfBirth,
+    placeOfBirth: values.placeOfBirth,
+    nationality: values.nationality.value,
+    stateOfOrigin: values.stateOfOrigin.value,
+    maritalStatus: values.maritalStatus.value,
+  };
+
+  const obj = type == "create" ? createObj : updateObj;
   return obj;
 };
 const onSubmit = handleSubmit((values) => {
   const hasBiodataError = getBiodataError.value !== null;
+  console.log("dataErrorVal: " + JSON.stringify(getBiodataError.value));
+
   if (hasBiodataError) {
-    store.dispatch("createProfile", prepareDetails(values));
+    store.dispatch("createProfile", prepareDetails(values, "create"));
   }
-  console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
+  if (!hasBiodataError) {
+    store.dispatch("updateProfile", prepareDetails(values, "edit"));
+  }
+  // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
 });
 watch(creationSuccess, () => {
   toast.success("Successfully created profile");
 });
 
-// watch(
-//   profileData,
-//   (newValue) => {
-//     if (newValue !== null) {
-//       fillData();
-//     }
-//   },
-//   { immediate: true }
-// );
-
-watch(profileData, () => {
-  setValues(profileData.value);
+watch(profileData, (newValue) => {
+  if (newValue !== null) {
+    setValues({
+      firstName: profileData.value.firstName,
+      lastName: profileData.value.lastName,
+      middleName: profileData.value.middleName,
+      email: profileData.value.email,
+      mobile1: profileData.value.phoneNumber,
+    });
+  }
+});
+watch(biodata, () => {
+  // const obj = {
+  //   userId: "f7557c35-9ba7-4cb3-ac3a-b333b156c3ec",
+  //   title: "Master",
+  //   firstName: "Baba",
+  //   middleName: "Fama",
+  //   surName: "Bola",
+  //   mobile1: "09049074411",
+  //   mobile2: "11111111111",
+  //   email: "tunde.famakinwa@gmail.com",
+  //   address: "Ajj",
+  //   nearestBusStop: "Jakande",
+  //   lga: "Ideato South",
+  //   state: "Lagos",
+  //   country: "Nigeria",
+  //   gender: "Male",
+  //   employmentStatus: "Employed",
+  //   dateOfBirth: "1995-12-07T00:00:00",
+  //   placeOfBirth: "Somolu",
+  //   nationality: "Nigeria",
+  //   stateOfOrigin: "Imo ",
+  //   maritalStatus: "Married",
+  //   isFirstTime: false,
+  //   id: 2,
+  //   isDeleted: false,
+  //   createdAt: "2023-11-01T00:03:14.446863",
+  //   modifiedAt: "0001-01-01T00:00:00",
+  // };
+  setValues({
+    firstName: profileData.value.firstName,
+    lastName: profileData.value.lastName,
+    middleName: profileData.value.middleName,
+    email: profileData.value.email,
+    mobile1: biodata.value.mobile1,
+    mobile2: biodata.value.mobile2,
+    address1: biodata.value.address,
+  });
 });
 </script>
 <style lang="scss" scoped></style>
