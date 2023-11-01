@@ -327,7 +327,7 @@ const prepareDetails = (values, type) => {
   const updateObj = {
     title: values.title,
     userId: id.value,
-    id: biodata.value.id,
+    id: biodata.value?.id,
     firstName: values.firstName,
     middleName: values.middleName,
     surName: values.surName,

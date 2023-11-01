@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
     <!-- {{ values }} -->
+    <!-- {{ employerData == null }} -->
 
     <ProfileInputSkeleton v-if="employerDataLoading" />
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -173,18 +174,18 @@ const prepareDetails = (values, type) => {
     sector: values.sector,
     subSector: values.subSector,
     country: values.country,
-    id: employerData.value.id,
+    id: employerData.value?.id,
   };
   const createObj = {
     userId: id.value,
     employerName: values.employerName,
     employerAddress: values.employerAddress,
-    lga: values.lga.value,
-    state: values.state.value,
+    lga: values.lga,
+    state: values.state,
     positionHeld: values.positionHeld,
-    sector: values.sector.value,
+    sector: values.sector,
     subSector: values.subSector,
-    country: values.country.value,
+    country: values.country,
   };
   const obj = type == "create" ? createObj : updateObj;
   return obj;
