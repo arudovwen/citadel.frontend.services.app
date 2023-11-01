@@ -6,7 +6,9 @@
       >
       
       </header> -->
-      <div class="p-6">
+      <ProfileInputSkeleton v-if="childrensDataLoading" />
+
+      <div v-else class="p-6">
         <!-- {{ values }} -->
         <form @submit.prevent="pushDetails()" :validation-schema="schema">
           <div class="flex gap-x-8 mb-12">
@@ -195,8 +197,10 @@ import { titleMenu, genderMenu, childrenDetailstable } from "@/constant/data";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useToast } from "vue-toastification";
 import * as yup from "yup";
-import { inject, onMounted, ref } from "vue";
+import { inject, onMounted, ref, computed } from "vue";
 import { useStore } from "vuex";
+import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
+
 // import { useRouter } from "vue-router";
 
 onMounted(() => {
@@ -207,6 +211,10 @@ const store = useStore();
 const getChildrensData = () => {
   store.dispatch("getChildrenDetailById", id.value);
 };
+const childrensDataLoading = computed(
+  () => store.state.profile.getChildrensDataloading
+);
+
 const toast = useToast();
 const childrenDetails = ref([]);
 const schema = yup.object({

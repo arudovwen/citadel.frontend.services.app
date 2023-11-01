@@ -1,13 +1,15 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
-    <!-- {{ biodata }} -->
+    <!-- {{ biodata }}s -->
+
     <!-- {{ getBiodataError !== null }} -->
     <!-- <span>{{ createProfileLoading }}</span>
     <span>{{  }}</span> -->
     <!-- <span>UserData: {{ profileData }}</span> -->
     <!-- <span>FormVal: {{ formValues }}</span> -->
-    <!-- {{ firstName }} -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- {{ values }} -->
+    <ProfileInputSkeleton v-if="biodataLoading" />
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
         id="firstName"
         label="First Name"
@@ -82,87 +84,95 @@
         :error="address2Error"
         classInput="h-[40px]"
       />
-      <CustomVueSelect
-        name="title"
-        v-model="title"
+      <Select
+        label="Title"
+        :options="titleMenu"
+        v-model.value="title"
         :modelValue="title"
         :error="titleError"
-        :options="titleMenu"
-        label="Title"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
-      <CustomVueSelect
-        name="lga"
-        v-model="lga"
+
+      <Select
+        label="LGA"
+        :options="LGAMenu"
+        v-model.value="lga"
         :modelValue="lga"
         :error="lgaError"
-        :options="LGAMenu"
-        label="LGA"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
-      <CustomVueSelect
-        name="state"
-        v-model="state"
+
+      <Select
+        label="State"
+        :options="stateMenu"
+        v-model.value="state"
         :modelValue="state"
         :error="stateError"
-        :options="stateMenu"
-        label="State"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
-      <CustomVueSelect
-        name="country"
-        v-model="country"
+
+      <Select
+        label="Country"
+        :options="countryMenu"
+        v-model.value="country"
         :modelValue="country"
         :error="countryError"
-        :options="countryMenu"
-        label="Country"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
-      <CustomVueSelect
-        name="gender"
-        v-model="gender"
+
+      <Select
+        label="Gender"
+        :options="genderMenu"
+        v-model.value="gender"
         :modelValue="gender"
         :error="genderError"
-        :options="genderMenu"
-        label="Gender"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
-      <CustomVueSelect
-        name="employmentStatus"
-        v-model="employmentStatus"
+
+      <Select
+        label="Employment Status"
+        :options="employmentStatusMenu"
+        v-model.value="employmentStatus"
         :modelValue="employmentStatus"
         :error="employmentStatusError"
-        :options="employmentStatusMenu"
-        label="Employment Status"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
-      <CustomVueSelect
-        name="nationality"
-        v-model="nationality"
+      <Select
+        label="Nationality"
+        :options="nationalityMenu"
+        v-model.value="nationality"
         :modelValue="nationality"
         :error="nationalityError"
-        :options="nationalityMenu"
-        label="Nationality"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
-      <CustomVueSelect
-        name="stateOfOrigin"
-        v-model="stateOfOrigin"
+
+      <Select
+        label="Gender"
+        :options="genderMenu"
+        v-model.value="gender"
+        :modelValue="gender"
+        :error="genderError"
+        classInput="!h-[40px]"
+      />
+
+      <Select
+        label="State Of Origin"
+        :options="stateOfOriginMenu"
+        v-model.value="stateOfOrigin"
         :modelValue="stateOfOrigin"
         :error="stateOfOriginError"
-        :options="stateOfOriginMenu"
-        label="State of Origin"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
-      <CustomVueSelect
-        name="maritalStatus"
-        v-model="maritalStatus"
+
+      <Select
+        label="Marital Status"
+        :options="maritalStatusMenu"
+        v-model.value="maritalStatus"
         :modelValue="maritalStatus"
         :error="maritalStatusError"
-        :options="maritalStatusMenu"
-        label="Marital Status"
-        @update:modelValue="defaultSelectedValue = $event"
+        classInput="!h-[40px]"
       />
+
       <Textinput
         label="Nearest Bus Stop"
         type="text"
@@ -204,11 +214,12 @@
   </form>
 </template>
 <script setup>
+import Select from "@/components/Select";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
+// import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
 import {
   titleMenu,
@@ -226,6 +237,7 @@ import { computed, onMounted, watch } from "vue";
 import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
+import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 onMounted(() => {
   getBiodata();
 });
@@ -236,10 +248,11 @@ const toast = useToast();
 const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
+
+const biodataLoading = computed(() => store.state.profile.getBiodataloading);
 const success = computed(() => store.state.profile.profileCreated);
-// const getBiodataloading = computed(() => store.state.profile.getBiodataloading);
 const biodata = computed(() => store.state.profile.biodata);
-// const profileData = computed(() => store.state.member.profile);
+const profileData = computed(() => store.state.member.profile);
 const id = computed(() => route.params.userId);
 
 const getBiodata = () => {
@@ -257,123 +270,20 @@ const schema = yup.object({
   mobile2: yup.string(),
   address: yup.string(),
   address2: yup.string(),
-  // title: yup.string(),
-  title: yup
-    .object()
-    .shape({
-      value: yup.string().required("Title text is required"),
-      label: yup.string(),
-    })
-    .nullable(),
+  title: yup.string().required("Title text is required"),
   nearestBusStop: yup.string(),
-  lga: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
-  state: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
-  country: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
-  gender: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
-  employmentStatus: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
+  lga: yup.string(),
+  state: yup.string(),
+  country: yup.string(),
+  gender: yup.string(),
+  employmentStatus: yup.string(),
   placeOfBirth: yup.string(),
-  nationality: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
-  stateOfOrigin: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
-  maritalStatus: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .nullable(),
+  nationality: yup.string(),
+  stateOfOrigin: yup.string(),
+  maritalStatus: yup.string(),
   dateOfBirth: yup.string(),
 });
 
-// const formValues = {
-//   firstName: "",
-//   surName: "",
-//   middleName: "",
-//   email: "",
-//   address: "",
-//   address2: "",
-//   title: {
-//     value: "",
-//     label: "",
-//   },
-//   mobile1: "",
-//   mobile2: "",
-//   nearestBusStop: "",
-//   lga: {
-//     value: "",
-//     label: "",
-//   },
-//   state: {
-//     value: "",
-//     label: "",
-//   },
-//   country: {
-//     value: "",
-//     label: "",
-//   },
-//   gender: {
-//     value: "",
-//     label: "",
-//   },
-//   employmentStatus: {
-//     value: "",
-//     label: "",
-//   },
-//   placeOfBirth: "",
-//   nationality: {
-//     value: "",
-//     label: "",
-//   },
-//   stateOfOrigin: {
-//     value: "",
-//     label: "",
-//   },
-//   maritalStatus: {
-//     value: "",
-//     label: "",
-//   },
-// };
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
   initialValues: null,
@@ -415,8 +325,9 @@ const { value: dateOfBirth, errorMessage: dateOfBirthError } =
 
 const prepareDetails = (values, type) => {
   const updateObj = {
-    title: values.title.value ? values.title.value : values.title,
+    title: values.title,
     userId: id.value,
+    id: biodata.value.id,
     firstName: values.firstName,
     middleName: values.middleName,
     surName: values.surName,
@@ -425,28 +336,21 @@ const prepareDetails = (values, type) => {
     email: values.email,
     address: values.address,
     nearestBusStop: values.nearestBusStop,
-    lga: values.lga.value,
-    state: values.state.value ? values.state.value : values.state,
-    country: values.country.value ? values.country.value : values.country,
-    gender: values.gender.value ? values.gender.value : values.gender,
-    employmentStatus: values.employmentStatus.value
-      ? values.employmentStatus.value
-      : values.employmentStatus,
+    lga: values.lga,
+    state: values.state,
+    country: values.country,
+    gender: values.gender,
+    employmentStatus: values.employmentStatus,
     dateOfBirth: values.dateOfBirth,
     placeOfBirth: values.placeOfBirth,
-    nationality: values.nationality.value
-      ? values.nationality.value
-      : values.nationality,
-    stateOfOrigin: values.stateOfOrigin.value
-      ? values.stateOfOrigin.value
-      : values.stateOfOrigin,
-    maritalStatus: values.maritalStatus.value
-      ? values.maritalStatus.value
-      : values.maritalStatus,
+    nationality: values.nationality,
+    stateOfOrigin: values.stateOfOrigin,
+    maritalStatus: values.maritalStatus,
   };
   const createObj = {
-    title: values.title.value,
+    title: values.title,
     userId: id.value,
+
     firstName: values.firstName,
     middleName: values.middleName,
     surName: values.surName,
@@ -455,22 +359,24 @@ const prepareDetails = (values, type) => {
     email: values.email,
     address: values.address,
     nearestBusStop: values.nearestBusStop,
-    lga: values.lga.value,
-    state: values.state.value,
-    country: values.country.value,
-    gender: values.gender.value,
-    employmentStatus: values.employmentStatus.value,
+    lga: values.lga,
+    state: values.state,
+    country: values.country,
+    gender: values.gender,
+    employmentStatus: values.employmentStatus,
     dateOfBirth: values.dateOfBirth,
     placeOfBirth: values.placeOfBirth,
-    nationality: values.nationality.value,
-    stateOfOrigin: values.stateOfOrigin.value,
-    maritalStatus: values.maritalStatus.value,
+    nationality: values.nationality,
+    stateOfOrigin: values.stateOfOrigin,
+    maritalStatus: values.maritalStatus,
   };
 
   const obj = type == "create" ? createObj : updateObj;
   return obj;
 };
 const onSubmit = handleSubmit((values) => {
+  console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
+
   const hasBiodataError = biodata.value == null;
 
   if (hasBiodataError) {
@@ -479,7 +385,6 @@ const onSubmit = handleSubmit((values) => {
   if (!hasBiodataError) {
     store.dispatch("updateProfile", prepareDetails(values, "edit"));
   }
-  // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
 });
 watch(creationSuccess, () => {
   toast.success("Successfully created profile");
@@ -496,8 +401,18 @@ watch(creationSuccess, () => {
 //     });
 //   }
 // });
-watch(biodata, () => {
-  setValues(biodata.value);
+watch(biodataLoading, () => {
+  if (biodata.value !== null) {
+    setValues(biodata.value);
+  } else {
+    setValues({
+      firstName: profileData.value.firstName,
+      surName: profileData.value.lastName,
+      middleName: profileData.value.middleName,
+      email: profileData.value.email,
+      mobile1: profileData.value.phoneNumber,
+    });
+  }
 });
 
 // watch(getBiodataloading, (newValue) => {

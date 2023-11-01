@@ -1,6 +1,8 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <ProfileInputSkeleton v-if="churchAffiliationsDataLoading" />
+
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <CustomVueSelect
         name="levelOfATS"
         v-model="levelOfATS"
@@ -96,6 +98,8 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
+import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
+
 // import { useRouter } from "vue-router";
 import {
   levelOfATSMenu,
@@ -119,6 +123,10 @@ const toast = useToast();
 const getChurchAffiliationsData = () => {
   store.dispatch("getChurchAffiliationsById", id.value);
 };
+const churchAffiliationsDataLoading = computed(
+  () => store.state.profile.getChurchAffiliationsDataloading
+);
+
 const churchAffiliationsData = computed(
   () => store.state.profile.churchAffiliationsData
 );

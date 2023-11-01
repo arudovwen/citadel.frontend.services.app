@@ -1,5 +1,8 @@
 <template>
-  <div class="space-y-5 profile-page">
+  <span v-if="profileLoading || profileError !== null"
+    ><ProfilePageSkeleton
+  /></span>
+  <div v-else class="space-y-5 profile-page">
     <div
       class="profiel-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0 space-y-6 justify-between items-end relative z-[1]"
     >
@@ -126,6 +129,7 @@
 </template>
 
 <script setup>
+import ProfilePageSkeleton from "@/components/Pages/Profile/ProfilePageSkeleton.vue";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import { provide, ref, computed, onMounted, watch } from "vue";
@@ -140,6 +144,9 @@ const route = useRoute();
 
 // console.log("Member:" + JSON.stringify(state.member.profile));
 const profileData = computed(() => state.member.profile);
+// const success = computed(() => state.member.profilesuccess);
+const profileLoading = computed(() => state.member.profileloading);
+const profileError = computed(() => state.member.profileerror);
 const userId = computed(() => route.params.userId);
 const isMarried = ref(false);
 
