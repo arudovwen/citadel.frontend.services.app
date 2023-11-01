@@ -27,7 +27,7 @@ export default {
     updateChildrenDataerror: null,
 
     updateChurchAffiliationDataloading: false,
-    updateChurchAffiliationDatasuccess: false,
+    updateChurchAffiliationDataSuccess: false,
     updateChurchAffiliationDataerror: null,
 
     //get
@@ -153,19 +153,19 @@ export default {
 
     updateChurchAffiliationDataBegin(state) {
       state.updateChurchAffiliationDataloading = true;
-      state.updateChurchAffiliationDatasuccess = false;
+      state.updateChurchAffiliationDataSuccess = false;
       state.updateChurchAffiliationDataerror = null;
     },
 
     updateChurchAffiliationDataSuccess(state) {
       state.updateChurchAffiliationDataloading = false;
-      state.updateChurchAffiliationDatasuccess = true;
+      state.updateChurchAffiliationDataSuccess = true;
     },
 
     updateChurchAffiliationDataErr(state, err) {
       state.updateChurchAffiliationDataloading = false;
       state.updateChurchAffiliationDataerror = err;
-      state.updateChurchAffiliationDatasuccess = false;
+      state.updateChurchAffiliationDataSuccess = false;
     },
 
     //get
@@ -391,7 +391,7 @@ export default {
         );
 
         if (response.status === 200) {
-          commit("updateChurchAffiliationDatasuccess");
+          commit("updateChurchAffiliationDataSuccess");
         }
       } catch (err) {
         commit("updateChurchAffiliationDataerror", err);
@@ -406,7 +406,7 @@ export default {
         );
 
         if (response.status === 200) {
-          commit("updateChurchAffiliationDatasuccess");
+          commit("updateChurchAffiliationDataSuccess");
         }
       } catch (err) {
         commit("updateChurchAffiliationDataerror", err);
