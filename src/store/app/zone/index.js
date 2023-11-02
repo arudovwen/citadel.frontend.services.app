@@ -1,5 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import { useToast } from "vue-toastification";
+import { DataService } from "@/config/dataService/dataService";
+import { urls } from "@/helpers/apI_urls";
 const toast = useToast();
 export default {
   state: {
@@ -14,93 +16,99 @@ export default {
     editcta: null,
     editId: null,
     editdesc: null,
+    addZoneLoading: false,
+    addZoneSuccess: false,
+    addZoneError: null,
 
     zones: [
-      {
-        id: uuidv4(),
-        assignto: [
-          {
-            image: require("@/assets/images/avatar/av-1.svg"),
-            title: "Mahedi Amin",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Sovo Haldar",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Rakibul Islam",
-          },
-        ],
-        name: "Welfare",
-        des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-        startDate: "2022-10-03",
-        endDate: "2022-10-06",
-        progress: 75,
-        category: [
-          {
-            value: "team",
-            label: "team",
-          },
-          {
-            value: "low",
-            label: "low",
-          },
-        ],
-      },
-      {
-        id: uuidv4(),
-        assignto: [
-          {
-            image: require("@/assets/images/avatar/av-1.svg"),
-            title: "Mahedi Amin",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Sovo Haldar",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Rakibul Islam",
-          },
-        ],
-        name: "Sanitation ",
-        des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-        startDate: "2022-10-03",
-        endDate: "2022-10-10",
-        progress: 50,
-
-        category: [
-          {
-            value: "team",
-            label: "team",
-          },
-          {
-            value: "low",
-            label: "low",
-          },
-        ],
-      },
+      // {
+      //   id: uuidv4(),
+      //   assignto: [
+      //     {
+      //       image: require("@/assets/images/avatar/av-1.svg"),
+      //       title: "Mahedi Amin",
+      //     },
+      //     {
+      //       image: require("@/assets/images/avatar/av-2.svg"),
+      //       title: "Sovo Haldar",
+      //     },
+      //     {
+      //       image: require("@/assets/images/avatar/av-2.svg"),
+      //       title: "Rakibul Islam",
+      //     },
+      //   ],
+      //   name: "Welfare",
+      //   des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
+      //   startDate: "2022-10-03",
+      //   endDate: "2022-10-06",
+      //   progress: 75,
+      //   category: [
+      //     {
+      //       value: "team",
+      //       label: "team",
+      //     },
+      //     {
+      //       value: "low",
+      //       label: "low",
+      //     },
+      //   ],
+      // },
+      // {
+      //   id: uuidv4(),
+      //   assignto: [
+      //     {
+      //       image: require("@/assets/images/avatar/av-1.svg"),
+      //       title: "Mahedi Amin",
+      //     },
+      //     {
+      //       image: require("@/assets/images/avatar/av-2.svg"),
+      //       title: "Sovo Haldar",
+      //     },
+      //     {
+      //       image: require("@/assets/images/avatar/av-2.svg"),
+      //       title: "Rakibul Islam",
+      //     },
+      //   ],
+      //   name: "Sanitation ",
+      //   des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
+      //   startDate: "2022-10-03",
+      //   endDate: "2022-10-10",
+      //   progress: 50,
+      //   category: [
+      //     {
+      //       value: "team",
+      //       label: "team",
+      //     },
+      //     {
+      //       value: "low",
+      //       label: "low",
+      //     },
+      //   ],
+      // },
     ],
   },
   getters: {
     zones: (state) => state.zones,
   },
   mutations: {
-    //
-    addZone(state, data) {
-      state.isLoading = true;
-
-      setTimeout(() => {
-        state.zones.unshift(data);
-        state.isLoading = false;
-        toast.success -
-          500("Zone added", {
-            timeout: 2000,
-          });
-      }, 1500);
-      state.addmodal = false;
+    addZoneBegin(state) {
+      state.addZoneLoading = true;
+      state.addZoneSuccess = false;
+      state.addZoneError = null;
     },
+
+    addZoneSuccess(state) {
+      state.addZoneLoading = false;
+      state.addZoneSuccess = true;
+    },
+
+    addZoneError(state, err) {
+      state.addZoneLoading = false;
+      state.addZoneError = err;
+      state.addZoneSuccess = false;
+    },
+    //
+
     // removeZone
     removeZone(state, data) {
       state.zones = state.zones.filter((item) => item.id !== data.id);
@@ -147,8 +155,17 @@ export default {
     },
   },
   actions: {
-    addZone({ commit }, data) {
-      commit("addZone", data);
+    async addZone({ commit }, data) {
+      try {
+        commit("addZoneBegin");
+        const response = await DataService.post(urls.CREATE_ZONE, data);
+
+        if (response.status === 200) {
+          commit("addZoneSuccess");
+        }
+      } catch (err) {
+        commit("addZoneError", err);
+      }
     },
     // removeZone
     removeZone({ commit }, data) {
