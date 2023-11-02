@@ -121,7 +121,7 @@
         </form>
 
         <Card v-if="childrenDetails.length > 0" bodyClass="p-0">
-          <header class="px-4 pt-4 pb-3 mb-3">
+          <header class="px-4 pt-4 pb-3 mb-3 mt-4">
             <h5 class="card-title mb-0 !text-[18px]">Children List</h5>
           </header>
           <vue-good-table
