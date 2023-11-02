@@ -90,10 +90,12 @@ const onSubmit = handleSubmit((values) => {
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
+    closeModal();
+    dispatch("resetSuccess");
     dispatch("getCenters");
+  } else {
+    closeModal();
   }
-
-  closeModal();
 
   // getAllZones();
 });
