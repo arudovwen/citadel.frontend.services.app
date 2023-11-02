@@ -102,6 +102,12 @@ export default {
     centers: (state) => state.centers,
   },
   mutations: {
+    resetSuccess(state) {
+      state.addCenterSuccess = false;
+      state.getCenterSuccess = false;
+      state.updateCenterSuccess = false;
+      state.deleteCenterSuccess = false;
+    },
     //
     addCenterBegin(state) {
       state.addCenterLoading = true;
@@ -285,6 +291,11 @@ export default {
     // closeEditModal
     closeEditModal({ commit }) {
       commit("closeEditModal");
+    },
+
+    //resetSuccess
+    resetSuccess({ commit }) {
+      commit("resetSuccess");
     },
   },
 };

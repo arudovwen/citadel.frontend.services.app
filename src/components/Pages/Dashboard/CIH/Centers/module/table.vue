@@ -245,11 +245,13 @@ export default {
   setup() {
     const modalChange = ref(null);
     const closeModal = () => modalChange.value.closeModal();
+    const zoneOptions = ref([]);
 
     provide("closeModal", closeModal);
 
     return {
       modalChange,
+      zoneOptions,
     };
   },
 
@@ -270,16 +272,16 @@ export default {
         month: "MMM",
       },
       zone: "",
-      zoneOptions: [
-        {
-          value: "option2",
-          label: "Zone 1",
-        },
-        {
-          value: "option3",
-          label: "Zone 2",
-        },
-      ],
+      // zoneOptions: [
+      //   {
+      //     value: "option2",
+      //     label: "Zone 1",
+      //   },
+      //   {
+      //     value: "option3",
+      //     label: "Zone 2",
+      //   },
+      // ],
       // provide: {
       //   // Provide a method
       //   closeModal: () => this.$refs.Modal.closeModal(),
