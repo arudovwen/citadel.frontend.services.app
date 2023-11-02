@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
+import { DataService } from "@/config/dataService/dataService";
+import { urls } from "@/helpers/apI_urls";
 import { useToast } from "vue-toastification";
 const toast = useToast();
 export default {
@@ -14,6 +16,19 @@ export default {
     editcta: null,
     editId: null,
     editdesc: null,
+
+    addCenterLoading: false,
+    addCenterSuccess: false,
+    addCenterError: null,
+    getCentersLoading: false,
+    getCentersSuccess: false,
+    getCentersError: null,
+    updateCenterLoading: false,
+    updateCenterSuccess: false,
+    updateCenterError: null,
+    deleteCenterLoading: false,
+    deleteCenterSuccess: false,
+    deleteCenterError: null,
 
     centers: [
       {
@@ -88,18 +103,69 @@ export default {
   },
   mutations: {
     //
-    addCenter(state, data) {
-      state.isLoading = true;
+    addCenterBegin(state) {
+      state.addCenterLoading = true;
+      state.addCenterSuccess = false;
+      state.addCenterError = null;
+    },
 
-      setTimeout(() => {
-        state.centers.unshift(data);
-        state.isLoading = false;
-        toast.success -
-          500("Center added", {
-            timeout: 2000,
-          });
-      }, 1500);
-      state.addmodal = false;
+    addCenterSuccess(state) {
+      state.addCenterLoading = false;
+      state.addCenterSuccess = true;
+    },
+
+    addCenterError(state, err) {
+      state.addCenterLoading = false;
+      state.addCenterSuccess = false;
+      state.addCenterError = err;
+    },
+
+    getCentersBegin(state) {
+      state.getCentersLoading = true;
+      state.getCentersSuccess = false;
+      state.getCentersError = null;
+    },
+    getCentersSuccess(state, data) {
+      state.getCentersLoading = false;
+      state.getCentersSuccess = true;
+      state.getCentersError = null;
+      state.Centers = data;
+    },
+    getCentersError(state, err) {
+      state.getCentersLoading = false;
+      state.getCentersSuccess = false;
+      state.getCentersError = err;
+    },
+
+    updateCenterBegin(state) {
+      state.updateCenterLoading = true;
+      state.updateCenterSuccess = false;
+      state.updateCenterError = null;
+    },
+    updateCenterSuccess(state) {
+      state.updateCenterLoading = false;
+      state.updateCenterSuccess = true;
+      state.updateCenterError = null;
+    },
+    updateCenterError(state, err) {
+      state.updateCenterLoading = false;
+      state.updateCenterSuccess = false;
+      state.updateCenterError = err;
+    },
+    deleteCenterBegin(state) {
+      state.deleteCenterLoading = true;
+      state.deleteCenterSuccess = false;
+      state.deleteCenterError = null;
+    },
+    deleteCenterSuccess(state) {
+      state.deleteCenterLoading = false;
+      state.deleteCenterSuccess = true;
+      state.deleteCenterError = null;
+    },
+    deleteCenterError(state, err) {
+      state.deleteCenterLoading = false;
+      state.deleteCenterSuccess = false;
+      state.deleteCenterError = err;
     },
     // removeCenter
     removeCenter(state, data) {
@@ -146,17 +212,68 @@ export default {
     },
   },
   actions: {
-    addCenter({ commit }, data) {
-      commit("addCenter", data);
+    //create center
+    async addCenter({ commit }, data) {
+      try {
+        commit("addCenterBegin");
+        const response = await DataService.post(urls.CREATE_CENTER, data);
+
+        if (response.status === 200) {
+          commit("addCenterSuccess");
+        }
+      } catch (err) {
+        commit("addCenterError", err);
+      }
+    },
+    //get center
+    async getCenters({ commit }) {
+      try {
+        commit("getCentersBegin");
+        const response = await DataService.get(urls.GET_ALL_CENTERS);
+
+        if (response.status === 200) {
+          commit("getCentersSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("getCentersError", err);
+      }
+    },
+    //edit center
+    async updateCenter({ commit }, data) {
+      try {
+        commit("updateCenterBegin");
+        const response = await DataService.put(urls.UPDATE_CENTER, data);
+
+        if (response.status === 200) {
+          commit("updateCenterSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("updateCenterError", err);
+      }
+    },
+    //delete center
+    async deleteCenter({ commit }, id) {
+      try {
+        commit("deleteCenterBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_CENTER}?id=${id}`
+        );
+
+        if (response.status === 200) {
+          commit("deleteCenterSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("deleteCenterError", err);
+      }
     },
     // removeCenter
     removeCenter({ commit }, data) {
       commit("removeCenter", data);
     },
     // updateCenter
-    updateCenter({ commit }, data) {
-      commit("updateCenter", data);
-    },
+    // openECenter({ commit }, data) {
+    //   commit("updateCenter", data);
+    // },
     // eopen center
     openCenter({ commit }) {
       commit("openCenter");

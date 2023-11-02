@@ -197,7 +197,7 @@
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
-    sizeClass="max-w-sm"
+    sizeClass="max-w-md"
   >
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />
