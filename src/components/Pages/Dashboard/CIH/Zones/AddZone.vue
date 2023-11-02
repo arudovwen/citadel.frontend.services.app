@@ -50,9 +50,11 @@ const schema = yup.object({
   zoneName: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
 });
+
 const { handleSubmit } = useForm({
   validationSchema: schema,
 });
+
 const { value: zoneName, errorMessage: zoneNameError } = useField("zoneName");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
@@ -68,6 +70,7 @@ const closeModal = () => {
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
+    dispatch("getZones");
   }
 
   closeModal();

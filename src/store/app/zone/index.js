@@ -6,6 +6,9 @@ const toast = useToast();
 export default {
   state: {
     addmodal: false,
+    addZoneLoading: false,
+    addZoneSuccess: false,
+    addZoneError: null,
     isLoading: null,
     // for edit
     editModal: false,
@@ -16,76 +19,11 @@ export default {
     editcta: null,
     editId: null,
     editdesc: null,
-    addZoneLoading: false,
-    addZoneSuccess: false,
-    addZoneError: null,
+    getZonesLoading: false,
+    getZonesSuccess: false,
+    getZonesError: null,
 
-    zones: [
-      // {
-      //   id: uuidv4(),
-      //   assignto: [
-      //     {
-      //       image: require("@/assets/images/avatar/av-1.svg"),
-      //       title: "Mahedi Amin",
-      //     },
-      //     {
-      //       image: require("@/assets/images/avatar/av-2.svg"),
-      //       title: "Sovo Haldar",
-      //     },
-      //     {
-      //       image: require("@/assets/images/avatar/av-2.svg"),
-      //       title: "Rakibul Islam",
-      //     },
-      //   ],
-      //   name: "Welfare",
-      //   des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-      //   startDate: "2022-10-03",
-      //   endDate: "2022-10-06",
-      //   progress: 75,
-      //   category: [
-      //     {
-      //       value: "team",
-      //       label: "team",
-      //     },
-      //     {
-      //       value: "low",
-      //       label: "low",
-      //     },
-      //   ],
-      // },
-      // {
-      //   id: uuidv4(),
-      //   assignto: [
-      //     {
-      //       image: require("@/assets/images/avatar/av-1.svg"),
-      //       title: "Mahedi Amin",
-      //     },
-      //     {
-      //       image: require("@/assets/images/avatar/av-2.svg"),
-      //       title: "Sovo Haldar",
-      //     },
-      //     {
-      //       image: require("@/assets/images/avatar/av-2.svg"),
-      //       title: "Rakibul Islam",
-      //     },
-      //   ],
-      //   name: "Sanitation ",
-      //   des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-      //   startDate: "2022-10-03",
-      //   endDate: "2022-10-10",
-      //   progress: 50,
-      //   category: [
-      //     {
-      //       value: "team",
-      //       label: "team",
-      //     },
-      //     {
-      //       value: "low",
-      //       label: "low",
-      //     },
-      //   ],
-      // },
-    ],
+    zones: [],
   },
   getters: {
     zones: (state) => state.zones,
@@ -104,9 +42,27 @@ export default {
 
     addZoneError(state, err) {
       state.addZoneLoading = false;
-      state.addZoneError = err;
       state.addZoneSuccess = false;
+      state.addZoneError = err;
     },
+
+    getZonesBegin(state) {
+      state.getZonesLoading = true;
+      state.getZonesSuccess = false;
+      state.getZonesError = null;
+    },
+    getZonesSuccess(state, data) {
+      state.getZonesLoading = false;
+      state.getZonesSuccess = true;
+      state.getZonesError = null;
+      state.zones = data;
+    },
+    getZonesError(state, err) {
+      state.getZonesLoading = false;
+      state.getZonesSuccess = false;
+      state.getZonesError = err;
+    },
+
     //
 
     // removeZone
@@ -165,6 +121,18 @@ export default {
         }
       } catch (err) {
         commit("addZoneError", err);
+      }
+    },
+    async getZones({ commit }) {
+      try {
+        commit("getZonesBegin");
+        const response = await DataService.get(urls.GET_ALL_ZONES);
+
+        if (response.status === 200) {
+          commit("getZonesSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("getZonesError", err);
       }
     },
     // removeZone
