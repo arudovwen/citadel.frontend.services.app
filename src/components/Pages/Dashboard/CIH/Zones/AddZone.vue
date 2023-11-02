@@ -47,7 +47,7 @@ const { state, dispatch } = useStore();
 const success = computed(() => state.zone.addZoneSuccess);
 const toast = useToast();
 const schema = yup.object({
-  zoneName: yup.string().required("Title is required"),
+  zoneName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
 });
 

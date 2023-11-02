@@ -22,7 +22,7 @@
               </div>
               <div class="font-medium text-lg leading-6">
                 <div class="dark:text-slate-200 text-slate-900">
-                  {{ item.zoneName }} Zone
+                  {{ item.zoneName }}
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@ const actions = ref([
     name: "Edit",
     icon: "heroicons-outline:pencil-alt",
     doit: (data) => {
-      dispatch("updateZone", data);
+      dispatch("openEditModal", data);
     },
   },
   {
