@@ -229,7 +229,7 @@ const onSubmit = handleSubmit((values) => {
     isFirstTime: true,
   });
   dispatch("createProfile", {
-    values,
+    ...values,
     isFirstTime: true,
   });
 });
