@@ -24,6 +24,13 @@ export const urls = {
   GET_ALL_BIODATA: "/Biodata/GetAllBiodata",
   DELETE_BIODATA: "/Biodata/DeleteBiodata",
 
+  //Centers
+  CREATE_CENTER: "/Center/CreateCenter",
+  UPDATE_CENTER: "/Center/UpdateCenter",
+  DELETE_CENTER: "/Center/DeleteCenter",
+  GET_ALL_CENTERS: "/Center/GetAllCenter",
+  GET_CENTER_BY_ID: "/Center/GetCenterById",
+
   // ChildrenDetail
   CREATE_CHILDREN_DETAIL: "/ChildrenDetail/CreateChildrenDetail",
   UPDATE_CHILDREN_DETAIL: "/ChildrenDetail/UpdateChildrenDetail",
