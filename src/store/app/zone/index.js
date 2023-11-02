@@ -25,6 +25,9 @@ export default {
     updateZoneLoading: false,
     updateZoneSuccess: false,
     updateZoneError: null,
+    deleteZoneLoading: false,
+    deleteZoneSuccess: false,
+    deleteZoneError: null,
     zone: null,
 
     zones: [],
@@ -82,6 +85,21 @@ export default {
       state.updateZoneSuccess = false;
       state.updateZoneError = err;
     },
+    deleteZoneBegin(state) {
+      state.deleteZoneLoading = true;
+      state.deleteZoneSuccess = false;
+      state.deleteZoneError = null;
+    },
+    deleteZoneSuccess(state) {
+      state.deleteZoneLoading = false;
+      state.deleteZoneSuccess = true;
+      state.deleteZoneError = null;
+    },
+    deleteZoneError(state, err) {
+      state.deleteZoneLoading = false;
+      state.deleteZoneSuccess = false;
+      state.deleteZoneError = err;
+    },
 
     //
 
@@ -122,6 +140,7 @@ export default {
       state.editModal = true;
       state.zone = data;
     },
+
     // openZone
     openZone(state) {
       state.addmodal = true;
@@ -170,6 +189,21 @@ export default {
         }
       } catch (err) {
         commit("updateZoneError", err);
+      }
+    },
+
+    async deleteZone({ commit }, id) {
+      try {
+        commit("deleteZoneBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_ZONE}?id=${id}`
+        );
+
+        if (response.status === 200) {
+          commit("deleteZoneSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("deleteZoneError", err);
       }
     },
     // removeZone
