@@ -190,6 +190,21 @@ export default {
     },
   },
   actions: {
+    async getAffiliationByMemberQuery({ commit }, data) {
+      try {
+        commit("fetchUserBegin");
+        const response = await DataService.get(
+          `${urls.GET_CHURCH_AFFILIATION_BY_MEMBER}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("fetchUserSuccess", response.data);
+        }
+      } catch (err) {
+        commit("fetchUserErr", err);
+      }
+    },
     async getRoles({ commit }) {
       const response = await DataService.get(`${urls.GET_USER_ROLES}`);
       if (response.status === 200) {
