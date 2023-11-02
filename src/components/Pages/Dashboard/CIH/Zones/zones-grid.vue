@@ -96,7 +96,7 @@
         <Button
           text="Delete"
           btnClass="btn-danger btn-sm"
-          @click="$refs.modal.closeModal()"
+          @click="deleteZone"
         />
       </div>
     </template>
@@ -111,9 +111,10 @@ import Dropdown from "@/components/Dropdown";
 import Icon from "@/components/Icon";
 import { MenuItem } from "@headlessui/vue";
 import Modal from "@/components/Modal/Modal";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 
 onMounted(() => {
   getZones();
@@ -123,6 +124,8 @@ const router = useRouter();
 
 const zones = computed(() => state.zone.zones);
 const getZonesLoading = computed(() => state.zone.getZonesLoading);
+const deleteZoneSuccess = computed(() => state.zone.deleteZoneSuccess);
+const toast = useToast();
 const modal = ref(null);
 const detail = ref(null);
 const actions = ref([
@@ -153,6 +156,22 @@ const actions = ref([
 const getZones = () => {
   dispatch("getZones");
 };
+
+const deleteZone = () => {
+  dispatch("deleteZone", detail.value.id);
+};
+
+watch(deleteZoneSuccess, () => {
+  if (deleteZoneSuccess.value) {
+    toast.success("Successfully Deleted");
+    dispatch("getZones");
+    modal.value.closeModal();
+  } else {
+    modal.value.closeModal();
+  }
+
+  // getAllZones();
+});
 
 // eslint-disable-next-line no-unused-vars
 function handleDelete() {
