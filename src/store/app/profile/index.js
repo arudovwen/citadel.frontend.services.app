@@ -10,6 +10,10 @@ export default {
     profileCreated: false,
     createProfileError: null,
 
+    createChildrenDataloading: false,
+    createChildrenDataSuccess: false,
+    createChildrenDataerror: null,
+
     updateQualificationDataloading: false,
     updateQualificationDataSuccess: false,
     updateQualificationDataerror: null,
@@ -137,6 +141,23 @@ export default {
       state.updateSpouseDataloading = false;
       state.updateSpouseDataerror = err;
       state.updateSpouseDataSuccess = false;
+    },
+
+    createChildrenDataBegin(state) {
+      state.createChildrenDataloading = true;
+      state.createChildrenDataSuccess = false;
+      state.createChildrenDataerror = null;
+    },
+
+    createChildrenDataSuccess(state) {
+      state.createChildrenDataloading = false;
+      state.createChildrenDataSuccess = true;
+    },
+
+    createChildrenDataErr(state, err) {
+      state.createChildrenDataloading = false;
+      state.createChildrenDataerror = err;
+      state.createChildrenDataSuccess = false;
     },
 
     updateChildrenDataBegin(state) {
@@ -408,17 +429,17 @@ export default {
     },
     async createChildren({ commit }, data) {
       try {
-        commit("updateChildrenDataBegin");
+        commit("createChildrenDataBegin");
         const response = await DataService.post(
           urls.CREATE_CHILDREN_DETAIL,
           data
         );
 
         if (response.status === 200) {
-          commit("updateChildrenDataSuccess");
+          commit("createChildrenDataSuccess");
         }
       } catch (err) {
-        commit("updateChildrenDataerror", err);
+        commit("createChildrenDataerror", err);
       }
     },
     async updateChildren({ commit }, data) {
@@ -483,7 +504,7 @@ export default {
       }
     },
 
-    async getChildrenDetailById({ commit }, id) {
+    async getChildrenDetailByUserId({ commit }, id) {
       try {
         commit("getChildrensDataBegin");
         const response = await DataService.get(

@@ -7,9 +7,9 @@
       >
       
       </header> -->
-      <ProfileInputSkeleton v-if="childrensDataLoading" />
+      <!-- <ProfileInputSkeleton  /> -->
 
-      <div v-else class="p-6">
+      <div class="p-6">
         <!-- {{ values }} -->
         <form @submit.prevent="onSubmit()" :validation-schema="schema">
           <div class="flex gap-x-8 mb-12">
@@ -196,7 +196,7 @@ import { useToast } from "vue-toastification";
 import * as yup from "yup";
 import { inject, onMounted, ref, computed, watch } from "vue";
 import { useStore } from "vuex";
-import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
+// import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 import moment from "moment";
 // import { useRouter } from "vue-router";
 
@@ -204,17 +204,22 @@ onMounted(() => {
   getChildrensData();
 });
 const id = inject("id");
+const initialLoad = ref(0);
 const store = useStore();
 const getChildrensData = () => {
-  store.dispatch("getChildrenDetailById", id.value);
+  store.dispatch("getChildrenDetailByUserId", id.value);
+
+  if (initialLoad.value == 0) {
+    initialLoad.value = 1;
+  }
 };
 
 const childrensData = computed(() => store.state.profile.childrensData);
-const success = computed(() => store.state.profile.updateChildrenDataSuccess);
+const success = computed(() => store.state.profile.createChildrenDataSuccess);
 
-const childrensDataLoading = computed(
-  () => store.state.profile.getChildrensDataloading
-);
+// const childrensDataLoading = computed(
+//   () => store.state.profile.getChildrensDataloading
+// );
 
 const toast = useToast();
 const childrenDetails = ref([]);
@@ -245,17 +250,17 @@ const formValues = {
   dateOfBirth: "",
 };
 
-const removeChild = (idx) => {
-  // Index of the item you want to remove
-  const indexToRemove = idx; // For example, removing "item3"
+// const removeChild = (idx) => {
+//   // Index of the item you want to remove
+//   const indexToRemove = idx; // For example, removing "item3"
 
-  // Use splice to remove the item at the specified index
-  childrenDetails.value.splice(indexToRemove, 1);
-};
+//   // Use splice to remove the item at the specified index
+//   childrenDetails.value.splice(indexToRemove, 1);
+// };
 
 // const router = useRouter();
 
-const { handleSubmit, values } = useForm({
+const { handleSubmit, values, setValues } = useForm({
   validationSchema: schema,
   initialValues: formValues,
 });
@@ -288,19 +293,6 @@ const { value: dateOfBirth, errorMessage: dateOfBirthError } =
 // };
 
 const prepareDetails = (values) => {
-  // const updateObj = {
-  //   userId: id.value,
-  //   firstName: values.firstName,
-  //   surName: values.surName,
-  //   middleName: values.middleName,
-  //   email: values.email,
-  //   title: values.title,
-  //   mobile1: values.mobile1,
-  //   mobile2: values.mobile2,
-  //   gender: values.gender,
-  //   dateOfBirth: values.dateOfBirth,
-  //   id: childrensData.value?.id,
-  // };
   const createObj = {
     userId: id.value,
     firstName: values.firstName,
@@ -313,22 +305,15 @@ const prepareDetails = (values) => {
     gender: values.gender,
     dateOfBirth: values.dateOfBirth,
   };
-  // const obj = type == "create" ? createObj : updateObj;
   return createObj;
 };
 
 const onSubmit = handleSubmit((values) => {
-  // const hasDataError = childrensData.value == null;
-  // if (hasDataError) {
-  store.dispatch("createChildren", prepareDetails(values, "create"));
-  // }
-  // if (!hasDataError) {
-  //   store.dispatch("updateChildren", prepareDetails(values, "edit"));
-  // }
+  store.dispatch("createChildren", prepareDetails(values));
 });
 
 // const addDetail = () => {
-//   toast.success("Update successful");
+//   toast.success("create successful");
 //   console.log("PersonalDetails: " + JSON.stringify(childrenDetails.value));
 // };
 
@@ -338,8 +323,12 @@ watch(childrensData, () => {
 
 watch(success, () => {
   if (success.value) {
-    toast.success("Successful");
+    toast.success("Successfully created");
   }
+
+  setValues(formValues);
+
+  getChildrensData();
 });
 </script>
 

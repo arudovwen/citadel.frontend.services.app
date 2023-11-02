@@ -126,7 +126,7 @@ import { titleMenu, genderMenu } from "@/constant/data";
 import Select from "@/components/Select";
 import { useToast } from "vue-toastification";
 import * as yup from "yup";
-import { computed, watch } from "vue";
+import { computed, watch, inject } from "vue";
 import { useStore } from "vuex";
 
 import Modal from "@/components/Modal";
@@ -135,8 +135,9 @@ let { dispatch, state } = useStore();
 
 const toast = useToast();
 const details = computed(() => state.profile.childDetails);
+const id = inject("id");
 
-const success = computed(() => false);
+const success = computed(() => state.profile.updateChildrenDataSuccess);
 // const loading = computed(() => false);
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
@@ -184,18 +185,37 @@ const { value: gender, errorMessage: genderError } = useField("gender");
 
 const { value: dateOfBirth, errorMessage: dateOfBirthError } =
   useField("dateOfBirth");
+
+const prepareDetails = (values) => {
+  const updateObj = {
+    userId: id.value,
+    firstName: values.firstName,
+    surName: values.surName,
+    middleName: values.middleName,
+    email: values.email,
+    title: values.title,
+    mobile1: values.mobile1,
+    mobile2: values.mobile2,
+    gender: values.gender,
+    dateOfBirth: values.dateOfBirth,
+    id: values.id,
+  };
+  return updateObj;
+};
+
 const updateChildDetail = handleSubmit(() => {
-  dispatch("editDepartment", values);
+  dispatch("updateChildren", prepareDetails(values));
 });
 
 watch(details, () => {
-  // console.log(JSON.stringify(details.value));
   setValues(details.value);
 });
 watch(success, () => {
   if (success.value) {
     toast.success("Details updated");
-    dispatch("closeEditModal");
+
+    dispatch("getChildrenDetailByUserId", id.value);
+    closeEditModal();
   }
 });
 const closeEditModal = () => {
