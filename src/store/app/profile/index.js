@@ -1,11 +1,14 @@
 import { DataService } from "@/config/dataService/dataService";
 import { urls } from "@/helpers/apI_urls";
+import { cleanObject } from "@/util/cleanObject";
+
 export default {
   state: {
     //personal Info
 
     //post methods
     biodata: null,
+    allbiodata: [],
     creatingProfile: false,
     profileCreated: false,
     createProfileError: null,
@@ -35,7 +38,9 @@ export default {
     updateChurchAffiliationDataerror: null,
 
     //get
-    getBiodataloading: false,
+    getAllBiodataloading: false,
+    getAllBiodatasuccess: false,
+    getAllBiodataerror: false,
     getBiodatasuccess: false,
     getBiodataerror: null,
     childDetails: null,
@@ -59,6 +64,8 @@ export default {
     getChurchAffiliationsDataloading: false,
     getChurchAffiliationsDatasuccess: false,
     getChurchAffiliationsDataerror: null,
+    deleteloading: false,
+    deletesuccess: false,
     deleteChildDataloading: false,
     deleteChildDataSuccess: false,
     deleteChildDataError: null,
@@ -79,6 +86,20 @@ export default {
     },
   },
   mutations: {
+    deleteBegin(state) {
+      state.deleteloading = true;
+      state.error = null;
+      state.deletesuccess = false;
+    },
+    deleteSuccess(state) {
+      state.deleteloading = false;
+      state.deletesuccess = true;
+    },
+    deleteErr(state, err) {
+      state.deleteloading = false;
+      state.error = err;
+      state.deletesuccess = false;
+    },
     //post
     creatingProfile(state) {
       state.creatingProfile = true;
@@ -198,6 +219,24 @@ export default {
     },
 
     //get
+    getAllBiodataBegin(state) {
+      state.getAllBiodataloading = true;
+      state.getAllBiodatasuccess = false;
+      state.getAllBiodataerror = null;
+    },
+
+    getAllBiodataSuccess(state, { data, totalCount }) {
+      state.getAllBiodataloading = false;
+      state.getAllBiodatasuccess = true;
+      state.allbiodata = data;
+      state.total = totalCount;
+    },
+
+    getAllBiodataErr(state, err) {
+      state.getAllBiodataloading = false;
+      state.getAllBiodataerror = err;
+      state.getAllBiodatasuccess = false;
+    },
     getBiodataBegin(state) {
       state.getBiodataloading = true;
       state.getBiodatasuccess = false;
@@ -426,6 +465,21 @@ export default {
     },
 
     //get
+    async getAllBiodata({ commit }, data) {
+      try {
+        commit("getAllBiodataBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_BIODATA}?${new URLSearchParams(cleanObject(data))}`
+        );
+        if (response.status === 200) {
+          commit("getAllBiodataSuccess", response.data);
+        }
+      } catch (err) {
+        console.log("getAllBiodataErr", JSON.stringify(err));
+        commit("getBiodataErr", err);
+      }
+    },
+
     async getBiodataByUserId({ commit }, id) {
       try {
         commit("getBiodataBegin");
@@ -616,7 +670,19 @@ export default {
         commit("getQualificationDataErr", err);
       }
     },
-
+    async deleteBiodata({ commit }, id) {
+      try {
+        commit("deleteBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_BIODATA}?id=${id}`
+        );
+        if (response.status === 200) {
+          commit("deleteSuccess");
+        }
+      } catch (err) {
+        commit("deleteErr", err);
+      }
+    },
     openChildDetail({ commit }, data) {
       commit("openChildDetail", data);
     },

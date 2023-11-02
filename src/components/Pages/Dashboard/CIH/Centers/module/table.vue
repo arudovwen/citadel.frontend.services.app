@@ -1,10 +1,11 @@
+<!-- eslint-disable no-unused-vars -->
 <template>
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div class="flex gap-x-4 rounded text-sm">
           <InputGroup
-            v-model="searchTerm"
+            v-model="query.searchTerm"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
@@ -14,10 +15,10 @@
 
           <VueSelect
             class="min-w-[200px] w-full md:w-auto h-9"
-            v-model="zone"
-            :options="zoneOptions"
+            v-model="center"
+            :options="centerOptions"
             placeholder="Select zone"
-            name="zone"
+            name="center"
           />
         </div>
         <div
@@ -42,17 +43,13 @@
         <vue-good-table
           :columns="columns"
           styleClass=" vgt-table  centered "
-          :rows="advancedTable"
+          :rows="centers"
           :sort-options="{
             enabled: false,
           }"
           :pagination-options="{
             enabled: true,
             perPage: perpage,
-          }"
-          :search-options="{
-            enabled: true,
-            externalQuery: searchTerm,
           }"
         >
           <template v-slot:table-row="props">
@@ -134,12 +131,12 @@
           <template #pagination-bottom="props">
             <div class="py-4 px-3">
               <Pagination
-                :total="50"
-                :current="current"
-                :per-page="perpage"
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
                 :pageRange="pageRange"
-                @page-changed="current = $event"
-                :pageChanged="props.pageChanged"
+                @page-changed="query.pageNumber = $event"
+                :pageChanged="perPage"
                 :perPageChanged="props.perPageChanged"
                 enableSearch
                 enableSelect
@@ -153,7 +150,37 @@
       </div>
     </Card>
   </div>
+
   <Modal
+    title="Delete Member"
+    label="Small modal"
+    labelClass="btn-outline-danger"
+    ref="modal"
+    sizeClass="max-w-md"
+    themeClass="bg-danger-500"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure you want to delete this member?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          :disabled="deleteloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Delete"
+          :disabled="deleteloading"
+          btnClass="btn-danger btn-sm"
+          @click="handleDelete"
+        />
+      </div>
+    </template>
+  </Modal>
+  <!-- <Modal
     title="Confirm action"
     label="Small modal"
     labelClass="btn-outline-dark"
@@ -185,7 +212,7 @@
         />
       </div>
     </template>
-  </Modal>
+  </Modal> -->
 
   <Modal
     :title="
@@ -218,7 +245,19 @@ import { advancedTable } from "@/constant/basic-tablle-data";
 import AddRecord from "../center-add.vue";
 import EditRecord from "../edit-center.vue";
 import window from "@/mixins/window";
-import { provide, ref } from "vue";
+import { useStore } from "vuex";
+import { debounce } from "lodash";
+import moment from "moment";
+
+import {
+  provide,
+  ref,
+  computed,
+  watch,
+  reactive,
+  getCurrentInstance,
+  onMounted,
+} from "vue";
 
 export default {
   mixins: [window],
@@ -238,20 +277,91 @@ export default {
     VueTailwindDatePicker,
   },
 
-  mounted() {
-    this.fetchZones();
-  },
-
   setup() {
+    const query = reactive({
+      pageNumber: 1,
+      pageSize: 10,
+      name: "",
+      searchTerm: "",
+    });
+    const id = ref(null);
+    const modal = ref(null);
+    const { state, dispatch } = useStore();
     const modalChange = ref(null);
     const closeModal = () => modalChange.value.closeModal();
+<<<<<<< HEAD
     const zoneOptions = ref([]);
+=======
+    const loading = computed(() => state.center.loading);
+    const centers = computed(() =>
+      state.center.centers.map((i) => {
+        i.createdAt = moment(i.createdAt).format("ll");
+        i.location = i.location ? i.location : "-";
+        i.total = i.total ? i.total : 0;
+        return i;
+      })
+    );
+    const total = computed(() => state.center.total);
+    const addsuccess = computed(() => state.center.addsuccess);
+    const deleteloading = computed(() => state.center.deleteloading);
+    const deletesuccess = computed(() => state.center.deletesuccess);
+
+    onMounted(() => {
+      dispatch("getAllCenters", query);
+      id.value = getCurrentInstance().data.id;
+    });
+>>>>>>> a714bdb5a06b9fe60e8b17b89a665fbe3a8dff3b
 
     provide("closeModal", closeModal);
+    // eslint-disable-next-line no-unused-vars
+    function handleDelete() {
+      dispatch("deleteCenter", id.value);
+    }
+    function perPage({ currentPage }) {
+      query.pageNumber = currentPage;
+    }
+    // Define a debounce delay (e.g., 500 milliseconds)
+    const debounceDelay = 800;
+    const debouncedSearch = debounce((searchValue) => {
+      dispatch("getAllCenters", { ...query, name: searchValue });
+    }, debounceDelay);
+    watch(addsuccess, () => {
+      addsuccess.value && dispatch("getAllCenters", query);
+      modalChange.value.closeModal();
+    });
 
+    watch(deletesuccess, () => {
+      if (deletesuccess.value) {
+        dispatch("getAllCenters", query);
+        modal.value.closeModal();
+      }
+    });
+
+    watch(
+      () => query.searchTerm,
+      () => {
+        debouncedSearch(query.searchTerm);
+      }
+    );
+    watch(
+      () => query.pageNumber,
+      () => {
+        dispatch("getAllCenters", query);
+      }
+    );
     return {
       modalChange,
+<<<<<<< HEAD
       zoneOptions,
+=======
+      centers,
+      loading,
+      total,
+      query,
+      perPage,
+      deleteloading,
+      handleDelete,
+>>>>>>> a714bdb5a06b9fe60e8b17b89a665fbe3a8dff3b
     };
   },
 
@@ -271,6 +381,7 @@ export default {
         date: "DD MMM YYYY",
         month: "MMM",
       },
+<<<<<<< HEAD
       zone: "",
       // zoneOptions: [
       //   {
@@ -282,6 +393,19 @@ export default {
       //     label: "Zone 2",
       //   },
       // ],
+=======
+      center: "",
+      centerOptions: [
+        {
+          value: "option2",
+          label: "Center 1",
+        },
+        {
+          value: "option3",
+          label: "Center 2",
+        },
+      ],
+>>>>>>> a714bdb5a06b9fe60e8b17b89a665fbe3a8dff3b
       // provide: {
       //   // Provide a method
       //   closeModal: () => this.$refs.Modal.closeModal(),
@@ -343,11 +467,11 @@ export default {
       columns: [
         {
           label: "Date created",
-          field: "date",
+          field: "createdAt",
         },
         {
           label: "Name",
-          field: "name",
+          field: "centerName",
         },
 
         {
@@ -368,9 +492,6 @@ export default {
     };
   },
   methods: {
-    fetchZones() {
-      this.$store.dispatch("getZones");
-    },
     generateAction(name, id) {
       this.id = id;
 

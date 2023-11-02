@@ -96,7 +96,7 @@ const closeModal = () => {
 
 watch(department, () => {
   // console.log(JSON.stringify(department.value));
-  setValues(department.value);
+  setValues({ ...department.value, hod: department.value.userId });
 });
 watch(success, () => {
   if (success.value) {
