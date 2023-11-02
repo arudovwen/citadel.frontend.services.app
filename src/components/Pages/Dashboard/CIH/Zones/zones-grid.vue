@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="getZonesLoading && zones?.length == 0" class="">
-      <Empty />
+      <EmptyGrid />
     </div>
     <div v-else class="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5">
       <!-- <span>Zones: {{ zones }}</span> -->
@@ -103,7 +103,7 @@
   </Modal>
 </template>
 <script setup>
-import Empty from "@/components/Empty";
+import EmptyGrid from "@/components/Skeleton/Project-grid.vue";
 
 import Button from "@/components/Button";
 import Card from "@/components/Card";
