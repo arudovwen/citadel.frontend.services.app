@@ -150,8 +150,8 @@
                 <div class="flex space-x-3 rtl:space-x-reverse justify-center">
                   <button
                     type="button"
-                    class="action-btn inline-flex items-center justify-center h-8 w-8 text-lg border rounded text-white"
-                    @click="() => {}"
+                    class="action-btn btn-primary inline-flex items-center justify-center h-8 w-8 text-lg border rounded text-white"
+                    @click="() => $store.dispatch('openChildDetail', props.row)"
                   >
                     <Icon icon="heroicons:pencil-square" />
                   </button>
@@ -159,7 +159,7 @@
                   <button
                     type="button"
                     class="inline-flex items-center justify-center h-8 w-8 bg-danger-500 text-lg border rounded border-danger-500 text-white"
-                    @click="removeChild"
+                    @click="() => $store.dispatch('openDeleteModal')"
                   >
                     <Icon icon="heroicons-outline:trash" />
                   </button>
@@ -178,10 +178,12 @@
         </div> -->
       </div>
     </Card>
+    <EditChildDetail />
   </div>
 </template>
 
 <script setup>
+import EditChildDetail from "@/components/Pages/Profile/ChildrensDetails/EditChildDetail.vue";
 import Icon from "@/components/Icon";
 import Card from "@/components/Card";
 // import Button from "@/components/Button";

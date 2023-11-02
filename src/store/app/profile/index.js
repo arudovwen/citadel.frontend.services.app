@@ -34,7 +34,7 @@ export default {
     getBiodataloading: false,
     getBiodatasuccess: false,
     getBiodataerror: null,
-    childData: null,
+    childDetails: null,
     childrensData: null,
     getChildrensDataloading: false,
     getChildrensDataSuccess: false,
@@ -55,6 +55,10 @@ export default {
     getChurchAffiliationsDataloading: false,
     getChurchAffiliationsDatasuccess: false,
     getChurchAffiliationsDataerror: null,
+
+    //edit modal
+    editModal: false,
+    deleteModal: false,
   },
   getters: {
     creatingProfile(state) {
@@ -274,6 +278,25 @@ export default {
       state.getChurchAffiliationsDataloading = false;
       state.getChurchAffiliationsDataerror = err;
       state.getChurchAffiliationsDatasuccess = false;
+    },
+
+    //edit modal
+    openChildDetail(state, data) {
+      state.editModal = true;
+      state.childDetails = data;
+      console.log(data);
+    },
+    closeEditModal(state) {
+      state.editModal = false;
+      // state.childDetails = null;
+    },
+
+    //delete modal
+    closeDeleteModal(state) {
+      state.editModal = false;
+    },
+    openDeleteModal(state) {
+      state.deleteModal = true;
     },
   },
   actions: {
@@ -527,6 +550,22 @@ export default {
       } catch (err) {
         commit("getQualificationDataErr", err);
       }
+    },
+
+    openChildDetail({ commit }, data) {
+      commit("openChildDetail", data);
+    },
+
+    closeEditModal({ commit }) {
+      commit("closeEditModal");
+    },
+
+    openDeleteModal({ commit }) {
+      commit("openDeleteModal");
+    },
+
+    closeDeleteModal({ commit }) {
+      commit("closeDeleteModal");
     },
   },
 };
