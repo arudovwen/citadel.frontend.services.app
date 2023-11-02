@@ -312,6 +312,7 @@ export default {
 
     onMounted(() => {
       dispatch("getAllCenters", query);
+      dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
       id.value = getCurrentInstance().data.id;
     });
 
