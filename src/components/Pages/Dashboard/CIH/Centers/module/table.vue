@@ -218,6 +218,7 @@ import { advancedTable } from "@/constant/basic-tablle-data";
 import AddRecord from "../center-add.vue";
 import EditRecord from "../edit-center.vue";
 import window from "@/mixins/window";
+import { provide, ref } from "vue";
 
 export default {
   mixins: [window],
@@ -235,6 +236,21 @@ export default {
     Button,
     // eslint-disable-next-line vue/no-unused-components
     VueTailwindDatePicker,
+  },
+
+  mounted() {
+    this.fetchZones();
+  },
+
+  setup() {
+    const modalChange = ref(null);
+    const closeModal = () => modalChange.value.closeModal();
+
+    provide("closeModal", closeModal);
+
+    return {
+      modalChange,
+    };
   },
 
   data() {
@@ -264,6 +280,10 @@ export default {
           label: "Zone 2",
         },
       ],
+      // provide: {
+      //   // Provide a method
+      //   closeModal: () => this.$refs.Modal.closeModal(),
+      // },
       actions: [
         {
           name: "Approve",
@@ -299,6 +319,7 @@ export default {
           },
         },
       ],
+
       options: [
         {
           value: "25",
@@ -345,6 +366,9 @@ export default {
     };
   },
   methods: {
+    fetchZones() {
+      this.$store.dispatch("getZones");
+    },
     generateAction(name, id) {
       this.id = id;
 

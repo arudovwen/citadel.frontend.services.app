@@ -13,7 +13,7 @@
           label="Zone"
           class="min-w-[200px] w-full md:w-auto"
           v-model.value="zoneId"
-          :options="options"
+          :options="zoneOptions"
           placeholder="Select zone"
           name="zone"
           :error="zoneIdError"
@@ -36,7 +36,7 @@
   </form>
 </template>
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import { useField, useForm } from "vee-validate";
 import Select from "@/components/Select";
 import * as yup from "yup";
@@ -44,14 +44,14 @@ import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
 import { useStore } from "vuex";
-import { computed, watch } from "vue";
+import { computed, watch, inject } from "vue";
 import { useToast } from "vue-toastification";
 import Textarea from "@/components/Textarea";
 
 const { state, dispatch } = useStore();
-const success = computed(() => state.zone.addCenterSuccess);
+const success = computed(() => state.center.addCenterSuccess);
 const toast = useToast();
-
+const closeModal = inject("closeModal");
 const formData = reactive({
   centerName: "",
   zoneId: "",
@@ -74,7 +74,14 @@ const { value: zoneId, errorMessage: zoneIdError } = useField("zoneId");
 
 const { value: description, errorMessage: descriptionError } =
   useField("description");
-const options = ref();
+const zoneOptions = computed(() =>
+  state?.zone?.zones?.map((i) => {
+    return {
+      label: i.zoneName,
+      value: i.id,
+    };
+  })
+);
 const onSubmit = handleSubmit((values) => {
   // console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
   dispatch("addCenter", values);
@@ -86,7 +93,7 @@ watch(success, () => {
     dispatch("getCenters");
   }
 
-  // closeModal();
+  closeModal();
 
   // getAllZones();
 });
