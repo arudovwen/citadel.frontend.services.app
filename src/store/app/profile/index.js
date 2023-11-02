@@ -59,6 +59,9 @@ export default {
     getChurchAffiliationsDataloading: false,
     getChurchAffiliationsDatasuccess: false,
     getChurchAffiliationsDataerror: null,
+    deleteChildDataloading: false,
+    deleteChildDataSuccess: false,
+    deleteChildDataError: null,
 
     //edit modal
     editModal: false,
@@ -301,6 +304,22 @@ export default {
       state.getChurchAffiliationsDatasuccess = false;
     },
 
+    deleteChildBegin(state) {
+      state.deleteChildDataloading = true;
+      state.deleteChildDataSuccess = false;
+      state.deleteChildDataError = null;
+    },
+    deleteChildDataSuccess(state) {
+      state.deleteChildDataloading = false;
+      state.deleteChildDataSuccess = true;
+    },
+
+    deleteChildDataError(state, err) {
+      state.deleteChildDataloading = false;
+      state.deleteChildDataSuccess = false;
+      state.deleteChildDataError = err;
+    },
+
     //edit modal
     openChildDetail(state, data) {
       state.editModal = true;
@@ -374,89 +393,7 @@ export default {
         commit("updateQualificationDataerror", err);
       }
     },
-    async createEmployer({ commit }, data) {
-      try {
-        commit("updateEmployerDataBegin");
-        const response = await DataService.post(urls.CREATE_EMPLOYER, data);
 
-        if (response.status === 200) {
-          commit("updateEmployerDataSuccess");
-        }
-      } catch (err) {
-        commit("updateEmployerDataErr", err);
-      }
-    },
-
-    async updateEmployer({ commit }, data) {
-      try {
-        commit("updateEmployerDataBegin");
-        const response = await DataService.put(urls.UPDATE_EMPLOYER, data);
-
-        if (response.status === 200) {
-          commit("updateEmployerDataSuccess");
-        }
-      } catch (err) {
-        commit("updateEmployerDataErr", err);
-      }
-    },
-    async createSpouse({ commit }, data) {
-      try {
-        commit("updateSpouseDataBegin");
-        const response = await DataService.post(
-          urls.CREATE_SPOUSE_DETAIL,
-          data
-        );
-
-        if (response.status === 200) {
-          commit("updateSpouseDataSuccess");
-        }
-      } catch (err) {
-        commit("updateSpouseDataerror", err);
-      }
-    },
-
-    async updateSpouse({ commit }, data) {
-      try {
-        commit("updateSpouseDataBegin");
-        const response = await DataService.put(urls.UPDATE_SPOUSE_DETAIL, data);
-
-        if (response.status === 200) {
-          commit("updateSpouseDataSuccess");
-        }
-      } catch (err) {
-        commit("updateSpouseDataerror", err);
-      }
-    },
-    async createChildren({ commit }, data) {
-      try {
-        commit("createChildrenDataBegin");
-        const response = await DataService.post(
-          urls.CREATE_CHILDREN_DETAIL,
-          data
-        );
-
-        if (response.status === 200) {
-          commit("createChildrenDataSuccess");
-        }
-      } catch (err) {
-        commit("createChildrenDataerror", err);
-      }
-    },
-    async updateChildren({ commit }, data) {
-      try {
-        commit("updateChildrenDataBegin");
-        const response = await DataService.put(
-          urls.UPDATE_CHILDREN_DETAIL,
-          data
-        );
-
-        if (response.status === 200) {
-          commit("updateChildrenDataSuccess");
-        }
-      } catch (err) {
-        commit("updateChildrenDataerror", err);
-      }
-    },
     async createChurchAffiliation({ commit }, data) {
       try {
         commit("updateChurchAffiliationDataBegin");
@@ -504,6 +441,8 @@ export default {
       }
     },
 
+    //children
+
     async getChildrenDetailByUserId({ commit }, id) {
       try {
         commit("getChildrensDataBegin");
@@ -518,6 +457,53 @@ export default {
       }
     },
 
+    async createChildren({ commit }, data) {
+      try {
+        commit("createChildrenDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_CHILDREN_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("createChildrenDataSuccess");
+        }
+      } catch (err) {
+        commit("createChildrenDataerror", err);
+      }
+    },
+    async updateChildren({ commit }, data) {
+      try {
+        commit("updateChildrenDataBegin");
+        const response = await DataService.put(
+          urls.UPDATE_CHILDREN_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateChildrenDataSuccess");
+        }
+      } catch (err) {
+        commit("updateChildrenDataerror", err);
+      }
+    },
+
+    async deleteChildById({ commit }, id) {
+      try {
+        commit("deleteChildBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_CHILDREN_DETAIL}?id=${id}`
+        );
+        if (response.status === 200) {
+          commit("deleteChildDataSuccess");
+        }
+      } catch (err) {
+        commit("deleteChildDataError", err);
+      }
+    },
+
+    //spouse
+
     async getSpouseDetailById({ commit }, id) {
       try {
         commit("getSpouseDataBegin");
@@ -531,6 +517,36 @@ export default {
         commit("getSpouseDataErr", err);
       }
     },
+    async createSpouse({ commit }, data) {
+      try {
+        commit("updateSpouseDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_SPOUSE_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateSpouseDataSuccess");
+        }
+      } catch (err) {
+        commit("updateSpouseDataerror", err);
+      }
+    },
+
+    async updateSpouse({ commit }, data) {
+      try {
+        commit("updateSpouseDataBegin");
+        const response = await DataService.put(urls.UPDATE_SPOUSE_DETAIL, data);
+
+        if (response.status === 200) {
+          commit("updateSpouseDataSuccess");
+        }
+      } catch (err) {
+        commit("updateSpouseDataerror", err);
+      }
+    },
+
+    //Employer
     async getEmployerDetailById({ commit }, id) {
       try {
         commit("getEmployerDataBegin");
@@ -544,6 +560,34 @@ export default {
         commit("getEmployerDataErr", err);
       }
     },
+
+    async createEmployer({ commit }, data) {
+      try {
+        commit("updateEmployerDataBegin");
+        const response = await DataService.post(urls.CREATE_EMPLOYER, data);
+
+        if (response.status === 200) {
+          commit("updateEmployerDataSuccess");
+        }
+      } catch (err) {
+        commit("updateEmployerDataErr", err);
+      }
+    },
+
+    async updateEmployer({ commit }, data) {
+      try {
+        commit("updateEmployerDataBegin");
+        const response = await DataService.put(urls.UPDATE_EMPLOYER, data);
+
+        if (response.status === 200) {
+          commit("updateEmployerDataSuccess");
+        }
+      } catch (err) {
+        commit("updateEmployerDataErr", err);
+      }
+    },
+
+    //ChurchAffiliation
 
     async getChurchAffiliationsById({ commit }, id) {
       try {

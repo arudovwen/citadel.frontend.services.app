@@ -159,7 +159,7 @@
                   <button
                     type="button"
                     class="inline-flex items-center justify-center h-8 w-8 bg-danger-500 text-lg border rounded border-danger-500 text-white"
-                    @click="() => $store.dispatch('openDeleteModal')"
+                    @click="openDelete(props.row.id, $refs.modal.openModal)"
                   >
                     <Icon icon="heroicons-outline:trash" />
                   </button>
@@ -179,14 +179,42 @@
       </div>
     </Card>
     <EditChildDetail />
+    <Modal
+      title="Delete Child"
+      label="Small modal"
+      labelClass="btn-outline-danger"
+      ref="modal"
+      sizeClass="max-w-md"
+      themeClass="bg-danger-500"
+    >
+      <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+        Are you sure you want to delete this child?
+      </div>
+
+      <template v-slot:footer>
+        <div class="flex gap-x-5">
+          <Button
+            text="Cancel"
+            btnClass="btn-outline-secondary btn-sm"
+            @click="$refs.modal.closeModal()"
+          />
+          <Button
+            text="Delete"
+            btnClass="btn-danger btn-sm"
+            @click="deleteChild($refs.modal.closeModal)"
+          />
+        </div>
+      </template>
+    </Modal>
   </div>
 </template>
 
 <script setup>
+import Modal from "@/components/Modal/Modal";
 import EditChildDetail from "@/components/Pages/Profile/ChildrensDetails/EditChildDetail.vue";
 import Icon from "@/components/Icon";
 import Card from "@/components/Card";
-// import Button from "@/components/Button";
+import Button from "@/components/Button";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
@@ -204,19 +232,17 @@ onMounted(() => {
   getChildrensData();
 });
 const id = inject("id");
-const initialLoad = ref(0);
+
 const store = useStore();
 const getChildrensData = () => {
   store.dispatch("getChildrenDetailByUserId", id.value);
-
-  if (initialLoad.value == 0) {
-    initialLoad.value = 1;
-  }
 };
 
 const childrensData = computed(() => store.state.profile.childrensData);
 const success = computed(() => store.state.profile.createChildrenDataSuccess);
-
+const deleteSuccess = computed(
+  () => store.state.profile.deleteChildDataSuccess
+);
 // const childrensDataLoading = computed(
 //   () => store.state.profile.getChildrensDataloading
 // );
@@ -237,6 +263,8 @@ const schema = yup.object({
   dateOfBirth: yup.string(),
 });
 
+const selectedChildId = ref(null);
+
 const formValues = {
   userId: id.value,
   firstName: "",
@@ -248,6 +276,12 @@ const formValues = {
   mobile2: "",
   gender: "",
   dateOfBirth: "",
+};
+
+const openDelete = (id, openFn) => {
+  selectedChildId.value = id;
+
+  openFn();
 };
 
 // const removeChild = (idx) => {
@@ -312,6 +346,19 @@ const onSubmit = handleSubmit((values) => {
   store.dispatch("createChildren", prepareDetails(values));
 });
 
+const deleteChild = (closeFn) => {
+  store.dispatch("deleteChildById", selectedChildId.value);
+  closeFn();
+};
+
+watch(deleteSuccess, () => {
+  if (deleteSuccess.value) {
+    toast.success("Successfully Deleted");
+  }
+
+  getChildrensData();
+});
+
 // const addDetail = () => {
 //   toast.success("create successful");
 //   console.log("PersonalDetails: " + JSON.stringify(childrenDetails.value));
@@ -323,7 +370,7 @@ watch(childrensData, () => {
 
 watch(success, () => {
   if (success.value) {
-    toast.success("Successfully created");
+    toast.success("Successfully Created");
   }
 
   setValues(formValues);
