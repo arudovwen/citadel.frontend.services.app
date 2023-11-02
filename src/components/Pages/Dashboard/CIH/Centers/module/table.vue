@@ -287,6 +287,7 @@ export default {
     const id = ref(null);
     const modal = ref(null);
     const { state, dispatch } = useStore();
+    const zoneOptions = ref([]);
     const modalChange = ref(null);
     const closeModal = () => modalChange.value.closeModal();
     const loading = computed(() => state.center.loading);
@@ -346,6 +347,7 @@ export default {
       }
     );
     return {
+      zoneOptions,
       modalChange,
       centers,
       loading,
@@ -373,6 +375,17 @@ export default {
         date: "DD MMM YYYY",
         month: "MMM",
       },
+      zone: "",
+      // zoneOptions: [
+      //   {
+      //     value: "option2",
+      //     label: "Zone 1",
+      //   },
+      //   {
+      //     value: "option3",
+      //     label: "Zone 2",
+      //   },
+      // ],
       center: "",
       centerOptions: [
         {
