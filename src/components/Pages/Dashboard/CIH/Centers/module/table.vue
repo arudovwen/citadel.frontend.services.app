@@ -287,11 +287,9 @@ export default {
     const id = ref(null);
     const modal = ref(null);
     const { state, dispatch } = useStore();
+    const zoneOptions = ref([]);
     const modalChange = ref(null);
     const closeModal = () => modalChange.value.closeModal();
-<<<<<<< HEAD
-    const zoneOptions = ref([]);
-=======
     const loading = computed(() => state.center.loading);
     const centers = computed(() =>
       state.center.centers.map((i) => {
@@ -310,7 +308,6 @@ export default {
       dispatch("getAllCenters", query);
       id.value = getCurrentInstance().data.id;
     });
->>>>>>> a714bdb5a06b9fe60e8b17b89a665fbe3a8dff3b
 
     provide("closeModal", closeModal);
     // eslint-disable-next-line no-unused-vars
@@ -350,10 +347,8 @@ export default {
       }
     );
     return {
-      modalChange,
-<<<<<<< HEAD
       zoneOptions,
-=======
+      modalChange,
       centers,
       loading,
       total,
@@ -361,7 +356,6 @@ export default {
       perPage,
       deleteloading,
       handleDelete,
->>>>>>> a714bdb5a06b9fe60e8b17b89a665fbe3a8dff3b
     };
   },
 
@@ -381,7 +375,6 @@ export default {
         date: "DD MMM YYYY",
         month: "MMM",
       },
-<<<<<<< HEAD
       zone: "",
       // zoneOptions: [
       //   {
@@ -393,7 +386,6 @@ export default {
       //     label: "Zone 2",
       //   },
       // ],
-=======
       center: "",
       centerOptions: [
         {
@@ -405,7 +397,6 @@ export default {
           label: "Center 2",
         },
       ],
->>>>>>> a714bdb5a06b9fe60e8b17b89a665fbe3a8dff3b
       // provide: {
       //   // Provide a method
       //   closeModal: () => this.$refs.Modal.closeModal(),
