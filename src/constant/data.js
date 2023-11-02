@@ -763,12 +763,12 @@ export const CIHAddressMenu = [
 
 export const childrenDetailstable = [
   {
-    label: "Last Name",
-    field: "lastName",
-  },
-  {
     label: "First Name",
     field: "firstName",
+  },
+  {
+    label: "Last Name",
+    field: "surName",
   },
 
   {
@@ -778,7 +778,7 @@ export const childrenDetailstable = [
 
   {
     label: "DOB",
-    field: "DOB",
+    field: "dateOfBirth",
   },
   {
     label: "Action",

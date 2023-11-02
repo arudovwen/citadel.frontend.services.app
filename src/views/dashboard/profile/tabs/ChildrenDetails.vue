@@ -133,17 +133,18 @@
             }"
           >
             <template v-slot:table-row="props">
-              <span
+              <!-- <span
                 v-if="props.column.field == 'gender'"
                 class="text-slate-500 dark:text-slate-300"
               >
                 {{ props.row.gender }}
-              </span>
+              </span> -->
+
               <span
-                v-if="props.column.field == 'DOB'"
+                v-if="props.column.field == 'dateOfBirth'"
                 class="text-slate-500 dark:text-slate-300"
               >
-                {{ props.row.dateOfBirth }}
+                {{ moment(props.row.dateOfBirth).format("ll") }}
               </span>
               <span v-if="props.column.field == 'action'">
                 <div class="flex space-x-3 rtl:space-x-reverse justify-center">
@@ -194,7 +195,7 @@ import * as yup from "yup";
 import { inject, onMounted, ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
-
+import moment from "moment";
 // import { useRouter } from "vue-router";
 
 onMounted(() => {
@@ -330,7 +331,7 @@ const onSubmit = handleSubmit((values) => {
 // };
 
 watch(childrensData, () => {
-  // setValues(childrensData.value);
+  childrenDetails.value = childrensData.value;
 });
 
 watch(success, () => {
