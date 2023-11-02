@@ -1,7 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
 import { DataService } from "@/config/dataService/dataService";
 import { urls } from "@/helpers/apI_urls";
+import { cleanObject } from "@/util/cleanObject";
 import { useToast } from "vue-toastification";
+
 const toast = useToast();
 export default {
   state: {
@@ -20,83 +21,17 @@ export default {
     addCenterLoading: false,
     addCenterSuccess: false,
     addCenterError: null,
-    getCentersLoading: false,
-    getCentersSuccess: false,
-    getCentersError: null,
+    getcentersloading: false,
+    getcenterssuccess: false,
+    getcenterserror: null,
     updateCenterLoading: false,
     updateCenterSuccess: false,
     updateCenterError: null,
     deleteCenterLoading: false,
     deleteCenterSuccess: false,
     deleteCenterError: null,
-
-    centers: [
-      {
-        id: uuidv4(),
-        assignto: [
-          {
-            image: require("@/assets/images/avatar/av-1.svg"),
-            title: "Mahedi Amin",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Sovo Haldar",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Rakibul Islam",
-          },
-        ],
-        name: "Welfare",
-        des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-        startDate: "2022-10-03",
-        endDate: "2022-10-06",
-        progress: 75,
-        category: [
-          {
-            value: "team",
-            label: "team",
-          },
-          {
-            value: "low",
-            label: "low",
-          },
-        ],
-      },
-      {
-        id: uuidv4(),
-        assignto: [
-          {
-            image: require("@/assets/images/avatar/av-1.svg"),
-            title: "Mahedi Amin",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Sovo Haldar",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Rakibul Islam",
-          },
-        ],
-        name: "Sanitation ",
-        des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-        startDate: "2022-10-03",
-        endDate: "2022-10-10",
-        progress: 50,
-
-        category: [
-          {
-            value: "team",
-            label: "team",
-          },
-          {
-            value: "low",
-            label: "low",
-          },
-        ],
-      },
-    ],
+    total: 0,
+    centers: [],
   },
   getters: {
     centers: (state) => state.centers,
@@ -121,20 +56,21 @@ export default {
     },
 
     getCentersBegin(state) {
-      state.getCentersLoading = true;
-      state.getCentersSuccess = false;
-      state.getCentersError = null;
+      state.getcentersloading = true;
+      state.getcenterssuccess = false;
+      state.getcenterserror = null;
     },
-    getCentersSuccess(state, data) {
-      state.getCentersLoading = false;
-      state.getCentersSuccess = true;
-      state.getCentersError = null;
-      state.Centers = data;
+    getCentersSuccess(state, { data, totalCount }) {
+      state.getcentersloading = false;
+      state.getcenterssuccess = true;
+      state.getcenterserror = null;
+      state.centers = data;
+      state.total = totalCount;
     },
     getCentersError(state, err) {
-      state.getCentersLoading = false;
-      state.getCentersSuccess = false;
-      state.getCentersError = err;
+      state.getcentersloading = false;
+      state.getcenterssuccess = false;
+      state.getcenterserror = err;
     },
 
     updateCenterBegin(state) {
@@ -226,13 +162,16 @@ export default {
       }
     },
     //get center
-    async getCenters({ commit }) {
+    async getAllCenters({ commit }, data) {
       try {
         commit("getCentersBegin");
-        const response = await DataService.get(urls.GET_ALL_CENTERS);
+
+        const response = await DataService.get(
+          `${urls.GET_ALL_CENTERS}?${new URLSearchParams(cleanObject(data))}`
+        );
 
         if (response.status === 200) {
-          commit("getCentersSuccess", response.data.data);
+          commit("getCentersSuccess", response.data);
         }
       } catch (err) {
         commit("getCentersError", err);
