@@ -107,7 +107,7 @@
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in filteredActions" :key="i">
+                  <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
                       @click="item.doit(item.name)"
                       :class="{
@@ -180,15 +180,16 @@
       </div>
     </template>
   </Modal>
-  <!-- <Modal
+  <Modal
     title="Confirm action"
     label="Small modal"
     labelClass="btn-outline-dark"
-    ref="modal"
+    ref="modalStatus"
     sizeClass="max-w-md"
+    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure about this action?
+      Are you sure you want to {{ type.toLowerCase() }} this center?
     </div>
     <div v-if="type.toLowerCase() === 'delist'">
       <textarea
@@ -196,23 +197,28 @@
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
         rows="4"
         placeholder="Provide reason"
+        v-model="reason"
       ></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
+          :disabled="deleteloading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modal.closeModal()"
+          @click="$refs.modalStatus.closeModal()"
         />
         <Button
+          :disabled="deleteloading"
           text="Proceed"
-          btnClass="btn-dark btn-sm"
-          @click="$refs.modal.closeModal()"
+          :btnClass="` btn-sm ${
+            type === 'approve' ? 'btn-success' : 'btn-danger'
+          }`"
+          @click="handleStatus"
         />
       </div>
     </template>
-  </Modal> -->
+  </Modal>
 
   <Modal
     :title="
@@ -366,6 +372,7 @@ export default {
       searchTerm: "",
       type: "",
       id: null,
+      reason: "",
       filters: ["all", "pending"],
       activeFilter: "all",
       dateValue: null,
@@ -390,19 +397,19 @@ export default {
       // },
       actions: [
         {
-          name: "Approve",
+          name: "approve",
           icon: "ph:check",
           doit: (name) => {
             this.type = name;
-            this.$refs.modal.openModal();
+            this.$refs.modalStatus.openModal();
           },
         },
         {
-          name: "Delist",
+          name: "delist",
           icon: "ph:x-light",
           doit: (name) => {
             this.type = name;
-            this.$refs.modal.openModal();
+            this.$refs.modalStatus.openModal();
           },
         },
         {
@@ -470,6 +477,29 @@ export default {
     };
   },
   methods: {
+    handleStatus() {
+      if (this.type === "approve") {
+        this.$store.dispatch("enableUser", this.id);
+      } else {
+        this.$store.dispatch("disableUser", this.id);
+      }
+    },
+    handleActions(value) {
+      if (value === "active") {
+        return this.actions.filter((i) => i.name.toLowerCase() !== "approve");
+      }
+      if (value === "delist") {
+        return this.actions.filter((i) => i.name.toLowerCase() !== "delist");
+      }
+      if (value === "pendingactivation") {
+        return this.actions.filter(
+          (i) =>
+            i.name.toLowerCase() !== "delist" &&
+            i.name.toLowerCase() !== "approve"
+        );
+      }
+      return value;
+    },
     generateAction(name, id) {
       this.id = id;
 
