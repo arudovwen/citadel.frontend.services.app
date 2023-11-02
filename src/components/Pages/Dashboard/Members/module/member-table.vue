@@ -75,7 +75,12 @@
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in actions" :key="i">
+                  <MenuItem
+                    v-for="(item, i) in handleActions(
+                      props.row.statusText.toLowerCase()
+                    )"
+                    :key="i"
+                  >
                     <div
                       @click="
                         generateAction(
@@ -86,7 +91,7 @@
                       :class="`
                 
                   ${
-                    generateAction(item.name, props.row.id).name === 'delete'
+                    item.name === 'delist'
                       ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
                       : 'hover:bg-slate-900 hover:text-white'
                   }
@@ -129,12 +134,13 @@
       </div>
     </Card>
   </div>
-  <!-- <Modal
+  <Modal
     title="Confirm action"
     label="Small modal"
     labelClass="btn-outline-dark"
-    ref="modal"
+    ref="modalStatus"
     sizeClass="max-w-md"
+    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure about this action?
@@ -145,23 +151,28 @@
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
         rows="4"
         placeholder="Provide reason"
+        v-model="reason"
       ></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
+          :disabled="deleteloading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modal.closeModal()"
+          @click="$refs.modalStatus.closeModal()"
         />
         <Button
+          :disabled="deleteloading"
           text="Proceed"
-          btnClass="btn-dark btn-sm"
-          @click="$refs.modal.closeModal()"
+          :btnClass="` btn-sm ${
+            type === 'approve' ? 'btn-success' : 'btn-danger'
+          }`"
+          @click="handleStatus"
         />
       </div>
     </template>
-  </Modal> -->
+  </Modal>
 
   <Modal
     title="Delete Member"
@@ -266,6 +277,7 @@ export default {
       filters: ["all", "pending"],
       activeFilter: "",
       dateValue: null,
+      reason: "",
       formatter: {
         date: "DD MMM YYYY",
         month: "MMM",
@@ -277,8 +289,14 @@ export default {
         {
           name: "edit",
         },
+        // {
+        //   name: "delete",
+        // },
         {
-          name: "delete",
+          name: "approve",
+        },
+        {
+          name: "delist",
         },
       ],
       options: [
@@ -350,6 +368,22 @@ export default {
       this.id = id;
 
       const actions = {
+        approve: {
+          name: "Approve",
+          icon: "ph:check",
+          doit: () => {
+            this.type = name;
+            this.$refs.modalStatus.openModal();
+          },
+        },
+        delist: {
+          name: "Delist",
+          icon: "ph:x-light",
+          doit: () => {
+            this.type = name;
+            this.$refs.modalStatus.openModal();
+          },
+        },
         view: {
           name: "view",
           icon: "heroicons-outline:eye",
@@ -378,11 +412,33 @@ export default {
 
       return actions[name] || null;
     },
+    handleStatus() {
+      if (this.type === "approve") {
+        this.$store.dispatch("enableUser", this.id);
+      } else {
+        this.$store.dispatch("disableUser", this.id);
+      }
+    },
+    handleActions(value) {
+      if (value === "active") {
+        return this.actions.filter((i) => i.name !== "approve");
+      }
+      if (value === "delist") {
+        return this.actions.filter((i) => i.name !== "delist");
+      }
+      if (value === "pendingactivation") {
+        return this.actions.filter(
+          (i) => i.name !== "delist" && i.name !== "approve"
+        );
+      }
+      return value;
+    },
   },
   setup() {
     const id = ref(null);
     const modal = ref(null);
     const modalChange = ref(null);
+    const modalStatus = ref(null);
     const query = reactive({
       pageNumber: 1,
       pageSize: 10,
@@ -439,7 +495,7 @@ export default {
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
         dispatch("getUsers", query);
-        modal.value.closeModal();
+        modalStatus.value.closeModal();
       }
     });
 
@@ -464,6 +520,7 @@ export default {
       handleDelete,
       modal,
       modalChange,
+      modalStatus,
       perPage,
     };
   },
