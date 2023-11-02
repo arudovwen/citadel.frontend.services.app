@@ -22,6 +22,7 @@ export default {
     getZonesLoading: false,
     getZonesSuccess: false,
     getZonesError: null,
+    zone: null,
 
     zones: [],
   },
@@ -97,6 +98,11 @@ export default {
       });
       state.editModal = true;
     },
+    //open edit zone
+    openEditModal(state, data) {
+      state.editModal = true;
+      state.zone = data;
+    },
     // openZone
     openZone(state) {
       state.addmodal = true;
@@ -142,6 +148,11 @@ export default {
     // updateZone
     updateZone({ commit }, data) {
       commit("updateZone", data);
+    },
+
+    //open edit modal
+    openEditModal({ commit }, data) {
+      commit("openEditModal", data);
     },
     // eopen zone
     openZone({ commit }) {

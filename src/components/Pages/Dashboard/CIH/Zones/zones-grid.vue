@@ -137,7 +137,7 @@ const actions = ref([
     name: "Edit",
     icon: "heroicons-outline:pencil-alt",
     doit: (data) => {
-      dispatch("updateZone", data);
+      dispatch("openEditModal", data);
     },
   },
   {
