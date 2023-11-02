@@ -86,4 +86,11 @@ export const urls = {
   GET_USER_AVATAR: "/UserManagement/GetUserAvatar",
 
   REQUEST_OTP: "/auth/requestotp",
+
+  //Zones
+  CREATE_ZONE: "/CIHZone/CreateCIHZone",
+  UPDATE_ZONE: "/CIHZone/UpdateCIHZone",
+  DELETE_ZONE: "/CIHZone/DeleteCIHZone",
+  GET_ALL_ZONES: "/CIHZone/GetAllCIHZone",
+  GET_ZONE_BY_ID: "/CIHZone/GetCIHZoneById",
 };

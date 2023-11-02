@@ -13,6 +13,10 @@ export default {
     profileCreated: false,
     createProfileError: null,
 
+    createChildrenDataloading: false,
+    createChildrenDataSuccess: false,
+    createChildrenDataerror: null,
+
     updateQualificationDataloading: false,
     updateQualificationDataSuccess: false,
     updateQualificationDataerror: null,
@@ -26,7 +30,7 @@ export default {
     updateSpouseDataerror: null,
 
     updateChildrenDataloading: false,
-    updateChildrenDatasuccess: false,
+    updateChildrenDataSuccess: false,
     updateChildrenDataerror: null,
 
     updateChurchAffiliationDataloading: false,
@@ -39,9 +43,10 @@ export default {
     getAllBiodataerror: false,
     getBiodatasuccess: false,
     getBiodataerror: null,
+    childDetails: null,
     childrensData: null,
     getChildrensDataloading: false,
-    getChildrensDatasuccess: false,
+    getChildrensDataSuccess: false,
     getChildrensDataerror: null,
     spouseData: null,
     getSpouseDataloading: false,
@@ -61,6 +66,13 @@ export default {
     getChurchAffiliationsDataerror: null,
     deleteloading: false,
     deletesuccess: false,
+    deleteChildDataloading: false,
+    deleteChildDataSuccess: false,
+    deleteChildDataError: null,
+
+    //edit modal
+    editModal: false,
+    deleteModal: false,
   },
   getters: {
     creatingProfile(state) {
@@ -155,21 +167,38 @@ export default {
       state.updateSpouseDataSuccess = false;
     },
 
+    createChildrenDataBegin(state) {
+      state.createChildrenDataloading = true;
+      state.createChildrenDataSuccess = false;
+      state.createChildrenDataerror = null;
+    },
+
+    createChildrenDataSuccess(state) {
+      state.createChildrenDataloading = false;
+      state.createChildrenDataSuccess = true;
+    },
+
+    createChildrenDataErr(state, err) {
+      state.createChildrenDataloading = false;
+      state.createChildrenDataerror = err;
+      state.createChildrenDataSuccess = false;
+    },
+
     updateChildrenDataBegin(state) {
       state.updateChildrenDataloading = true;
-      state.updateChildrenDatasuccess = false;
+      state.updateChildrenDataSuccess = false;
       state.updateChildrenDataerror = null;
     },
 
     updateChildrenDataSuccess(state) {
       state.updateChildrenDataloading = false;
-      state.updateChildrenDatasuccess = true;
+      state.updateChildrenDataSuccess = true;
     },
 
     updateChildrenDataErr(state, err) {
       state.updateChildrenDataloading = false;
       state.updateChildrenDataerror = err;
-      state.updateChildrenDatasuccess = false;
+      state.updateChildrenDataSuccess = false;
     },
 
     updateChurchAffiliationDataBegin(state) {
@@ -228,20 +257,20 @@ export default {
 
     getChildrensDataBegin(state) {
       state.getChildrensDataloading = true;
-      state.getChildrensDatasuccess = false;
+      state.getChildrensDataSuccess = false;
       state.getChildrensDataerror = null;
     },
 
     getChildrensDataSuccess(state, data) {
       state.getChildrensDataloading = false;
-      state.getChildrensDatasuccess = true;
+      state.getChildrensDataSuccess = true;
       state.childrensData = data;
     },
 
     getChildrensDataErr(state, err) {
       state.getChildrensDataloading = false;
       state.getChildrensDataerror = err;
-      state.getChildrensDatasuccess = false;
+      state.getChildrensDataSuccess = false;
     },
 
     getSpouseDataBegin(state) {
@@ -313,6 +342,41 @@ export default {
       state.getChurchAffiliationsDataerror = err;
       state.getChurchAffiliationsDatasuccess = false;
     },
+
+    deleteChildBegin(state) {
+      state.deleteChildDataloading = true;
+      state.deleteChildDataSuccess = false;
+      state.deleteChildDataError = null;
+    },
+    deleteChildDataSuccess(state) {
+      state.deleteChildDataloading = false;
+      state.deleteChildDataSuccess = true;
+    },
+
+    deleteChildDataError(state, err) {
+      state.deleteChildDataloading = false;
+      state.deleteChildDataSuccess = false;
+      state.deleteChildDataError = err;
+    },
+
+    //edit modal
+    openChildDetail(state, data) {
+      state.editModal = true;
+      state.childDetails = data;
+      console.log(data);
+    },
+    closeEditModal(state) {
+      state.editModal = false;
+      // state.childDetails = null;
+    },
+
+    //delete modal
+    closeDeleteModal(state) {
+      state.editModal = false;
+    },
+    openDeleteModal(state) {
+      state.deleteModal = true;
+    },
   },
   actions: {
     //post
@@ -368,74 +432,7 @@ export default {
         commit("updateQualificationDataerror", err);
       }
     },
-    async createEmployer({ commit }, data) {
-      try {
-        commit("updateEmployerDataBegin");
-        const response = await DataService.post(urls.CREATE_EMPLOYER, data);
 
-        if (response.status === 200) {
-          commit("updateEmployerDataSuccess");
-        }
-      } catch (err) {
-        commit("updateEmployerDataErr", err);
-      }
-    },
-
-    async updateEmployer({ commit }, data) {
-      try {
-        commit("updateEmployerDataBegin");
-        const response = await DataService.put(urls.UPDATE_EMPLOYER, data);
-
-        if (response.status === 200) {
-          commit("updateEmployerDataSuccess");
-        }
-      } catch (err) {
-        commit("updateEmployerDataErr", err);
-      }
-    },
-    async createSpouse({ commit }, data) {
-      try {
-        commit("updateSpouseDataBegin");
-        const response = await DataService.post(
-          urls.CREATE_SPOUSE_DETAIL,
-          data
-        );
-
-        if (response.status === 200) {
-          commit("updateSpouseDataSuccess");
-        }
-      } catch (err) {
-        commit("updateSpouseDataerror", err);
-      }
-    },
-
-    async updateSpouse({ commit }, data) {
-      try {
-        commit("updateSpouseDataBegin");
-        const response = await DataService.put(urls.UPDATE_SPOUSE_DETAIL, data);
-
-        if (response.status === 200) {
-          commit("updateSpouseDataSuccess");
-        }
-      } catch (err) {
-        commit("updateSpouseDataerror", err);
-      }
-    },
-    async updateChildren({ commit }, data) {
-      try {
-        commit("updateChildrenDataBegin");
-        const response = await DataService.put(
-          urls.UPDATE_CHILDREN_DETAIL,
-          data
-        );
-
-        if (response.status === 200) {
-          commit("updateChildrenDatasuccess");
-        }
-      } catch (err) {
-        commit("updateChildrenDataerror", err);
-      }
-    },
     async createChurchAffiliation({ commit }, data) {
       try {
         commit("updateChurchAffiliationDataBegin");
@@ -498,7 +495,9 @@ export default {
       }
     },
 
-    async getChildrenDetailById({ commit }, id) {
+    //children
+
+    async getChildrenDetailByUserId({ commit }, id) {
       try {
         commit("getChildrensDataBegin");
         const response = await DataService.get(
@@ -511,6 +510,53 @@ export default {
         commit("getChildrensDataErr", err);
       }
     },
+
+    async createChildren({ commit }, data) {
+      try {
+        commit("createChildrenDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_CHILDREN_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("createChildrenDataSuccess");
+        }
+      } catch (err) {
+        commit("createChildrenDataerror", err);
+      }
+    },
+    async updateChildren({ commit }, data) {
+      try {
+        commit("updateChildrenDataBegin");
+        const response = await DataService.put(
+          urls.UPDATE_CHILDREN_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateChildrenDataSuccess");
+        }
+      } catch (err) {
+        commit("updateChildrenDataerror", err);
+      }
+    },
+
+    async deleteChildById({ commit }, id) {
+      try {
+        commit("deleteChildBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_CHILDREN_DETAIL}?id=${id}`
+        );
+        if (response.status === 200) {
+          commit("deleteChildDataSuccess");
+        }
+      } catch (err) {
+        commit("deleteChildDataError", err);
+      }
+    },
+
+    //spouse
 
     async getSpouseDetailById({ commit }, id) {
       try {
@@ -525,6 +571,36 @@ export default {
         commit("getSpouseDataErr", err);
       }
     },
+    async createSpouse({ commit }, data) {
+      try {
+        commit("updateSpouseDataBegin");
+        const response = await DataService.post(
+          urls.CREATE_SPOUSE_DETAIL,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("updateSpouseDataSuccess");
+        }
+      } catch (err) {
+        commit("updateSpouseDataerror", err);
+      }
+    },
+
+    async updateSpouse({ commit }, data) {
+      try {
+        commit("updateSpouseDataBegin");
+        const response = await DataService.put(urls.UPDATE_SPOUSE_DETAIL, data);
+
+        if (response.status === 200) {
+          commit("updateSpouseDataSuccess");
+        }
+      } catch (err) {
+        commit("updateSpouseDataerror", err);
+      }
+    },
+
+    //Employer
     async getEmployerDetailById({ commit }, id) {
       try {
         commit("getEmployerDataBegin");
@@ -538,6 +614,34 @@ export default {
         commit("getEmployerDataErr", err);
       }
     },
+
+    async createEmployer({ commit }, data) {
+      try {
+        commit("updateEmployerDataBegin");
+        const response = await DataService.post(urls.CREATE_EMPLOYER, data);
+
+        if (response.status === 200) {
+          commit("updateEmployerDataSuccess");
+        }
+      } catch (err) {
+        commit("updateEmployerDataErr", err);
+      }
+    },
+
+    async updateEmployer({ commit }, data) {
+      try {
+        commit("updateEmployerDataBegin");
+        const response = await DataService.put(urls.UPDATE_EMPLOYER, data);
+
+        if (response.status === 200) {
+          commit("updateEmployerDataSuccess");
+        }
+      } catch (err) {
+        commit("updateEmployerDataErr", err);
+      }
+    },
+
+    //ChurchAffiliation
 
     async getChurchAffiliationsById({ commit }, id) {
       try {
@@ -578,6 +682,21 @@ export default {
       } catch (err) {
         commit("deleteErr", err);
       }
+    },
+    openChildDetail({ commit }, data) {
+      commit("openChildDetail", data);
+    },
+
+    closeEditModal({ commit }) {
+      commit("closeEditModal");
+    },
+
+    openDeleteModal({ commit }) {
+      commit("openDeleteModal");
+    },
+
+    closeDeleteModal({ commit }) {
+      commit("closeDeleteModal");
     },
   },
 };
