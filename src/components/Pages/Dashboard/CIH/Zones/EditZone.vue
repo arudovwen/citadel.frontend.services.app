@@ -40,9 +40,12 @@ import { useField, useForm } from "vee-validate";
 import { useStore } from "vuex";
 import * as yup from "yup";
 import { computed, watch } from "vue";
+import { useToast } from "vue-toastification";
 
 const { state, dispatch } = useStore();
 const zone = computed(() => state.zone.zone);
+const success = computed(() => state.zone.updateZoneSuccess);
+const toast = useToast();
 
 const schema = yup.object({
   zoneName: yup.string().required("Name is required"),
@@ -68,6 +71,18 @@ const closeModal = () => {
 
 watch(zone, () => {
   setValues(zone.value);
+});
+
+watch(success, () => {
+  if (success.value) {
+    toast.success("Successfully Updated");
+    dispatch("getZones");
+    closeModal();
+  } else {
+    closeModal();
+  }
+
+  // getAllZones();
 });
 </script>
 <style lang=""></style>

@@ -22,6 +22,9 @@ export default {
     getZonesLoading: false,
     getZonesSuccess: false,
     getZonesError: null,
+    updateZoneLoading: false,
+    updateZoneSuccess: false,
+    updateZoneError: null,
     zone: null,
 
     zones: [],
@@ -62,6 +65,22 @@ export default {
       state.getZonesLoading = false;
       state.getZonesSuccess = false;
       state.getZonesError = err;
+    },
+
+    updateZoneBegin(state) {
+      state.updateZoneLoading = true;
+      state.updateZoneSuccess = false;
+      state.updateZoneError = null;
+    },
+    updateZoneSuccess(state) {
+      state.updateZoneLoading = false;
+      state.updateZoneSuccess = true;
+      state.updateZoneError = null;
+    },
+    updateZoneError(state, err) {
+      state.updateZoneLoading = false;
+      state.updateZoneSuccess = false;
+      state.updateZoneError = err;
     },
 
     //
@@ -141,14 +160,23 @@ export default {
         commit("getZonesError", err);
       }
     },
+    async updateZone({ commit }, data) {
+      try {
+        commit("updateZoneBegin");
+        const response = await DataService.put(urls.UPDATE_ZONE, data);
+
+        if (response.status === 200) {
+          commit("updateZoneSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("updateZoneError", err);
+      }
+    },
     // removeZone
     removeZone({ commit }, data) {
       commit("removeZone", data);
     },
     // updateZone
-    updateZone({ commit }, data) {
-      commit("updateZone", data);
-    },
 
     //open edit modal
     openEditModal({ commit }, data) {
