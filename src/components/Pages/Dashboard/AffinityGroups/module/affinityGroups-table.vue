@@ -15,7 +15,7 @@
           <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
-            input-classes="form-control h-[36px]"
+            input-classes="form-control hidden h-[36px]"
             placeholder="Select date"
             as-single
           />
