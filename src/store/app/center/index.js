@@ -17,6 +17,7 @@ export default {
     editcta: null,
     editId: null,
     editdesc: null,
+    centerToUpdate: null,
 
     deleteId: null,
 
@@ -39,6 +40,9 @@ export default {
     centers: (state) => state.centers,
   },
   mutations: {
+    setCenterToUpdate(state, data) {
+      state.centerToUpdate = data;
+    },
     resetSuccess(state) {
       state.addCenterSuccess = false;
       state.getCenterSuccess = false;
@@ -245,6 +249,9 @@ export default {
 
     setDeleteId({ commit }, id) {
       commit("setDeleteId", id);
+    },
+    setCenterToUpdate({ commit }, data) {
+      commit("setCenterToUpdate", data);
     },
   },
 };

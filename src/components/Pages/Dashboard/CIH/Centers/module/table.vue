@@ -110,7 +110,7 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="item.doit(item.name, props.row.id)"
+                      @click="item.doit(item.name, props.row)"
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -407,7 +407,7 @@ export default {
     );
     provide("closeModal", closeModal);
     provide("zoneOptions", zoneOptions);
-    // provide("initialValue", initialValue);
+    provide("initialValue", initialValue);
     provide("query", query);
 
     return {
@@ -496,11 +496,20 @@ export default {
             this.$refs.modalChange.openModal();
           },
         },
+        {
+          name: "edit",
+          icon: "heroicons:pencil-square",
+          doit: (name, data) => {
+            this.type = name;
+            this.$refs.modalChange.openModal();
+            this.$store.dispatch("setCenterToUpdate", data);
+          },
+        },
 
         {
           name: "delete",
           icon: "heroicons-outline:trash",
-          doit: (name, id) => {
+          doit: (name, { id }) => {
             this.type = name;
             this.$refs.modal.openModal();
             this.$store.dispatch("setDeleteId", id);

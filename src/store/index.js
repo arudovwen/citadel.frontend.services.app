@@ -18,6 +18,7 @@ import center from "./app/center";
 import apptodo from "./app/todo";
 import auth from "./app/auth";
 import profile from "./app/profile";
+import affinityGroup from "./app/affinityGroup";
 
 export default createStore({
   state: {
@@ -110,6 +111,7 @@ export default createStore({
     zone,
     center,
     profile,
+    affinityGroup,
     auth,
   },
 });

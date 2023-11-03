@@ -4,7 +4,7 @@ import ProfileIndex from "@/views/dashboard/profile/index.vue";
 import MembersIndex from "@/views/dashboard/members/index.vue";
 import VenuesIndex from "@/views/dashboard/venues/index.vue";
 import AppointmentsIndex from "@/views/dashboard/appointments/index.vue";
-
+import AffinityGroupsIndex from "@/views/dashboard/affinityGroups/index.vue";
 function guard(to, from, next) {
   if (store.state.auth.accessToken) {
     next();
@@ -125,6 +125,37 @@ const routes = [
         ],
       },
       {
+        path: "/affinity-groups",
+        name: "affinity-groups",
+        component: AffinityGroupsIndex,
+        children: [
+          {
+            path: "",
+            name: "affinity-groups",
+            component: () =>
+              import("@/components/Pages/Dashboard/AffinityGroups"),
+            meta: {
+              activeName: "affinity-groups",
+            },
+          },
+          // {
+          //   path: "preview/:id",
+          //   name: "member Preview",
+
+          //   component: () =>
+          //     import("@/components/Pages/Dashboard/Members/member-preview.vue"),
+          //   meta: {
+          //     activeName: "members-management",
+          //     groupParent: {
+          //       name: "Members",
+          //       url: "/members-management",
+          //     },
+          //     hide: true,
+          //   },
+          // },
+        ],
+      },
+      {
         path: "/departments",
         name: "departments",
         component: () => import("@/views/dashboard/departments/index.vue"),
@@ -153,6 +184,7 @@ const routes = [
           },
         ],
       },
+
       {
         path: "/first-timers",
         name: "first timers",
