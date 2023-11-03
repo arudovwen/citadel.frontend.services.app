@@ -66,7 +66,8 @@ const { state, dispatch } = useStore();
 const success = computed(() => state.center.addCenterSuccess);
 const toast = useToast();
 const closeModal = inject("closeModal");
-const initialValue = inject("initialValue");
+const initialQueryValue = inject("initialValue");
+const zoneOptions = inject("zoneOptions");
 const zone = ref({
   id: "",
   zoneName: "",
@@ -94,9 +95,9 @@ const { errorMessage: zoneIdError } = useField("zoneId");
 
 const { value: description, errorMessage: descriptionError } =
   useField("description");
-const zoneOptions = inject("zoneOptions");
+
 const onSubmit = handleSubmit((values) => {
-  console.log(values);
+  // console.log(values);
   // console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
   dispatch("addCenter", values);
 });
@@ -105,7 +106,7 @@ watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
     dispatch("resetSuccess");
-    dispatch("getAllCenters", initialValue);
+    dispatch("getAllCenters", initialQueryValue);
     closeModal();
   } else {
     closeModal();
