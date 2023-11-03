@@ -15,10 +15,10 @@
 
           <VueSelect
             class="min-w-[200px] w-full md:w-auto h-9"
-            v-model="center"
-            :options="centerOptions"
+            v-model.value="zoneId"
+            :options="zoneOptions"
             placeholder="Select zone"
-            name="center"
+            name="zone"
           />
         </div>
         <div
@@ -284,16 +284,35 @@ export default {
   },
 
   setup() {
+    onMounted(() => {
+      dispatch("getAllCenters", query);
+      dispatch("getZones");
+      id.value = getCurrentInstance().data.id;
+    });
+    const zoneId = ref({
+      label: "",
+      zoneId: "",
+    });
     const query = reactive({
       pageNumber: 1,
       pageSize: 10,
       name: "",
       searchTerm: "",
+      zoneId: zoneId.value.zoneId,
     });
     const id = ref(null);
+
     const modal = ref(null);
     const { state, dispatch } = useStore();
-    const zoneOptions = ref([]);
+    const zoneOptions = computed(() =>
+      state?.zone?.zones.map((i) => {
+        return {
+          label: i.zoneName,
+          zoneId: i.id,
+        };
+      })
+    );
+
     const modalChange = ref(null);
     const closeModal = () => modalChange.value.closeModal();
     const loading = computed(() => state.center.loading);
@@ -353,7 +372,10 @@ export default {
         dispatch("getAllCenters", query);
       }
     );
+    provide("closeModal", closeModal);
+    provide("zoneOptions", zoneOptions);
     return {
+      zoneId,
       zoneOptions,
       modalChange,
       centers,
