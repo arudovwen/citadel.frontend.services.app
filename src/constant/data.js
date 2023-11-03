@@ -24,6 +24,11 @@ export const menuItems = [
     link: "/members-management",
   },
   {
+    title: "Affinity Groups",
+    icon: "mingcute:department-line",
+    link: "/affinity-groups",
+  },
+  {
     title: "Departments",
     icon: "mingcute:department-line",
     link: "/departments",

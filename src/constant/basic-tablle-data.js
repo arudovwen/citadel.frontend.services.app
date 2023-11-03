@@ -1272,6 +1272,25 @@ export const venueTable = [
   },
 ];
 
+export const affinityGroupsTable = [
+  {
+    id: 1,
+    name: "Choir",
+    statusText: "active",
+  },
+  {
+    id: 2,
+    name: "Logistics",
+    statusText: "delist",
+  },
+
+  {
+    id: 2,
+    name: "Tech Support",
+    statusText: "pendingactivation",
+  },
+];
+
 export const appointmentTable = [
   {
     id: "1",
