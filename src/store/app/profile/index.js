@@ -363,7 +363,7 @@ export default {
     openChildDetail(state, data) {
       state.editModal = true;
       state.childDetails = data;
-      console.log(data);
+      // console.log(data);
     },
     closeEditModal(state) {
       state.editModal = false;
