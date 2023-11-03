@@ -329,6 +329,13 @@ export default {
     const deleteloading = computed(() => state.center.deleteloading);
     const deletesuccess = computed(() => state.center.deletesuccess);
 
+    onMounted(() => {
+      dispatch("getAllCenters", query);
+      dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
+      id.value = getCurrentInstance().data.id;
+    });
+
+    provide("closeModal", closeModal);
     // eslint-disable-next-line no-unused-vars
     function handleDelete() {
       dispatch("deleteCenter", id.value);
