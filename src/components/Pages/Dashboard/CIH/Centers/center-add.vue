@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="onSubmit">
     <!-- {{ values }}{{ zoneId }} -->
+    {{ initialValue }}
     <Card>
       <div class="flex flex-col gap-y-6">
         <Textinput
@@ -65,8 +66,9 @@ const { state, dispatch } = useStore();
 const success = computed(() => state.center.addCenterSuccess);
 const toast = useToast();
 const closeModal = inject("closeModal");
+const initialValue = inject("initialValue");
 const zone = ref({
-  id: "hgv",
+  id: "",
   zoneName: "",
 });
 // const zoneId = computed(() => zone.value.id);
@@ -102,9 +104,9 @@ const onSubmit = handleSubmit((values) => {
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
-    closeModal();
     dispatch("resetSuccess");
-    dispatch("getCenters");
+    dispatch("getAllCenters", initialValue);
+    closeModal();
   } else {
     closeModal();
   }

@@ -18,6 +18,8 @@ export default {
     editId: null,
     editdesc: null,
 
+    deleteId: null,
+
     addCenterLoading: false,
     addCenterSuccess: false,
     addCenterError: null,
@@ -42,6 +44,10 @@ export default {
       state.getCenterSuccess = false;
       state.updateCenterSuccess = false;
       state.deleteCenterSuccess = false;
+    },
+
+    setDeleteId(state, id) {
+      state.deleteId = id;
     },
     //
     addCenterBegin(state) {
@@ -235,6 +241,10 @@ export default {
     //resetSuccess
     resetSuccess({ commit }) {
       commit("resetSuccess");
+    },
+
+    setDeleteId({ commit }, id) {
+      commit("setDeleteId", id);
     },
   },
 };

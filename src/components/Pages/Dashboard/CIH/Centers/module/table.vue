@@ -110,7 +110,7 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="item.doit(item.name)"
+                      @click="item.doit(item.name, props.row.id)"
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -255,6 +255,7 @@ import window from "@/mixins/window";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
 import moment from "moment";
+import { useToast } from "vue-toastification";
 
 import {
   provide,
@@ -285,28 +286,43 @@ export default {
   },
 
   setup() {
+    // onMounted(() => {
+    //   dispatch("getAllCenters", query);
+    //   dispatch("getZones");
+    //   id.value = getCurrentInstance().data.id;
+    // });
+
     onMounted(() => {
       dispatch("getAllCenters", query);
-      dispatch("getZones");
+      dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
       id.value = getCurrentInstance().data.id;
     });
+
+    const { state, dispatch } = useStore();
+    const toast = useToast();
+    const deleteCenterSuccess = computed(
+      () => state.center.deleteCenterSuccess
+    );
     const zoneObj = ref({
       label: "",
       zoneId: "",
     });
     const zone = ref("");
-    // const zoneId = computed(() => zone.value.zoneId);
-    const query = reactive({
+
+    const initialValue = {
       pageNumber: 1,
       pageSize: 10,
       name: "",
       searchTerm: "",
       zoneId: "",
+    };
+    // const zoneId = computed(() => zone.value.zoneId);
+    const query = reactive({
+      ...initialValue,
     });
+
     const id = ref(null);
 
-    const modal = ref(null);
-    const { state, dispatch } = useStore();
     const zoneOptions = computed(() =>
       state?.zone?.zones.map((i) => {
         return {
@@ -315,9 +331,11 @@ export default {
         };
       })
     );
-
+    const modal = ref(null);
     const modalChange = ref(null);
     const closeModal = () => modalChange.value.closeModal();
+    const closeDeleteModal = () => modal.value.closeModal();
+
     const loading = computed(() => state.center.loading);
     const centers = computed(() =>
       state.center.centers.map((i) => {
@@ -332,17 +350,20 @@ export default {
     const deleteloading = computed(() => state.center.deleteloading);
     const deletesuccess = computed(() => state.center.deletesuccess);
 
-    onMounted(() => {
-      dispatch("getAllCenters", query);
-      dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
-      id.value = getCurrentInstance().data.id;
-    });
-
     provide("closeModal", closeModal);
     // eslint-disable-next-line no-unused-vars
     function handleDelete() {
-      dispatch("deleteCenter", id.value);
+      dispatch("deleteCenter", state.center.deleteId);
     }
+
+    watch(deleteCenterSuccess, () => {
+      if (deleteCenterSuccess.value) {
+        console.log("SuccessfullyDeleted");
+        closeDeleteModal();
+        toast.success("Successfully Deleted");
+        dispatch("getAllCenters", query);
+      }
+    });
     function perPage({ currentPage }) {
       query.pageNumber = currentPage;
     }
@@ -386,11 +407,16 @@ export default {
     );
     provide("closeModal", closeModal);
     provide("zoneOptions", zoneOptions);
+    // provide("initialValue", initialValue);
+    provide("query", query);
+
     return {
       // zoneId,
+
       zone,
       zoneObj,
       zoneOptions,
+      modal,
       modalChange,
       centers,
       loading,
@@ -474,9 +500,10 @@ export default {
         {
           name: "delete",
           icon: "heroicons-outline:trash",
-          doit: (name) => {
+          doit: (name, id) => {
             this.type = name;
             this.$refs.modal.openModal();
+            this.$store.dispatch("setDeleteId", id);
           },
         },
       ],
