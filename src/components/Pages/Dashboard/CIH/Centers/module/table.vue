@@ -1,6 +1,7 @@
 <!-- eslint-disable no-unused-vars -->
 <template>
   <div>
+    <!-- {{ query }}{{ zoneObj }} -->
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div class="flex gap-x-4 rounded text-sm">
@@ -15,7 +16,7 @@
 
           <VueSelect
             class="min-w-[200px] w-full md:w-auto h-9"
-            v-model.value="zoneId"
+            v-model.value="zoneObj"
             :options="zoneOptions"
             placeholder="Select zone"
             name="zone"
@@ -289,16 +290,18 @@ export default {
       dispatch("getZones");
       id.value = getCurrentInstance().data.id;
     });
-    const zoneId = ref({
+    const zoneObj = ref({
       label: "",
       zoneId: "",
     });
+    const zone = ref("");
+    // const zoneId = computed(() => zone.value.zoneId);
     const query = reactive({
       pageNumber: 1,
       pageSize: 10,
       name: "",
       searchTerm: "",
-      zoneId: zoneId.value.zoneId,
+      zoneId: "",
     });
     const id = ref(null);
 
@@ -372,10 +375,21 @@ export default {
         dispatch("getAllCenters", query);
       }
     );
+    watch(zoneObj, (newValue) => {
+      query.zoneId = newValue.zoneId;
+    });
+    watch(
+      () => query.zoneId,
+      () => {
+        dispatch("getAllCenters", query);
+      }
+    );
     provide("closeModal", closeModal);
     provide("zoneOptions", zoneOptions);
     return {
-      zoneId,
+      // zoneId,
+      zone,
+      zoneObj,
       zoneOptions,
       modalChange,
       centers,
@@ -405,7 +419,7 @@ export default {
         date: "DD MMM YYYY",
         month: "MMM",
       },
-      zone: "",
+      // zone: "",
       // zoneOptions: [
       //   {
       //     value: "option2",
