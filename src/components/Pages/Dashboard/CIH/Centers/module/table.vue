@@ -295,14 +295,19 @@ export default {
       zoneId: "",
     });
     const zone = ref("");
-    // const zoneId = computed(() => zone.value.zoneId);
-    const query = reactive({
+
+    const initialValue = {
       pageNumber: 1,
       pageSize: 10,
       name: "",
       searchTerm: "",
       zoneId: "",
+    };
+    // const zoneId = computed(() => zone.value.zoneId);
+    const query = reactive({
+      ...initialValue,
     });
+
     const id = ref(null);
 
     const modal = ref(null);
@@ -386,6 +391,9 @@ export default {
     );
     provide("closeModal", closeModal);
     provide("zoneOptions", zoneOptions);
+    // provide("initialValue", initialValue);
+    provide("query", query);
+
     return {
       // zoneId,
       zone,
