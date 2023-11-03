@@ -532,10 +532,13 @@ export default {
           field: "createdAt",
         },
         {
-          label: "Name",
+          label: "Center Name",
           field: "centerName",
         },
-
+        {
+          label: "Cordinator",
+          field: "cordinator",
+        },
         {
           label: "Total members",
           field: "total",

@@ -1,23 +1,25 @@
+<!-- eslint-disable no-unused-vars -->
 <template>
   <div>
+    <!-- {{ query }}{{ zoneObj }} -->
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div class="flex gap-x-4 rounded text-sm">
           <InputGroup
-            v-model="searchTerm"
+            v-model="query.searchTerm"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
             merged
             classInput="min-w-[220px] !h-9"
           />
-
-          <!-- <VueTailwindDatePicker
-            v-model="dateValue"mdi:house-group-add
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="Select date"
-            as-single
+          <!-- 
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto h-9"
+            v-model.value="zoneObj"
+            :options="zoneOptions"
+            placeholder="Select zone"
+            name="zone"
           /> -->
         </div>
         <div
@@ -38,7 +40,6 @@
           />
           <router-link :to="`/cih/zones/zone-members/${route.params.id}`">
             <Button
-              icon="heroicons-outline:plus-sm"
               text="View members"
               btnClass=" btn-dark font-normal btn-sm "
               iconClass="text-lg"
@@ -50,17 +51,13 @@
         <vue-good-table
           :columns="columns"
           styleClass=" vgt-table  centered "
-          :rows="advancedTable"
+          :rows="centers"
           :sort-options="{
             enabled: false,
           }"
           :pagination-options="{
             enabled: true,
             perPage: perpage,
-          }"
-          :search-options="{
-            enabled: true,
-            externalQuery: searchTerm,
           }"
         >
           <template v-slot:table-row="props">
@@ -118,9 +115,9 @@
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in filteredActions" :key="i">
+                  <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="item.doit(item.name)"
+                      @click="item.doit(item.name, props.row.id)"
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -139,37 +136,68 @@
               </Dropdown>
             </span>
           </template>
-          <template #pagination-bottom="props">
+          <template #pagination-bottom>
             <div class="py-4 px-3">
-              <Pagination
-                :total="50"
-                :current="current"
-                :per-page="perpage"
+              <!-- <Pagination
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
                 :pageRange="pageRange"
-                @page-changed="current = $event"
-                :pageChanged="props.pageChanged"
+                @page-changed="query.pageNumber = $event"
+                :pageChanged="perPage"
                 :perPageChanged="props.perPageChanged"
                 enableSearch
                 enableSelect
                 :options="options"
               >
                 >
-              </Pagination>
+              </Pagination> -->
             </div>
           </template>
         </vue-good-table>
       </div>
     </Card>
   </div>
+
+  <Modal
+    title="Delete Member"
+    label="Small modal"
+    labelClass="btn-outline-danger"
+    ref="modal"
+    sizeClass="max-w-md"
+    themeClass="bg-danger-500"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure you want to delete this member?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          :disabled="deleteloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Delete"
+          :disabled="deleteloading"
+          btnClass="btn-danger btn-sm"
+          @click="handleDelete"
+        />
+      </div>
+    </template>
+  </Modal>
   <Modal
     title="Confirm action"
     label="Small modal"
     labelClass="btn-outline-dark"
-    ref="modal"
+    ref="modalStatus"
     sizeClass="max-w-md"
+    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure about this action?
+      Are you sure you want to {{ type.toLowerCase() }} this center?
     </div>
     <div v-if="type.toLowerCase() === 'delist'">
       <textarea
@@ -177,19 +205,24 @@
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
         rows="4"
         placeholder="Provide reason"
+        v-model="reason"
       ></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
+          :disabled="deleteloading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modal.closeModal()"
+          @click="$refs.modalStatus.closeModal()"
         />
         <Button
+          :disabled="deleteloading"
           text="Proceed"
-          btnClass="btn-dark btn-sm"
-          @click="$refs.modal.closeModal()"
+          :btnClass="` btn-sm ${
+            type === 'approve' ? 'btn-success' : 'btn-danger'
+          }`"
+          @click="handleStatus"
         />
       </div>
     </template>
@@ -205,37 +238,50 @@
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
-    sizeClass="max-w-sm"
+    sizeClass="max-w-md"
   >
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />
-    <ViewRecord v-if="type === 'view'" />
   </Modal>
 </template>
 <script>
+// import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
-import Pagination from "@/components/Pagination";
+// import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
-import AddRecord from "../zone-add.vue";
-import EditRecord from "../edit-zone.vue";
-import ViewRecord from "../zone-preview.vue";
+import AddRecord from "../center-add.vue";
+import EditRecord from "../edit-center.vue";
 import window from "@/mixins/window";
+import { useStore } from "vuex";
+import { debounce } from "lodash";
+import moment from "moment";
+import { useToast } from "vue-toastification";
 import { useRoute } from "vue-router";
+
+import {
+  provide,
+  ref,
+  computed,
+  watch,
+  reactive,
+  getCurrentInstance,
+  onMounted,
+} from "vue";
 
 export default {
   mixins: [window],
   components: {
     AddRecord,
     EditRecord,
-    ViewRecord,
-    Pagination,
+    // VueSelect,
+    // Pagination,
     InputGroup,
     Modal,
     Dropdown,
@@ -247,6 +293,149 @@ export default {
     VueTailwindDatePicker,
   },
 
+  setup() {
+    // onMounted(() => {
+    //   dispatch("getAllCenters", query);
+    //   dispatch("getZones");
+    //   id.value = getCurrentInstance().data.id;
+    // });
+    const route = useRoute();
+    onMounted(() => {
+      dispatch("getAllCenters", query);
+      dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
+      id.value = getCurrentInstance().data.id;
+    });
+
+    const { state, dispatch } = useStore();
+    const toast = useToast();
+    const deleteCenterSuccess = computed(
+      () => state.center.deleteCenterSuccess
+    );
+    const zoneObj = ref({
+      label: "",
+      zoneId: "",
+    });
+    const zone = ref("");
+
+    const initialValue = {
+      pageNumber: 1,
+      pageSize: 10,
+      name: "",
+      searchTerm: "",
+      zoneId: "",
+    };
+    // const zoneId = computed(() => zone.value.zoneId);
+    const query = reactive({
+      ...initialValue,
+    });
+
+    const id = ref(null);
+
+    const zoneOptions = computed(() =>
+      state?.zone?.zones.map((i) => {
+        return {
+          label: i.zoneName,
+          zoneId: i.id,
+        };
+      })
+    );
+    const modal = ref(null);
+    const modalChange = ref(null);
+    const closeModal = () => modalChange.value.closeModal();
+    const closeDeleteModal = () => modal.value.closeModal();
+
+    const loading = computed(() => state.center.loading);
+    const centers = computed(() =>
+      state.center.centers.map((i) => {
+        i.createdAt = moment(i.createdAt).format("ll");
+        i.location = i.location ? i.location : "-";
+        i.total = i.total ? i.total : 0;
+        return i;
+      })
+    );
+    const total = computed(() => state.center.total);
+    const addsuccess = computed(() => state.center.addsuccess);
+    const deleteloading = computed(() => state.center.deleteloading);
+    const deletesuccess = computed(() => state.center.deletesuccess);
+
+    provide("closeModal", closeModal);
+    // eslint-disable-next-line no-unused-vars
+    function handleDelete() {
+      dispatch("deleteCenter", state.center.deleteId);
+    }
+
+    watch(deleteCenterSuccess, () => {
+      if (deleteCenterSuccess.value) {
+        console.log("SuccessfullyDeleted");
+        closeDeleteModal();
+        toast.success("Successfully Deleted");
+        dispatch("getAllCenters", query);
+      }
+    });
+    function perPage({ currentPage }) {
+      query.pageNumber = currentPage;
+    }
+    // Define a debounce delay (e.g., 500 milliseconds)
+    const debounceDelay = 800;
+    const debouncedSearch = debounce((searchValue) => {
+      dispatch("getAllCenters", { ...query, name: searchValue });
+    }, debounceDelay);
+    watch(addsuccess, () => {
+      addsuccess.value && dispatch("getAllCenters", query);
+      modalChange.value.closeModal();
+    });
+
+    watch(deletesuccess, () => {
+      if (deletesuccess.value) {
+        dispatch("getAllCenters", query);
+        modal.value.closeModal();
+      }
+    });
+
+    watch(
+      () => query.searchTerm,
+      () => {
+        debouncedSearch(query.searchTerm);
+      }
+    );
+    watch(
+      () => query.pageNumber,
+      () => {
+        dispatch("getAllCenters", query);
+      }
+    );
+    watch(zoneObj, (newValue) => {
+      query.zoneId = newValue.zoneId;
+    });
+    watch(
+      () => query.zoneId,
+      () => {
+        dispatch("getAllCenters", query);
+      }
+    );
+    provide("closeModal", closeModal);
+    provide("zoneOptions", zoneOptions);
+    // provide("initialValue", initialValue);
+    provide("query", query);
+
+    return {
+      // zoneId,
+      route,
+      zone,
+      zoneObj,
+      zoneOptions,
+      modal,
+      modalChange,
+      centers,
+      loading,
+      total,
+      query,
+      perPage,
+      deleteloading,
+      handleDelete,
+    };
+  },
+
   data() {
     return {
       advancedTable,
@@ -256,29 +445,55 @@ export default {
       searchTerm: "",
       type: "",
       id: null,
+      reason: "",
       filters: ["all", "pending"],
       activeFilter: "all",
       dateValue: null,
-      route: useRoute(),
       formatter: {
         date: "DD MMM YYYY",
         month: "MMM",
       },
+      // zone: "",
+      // zoneOptions: [
+      //   {
+      //     value: "option2",
+      //     label: "Zone 1",
+      //   },
+      //   {
+      //     value: "option3",
+      //     label: "Zone 2",
+      //   },
+      // ],
+      center: "",
+      centerOptions: [
+        {
+          value: "option2",
+          label: "Center 1",
+        },
+        {
+          value: "option3",
+          label: "Center 2",
+        },
+      ],
+      // provide: {
+      //   // Provide a method
+      //   closeModal: () => this.$refs.Modal.closeModal(),
+      // },
       actions: [
         {
-          name: "Approve",
+          name: "approve",
           icon: "ph:check",
           doit: (name) => {
             this.type = name;
-            this.$refs.modal.openModal();
+            this.$refs.modalStatus.openModal();
           },
         },
         {
-          name: "Delist",
+          name: "delist",
           icon: "ph:x-light",
           doit: (name) => {
             this.type = name;
-            this.$refs.modal.openModal();
+            this.$refs.modalStatus.openModal();
           },
         },
         {
@@ -293,12 +508,14 @@ export default {
         {
           name: "delete",
           icon: "heroicons-outline:trash",
-          doit: (name) => {
+          doit: (name, id) => {
             this.type = name;
             this.$refs.modal.openModal();
+            this.$store.dispatch("setDeleteId", id);
           },
         },
       ],
+
       options: [
         {
           value: "25",
@@ -319,12 +536,20 @@ export default {
       ],
       columns: [
         {
-          label: "Center Name",
-          field: "name",
+          label: "Date created",
+          field: "createdAt",
         },
         {
-          label: "Coordinator",
+          label: "Center Name",
+          field: "centerName",
+        },
+        {
+          label: "coordinator",
           field: "coordinator",
+        },
+        {
+          label: "Total members",
+          field: "total",
         },
 
         {
@@ -333,14 +558,6 @@ export default {
         },
 
         {
-          label: "Total members",
-          field: "total",
-        },
-        {
-          label: "Date created",
-          field: "date",
-        },
-        {
           label: "Action",
           field: "action",
         },
@@ -348,6 +565,29 @@ export default {
     };
   },
   methods: {
+    handleStatus() {
+      if (this.type === "approve") {
+        this.$store.dispatch("enableUser", this.id);
+      } else {
+        this.$store.dispatch("disableUser", this.id);
+      }
+    },
+    handleActions(value) {
+      if (value === "active") {
+        return this.actions.filter((i) => i.name.toLowerCase() !== "approve");
+      }
+      if (value === "delist") {
+        return this.actions.filter((i) => i.name.toLowerCase() !== "delist");
+      }
+      if (value === "pendingactivation") {
+        return this.actions.filter(
+          (i) =>
+            i.name.toLowerCase() !== "delist" &&
+            i.name.toLowerCase() !== "approve"
+        );
+      }
+      return value;
+    },
     generateAction(name, id) {
       this.id = id;
 
@@ -372,14 +612,14 @@ export default {
           name: "view",
           icon: "heroicons-outline:eye",
           doit: () => {
-            this.$router.push("/zones-management/preview/" + id);
+            this.$router.push("/centers-management/preview/" + id);
           },
         },
         edit: {
           name: "edit",
           icon: "heroicons:pencil-square",
           doit: () => {
-            this.$router.push("/zones-management/edit/" + id);
+            this.$router.push("/centers-management/edit/" + id);
           },
         },
         delete: {
