@@ -86,13 +86,6 @@ const { handleSubmit, values, setValues } = useForm({
   initialValues: formData,
 });
 
-watch(zone, (newValue) => {
-  setValues({
-    ...values,
-    zoneId: newValue.zoneId,
-  });
-});
-
 const { value: centerName, errorMessage: centerNameError } =
   useField("centerName");
 const { errorMessage: zoneIdError } = useField("zoneId");
@@ -117,6 +110,12 @@ watch(success, () => {
   }
 
   // getAllZones();
+});
+watch(zone, (newValue) => {
+  setValues({
+    ...values,
+    zoneId: newValue.zoneId,
+  });
 });
 </script>
 <style lang=""></style>
