@@ -175,7 +175,7 @@
   </Modal>
 
   <Modal
-    title="Delete Member"
+    title="Delete Affinity Group"
     label="Small modal"
     labelClass="btn-outline-danger"
     ref="modal"
@@ -183,7 +183,7 @@
     themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to delete this member?
+      Are you sure you want to delete this affinity group?
     </div>
 
     <template v-slot:footer>

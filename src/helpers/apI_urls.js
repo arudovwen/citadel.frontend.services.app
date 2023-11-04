@@ -7,6 +7,13 @@ export const urls = {
   GET_USER_ROLES: "/Admin/GetUserRoles",
   GET_CIH_ROLES: "/Admin/GetCIHRoles",
 
+  //Affinity Groups
+  CREATE_AFFINITY_GROUP: "/AffinityGroup/CreateAffinityGroup",
+  UPDATE_AFFINITY_GROUP: "/AffinityGroup/UpdateAffinityGroup",
+  DELETE_AFFINITY_GROUP: "/AffinityGroup/DeleteAffinityGroup",
+  GET_ALL_AFFINITY_GROUPS: "/AffinityGroup/GetAllAffinityGroups",
+  GET_AFFINITY_GROUP_BY_ID: "/AffinityGroup/GetAffinityGroupById",
+
   // Auth
   LOGIN: "/Auth/Login",
   CHANGE_PASSWORD_INITIATE: "/Auth/ChangePasswordInitiate",
