@@ -6,12 +6,11 @@ const toast = useToast();
 export default {
   state: {
     addmodal: false,
-    addAffinityGroupLoading: false,
-    addAffinityGroupSuccess: false,
-    addAffinityGroupError: null,
+
     isLoading: null,
     // for edit
     modal: false,
+    deleteModal: false,
     editName: "",
     editassignto: null,
     editStartDate: null,
@@ -19,6 +18,9 @@ export default {
     editcta: null,
     editId: null,
     editdesc: null,
+    addAffinityGroupLoading: false,
+    addAffinityGroupSuccess: false,
+    addAffinityGroupError: null,
     getAffinityGroupsLoading: false,
     getAffinityGroupsSuccess: false,
     getAffinityGroupsError: null,
@@ -30,12 +32,35 @@ export default {
     deleteAffinityGroupError: null,
     affinityGroup: null,
 
+    resetSuccess(state) {
+      state.addAffinityGroupSuccess = false;
+      state.getAffinityGroupsSuccess = false;
+      state.updateAffinityGroupSuccess = false;
+      state.deleteAffinityGroupSuccess = false;
+    },
+
     affinityGroups: [],
+    selectedGroupToEdit: null,
   },
   getters: {
     affinityGroups: (state) => state.affinityGroups,
   },
   mutations: {
+    setDeleteModal(state, boolean) {
+      state.deleteModal = boolean;
+    },
+    setSelectedGroupToEdit(
+      state,
+      { id, userId, affinityGroupName, affinityGroupCode, description }
+    ) {
+      state.selectedGroupToEdit = {
+        id,
+        userId,
+        affinityGroupName,
+        affinityGroupCode,
+        description,
+      };
+    },
     addAffinityGroupBegin(state) {
       state.addAffinityGroupLoading = true;
       state.addAffinityGroupSuccess = false;
@@ -173,7 +198,7 @@ export default {
     async getAffinityGroups({ commit }) {
       try {
         commit("getAffinityGroupsBegin");
-        const response = await DataService.get(urls.GET_ALL_AffinityGroupS);
+        const response = await DataService.get(urls.GET_ALL_AFFINITY_GROUPS);
 
         if (response.status === 200) {
           commit("getAffinityGroupsSuccess", response.data.data);
@@ -185,7 +210,10 @@ export default {
     async updateAffinityGroup({ commit }, data) {
       try {
         commit("updateAffinityGroupBegin");
-        const response = await DataService.put(urls.UPDATE_AffinityGroup, data);
+        const response = await DataService.put(
+          urls.UPDATE_AFFINITY_GROUP,
+          data
+        );
 
         if (response.status === 200) {
           commit("updateAffinityGroupSuccess", response.data.data);
@@ -199,7 +227,7 @@ export default {
       try {
         commit("deleteAffinityGroupBegin");
         const response = await DataService.delete(
-          `${urls.DELETE_AffinityGroup}?id=${id}`
+          `${urls.DELETE_AFFINITY_GROUP}?id=${id}`
         );
 
         if (response.status === 200) {
@@ -229,9 +257,15 @@ export default {
     closeModal({ commit }) {
       commit("closeModal");
     },
-    // closeModal
-    // closeModal({ commit }) {
-    //   commit("closeModal");
-    // },
+
+    setSelectedGroupToEdit({ commit }, data) {
+      commit("setSelectedGroupToEdit", data);
+    },
+    resetSuccess({ commit }) {
+      commit("resetSuccess");
+    },
+    setDeleteModal({ commit }, boolean) {
+      commit("setDeleteModal", boolean);
+    },
   },
 };

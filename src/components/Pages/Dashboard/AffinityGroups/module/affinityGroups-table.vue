@@ -53,40 +53,17 @@
           }"
         >
           <template v-slot:table-row="props">
-            <span v-if="props.column.field == 'statusText'">
-              <span
-                :class="`whitespace-nowrap text-[12.5px] rounded-full px-3 py-1 ${
-                  props.row.statusText.toLowerCase() === 'pendingactivation'
-                    ? 'text-gray-700 bg-gray-100'
-                    : props.row.statusText.toLowerCase() === 'active'
-                    ? 'text-green-700 bg-green-100'
-                    : 'text-red-700 bg-red-100'
-                }`"
-                >{{
-                  props.row.statusText.toLowerCase() === "pendingactivation"
-                    ? "Pending"
-                    : props.row.statusText
-                }}</span
-              >
-            </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
                 <span class="text-xl"
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem
-                    v-for="(item, i) in handleActions(
-                      props.row.statusText.toLowerCase()
-                    )"
-                    :key="i"
-                  >
+                  <!-- {{ props.row }} -->
+                  <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
                       @click="
-                        generateAction(
-                          item.name.toLowerCase(),
-                          props.row.userId
-                        ).doit
+                        generateAction(item.name.toLowerCase(), props.row).doit
                       "
                       :class="`
                 
@@ -99,12 +76,10 @@
                     >
                       <span class="text-base"
                         ><Icon
-                          :icon="
-                            generateAction(item.name, props.row.userId).icon
-                          "
+                          :icon="generateAction(item.name, props.row).icon"
                       /></span>
                       <span>{{
-                        generateAction(item.name, props.row.userId).name
+                        generateAction(item.name, props.row).name
                       }}</span>
                     </div>
                   </MenuItem>
@@ -134,7 +109,7 @@
       </div>
     </Card>
   </div>
-  <Modal
+  <!-- <Modal
     title="Confirm action"
     label="Small modal"
     labelClass="btn-outline-dark"
@@ -160,7 +135,7 @@
           :disabled="deleteLoading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modalStatus.closeModal()"
+          @click="toggleDeleteModal(false)"
         />
         <Button
           :disabled="deleteLoading"
@@ -172,13 +147,15 @@
         />
       </div>
     </template>
-  </Modal>
+  </Modal> -->
 
   <Modal
+    :activeModal="$store.state.affinityGroup.deleteModal"
+    @close="toggleDeleteModal(false)"
     title="Delete Affinity Group"
     label="Small modal"
     labelClass="btn-outline-danger"
-    ref="modal"
+    ref="deleteModal"
     sizeClass="max-w-md"
     themeClass="bg-danger-500"
   >
@@ -192,7 +169,7 @@
           :disabled="deleteLoading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm"
-          @click="$refs.modal.closeModal()"
+          @click="toggleDeleteModal(false)"
         />
         <Button
           text="Delete"
@@ -231,12 +208,14 @@ import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal";
 import { MenuItem } from "@headlessui/vue";
-import { affinityGroupsTable } from "@/constant/basic-tablle-data";
+// import { affinityGroups } from "@/constant/c";
 import AddRecord from "../affinityGroup-add.vue";
 import EditRecord from "../affinityGroup-edit.vue";
 import ViewRecord from "../affinityGroup-preview.vue";
 // import moment from "moment";
 import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
+
 // import { debounce } from "lodash";
 import {
   computed,
@@ -244,6 +223,7 @@ import {
   // watch,
   reactive,
   ref,
+  watch,
 } from "vue";
 import window from "@/mixins/window";
 // import store from "@/store";
@@ -267,7 +247,6 @@ export default {
 
   data() {
     return {
-      affinityGroupsTable,
       current: 1,
       perpage: 10,
       pageRange: 5,
@@ -282,21 +261,16 @@ export default {
         date: "DD MMM YYYY",
         month: "MMM",
       },
+
       actions: [
-        {
-          name: "view",
-        },
+        // {
+        //   name: "view",
+        // },
         {
           name: "edit",
         },
-        // {
-        //   name: "delete",
-        // },
         {
-          name: "approve",
-        },
-        {
-          name: "delist",
+          name: "delete",
         },
       ],
       options: [
@@ -323,13 +297,24 @@ export default {
       ],
       columns: [
         {
-          label: "Name",
-          field: "name",
+          label: "Group Name",
+          field: "affinityGroupName",
         },
-
         {
-          label: "Status",
-          field: "statusText",
+          label: "Group Code",
+          field: "affinityGroupCode",
+        },
+        {
+          label: "Description",
+          field: "description",
+        },
+        {
+          label: "Date Created",
+          field: "createdAt",
+        },
+        {
+          label: "Date Modified",
+          field: "modifiedAt",
         },
 
         {
@@ -347,39 +332,19 @@ export default {
       this.$store.dispatch("closeModal");
     },
 
-    generateAction(name, id) {
-      this.id = id;
+    toggleDeleteModal(boolean) {
+      this.$store.dispatch("setDeleteModal", boolean);
+    },
+
+    generateAction(name, group) {
+      this.id = group?.id;
 
       const actions = {
-        approve: {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.type = name;
-            this.$refs.modalStatus.openModal();
-          },
-        },
-        delist: {
-          name: "Delist",
-          icon: "ph:x-light",
-          doit: () => {
-            this.type = name;
-            this.$refs.modalStatus.openModal();
-          },
-        },
-        view: {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: () => {
-            // store.dispatch("getUserById", id);
-            this.$router.push("/profile/" + id);
-          },
-        },
         edit: {
           name: "edit",
           icon: "heroicons:pencil-square",
           doit: () => {
-            // store.dispatch("getUserById", id);
+            this.$store.dispatch("setSelectedGroupToEdit", group);
             this.type = "edit";
             this.openModal();
           },
@@ -389,7 +354,7 @@ export default {
           icon: "heroicons-outline:trash",
           doit: () => {
             this.type = name;
-            this.$refs.modal.openModal();
+            this.toggleDeleteModal(true);
           },
         },
       };
@@ -403,70 +368,84 @@ export default {
         this.$store.dispatch("disableUser", this.id);
       }
     },
-    handleActions(value) {
-      if (value === "active") {
-        return this.actions.filter((i) => i.name !== "approve");
-      }
-      if (value === "delist") {
-        return this.actions.filter((i) => i.name !== "delist");
-      }
-      if (value === "pendingactivation") {
-        return this.actions.filter(
-          (i) => i.name !== "delist" && i.name !== "approve"
-        );
-      }
-      return value;
+    handleDelete() {
+      this.$store.dispatch("deleteAffinityGroup", this.id);
     },
+    // handleActions(value) {
+    //   if (value === "active") {
+    //     return this.actions.filter((i) => i.name !== "approve");
+    //   }
+    //   if (value === "delist") {
+    //     return this.actions.filter((i) => i.name !== "delist");
+    //   }
+    //   if (value === "pendingactivation") {
+    //     return this.actions.filter(
+    //       (i) => i.name !== "delist" && i.name !== "approve"
+    //     );
+    //   }
+    //   return value;
+    // },
   },
   setup() {
-    onMounted(() => {});
+    onMounted(() => {
+      getAllAffinityGroups();
+    });
+    const { state, dispatch } = useStore();
     const total = ref(10000);
     const deleteLoading = ref(false);
+    const deleteAffinityGroupSuccess = computed(
+      () => state.affinityGroup.deleteAffinityGroupSuccess
+    );
+    const toast = useToast();
+
     const modal = ref(null);
+    const deleteModal = ref(null);
     const modalChange = ref(null);
     const modalStatus = ref(null);
     const query = reactive({
       pageNumber: 1,
       pageSize: 10,
-      name: "",
-      email: "",
-      mobileNo: "",
+      searchParameter: "",
+      sortOrder: "",
     });
-    const { state, dispatch } = useStore();
+    const search = ref("");
+    const loading = computed(
+      () => state.affinityGroup.getAffinityGroupsLoading
+    );
+    const affinityGroups = computed(() => {
+      return state.affinityGroup.affinityGroups;
+    });
 
-    function fetchRecords(page) {
-      dispatch("getUsers", { ...query, pageNumber: page });
-    }
+    const getAllAffinityGroups = () => {
+      dispatch("getAffinityGroups", { ...query });
+    };
+
+    // function fetchRecords(page) {
+    //   dispatch("getUsers", { ...query, pageNumber: page });
+    // }
 
     function perPage({ currentPage }) {
       query.pageNumber = currentPage;
     }
-    const search = ref("");
-    const loading = computed(() => state.member.loading);
-    const affinityGroups = computed(() => {
-      return affinityGroupsTable;
-      // if (state?.member?.data) {
-      //   return state?.member?.data.map((item) => {
-      //     item.dob = item?.dob ? moment(item?.dob).format("ll") : "-";
-      //     item.department = item?.department ? item?.department : "-";
 
-      //     return item;
-      //   });
-      // }
-      // return [];
+    watch(deleteAffinityGroupSuccess, () => {
+      if (deleteAffinityGroupSuccess.value) {
+        dispatch("setDeleteModal", false);
+        toast.success("Successfully deleted");
+        dispatch("getAffinityGroups");
+      }
     });
-
-    function handleDelete() {}
 
     return {
       query,
       total,
-      fetchRecords,
+      // fetchRecords,
+      deleteModal,
       loading,
       deleteLoading,
       affinityGroups,
       search,
-      handleDelete,
+
       modal,
       modalChange,
       modalStatus,
