@@ -28,15 +28,15 @@ export default {
     deleteAffinityGroupLoading: false,
     deleteAffinityGroupSuccess: false,
     deleteAffinityGroupError: null,
-    zone: null,
+    affinityGroup: null,
 
-    zones: [],
+    affinityGroups: [],
   },
   getters: {
-    zones: (state) => state.zones,
+    affinityGroups: (state) => state.affinityGroups,
   },
   mutations: {
-    addZoneBegin(state) {
+    addAffinityGroupBegin(state) {
       state.addAffinityGroupLoading = true;
       state.addAffinityGroupSuccess = false;
       state.addAffinityGroupError = null;
@@ -62,7 +62,7 @@ export default {
       state.getAffinityGroupsLoading = false;
       state.getAffinityGroupsSuccess = true;
       state.getAffinityGroupsError = null;
-      state.zones = data;
+      state.affinityGroups = data;
     },
     getAffinityGroupsError(state, err) {
       state.getAffinityGroupsLoading = false;
@@ -105,14 +105,16 @@ export default {
 
     // removeAffinityGroup
     removeAffinityGroup(state, data) {
-      state.zones = state.zones.filter((item) => item.id !== data.id);
+      state.affinityGroups = state.affinityGroups.filter(
+        (item) => item.id !== data.id
+      );
       toast.error("AffinityGroup Removed", {
         timeout: 2000,
       });
     },
     // updateAffinityGroup
     updateAffinityGroup(state, data) {
-      state.zones.findIndex((item) => {
+      state.affinityGroups.findIndex((item) => {
         if (item.id === data.id) {
           // store data
           state.editId = data.id;
@@ -135,10 +137,10 @@ export default {
       });
       state.modal = true;
     },
-    //open edit zone
+    //open edit affinityGroup
     openModal(state, data) {
       state.modal = true;
-      state.zone = data;
+      state.affinityGroup = data;
     },
 
     // openAffinityGroup
@@ -157,7 +159,7 @@ export default {
       try {
         commit("addAffinityGroupBegin");
         const response = await DataService.post(
-          urls.CREATE_Affinity_GROUP,
+          urls.CREATE_AFFINITY_GROUP,
           data
         );
 
