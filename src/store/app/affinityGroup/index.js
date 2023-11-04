@@ -173,7 +173,7 @@ export default {
     async getAffinityGroups({ commit }) {
       try {
         commit("getAffinityGroupsBegin");
-        const response = await DataService.get(urls.GET_ALL_AffinityGroupS);
+        const response = await DataService.get(urls.GET_ALL_AFFINITY_GROUPS);
 
         if (response.status === 200) {
           commit("getAffinityGroupsSuccess", response.data.data);
@@ -185,7 +185,10 @@ export default {
     async updateAffinityGroup({ commit }, data) {
       try {
         commit("updateAffinityGroupBegin");
-        const response = await DataService.put(urls.UPDATE_AffinityGroup, data);
+        const response = await DataService.put(
+          urls.UPDATE_AFFINITY_GROUP,
+          data
+        );
 
         if (response.status === 200) {
           commit("updateAffinityGroupSuccess", response.data.data);
@@ -199,7 +202,7 @@ export default {
       try {
         commit("deleteAffinityGroupBegin");
         const response = await DataService.delete(
-          `${urls.DELETE_AffinityGroup}?id=${id}`
+          `${urls.DELETE_AFFINITY_GROUP}?id=${id}`
         );
 
         if (response.status === 200) {

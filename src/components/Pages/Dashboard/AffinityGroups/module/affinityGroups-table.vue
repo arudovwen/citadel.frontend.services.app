@@ -53,22 +53,6 @@
           }"
         >
           <template v-slot:table-row="props">
-            <span v-if="props.column.field == 'statusText'">
-              <span
-                :class="`whitespace-nowrap text-[12.5px] rounded-full px-3 py-1 ${
-                  props.row.statusText.toLowerCase() === 'pendingactivation'
-                    ? 'text-gray-700 bg-gray-100'
-                    : props.row.statusText.toLowerCase() === 'active'
-                    ? 'text-green-700 bg-green-100'
-                    : 'text-red-700 bg-red-100'
-                }`"
-                >{{
-                  props.row.statusText.toLowerCase() === "pendingactivation"
-                    ? "Pending"
-                    : props.row.statusText
-                }}</span
-              >
-            </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
                 <span class="text-xl"
@@ -231,7 +215,7 @@ import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal";
 import { MenuItem } from "@headlessui/vue";
-import { affinityGroupsTable } from "@/constant/basic-tablle-data";
+// import { affinityGroups } from "@/constant/c";
 import AddRecord from "../affinityGroup-add.vue";
 import EditRecord from "../affinityGroup-edit.vue";
 import ViewRecord from "../affinityGroup-preview.vue";
@@ -267,7 +251,6 @@ export default {
 
   data() {
     return {
-      affinityGroupsTable,
       current: 1,
       perpage: 10,
       pageRange: 5,
@@ -324,12 +307,23 @@ export default {
       columns: [
         {
           label: "Name",
-          field: "name",
+          field: "affinityGroupName",
         },
-
         {
-          label: "Status",
-          field: "statusText",
+          label: "Name",
+          field: "affinityGroupCode",
+        },
+        {
+          label: "Name",
+          field: "description",
+        },
+        {
+          label: "Date Created",
+          field: "createdAt",
+        },
+        {
+          label: "Date Modified",
+          field: "modifiedAt",
         },
 
         {
@@ -419,7 +413,9 @@ export default {
     },
   },
   setup() {
-    onMounted(() => {});
+    onMounted(() => {
+      getAllAffinityGroups();
+    });
     const total = ref(10000);
     const deleteLoading = ref(false);
     const modal = ref(null);
@@ -428,15 +424,18 @@ export default {
     const query = reactive({
       pageNumber: 1,
       pageSize: 10,
-      name: "",
-      email: "",
-      mobileNo: "",
+      searchParameter: "",
+      sortOrder: "",
     });
     const { state, dispatch } = useStore();
 
-    function fetchRecords(page) {
-      dispatch("getUsers", { ...query, pageNumber: page });
-    }
+    const getAllAffinityGroups = () => {
+      dispatch("getAffinityGroups", { ...query });
+    };
+
+    // function fetchRecords(page) {
+    //   dispatch("getUsers", { ...query, pageNumber: page });
+    // }
 
     function perPage({ currentPage }) {
       query.pageNumber = currentPage;
@@ -444,16 +443,7 @@ export default {
     const search = ref("");
     const loading = computed(() => state.member.loading);
     const affinityGroups = computed(() => {
-      return affinityGroupsTable;
-      // if (state?.member?.data) {
-      //   return state?.member?.data.map((item) => {
-      //     item.dob = item?.dob ? moment(item?.dob).format("ll") : "-";
-      //     item.department = item?.department ? item?.department : "-";
-
-      //     return item;
-      //   });
-      // }
-      // return [];
+      return state.affinityGroup.affinityGroups;
     });
 
     function handleDelete() {}
@@ -461,7 +451,7 @@ export default {
     return {
       query,
       total,
-      fetchRecords,
+      // fetchRecords,
       loading,
       deleteLoading,
       affinityGroups,
