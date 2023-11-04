@@ -87,7 +87,7 @@ watch(success, () => {
   if (success.value) {
     dispatch("closeModal");
     toast.success("Affinity group successfully created");
-    // dispatch("getAffinityGroups");
+    dispatch("getAffinityGroups");
   }
 });
 </script>

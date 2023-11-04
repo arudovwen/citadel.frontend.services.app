@@ -59,18 +59,11 @@
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem
-                    v-for="(item, i) in handleActions(
-                      props.row.statusText.toLowerCase()
-                    )"
-                    :key="i"
-                  >
+                  <!-- {{ props.row }} -->
+                  <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
                       @click="
-                        generateAction(
-                          item.name.toLowerCase(),
-                          props.row.userId
-                        ).doit
+                        generateAction(item.name.toLowerCase(), props.row).doit
                       "
                       :class="`
                 
@@ -83,12 +76,10 @@
                     >
                       <span class="text-base"
                         ><Icon
-                          :icon="
-                            generateAction(item.name, props.row.userId).icon
-                          "
+                          :icon="generateAction(item.name, props.row).icon"
                       /></span>
                       <span>{{
-                        generateAction(item.name, props.row.userId).name
+                        generateAction(item.name, props.row).name
                       }}</span>
                     </div>
                   </MenuItem>
@@ -176,7 +167,7 @@
           :disabled="deleteLoading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm"
-          @click="$refs.modal.closeModal()"
+          @click="$refs.deleteModal.closeModal()"
         />
         <Button
           text="Delete"
@@ -265,21 +256,16 @@ export default {
         date: "DD MMM YYYY",
         month: "MMM",
       },
+
       actions: [
-        {
-          name: "view",
-        },
+        // {
+        //   name: "view",
+        // },
         {
           name: "edit",
         },
-        // {
-        //   name: "delete",
-        // },
         {
-          name: "approve",
-        },
-        {
-          name: "delist",
+          name: "delete",
         },
       ],
       options: [
@@ -306,15 +292,15 @@ export default {
       ],
       columns: [
         {
-          label: "Name",
+          label: "Group Name",
           field: "affinityGroupName",
         },
         {
-          label: "Name",
+          label: "Group Code",
           field: "affinityGroupCode",
         },
         {
-          label: "Name",
+          label: "Description",
           field: "description",
         },
         {
@@ -341,39 +327,15 @@ export default {
       this.$store.dispatch("closeModal");
     },
 
-    generateAction(name, id) {
-      this.id = id;
+    generateAction(name, group) {
+      this.id = group?.id;
 
       const actions = {
-        approve: {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.type = name;
-            this.$refs.modalStatus.openModal();
-          },
-        },
-        delist: {
-          name: "Delist",
-          icon: "ph:x-light",
-          doit: () => {
-            this.type = name;
-            this.$refs.modalStatus.openModal();
-          },
-        },
-        view: {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: () => {
-            // store.dispatch("getUserById", id);
-            this.$router.push("/profile/" + id);
-          },
-        },
         edit: {
           name: "edit",
           icon: "heroicons:pencil-square",
           doit: () => {
-            // store.dispatch("getUserById", id);
+            this.$store.dispatch("setSelectedGroupToEdit", group);
             this.type = "edit";
             this.openModal();
           },
@@ -383,7 +345,7 @@ export default {
           icon: "heroicons-outline:trash",
           doit: () => {
             this.type = name;
-            this.$refs.modal.openModal();
+            this.$refs.deleteModal.openModal();
           },
         },
       };
@@ -397,20 +359,20 @@ export default {
         this.$store.dispatch("disableUser", this.id);
       }
     },
-    handleActions(value) {
-      if (value === "active") {
-        return this.actions.filter((i) => i.name !== "approve");
-      }
-      if (value === "delist") {
-        return this.actions.filter((i) => i.name !== "delist");
-      }
-      if (value === "pendingactivation") {
-        return this.actions.filter(
-          (i) => i.name !== "delist" && i.name !== "approve"
-        );
-      }
-      return value;
-    },
+    // handleActions(value) {
+    //   if (value === "active") {
+    //     return this.actions.filter((i) => i.name !== "approve");
+    //   }
+    //   if (value === "delist") {
+    //     return this.actions.filter((i) => i.name !== "delist");
+    //   }
+    //   if (value === "pendingactivation") {
+    //     return this.actions.filter(
+    //       (i) => i.name !== "delist" && i.name !== "approve"
+    //     );
+    //   }
+    //   return value;
+    // },
   },
   setup() {
     onMounted(() => {
@@ -419,6 +381,7 @@ export default {
     const total = ref(10000);
     const deleteLoading = ref(false);
     const modal = ref(null);
+    const deleteModal = ref(null);
     const modalChange = ref(null);
     const modalStatus = ref(null);
     const query = reactive({
@@ -452,6 +415,7 @@ export default {
       query,
       total,
       // fetchRecords,
+      deleteModal,
       loading,
       deleteLoading,
       affinityGroups,

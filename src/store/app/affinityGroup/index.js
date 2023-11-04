@@ -6,9 +6,7 @@ const toast = useToast();
 export default {
   state: {
     addmodal: false,
-    addAffinityGroupLoading: false,
-    addAffinityGroupSuccess: false,
-    addAffinityGroupError: null,
+
     isLoading: null,
     // for edit
     modal: false,
@@ -19,6 +17,9 @@ export default {
     editcta: null,
     editId: null,
     editdesc: null,
+    addAffinityGroupLoading: false,
+    addAffinityGroupSuccess: false,
+    addAffinityGroupError: null,
     getAffinityGroupsLoading: false,
     getAffinityGroupsSuccess: false,
     getAffinityGroupsError: null,
@@ -30,12 +31,32 @@ export default {
     deleteAffinityGroupError: null,
     affinityGroup: null,
 
+    resetSuccess(state) {
+      state.addAffinityGroupSuccess = false;
+      state.getAffinityGroupsSuccess = false;
+      state.updateAffinityGroupSuccess = false;
+      state.deleteAffinityGroupSuccess = false;
+    },
+
     affinityGroups: [],
+    selectedGroupToEdit: null,
   },
   getters: {
     affinityGroups: (state) => state.affinityGroups,
   },
   mutations: {
+    setSelectedGroupToEdit(
+      state,
+      { id, userId, affinityGroupName, affinityGroupCode, description }
+    ) {
+      state.selectedGroupToEdit = {
+        id,
+        userId,
+        affinityGroupName,
+        affinityGroupCode,
+        description,
+      };
+    },
     addAffinityGroupBegin(state) {
       state.addAffinityGroupLoading = true;
       state.addAffinityGroupSuccess = false;
@@ -232,9 +253,12 @@ export default {
     closeModal({ commit }) {
       commit("closeModal");
     },
-    // closeModal
-    // closeModal({ commit }) {
-    //   commit("closeModal");
-    // },
+
+    setSelectedGroupToEdit({ commit }, data) {
+      commit("setSelectedGroupToEdit", data);
+    },
+    resetSuccess({ commit }) {
+      commit("resetSuccess");
+    },
   },
 };

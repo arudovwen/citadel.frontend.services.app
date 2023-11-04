@@ -1,112 +1,100 @@
 <template>
   <form @submit.prevent="onSubmit">
+    <!-- {{ values }} -->
     <Card title="">
       <div class="flex flex-col gap-y-5">
         <Textinput
-          label="First Name"
+          label="Affinity Group Name"
           type="text"
-          v-model="firstname"
-          :error="firstnameError"
-          placeholder="Provide a first name"
+          v-model="affinityGroupName"
+          :error="affinityGroupNameError"
+          placeholder="Type in your group name"
         />
         <Textinput
-          label="Middle name"
+          label="Affinity Group Code"
           type="text"
-          v-model="middlename"
-          :error="middlenameError"
-          placeholder="Provide a middle name"
-        />
-        <Textinput
-          label="Surname"
-          type="text"
-          v-model="surname"
-          :error="surnameError"
-          placeholder="Provide a surnanme"
-        />
-        <div class="">
-          <Textinput
-            label="Email"
-            type="email"
-            v-model="emailAddress"
-            :error="emailAddressError"
-            placeholder="Provide an email address"
-          />
-        </div>
-        <Select
-          label="Role"
-          :options="roleOptions"
-          v-model="role"
-          :error="roleError"
+          v-model="affinityGroupCode"
+          :error="affinityGroupCodeError"
+          placeholder="Type in your group code"
         />
 
-        <Textinput
-          label="Phone"
-          type="text"
-          v-model="phoneNumber"
-          :error="phoneNumberError"
-          placeholder="Provide a phone number"
+        <Textarea
+          label="Affinity Group description"
+          placeholder="Type in your group description"
+          v-model.value="description"
+          :error="descriptionError"
         />
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Update record" btnClass="btn-dark" />
+        <Button
+          type="submit"
+          text="Add Affinity Group"
+          btnClass="btn-dark w-full disabled:opacity-50"
+          :disabled="loading"
+        />
       </div>
     </Card>
   </form>
 </template>
 <script setup>
-import { reactive } from "vue";
+import { computed, watch } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
-import Select from "@/components/Select";
+import Textarea from "@/components/Textarea";
+import { useToast } from "vue-toastification";
 
-const formData = reactive({
-  surname: "",
-  firstname: "",
-  middlename: "",
-  role: "",
-  phoneNumber: "",
-  emailAddress: "",
-});
-const formDataSchema = yup.object().shape({
-  surname: yup.string().required("Surname is required"),
-  firstname: yup.string().required("Firstname is required"),
-  middlename: yup.string(),
-  role: yup.string().required("Please select a role"),
-  phoneNumber: yup.string().required("Phone Number is required"),
-  emailAddress: yup
-    .string()
-    .email("Invalid email format")
-    .required("Email Address is required"),
-});
-const roleOptions = [
-  { value: "admin", label: "Administrator" },
-  { value: "hod", label: "HOD" },
-];
+import { useStore } from "vuex";
 
-const { handleSubmit } = useForm({
-  validationSchema: formDataSchema,
-  initialValues: formData,
+const { state, dispatch } = useStore();
+const defaultData = computed(() => state.affinityGroup.selectedGroupToEdit);
+const toast = useToast();
+const loading = computed(() => state.affinityGroup.addAffinityGroupLoading);
+const userId = computed(() => state.auth?.userData?.id);
+const success = computed(() => state.affinityGroup.updateAffinityGroupSuccess);
+
+const schema = yup.object().shape({
+  affinityGroupName: yup.string().required("Group is required"),
+  affinityGroupCode: yup.string().required("Group code is required"),
+  description: yup.string(),
+  id: yup.string(),
+  userId: yup.string(),
 });
 
-const { value: emailAddress, errorMessage: emailAddressError } =
-  useField("emailAddress");
+const { handleSubmit, setValues } = useForm({
+  validationSchema: schema,
+  initialValues: { ...defaultData.value, userId: userId.value },
+});
 
-const { value: surname, errorMessage: surnameError } = useField("surname");
-const { value: firstname, errorMessage: firstnameError } =
-  useField("firstname");
-const { value: middlename, errorMessage: middlenameError } =
-  useField("middlename");
-const { value: role, errorMessage: roleError } = useField("role");
-
-const { value: phoneNumber, errorMessage: phoneNumberError } =
-  useField("phoneNumber");
+const { value: affinityGroupName, errorMessage: affinityGroupNameError } =
+  useField("affinityGroupName");
+const { value: affinityGroupCode, errorMessage: affinityGroupCodeError } =
+  useField("affinityGroupCode");
+const { value: description, errorMessage: descriptionError } =
+  useField("description");
 
 const onSubmit = handleSubmit((values) => {
-  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
+  dispatch("updateAffinityGroup", values);
+
+  // console.log(values);
+});
+
+watch(defaultData, () => {
+  console.log("Changed");
+  setValues({ ...defaultData.value });
+});
+
+watch(success, () => {
+  if (success.value) {
+    toast.success("Affinity group successfully created");
+    dispatch("closeModal");
+    dispatch("resetSuccess");
+
+    dispatch("getAffinityGroups");
+  }
 });
 </script>
 <style lang=""></style>
