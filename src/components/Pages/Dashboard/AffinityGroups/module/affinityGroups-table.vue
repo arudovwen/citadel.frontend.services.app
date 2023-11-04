@@ -109,7 +109,7 @@
       </div>
     </Card>
   </div>
-  <Modal
+  <!-- <Modal
     title="Confirm action"
     label="Small modal"
     labelClass="btn-outline-dark"
@@ -135,7 +135,7 @@
           :disabled="deleteLoading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modalStatus.closeModal()"
+          @click="toggleDeleteModal(false)"
         />
         <Button
           :disabled="deleteLoading"
@@ -147,13 +147,15 @@
         />
       </div>
     </template>
-  </Modal>
+  </Modal> -->
 
   <Modal
+    :activeModal="$store.state.affinityGroup.deleteModal"
+    @close="toggleDeleteModal(false)"
     title="Delete Affinity Group"
     label="Small modal"
     labelClass="btn-outline-danger"
-    ref="modal"
+    ref="deleteModal"
     sizeClass="max-w-md"
     themeClass="bg-danger-500"
   >
@@ -167,7 +169,7 @@
           :disabled="deleteLoading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm"
-          @click="$refs.deleteModal.closeModal()"
+          @click="toggleDeleteModal(false)"
         />
         <Button
           text="Delete"
@@ -212,6 +214,8 @@ import EditRecord from "../affinityGroup-edit.vue";
 import ViewRecord from "../affinityGroup-preview.vue";
 // import moment from "moment";
 import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
+
 // import { debounce } from "lodash";
 import {
   computed,
@@ -219,6 +223,7 @@ import {
   // watch,
   reactive,
   ref,
+  watch,
 } from "vue";
 import window from "@/mixins/window";
 // import store from "@/store";
@@ -327,6 +332,10 @@ export default {
       this.$store.dispatch("closeModal");
     },
 
+    toggleDeleteModal(boolean) {
+      this.$store.dispatch("setDeleteModal", boolean);
+    },
+
     generateAction(name, group) {
       this.id = group?.id;
 
@@ -345,7 +354,7 @@ export default {
           icon: "heroicons-outline:trash",
           doit: () => {
             this.type = name;
-            this.$refs.deleteModal.openModal();
+            this.toggleDeleteModal(true);
           },
         },
       };
@@ -358,6 +367,9 @@ export default {
       } else {
         this.$store.dispatch("disableUser", this.id);
       }
+    },
+    handleDelete() {
+      this.$store.dispatch("deleteAffinityGroup", this.id);
     },
     // handleActions(value) {
     //   if (value === "active") {
@@ -378,8 +390,14 @@ export default {
     onMounted(() => {
       getAllAffinityGroups();
     });
+    const { state, dispatch } = useStore();
     const total = ref(10000);
     const deleteLoading = ref(false);
+    const deleteAffinityGroupSuccess = computed(
+      () => state.affinityGroup.deleteAffinityGroupSuccess
+    );
+    const toast = useToast();
+
     const modal = ref(null);
     const deleteModal = ref(null);
     const modalChange = ref(null);
@@ -390,7 +408,13 @@ export default {
       searchParameter: "",
       sortOrder: "",
     });
-    const { state, dispatch } = useStore();
+    const search = ref("");
+    const loading = computed(
+      () => state.affinityGroup.getAffinityGroupsLoading
+    );
+    const affinityGroups = computed(() => {
+      return state.affinityGroup.affinityGroups;
+    });
 
     const getAllAffinityGroups = () => {
       dispatch("getAffinityGroups", { ...query });
@@ -403,13 +427,14 @@ export default {
     function perPage({ currentPage }) {
       query.pageNumber = currentPage;
     }
-    const search = ref("");
-    const loading = computed(() => state.member.loading);
-    const affinityGroups = computed(() => {
-      return state.affinityGroup.affinityGroups;
-    });
 
-    function handleDelete() {}
+    watch(deleteAffinityGroupSuccess, () => {
+      if (deleteAffinityGroupSuccess.value) {
+        dispatch("setDeleteModal", false);
+        toast.success("Successfully deleted");
+        dispatch("getAffinityGroups");
+      }
+    });
 
     return {
       query,
@@ -420,7 +445,7 @@ export default {
       deleteLoading,
       affinityGroups,
       search,
-      handleDelete,
+
       modal,
       modalChange,
       modalStatus,

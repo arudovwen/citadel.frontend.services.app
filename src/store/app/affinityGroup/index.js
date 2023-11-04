@@ -10,6 +10,7 @@ export default {
     isLoading: null,
     // for edit
     modal: false,
+    deleteModal: false,
     editName: "",
     editassignto: null,
     editStartDate: null,
@@ -45,6 +46,9 @@ export default {
     affinityGroups: (state) => state.affinityGroups,
   },
   mutations: {
+    setDeleteModal(state, boolean) {
+      state.deleteModal = boolean;
+    },
     setSelectedGroupToEdit(
       state,
       { id, userId, affinityGroupName, affinityGroupCode, description }
@@ -259,6 +263,9 @@ export default {
     },
     resetSuccess({ commit }) {
       commit("resetSuccess");
+    },
+    setDeleteModal({ commit }, boolean) {
+      commit("setDeleteModal", boolean);
     },
   },
 };
