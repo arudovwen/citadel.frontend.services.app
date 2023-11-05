@@ -4,9 +4,11 @@
 
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <!-- <span> zoneObj:{{ zoneObj }}</span> -->
-      <!-- <span>zoneOptions:{{ zoneOptions }}</span>
-      <span>data:{{ churchAffiliationsData }}</span>
-      <span>values: {{ values }}</span> -->
+      <!-- <span>zoneOptions:{{ zoneOptions }}</span> -->
+      <!-- <span>data:{{ churchAffiliationsData }}</span> -->
+      <!-- <span>values: {{ values }}</span> -->
+
+      <!-- {{ centerOptions }} -->
       <Select
         label="Level Of ATS"
         :options="levelOfATSMenu"
@@ -48,25 +50,40 @@
         classInput="!h-[40px]"
       /> -->
 
-      <CustomVueSelect
-        label="CIH Zone"
-        class="min-w-[200px] w-full md:w-auto h-10"
-        v-model.value="zoneObj"
-        :modelValue="zoneObj"
-        :error="cihZoneError"
-        :options="zoneOptions"
-        placeholder="Select zone"
-        name="zone"
-      />
+      <div>
+        <CustomVueSelect
+          label="CIH Zone"
+          class="min-w-[200px] w-full md:w-auto h-10"
+          v-model.value="zoneObj"
+          :modelValue="zoneObj"
+          :error="cihZoneError"
+          :options="zoneOptions"
+          placeholder="Select zone"
+          name="zone"
+        />
+      </div>
 
-      <Select
+      <div>
+        <CustomVueSelect
+          label="CIH Address"
+          class="min-w-[200px] w-full md:w-auto h-10"
+          v-model.value="centerObj"
+          :modelValue="centerObj"
+          :error="cihAddressError"
+          :options="centerOptions"
+          placeholder="Select center"
+          name="zone"
+        />
+      </div>
+
+      <!-- <Select
         label="CIH Address"
         :options="CIHAddressMenu"
         v-model.value="cihAddress"
         :modelValue="cihAddress"
         :error="cihAddressError"
         classInput="!h-[40px]"
-      />
+      /> -->
 
       <Textinput
         label="Mountain of Evidence"
@@ -149,10 +166,8 @@ import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import {
   levelOfATSMenu,
   isCharterMemberMenu,
-  // CIHZoneMenu,
   affinityGroupMenu,
   departmentMenu,
-  CIHAddressMenu,
 } from "@/constant/data";
 
 import { inject, onMounted } from "vue";
@@ -175,11 +190,23 @@ const zoneObj = ref({
   label: "",
   zoneId: "",
 });
+const centerObj = ref({
+  label: "",
+  centerId: "",
+});
 const zoneOptions = computed(() =>
   store.state?.zone?.zones.map((i) => {
     return {
       label: i.zoneName,
       zoneId: i.id,
+    };
+  })
+);
+const centerOptions = computed(() =>
+  store.state?.center?.centers.map((i) => {
+    return {
+      label: i.centerName,
+      centerId: i.id,
     };
   })
 );
@@ -229,8 +256,7 @@ const { value: affinityGroup, errorMessage: affinityGroupError } =
 const { value: department, errorMessage: departmentError } =
   useField("department");
 
-const { value: cihAddress, errorMessage: cihAddressError } =
-  useField("cihAddress");
+const { errorMessage: cihAddressError } = useField("cihAddress");
 
 const prepareDetails = (values, type) => {
   const updateObj = {
@@ -289,24 +315,25 @@ const matchZone = () => {
 watch(churchAffiliationsData, (newValue) => {
   setValues(newValue);
 
-  // console.log("ZoneOptions: " + JSON.stringify(zoneOptions.value));
-  // console.log("churchAffiliationsData: " + JSON.stringify(newValue));
   matchZone();
 
   console.log("ZoneObj: " + JSON.stringify(zoneObj.value));
 });
 
 watch(zoneObj, (newValue) => {
-  console.log(newValue);
-  console.log(values);
   setValues({
     ...values,
     cihZone: newValue?.label,
   });
 
-  // setValues
+  store.dispatch("getAllCenters", { zoneId: newValue.zoneId });
+});
 
-  // cihZone = newValue.value;
+watch(centerObj, (newValue) => {
+  setValues({
+    ...values,
+    cihAddress: newValue?.label,
+  });
 });
 
 watch(success, () => {
