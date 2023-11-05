@@ -97,8 +97,6 @@ const { value: description, errorMessage: descriptionError } =
   useField("description");
 
 const onSubmit = handleSubmit((values) => {
-  // console.log(values);
-  // console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
   dispatch("addCenter", values);
 });
 

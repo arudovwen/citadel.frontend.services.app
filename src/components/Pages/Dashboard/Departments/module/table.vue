@@ -228,6 +228,8 @@ import AddRecord from "../member-add.vue";
 import EditRecord from "../member-edit.vue";
 import ViewRecord from "../member-preview.vue";
 import window from "@/mixins/window";
+import { useStore } from "vuex";
+import { reactive } from "vue";
 
 export default {
   mixins: [window],
@@ -448,6 +450,16 @@ export default {
           )
         : this.actions;
     },
+  },
+  setup() {
+    const query = reactive({
+      pageNumber: 1,
+      pageSize: 10,
+      sortOrder: "department",
+      searchParameter: "Drama",
+    });
+    const { dispatch } = useStore();
+    dispatch("getAffiliationByMemberQuery", query);
   },
 };
 </script>

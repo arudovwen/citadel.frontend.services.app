@@ -98,7 +98,6 @@ export default {
   setup() {
     const { state } = useStore();
     const profile = computed(() => state.auth.userData);
-    console.log("Bearer " + state.auth.accessToken);
     return {
       profile,
     };
