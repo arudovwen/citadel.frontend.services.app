@@ -149,7 +149,9 @@ const profileLoading = computed(() => state.member.profileloading);
 const profileError = computed(() => state.member.profileerror);
 const userId = computed(() => route.params.userId);
 const isMarried = ref(false);
-
+const isAdmin = computed(
+  () => state.auth.userData.userRole === "administrator"
+);
 console.log("route" + userId.value);
 const fetchUser = () => {
   dispatch("getUserById", userId.value);
@@ -162,6 +164,7 @@ watch(userId, () => {
 provide("isMarried", isMarried);
 provide("profileData", profileData);
 provide("id", userId);
+provide("isAdmin", isAdmin);
 </script>
 
 <style lang="scss" scoped></style>
