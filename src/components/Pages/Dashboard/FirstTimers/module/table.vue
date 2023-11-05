@@ -23,7 +23,7 @@
         <div class="md:flex md:space-x-3 items-center flex-none">
           <Button
             icon="ri:user-add-line"
-            text="Add Member"
+            text="Add First timer"
             btnClass="btn-primary font-normal btn-sm"
             iconClass="text-lg"
             @click="
@@ -204,10 +204,10 @@ import ViewRecord from "../member-preview.vue";
 import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
-import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
-const router = useRoute();
+const router = useRouter();
 const pageRange = ref(5);
 
 const timerid = ref(null);
@@ -249,6 +249,11 @@ const actions = ref([
 ]);
 
 const options = ref([
+  {
+    value: "5",
+    label: "5",
+  },
+
   {
     value: "25",
     label: "25",
@@ -341,7 +346,7 @@ function handleDelete() {
   dispatch("deleteBiodata", timerid.value);
 }
 function perPage({ currentPage }) {
-  query.pageNumber = currentPage;
+  query.pageSize = currentPage;
 }
 // Define a debounce delay (e.g., 500 milliseconds)
 const debounceDelay = 800;
@@ -373,7 +378,7 @@ watch(
   }
 );
 watch(
-  () => query.pageNumber,
+  () => [query.pageNumber, query.pageSize],
   () => {
     dispatch("getAllBiodata", query);
   }

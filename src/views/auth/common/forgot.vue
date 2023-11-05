@@ -45,7 +45,7 @@ export default {
 
     // Define a validation schema
     const schema = yup.object({
-      emailAddress: yup.string().required("Email is required").email(),
+      emailAddress: yup.string().required("Email is required").email("Please enter a valid email address"),
     });
     const formState = reactive({
       emailAddress: "",

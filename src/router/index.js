@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "@/store";
 import ProfileIndex from "@/views/dashboard/profile/index.vue";
-import MembersIndex from "@/views/dashboard/members/index.vue";
+// import MembersIndex from "@/views/dashboard/members/index.vue";
 import VenuesIndex from "@/views/dashboard/venues/index.vue";
 import AppointmentsIndex from "@/views/dashboard/appointments/index.vue";
 import AffinityGroupsIndex from "@/views/dashboard/affinityGroups/index.vue";
@@ -74,11 +74,15 @@ const routes = [
     redirect: "/home",
     component: () => import("@/Layout/index.vue"),
     beforeEnter: guard,
+    meta: { auth: false },
     children: [
       {
         path: "/home",
         name: "home",
         component: () => import("@/views/index.vue"),
+        meta: {
+          roles: ["administrator", "hod", "member"],
+        },
       },
       {
         path: "/overview",
@@ -87,47 +91,42 @@ const routes = [
         meta: {
           hide: true,
           activeName: "overview",
+          roles: ["administrator", "hod", "member"],
         },
       },
       {
         path: "/profile/:userId",
         name: "profile",
         component: ProfileIndex,
+        meta: {
+          roles: ["administrator", "hod", "member"],
+        },
       },
       {
         path: "/members-management",
-        name: "members",
-        component: MembersIndex,
-        children: [
-          {
-            path: "",
-            name: "members management",
-            component: () => import("@/components/Pages/Dashboard/Members"),
-            meta: {
-              activeName: "members-management",
-            },
-          },
-          {
-            path: "preview/:id",
-            name: "member Preview",
-
-            component: () =>
-              import("@/components/Pages/Dashboard/Members/member-preview.vue"),
-            meta: {
-              activeName: "members-management",
-              groupParent: {
-                name: "Members",
-                url: "/members-management",
-              },
-              hide: true,
-            },
-          },
-        ],
+        name: "members management",
+        component: () => import("@/components/Pages/Dashboard/Members"),
+        meta: {
+          activeName: "members-management",
+          roles: ["administrator"],
+        },
+      },
+      {
+        path: "/users-management",
+        name: "users management",
+        component: () => import("@/components/Pages/Dashboard/Members/users"),
+        meta: {
+          activeName: "users-management",
+          roles: ["administrator"],
+        },
       },
       {
         path: "/affinity-groups",
         name: "affinity-groups",
         component: AffinityGroupsIndex,
+        meta: {
+          roles: ["administrator"],
+        },
         children: [
           {
             path: "",
@@ -138,21 +137,6 @@ const routes = [
               activeName: "affinity-groups",
             },
           },
-          // {
-          //   path: "preview/:id",
-          //   name: "member Preview",
-
-          //   component: () =>
-          //     import("@/components/Pages/Dashboard/Members/member-preview.vue"),
-          //   meta: {
-          //     activeName: "members-management",
-          //     groupParent: {
-          //       name: "Members",
-          //       url: "/members-management",
-          //     },
-          //     hide: true,
-          //   },
-          // },
         ],
       },
       {
@@ -183,6 +167,9 @@ const routes = [
             },
           },
         ],
+        meta: {
+          roles: ["administrator", "hod"],
+        },
       },
 
       {
@@ -199,6 +186,9 @@ const routes = [
             },
           },
         ],
+        meta: {
+          roles: ["administrator"],
+        },
       },
       {
         path: "/cih",
@@ -312,6 +302,9 @@ const routes = [
             },
           },
         ],
+        meta: {
+          roles: ["administrator", "hod"],
+        },
       },
       {
         path: "/outreach",
@@ -327,6 +320,9 @@ const routes = [
             },
           },
         ],
+        meta: {
+          roles: ["administrator"],
+        },
       },
       {
         path: "/attendance",
@@ -342,6 +338,9 @@ const routes = [
             },
           },
         ],
+        meta: {
+          roles: ["administrator"],
+        },
       },
       {
         path: "/goals",
@@ -357,6 +356,9 @@ const routes = [
             },
           },
         ],
+        meta: {
+          roles: ["administrator"],
+        },
       },
       {
         path: "/meetings",
@@ -372,6 +374,9 @@ const routes = [
             },
           },
         ],
+        meta: {
+          roles: ["administrator"],
+        },
       },
       {
         path: "/events",
@@ -387,6 +392,9 @@ const routes = [
             },
           },
         ],
+        meta: {
+          roles: ["administrator"],
+        },
       },
       {
         path: "/notifications",
@@ -403,6 +411,7 @@ const routes = [
             },
           },
         ],
+        roles: ["administrator", "hod"],
       },
       {
         path: "/appointments",
@@ -419,6 +428,9 @@ const routes = [
             },
           },
         ],
+        meta: {
+          roles: ["administrator"],
+        },
       },
       {
         path: "/venue-management",
@@ -434,6 +446,9 @@ const routes = [
             },
           },
         ],
+        meta: {
+          roles: ["administrator"],
+        },
       },
       // {
       //   path: "/venue-management",
@@ -539,7 +554,19 @@ router.beforeEach((to, from, next) => {
   }
 
   document.title = "Citadel  - " + words;
-  next();
+  if (store.state.auth.accessToken) {
+    if (
+      to.meta.roles.includes(store.state.auth.userData.userRole.toLowerCase())
+    ) {
+      console.log("🚀 ~ file: index.js:573 ~ router.beforeEach ~ true:");
+      next();
+    } else {
+      console.log("🚀 ~ file: index.js:573 ~ router.beforeEach ~ false:");
+      next({ name: "overview" });
+    }
+  } else {
+    next();
+  }
 });
 
 router.afterEach(() => {

@@ -46,11 +46,6 @@
           >Keep me signed in</span
         >
       </label>
-      <router-link
-        to="/forgot-password"
-        class="text-sm text-slate-800 dark:text-slate-400 leading-6 font-medium"
-        >Forgot Password?</router-link
-      >
     </div>
 
     <button
@@ -88,7 +83,10 @@ export default {
     const error = computed(() => state.auth.error);
     // Define a validation schema
     const schema = yup.object({
-      emailAddress: yup.string().required("Email is required").email(),
+      emailAddress: yup
+        .string()
+        .required("Email is required")
+        .email("Please enter a valid email address"),
       // password: yup.string().required("Password is required"),
     });
 

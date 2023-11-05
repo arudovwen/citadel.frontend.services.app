@@ -1,126 +1,219 @@
 <template>
   <form @submit.prevent="onSubmit">
     <Card title="">
-      <div class="flex flex-col gap-y-5">
+      <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
         <Textinput
           label="First Name"
           type="text"
           v-model="firstname"
           :error="firstnameError"
-          placeholder="Provide a first name"
+          placeholder="Add your first name"
         />
         <Textinput
           label="Middle name"
           type="text"
           v-model="middlename"
           :error="middlenameError"
-          placeholder="Provide a middle name"
+          placeholder="Add your middle name"
         />
         <Textinput
-          label="Last name"
+          label="surName"
           type="text"
-          v-model="lastName"
-          :error="lastNameError"
-          placeholder="Provide a surnanme"
+          v-model="surName"
+          :error="surNameError"
+          placeholder="Add your surnanme"
         />
-        <div class="">
-          <Textinput
-            label="Email"
-            type="email"
-            v-model="emailAddress"
-            :error="emailAddressError"
-            placeholder="Provide an email address"
+        <Select
+          label="Gender"
+          :options="genderOptions"
+          v-model="gender"
+          :error="genderError"
+        />
+        <FormGroup
+          label="Date of birth"
+          name="dateOfBirth"
+          :error="dateOfBirthError"
+        >
+          <flat-pickr
+            v-model="dateOfBirth"
+            class="form-control"
+            id="d1"
+            placeholder="yyyy, dd M"
           />
-        </div>
+        </FormGroup>
         <Textinput
           label="Phone"
           type="text"
-          v-model="phoneNumber"
-          :error="phoneNumberError"
-          placeholder="Provide a phone number"
+          v-model="mobile1"
+          :error="mobile1Error"
+          placeholder="Add your phone"
         />
-        <Select
-          label="Role"
-          :options="roles"
-          v-model="role"
-          :error="roleError"
+        <div class="lg:col-span-2 col-span-1">
+          <Textinput
+            label="Email"
+            type="email"
+            v-model="email"
+            :error="emailError"
+            placeholder="Add your email"
+          />
+        </div>
+
+        <div class="lg:col-span-2 col-span-1">
+          <Textinput
+            label="Residential Address"
+            v-model="address"
+            :error="addressError"
+            placeholder="Enter our residential address"
+          />
+        </div>
+        <div class="lg:col-span-2 col-span-1">
+          <Textinput
+            label="Nearest Busstop"
+            type="ext"
+            v-model="nearestBusStop"
+            :error="nearestBusStopError"
+            placeholder="Add your nearest bus-stop"
+          />
+        </div>
+
+        <FormGroup label="Country" :error="countryError">
+          <VueSelect
+            class="w-full"
+            v-model.value="country"
+            :options="countriesOption"
+            placeholder="Select your country"
+            name="country"
+          />
+        </FormGroup>
+
+        <FormGroup label="State" :error="stateError">
+          <VueSelect
+            class="w-full"
+            v-model.value="state"
+            :options="statesOption"
+            placeholder="Select your state"
+            name="state"
+          />
+        </FormGroup>
+        <Textinput
+          label="City"
+          v-model="city"
+          :error="cityError"
+          type="text"
+          placeholder="Enter your city"
         />
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button
-          type="submit"
-          text="Add member"
-          btnClass="btn-dark w-full disabled:opacity-50"
-          :disabled="loading"
-        />
+        <Button type="submit" text="Add member" btnClass="btn-dark" />
       </div>
     </Card>
   </form>
 </template>
 <script setup>
-import { reactive, computed, onMounted } from "vue";
+import VueSelect from "@/components/Select/VueSelect";
+import { reactive, computed, watch } from "vue";
+import { useToast } from "vue-toastification";
 import { useField, useForm } from "vee-validate";
+import { useStore } from "vuex";
 import * as yup from "yup";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
+import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import Select from "@/components/Select";
-import { useStore } from "vuex";
+import Countries from "@/util/countries.json";
 
-const { state, dispatch } = useStore();
-onMounted(() => {
-  dispatch("getRoles");
-});
-const loading = computed(() => state.member.addloading);
-const roles = computed(() =>
-  state.member.roles.map((i) => {
-    return { value: i, label: i };
+const toast = useToast();
+// eslint-disable-next-line no-unused-vars
+const countriesOption = computed(() =>
+  Countries.map((i) => {
+    return { label: i.name, value: i.name };
   })
 );
+const statesOption = computed(() => {
+  return Countries.find((i) => i.name === country.value.label)?.states?.map(
+    (i) => {
+      return { label: i.name, value: i.name };
+    }
+  );
+});
+const { state: vState, dispatch } = useStore();
+const success = computed(() => vState.profile.profileCreated);
 const formData = reactive({
-  lastName: "",
+  dateOfVisit: "",
+  surName: "",
   firstname: "",
   middlename: "",
-  role: "",
-  phoneNumber: "",
-  emailAddress: "",
+  gender: "",
+  dateOfBirth: "",
+  mobile1: "",
+  email: "",
+  address: "",
+  nearestBusStop: "",
+  city: "",
+  state: "",
+  country: "",
+  purposeOfVisit: "",
+  placeOfVisit: "",
 });
 const formDataSchema = yup.object().shape({
-  lastName: yup.string().required("lastName is required"),
+  surName: yup.string().required("surName is required"),
   firstname: yup.string().required("Firstname is required"),
-  middlename: yup.string(),
-  role: yup.string().required("Please select a role"),
-  phoneNumber: yup.string().required("Phone Number is required"),
-  emailAddress: yup
+  middlename: yup.string().nullable(),
+  gender: yup.string().required("Gender is required"),
+  dateOfBirth: yup.date().required("Date of Birth is required"),
+  mobile1: yup.string().required("Phone Number is required"),
+  email: yup
     .string()
     .email("Invalid email format")
     .required("Email Address is required"),
+  address: yup.string().required("Residential Address is required"),
+  nearestBusStop: yup.string().nullable(),
+  city: yup.string().required("City is required"),
+  state: yup.object().required("State is required"),
+  country: yup.object().required("Country is required"),
 });
 
+const genderOptions = [
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+];
 const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
 
-const { value: emailAddress, errorMessage: emailAddressError } =
-  useField("emailAddress");
-
-const { value: lastName, errorMessage: lastNameError } = useField("lastName");
+const { value: email, errorMessage: emailError } = useField("email");
+const { value: surName, errorMessage: surNameError } = useField("surName");
 const { value: firstname, errorMessage: firstnameError } =
   useField("firstname");
 const { value: middlename, errorMessage: middlenameError } =
   useField("middlename");
-const { value: role, errorMessage: roleError } = useField("role");
-
-const { value: phoneNumber, errorMessage: phoneNumberError } =
-  useField("phoneNumber");
+const { value: gender, errorMessage: genderError } = useField("gender");
+const { value: dateOfBirth, errorMessage: dateOfBirthError } =
+  useField("dateOfBirth");
+const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
+const { value: address, errorMessage: addressError } = useField("address");
+const { value: nearestBusStop, errorMessage: nearestBusStopError } =
+  useField("nearestBusStop");
+const { value: city, errorMessage: cityError } = useField("city");
+const { value: state, errorMessage: stateError } = useField("state");
+const { value: country, errorMessage: countryError } = useField("country");
 
 const onSubmit = handleSubmit((values) => {
-  dispatch("addUser", {
+  dispatch("createProfile", {
     ...values,
-    password: "Password@1234",
+    isFirstTime: false,
+    country: values.country.value,
+    state: values.state.value,
+    dateOfVisit: new Date(),
   });
+});
+watch(success, () => {
+  if (success.value) {
+    toast.success("Member added");
+  }
 });
 </script>
 <style lang=""></style>

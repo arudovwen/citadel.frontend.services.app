@@ -2,23 +2,9 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex md:mb-0 mb-3 border border-gray-200 rounded text-sm">
-          <button
-            class="px-4 py-2 border-r border-gray-200 last:border-none capitalize min-w-[90px] text-center"
-            :class="activeFilter === n ? 'bg-gray-100' : ''"
-            @click="activeFilter = n"
-            v-for="n in filters"
-            :key="n"
-          >
-            {{ n }}
-          </button>
-        </div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
+        <div class="flex rounded-[6px] text-sm overflow-hidden gap-x-4">
           <InputGroup
-            v-model="query.searchParameter"
+            v-model="search"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
@@ -33,10 +19,14 @@
             placeholder="Select date"
             as-single
           />
-
+        </div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
           <Button
             icon="ri:user-add-line"
-            text="Add Member"
+            text="Add user"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
             @click="
@@ -63,53 +53,21 @@
           }"
         >
           <template v-slot:table-row="props">
-            <span
-              v-if="props.column.field == 'customer'"
-              class="flex items-center"
-            >
-              <span class="w-7 h-7 rounded-full mr-3 flex-none">
-                <img
-                  :src="
-                    require('@/assets/images/all-img/' +
-                      props.row.customer.image)
-                  "
-                  :alt="props.row.customer.name"
-                  class="object-cover w-full h-full rounded-full"
-                />
-              </span>
+            <span v-if="props.column.field == 'statusText'">
               <span
-                class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium"
-                >{{ props.row.customer.name }}</span
+                :class="`whitespace-nowrap text-[12.5px] rounded-full px-3 py-1 ${
+                  props.row.statusText.toLowerCase() === 'pendingactivation'
+                    ? 'text-gray-700 bg-gray-100'
+                    : props.row.statusText.toLowerCase() === 'active'
+                    ? 'text-green-700 bg-green-100'
+                    : 'text-red-700 bg-red-100'
+                }`"
+                >{{
+                  props?.row?.statusText?.toLowerCase() === "pendingactivation"
+                    ? "Pending"
+                    : props.row.statusText
+                }}</span
               >
-            </span>
-            <span v-if="props.column.field == 'order'" class="font-medium">
-              {{ "#" + props.row.order }}
-            </span>
-            <span
-              v-if="props.column.field == 'date'"
-              class="text-slate-500 dark:text-slate-400"
-            >
-              {{ props.row.date }}
-            </span>
-            <span v-if="props.column.field == 'status'" class="block w-full">
-              <span
-                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                :class="`${
-                  props.row.status === 'active'
-                    ? 'text-success-500 bg-success-500'
-                    : ''
-                } 
-            ${
-              props.row.status === 'inactive'
-                ? 'text-warning-500 bg-warning-500'
-                : ''
-            }
-            ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
-            
-             `"
-              >
-                {{ props.row.status }}
-              </span>
             </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
@@ -117,21 +75,37 @@
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in filteredActions" :key="i">
+                  <MenuItem
+                    v-for="(item, i) in handleActions(
+                      props?.row?.statusText?.toLowerCase()
+                    )"
+                    :key="i"
+                  >
                     <div
-                      @click="item.doit(item.name)"
-                      :class="{
-                        'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
-                          item.name === 'delete',
-                        'hover:bg-slate-900 hover:text-white':
-                          item.name !== 'delete',
-                      }"
-                      class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
+                      @click="
+                        generateAction(
+                          item?.name?.toLowerCase(),
+                          props.row.userId
+                        ).doit
+                      "
+                      :class="`
+                
+                  ${
+                    item.name === 'delete'
+                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
+                      : 'hover:bg-slate-900 hover:text-white'
+                  }
+                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
                     >
-                      <span class="text-base">
-                        <Icon :icon="item.icon" />
-                      </span>
-                      <span>{{ item.name }}</span>
+                      <span class="text-base"
+                        ><Icon
+                          :icon="
+                            generateAction(item.name, props.row.userId).icon
+                          "
+                      /></span>
+                      <span>{{
+                        generateAction(item.name, props.row.userId).name
+                      }}</span>
                     </div>
                   </MenuItem>
                 </template>
@@ -164,47 +138,78 @@
     title="Confirm action"
     label="Small modal"
     labelClass="btn-outline-dark"
-    ref="modal"
+    ref="modalStatus"
     sizeClass="max-w-md"
+    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to {{ type }} this department?
+      Are you sure you want to {{ type.toLowerCase() }} this member?
     </div>
-    <div v-if="type.toLowerCase() === 'reject'">
+    <div v-if="type.toLowerCase() === 'delete'">
       <textarea
         resize="none"
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
         rows="4"
         placeholder="Provide reason"
+        v-model="reason"
       ></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
+          :disabled="deleteloading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modal.closeModal()"
+          @click="$refs.modalStatus.closeModal()"
         />
         <Button
+          :disabled="deleteloading"
           text="Proceed"
-          btnClass="btn-dark btn-sm"
-          @click="$refs.modal.closeModal()"
+          :btnClass="` btn-sm ${
+            type === 'approve' ? 'btn-success' : 'btn-danger'
+          }`"
+          @click="handleStatus"
         />
       </div>
     </template>
   </Modal>
 
   <Modal
+    title="Delete Member"
+    label="Small modal"
+    labelClass="btn-outline-danger"
+    ref="modal"
+    sizeClass="max-w-md"
+    themeClass="bg-danger-500"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure you want to delete this member?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          :disabled="deleteloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Delete"
+          :disabled="deleteloading"
+          btnClass="btn-danger btn-sm"
+          @click="handleDelete"
+        />
+      </div>
+    </template>
+  </Modal>
+  <Modal
     :title="
-      type === 'add'
-        ? 'Add member'
-        : type === 'edit'
-        ? 'Edit member'
-        : 'View member'
+      type === 'add' ? 'Add user' : type === 'edit' ? 'Edit user' : 'View user'
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
-    sizeClass="max-w-3xl"
+    sizeClass="max-w-md"
   >
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />
@@ -221,13 +226,13 @@ import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
-import AddRecord from "../member-add.vue";
+import { membersTable } from "@/constant/basic-tablle-data";
+import AddRecord from "../user-add.vue";
 import EditRecord from "../member-edit.vue";
 import ViewRecord from "../member-preview.vue";
-import window from "@/mixins/window";
+import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
-import moment from "moment";
 import {
   computed,
   onMounted,
@@ -236,6 +241,8 @@ import {
   ref,
   getCurrentInstance,
 } from "vue";
+import window from "@/mixins/window";
+// import store from "@/store";
 
 export default {
   mixins: [window],
@@ -256,52 +263,43 @@ export default {
 
   data() {
     return {
+      membersTable,
+      current: 1,
+      perpage: 10,
+      pageRange: 5,
+      searchTerm: "",
       type: "",
       id: null,
       filters: ["all", "pending"],
-      activeFilter: "all",
+      activeFilter: "",
       dateValue: null,
-      pageRange: 5,
+      reason: "",
       formatter: {
         date: "DD MMM YYYY",
         month: "MMM",
       },
       actions: [
         {
-          name: "Approve",
-          icon: "ph:check",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        {
-          name: "Reject",
-          icon: "ph:x-light",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        {
           name: "view",
-          icon: "heroicons-outline:eye",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modalChange.openModal();
-          },
         },
-
+        {
+          name: "edit",
+        },
+        // {
+        //   name: "delete",
+        // },
+        {
+          name: "approve",
+        },
         {
           name: "delete",
-          icon: "heroicons-outline:trash",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
         },
       ],
       options: [
+        {
+          value: "5",
+          label: "5",
+        },
         {
           value: "25",
           label: "25",
@@ -322,30 +320,37 @@ export default {
       columns: [
         {
           label: "Name",
-          field: "name",
+          field: "fullName",
         },
-
         {
-          label: "Gender",
-          field: "gender",
+          label: "Email",
+          field: "emailAddress",
         },
 
         {
           label: "Phone",
-          field: "phone",
+          field: "mobileNo",
         },
+        {
+          label: "Gender",
+          field: "gender",
+        },
+        {
+          label: "Role",
+          field: "role",
+        },
+        // {
+        //   label: "DOB",
+        //   field: "dob",
+        // },
 
         {
-          label: "Email",
-          field: "email",
-        },
-        {
-          label: "Dob",
-          field: "dob",
+          label: "Department",
+          field: "department",
         },
         {
           label: "Status",
-          field: "status",
+          field: "statusText",
         },
         {
           label: "Action",
@@ -359,34 +364,36 @@ export default {
       this.id = id;
 
       const actions = {
-        Approve: {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        Reject: {
-          name: "Reject",
-          icon: "ph:x-light",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
+        // approve: {
+        //   name: "Approve",
+        //   icon: "ph:check",
+        //   doit: () => {
+        //     this.type = name;
+        //     this.$refs.modalStatus.openModal();
+        //   },
+        // },
+        // delete: {
+        //   name: "delete",
+        //   icon: "ph:x-light",
+        //   doit: () => {
+        //     this.type = name;
+        //     this.$refs.modalStatus.openModal();
+        //   },
+        // },
         view: {
           name: "view",
           icon: "heroicons-outline:eye",
           doit: () => {
-            this.$router.push("/members-management/preview/" + id);
+            // store.dispatch("getUserById", id);
+            this.$router.push("/profile/" + id);
           },
         },
         edit: {
           name: "edit",
           icon: "heroicons:pencil-square",
           doit: () => {
-            this.$router.push("/members-management/edit/" + id);
+            // store.dispatch("getUserById", id);
+            this.$router.push("/profile/" + id);
           },
         },
         delete: {
@@ -401,53 +408,59 @@ export default {
 
       return actions[name] || null;
     },
-  },
-  computed: {
-    filteredActions() {
-      return this.activeFilter === "all"
-        ? this.actions.filter(
-            (i) =>
-              i.name.toLowerCase() !== "approve" &&
-              i.name.toLowerCase() !== "reject"
-          )
-        : this.actions;
+    handleStatus() {
+      if (this.type === "approve") {
+        this.$store.dispatch("enableUser", this.id);
+      } else {
+        this.$store.dispatch("disableUser", this.id);
+      }
+    },
+    handleActions(value) {
+      if (value === "active") {
+        return this.actions.filter((i) => i.name !== "approve");
+      }
+      if (value === "delete") {
+        return this.actions.filter((i) => i.name !== "delete");
+      }
+      if (value === "pendingactivation") {
+        return this.actions.filter(
+          (i) => i.name !== "delete" && i.name !== "approve"
+        );
+      }
+      return value;
     },
   },
   setup() {
-    const query = reactive({
-      pageNumber: 1,
-      pageSize: 10,
-      sortOrder: "",
-      searchParameter: "",
-    });
-    const { state, dispatch } = useStore();
-    dispatch("getAffiliationByMemberQuery", query);
     const id = ref(null);
     const modal = ref(null);
     const modalChange = ref(null);
     const modalStatus = ref(null);
-
+    const query = reactive({
+      pageNumber: 1,
+      pageSize: 10,
+      name: "",
+      email: "",
+      mobileNo: "",
+    });
+    const { state, dispatch } = useStore();
     onMounted(() => {
-      dispatch("getAffiliationByMemberQuery", query);
+      dispatch("getUsers", query);
       dispatch("getRoles");
       id.value = getCurrentInstance().data.id;
     });
     function fetchRecords(page) {
-      dispatch("getAffiliationByMemberQuery", { ...query, pageNumber: page });
+      dispatch("getUsers", { ...query, pageNumber: page });
     }
 
     function perPage({ currentPage }) {
       query.pageSize = currentPage;
     }
     const search = ref("");
-    const loading = computed(() => state.profile.loading);
+    const loading = computed(() => state.member.loading);
     const members = computed(() => {
-      if (state?.profile?.allbiodata) {
-        return state?.profile?.allbiodata.map((item) => {
-          item.fullName = `${item.firstName} ${item.middleName} ${item.surName}`;
-          item.dateOfBirth = item?.dateOfBirth
-            ? moment(item?.dateOfBirth).format("ll")
-            : "-";
+      if (state?.member?.data) {
+        return state?.member?.data.map((item) => {
+          item.dob = item?.dob ? moment(item?.dob).format("ll") : "-";
           item.department = item?.department ? item?.department : "-";
 
           return item;
@@ -455,11 +468,11 @@ export default {
       }
       return [];
     });
-    const total = computed(() => state.profile.total);
-    const roles = computed(() => state.profile.roles);
-    const addsuccess = computed(() => state.profile.addsuccess);
-    const deleteloading = computed(() => state.profile.deleteloading);
-    const deletesuccess = computed(() => state.profile.deletesuccess);
+    const total = computed(() => state.member.total);
+    const roles = computed(() => state.member.roles);
+    const addsuccess = computed(() => state.member.addsuccess);
+    const deleteloading = computed(() => state.member.deleteloading);
+    const deletesuccess = computed(() => state.member.deletesuccess);
 
     function handleDelete() {
       dispatch("disableUser", id.value);
@@ -468,30 +481,27 @@ export default {
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
-      dispatch("getAffiliationByMemberQuery", { ...query, name: searchValue });
+      dispatch("getUsers", { ...query, name: searchValue });
     }, debounceDelay);
     watch(addsuccess, () => {
-      addsuccess.value && dispatch("getAffiliationByMemberQuery", query);
+      addsuccess.value && dispatch("getUsers", query);
       modalChange.value.closeModal();
     });
 
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
-        dispatch("getAffiliationByMemberQuery", query);
+        dispatch("getUsers", query);
         modalStatus.value.closeModal();
       }
     });
 
-    watch(
-      () => query.searchParameter,
-      () => {
-        debouncedSearch(query.searchParameter);
-      }
-    );
+    watch(search, () => {
+      debouncedSearch(search.value);
+    });
     watch(
       () => [query.pageNumber, query.pageSize],
       () => {
-        dispatch("getAffiliationByMemberQuery", query);
+        dispatch("getUsers", query);
       }
     );
     return {

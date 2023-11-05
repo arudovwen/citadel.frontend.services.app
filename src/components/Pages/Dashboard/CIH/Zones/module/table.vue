@@ -26,18 +26,6 @@
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
-          <Button
-            icon="mdi:house-group-add"
-            text="Add center"
-            btnClass=" btn-primary font-normal btn-sm "
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                $refs.modalChange.openModal();
-              }
-            "
-          />
           <router-link :to="`/cih/zones/zone-members/${route.params.id}`">
             <Button
               text="View members"
@@ -245,7 +233,6 @@
   </Modal>
 </template>
 <script>
-// import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
@@ -373,7 +360,7 @@ export default {
       }
     });
     function perPage({ currentPage }) {
-      query.pageNumber = currentPage;
+      query.pageSize = currentPage;
     }
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
@@ -399,7 +386,7 @@ export default {
       }
     );
     watch(
-      () => query.pageNumber,
+      () => [query.pageNumber, query.pageSize],
       () => {
         dispatch("getAllCenters", query);
       }

@@ -239,13 +239,13 @@ watch(
   }
 );
 watch(
-  () => [query.pageNumber, query.sortOrder],
+  () => [query.pageNumber, query.sortOrder, query.pageSize],
   () => {
     dispatch("getDepartments", query);
   }
 );
 function perPage({ currentPage }) {
-  query.pageNumber = currentPage;
+  query.pageSize = currentPage;
 }
 function handleSuccess() {
   dispatch("getDepartments", query);

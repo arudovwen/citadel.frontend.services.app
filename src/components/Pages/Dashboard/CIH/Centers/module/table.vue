@@ -365,7 +365,7 @@ export default {
       }
     });
     function perPage({ currentPage }) {
-      query.pageNumber = currentPage;
+      query.pageSize = currentPage;
     }
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
@@ -391,7 +391,7 @@ export default {
       }
     );
     watch(
-      () => query.pageNumber,
+      () => [query.pageNumber, query.pageSize],
       () => {
         dispatch("getAllCenters", query);
       }
