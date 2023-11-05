@@ -3,6 +3,10 @@
     <ProfileInputSkeleton v-if="churchAffiliationsDataLoading" />
 
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- <span> zoneObj:{{ zoneObj }}</span> -->
+      <!-- <span>zoneOptions:{{ zoneOptions }}</span>
+      <span>data:{{ churchAffiliationsData }}</span>
+      <span>values: {{ values }}</span> -->
       <Select
         label="Level Of ATS"
         :options="levelOfATSMenu"
@@ -35,12 +39,32 @@
         classInput="h-[40px]"
       />
 
-      <Select
+      <!-- <Select
         label="CIH Zone"
         :options="CIHZoneMenu"
         v-model.value="cihZone"
         :modelValue="cihZone"
         :error="cihZoneError"
+        classInput="!h-[40px]"
+      /> -->
+
+      <CustomVueSelect
+        label="CIH Zone"
+        class="min-w-[200px] w-full md:w-auto h-10"
+        v-model.value="zoneObj"
+        :modelValue="zoneObj"
+        :error="cihZoneError"
+        :options="zoneOptions"
+        placeholder="Select zone"
+        name="zone"
+      />
+
+      <Select
+        label="CIH Address"
+        :options="CIHAddressMenu"
+        v-model.value="cihAddress"
+        :modelValue="cihAddress"
+        :error="cihAddressError"
         classInput="!h-[40px]"
       />
 
@@ -91,14 +115,6 @@
         @update:modelValue="defaultSelectedValue = $event"
       /> -->
 
-      <Select
-        label="CIH Address"
-        :options="CIHAddressMenu"
-        v-model.value="cihAddress"
-        :modelValue="cihAddress"
-        :error="cihAddressError"
-        classInput="!h-[40px]"
-      />
       <!-- <CustomVueSelect
         name="cihAddress"
         v-model="cihAddress"
@@ -121,18 +137,19 @@
 
 <script setup>
 import Select from "@/components/Select";
-import { computed, watch } from "vue";
+import { computed, watch, ref } from "vue";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 // import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
-
+// import VueSelect from "@/components/Select/VueSelect";
+import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
 import {
   levelOfATSMenu,
   isCharterMemberMenu,
-  CIHZoneMenu,
+  // CIHZoneMenu,
   affinityGroupMenu,
   departmentMenu,
   CIHAddressMenu,
@@ -142,8 +159,11 @@ import { inject, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 
-onMounted(() => {
-  getChurchAffiliationsData();
+onMounted(async () => {
+  await getZones();
+  await getChurchAffiliationsData();
+
+  matchZone();
 });
 const id = inject("id");
 const store = useStore();
@@ -151,6 +171,18 @@ const toast = useToast();
 const getChurchAffiliationsData = () => {
   store.dispatch("getChurchAffiliationsById", id.value);
 };
+const zoneObj = ref({
+  label: "",
+  zoneId: "",
+});
+const zoneOptions = computed(() =>
+  store.state?.zone?.zones.map((i) => {
+    return {
+      label: i.zoneName,
+      zoneId: i.id,
+    };
+  })
+);
 const churchAffiliationsDataLoading = computed(
   () => store.state.profile.getChurchAffiliationsDataloading
 );
@@ -167,14 +199,14 @@ const schema = yup.object({
   levelOfATS: yup.string(),
   charteredMember: yup.bool(),
   charteredMemberNumber: yup.number().nullable(),
-  cihZone: yup.string(),
+  cihZone: yup.string().required("Zone is required"),
   mountainOfInfluence: yup.string(),
   affinityGroup: yup.string(),
   department: yup.string(),
   cihAddress: yup.string(),
 });
 
-const { handleSubmit, setValues } = useForm({
+const { handleSubmit, setValues, values } = useForm({
   validationSchema: schema,
   initialValues: churchAffiliationsData.value,
 });
@@ -188,7 +220,7 @@ const {
   value: charteredMemberNumber,
   errorMessage: charteredMemberNumberError,
 } = useField("charteredMemberNumber");
-const { value: cihZone, errorMessage: cihZoneError } = useField("cihZone");
+const { errorMessage: cihZoneError } = useField("cihZone");
 const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
   useField("mountainOfInfluence");
 const { value: affinityGroup, errorMessage: affinityGroupError } =
@@ -233,6 +265,10 @@ const prepareDetails = (values, type) => {
   const obj = type == "create" ? createObj : updateObj;
   return obj;
 };
+
+const getZones = () => {
+  store.dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
+};
 const onSubmit = handleSubmit((values) => {
   // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
   const hasDataError = churchAffiliationsData.value == null;
@@ -244,13 +280,33 @@ const onSubmit = handleSubmit((values) => {
   }
 });
 
-watch(churchAffiliationsData, () => {
-  // setValues({
-  //   charteredMember:
-  //     churchAffiliationsData.value.charteredMember == true ? "true" : "false",
-  //   ...churchAffiliationsData.value,
-  // });
-  setValues(churchAffiliationsData.value);
+const matchZone = () => {
+  zoneObj.value = zoneOptions.value.find(
+    (zone) => zone.label === churchAffiliationsData.value.cihZone
+  );
+};
+
+watch(churchAffiliationsData, (newValue) => {
+  setValues(newValue);
+
+  // console.log("ZoneOptions: " + JSON.stringify(zoneOptions.value));
+  // console.log("churchAffiliationsData: " + JSON.stringify(newValue));
+  matchZone();
+
+  console.log("ZoneObj: " + JSON.stringify(zoneObj.value));
+});
+
+watch(zoneObj, (newValue) => {
+  console.log(newValue);
+  console.log(values);
+  setValues({
+    ...values,
+    cihZone: newValue?.label,
+  });
+
+  // setValues
+
+  // cihZone = newValue.value;
 });
 
 watch(success, () => {

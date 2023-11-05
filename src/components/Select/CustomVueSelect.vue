@@ -194,5 +194,9 @@ export default {
   .vs__dropdown-option--disabled {
     @apply bg-slate-50 dark:bg-slate-700;
   }
+
+  .vs__dropdown-toggle {
+    height: 40px;
+  }
 }
 </style>
