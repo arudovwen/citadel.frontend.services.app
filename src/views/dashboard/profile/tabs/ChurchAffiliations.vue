@@ -6,6 +6,8 @@
       <!-- <span> zoneObj:{{ zoneObj }}</span> -->
       <!-- <span>zoneOptions:{{ zoneOptions }}</span> -->
       <!-- <span>data:{{ churchAffiliationsData }}</span> -->
+
+      <!-- <span>DepObj: {{ departmentObj }}</span> -->
       <!-- <span>values: {{ values }}</span> -->
 
       <!-- {{ centerOptions }} -->
@@ -72,7 +74,7 @@
           :error="cihAddressError"
           :options="centerOptions"
           placeholder="Select center"
-          name="zone"
+          name="CIH Address"
         />
       </div>
 
@@ -95,13 +97,15 @@
         classInput="h-[40px]"
       />
 
-      <Select
+      <CustomVueSelect
         label="Affinity Group"
-        :options="affinityGroupMenu"
-        v-model.value="affinityGroup"
-        :modelValue="affinityGroup"
-        :error="affinityGroupError"
         classInput="!h-[40px]"
+        v-model.value="affinityGroupObj"
+        :modelValue="affinityGroupObj"
+        :error="affinityGroupError"
+        :options="affinityGroupOptions"
+        placeholder="Select affinity group"
+        name="Affinity Group"
       />
 
       <!-- <CustomVueSelect
@@ -114,13 +118,15 @@
         @update:modelValue="defaultSelectedValue = $event"
       /> -->
 
-      <Select
+      <CustomVueSelect
         label="Department"
-        :options="departmentMenu"
-        v-model.value="department"
-        :modelValue="department"
-        :error="departmentError"
         classInput="!h-[40px]"
+        v-model.value="departmentObj"
+        :modelValue="departmentObj"
+        :error="departmentError"
+        :options="departmentOptions"
+        placeholder="Select department"
+        name="Department"
       />
       <!-- <CustomVueSelect
         name="department"
@@ -163,22 +169,20 @@ import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleto
 // import VueSelect from "@/components/Select/VueSelect";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
-import {
-  levelOfATSMenu,
-  isCharterMemberMenu,
-  affinityGroupMenu,
-  departmentMenu,
-} from "@/constant/data";
+import { levelOfATSMenu, isCharterMemberMenu } from "@/constant/data";
 
 import { inject, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 
 onMounted(async () => {
-  await getZones();
   await getChurchAffiliationsData();
-
-  matchZone();
+  await getZones();
+  await matchZone();
+  await getAffinityGroups();
+  await matchaffinityGroup();
+  await getDepartments();
+  await matchDepartment();
 });
 const id = inject("id");
 const store = useStore();
@@ -193,6 +197,16 @@ const zoneObj = ref({
 const centerObj = ref({
   label: "",
   centerId: "",
+});
+
+const departmentObj = ref({
+  label: "",
+  departmentId: "",
+});
+
+const affinityGroupObj = ref({
+  label: "",
+  affinityGroupId: "",
 });
 const zoneOptions = computed(() =>
   store.state?.zone?.zones.map((i) => {
@@ -210,6 +224,25 @@ const centerOptions = computed(() =>
     };
   })
 );
+
+const departmentOptions = computed(() =>
+  store.state?.department?.departments.map((i) => {
+    return {
+      label: i.departmentName,
+      departmentId: i.id,
+    };
+  })
+);
+
+const affinityGroupOptions = computed(() =>
+  store.state?.affinityGroup?.affinityGroups.map((i) => {
+    return {
+      label: i.affinityGroupName,
+      affinityGroupId: i.id,
+    };
+  })
+);
+
 const churchAffiliationsDataLoading = computed(
   () => store.state.profile.getChurchAffiliationsDataloading
 );
@@ -250,11 +283,9 @@ const {
 const { errorMessage: cihZoneError } = useField("cihZone");
 const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
   useField("mountainOfInfluence");
-const { value: affinityGroup, errorMessage: affinityGroupError } =
-  useField("affinityGroup");
+const { errorMessage: affinityGroupError } = useField("affinityGroup");
 
-const { value: department, errorMessage: departmentError } =
-  useField("department");
+const { errorMessage: departmentError } = useField("department");
 
 const { errorMessage: cihAddressError } = useField("cihAddress");
 
@@ -295,6 +326,13 @@ const prepareDetails = (values, type) => {
 const getZones = () => {
   store.dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
 };
+const getDepartments = () => {
+  store.dispatch("getDepartments", { pageNumber: 1, pageSize: 10000 });
+};
+
+const getAffinityGroups = () => {
+  store.dispatch("getAffinityGroups", { pageNumber: 1, pageSize: 10000 });
+};
 const onSubmit = handleSubmit((values) => {
   // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
   const hasDataError = churchAffiliationsData.value == null;
@@ -312,12 +350,27 @@ const matchZone = () => {
   );
 };
 
+const matchDepartment = () => {
+  departmentObj.value = departmentOptions.value.find(
+    (department) => department.label === churchAffiliationsData.value.department
+  );
+};
+
+const matchaffinityGroup = () => {
+  affinityGroupObj.value = affinityGroupOptions.value.find(
+    (affinityGroup) =>
+      affinityGroup.label === churchAffiliationsData.value.affinityGroup
+  );
+};
+
 watch(churchAffiliationsData, (newValue) => {
   setValues(newValue);
 
   matchZone();
+  matchDepartment();
+  matchaffinityGroup();
 
-  console.log("ZoneObj: " + JSON.stringify(zoneObj.value));
+  // console.log("ZoneObj: " + JSON.stringify(zoneObj.value));
 });
 
 watch(zoneObj, (newValue) => {
@@ -326,7 +379,19 @@ watch(zoneObj, (newValue) => {
     cihZone: newValue?.label,
   });
 
-  store.dispatch("getAllCenters", { zoneId: newValue.zoneId });
+  store.dispatch("getAllCenters", { zoneId: newValue?.zoneId });
+});
+watch(departmentObj, (newValue) => {
+  setValues({
+    ...values,
+    department: newValue?.label,
+  });
+});
+watch(affinityGroupObj, (newValue) => {
+  setValues({
+    ...values,
+    affinityGroup: newValue?.label,
+  });
 });
 
 watch(centerObj, (newValue) => {
