@@ -16,24 +16,6 @@
       />
 
       <Textinput
-        label="Employer Address 1"
-        type="text"
-        placeholder="Type your address 1"
-        name="employerAddress"
-        v-model="employerAddress"
-        :error="employerAddressError"
-        classInput="h-[40px]"
-      />
-      <Textinput
-        label="Employer Address 2"
-        type="text"
-        placeholder="Type your address 2"
-        name="employerAddress2"
-        v-model="employerAddress2"
-        :error="employerAddress2Error"
-        classInput="h-[40px]"
-      />
-      <Textinput
         label="Position Held"
         type="text"
         placeholder="Type your position"
@@ -43,32 +25,6 @@
         classInput="h-[40px]"
       />
 
-      <Select
-        label="LGA"
-        :options="LGAMenu"
-        v-model.value="lga"
-        :modelValue="lga"
-        :error="lgaError"
-        classInput="!h-[40px]"
-      />
-
-      <Select
-        label="State"
-        :options="stateMenu"
-        v-model.value="state"
-        :modelValue="state"
-        :error="stateError"
-        classInput="!h-[40px]"
-      />
-
-      <Select
-        label="Country"
-        :options="countryMenu"
-        v-model.value="country"
-        :modelValue="country"
-        :error="countryError"
-        classInput="!h-[40px]"
-      />
       <Select
         label="Industry"
         :options="industryMenu"
@@ -86,6 +42,51 @@
         v-model="subSector"
         :error="subSectorError"
         classInput="h-[40px]"
+      />
+
+      <Textinput
+        label="Employer Address"
+        type="text"
+        placeholder="Type your addres"
+        name="employerAddress"
+        v-model="employerAddress"
+        :error="employerAddressError"
+        classInput="h-[40px]"
+      />
+      <!-- <Textinput
+        label="Employer Address 2"
+        type="text"
+        placeholder="Type your address 2"
+        name="employerAddress2"
+        v-model="employerAddress2"
+        :error="employerAddress2Error"
+        classInput="h-[40px]"
+      /> -->
+      <Select
+        label="Country"
+        :options="countryMenu"
+        v-model.value="country"
+        :modelValue="country"
+        :error="countryError"
+        classInput="!h-[40px]"
+      />
+
+      <Select
+        label="State"
+        :options="stateMenu"
+        v-model.value="state"
+        :modelValue="state"
+        :error="stateError"
+        classInput="!h-[40px]"
+      />
+
+      <Select
+        label="LGA"
+        :options="LGAMenu"
+        v-model.value="lga"
+        :modelValue="lga"
+        :error="lgaError"
+        classInput="!h-[40px]"
       />
     </div>
 
@@ -129,7 +130,7 @@ const toast = useToast();
 const schema = yup.object({
   employerName: yup.string(),
   employerAddress: yup.string(),
-  employerAddress2: yup.string(),
+  // employerAddress2: yup.string(),
   positionHeld: yup.string(),
   lga: yup.string(),
   state: yup.string(),
@@ -150,8 +151,8 @@ const { value: employerName, errorMessage: employerNameError } =
 
 const { value: employerAddress, errorMessage: employerAddressError } =
   useField("employerAddress");
-const { value: employerAddress2, errorMessage: employerAddress2Error } =
-  useField("employerAddress2");
+// const { value: employerAddress2, errorMessage: employerAddress2Error } =
+useField("employerAddress2");
 const { value: positionHeld, errorMessage: positionHeldError } =
   useField("positionHeld");
 const { value: lga, errorMessage: lgaError } = useField("lga");
