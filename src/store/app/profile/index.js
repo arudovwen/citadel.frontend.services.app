@@ -19,7 +19,7 @@ export default {
 
     updateQualificationDataloading: false,
     updateQualificationDataSuccess: false,
-    updateQualificationDataerror: null,
+    updateQualificationDataError: null,
 
     updateEmployerDataloading: false,
     updateEmployerDataSuccess: false,
@@ -36,7 +36,7 @@ export default {
     updateChurchAffiliationDataloading: false,
     updateChurchAffiliationDataSuccess: false,
     updateChurchAffiliationDataerror: null,
-
+    qualificationDetails: null,
     //get
     getAllBiodataloading: false,
     getAllBiodatasuccess: false,
@@ -70,6 +70,10 @@ export default {
     deleteChildDataSuccess: false,
     deleteChildDataError: null,
 
+    deleteQualificationLoading: false,
+    deleteQualificationSuccess: false,
+    deleteQualificationError: null,
+
     //edit modal
     editModal: false,
     deleteModal: false,
@@ -86,6 +90,20 @@ export default {
     },
   },
   mutations: {
+    deleteQualificationBegin(state) {
+      state.deleteQualificationLoading = true;
+      state.deleteQualificationError = null;
+      state.deleteQualificationSuccess = false;
+    },
+    deleteQualificationSuccess(state) {
+      state.deleteQualificationLoading = false;
+      state.deleteQualificationSuccess = true;
+    },
+    deleteQualificationError(state, err) {
+      state.deleteQualificationLoading = false;
+      state.deleteQualificationError = err;
+      state.deleteQualificationSuccess = false;
+    },
     deleteBegin(state) {
       state.deleteloading = true;
       state.error = null;
@@ -120,17 +138,18 @@ export default {
     updateQualificationDataBegin(state) {
       state.updateQualificationDataloading = true;
       state.updateQualificationDataSuccess = false;
-      state.updateQualificationDataerror = null;
+      state.updateQualificationDataError = null;
     },
 
     updateQualificationDataSuccess(state) {
       state.updateQualificationDataloading = false;
       state.updateQualificationDataSuccess = true;
+      state.updateQualificationDataError = null;
     },
 
-    updateQualificationDataErr(state, err) {
+    updateQualificationDataError(state, err) {
       state.updateQualificationDataloading = false;
-      state.updateQualificationDataerror = err;
+      state.updateQualificationDataError = err;
       state.updateQualificationDataSuccess = false;
     },
     updateEmployerDataBegin(state) {
@@ -365,6 +384,11 @@ export default {
       state.childDetails = data;
       // console.log(data);
     },
+
+    openQualificationDetail(state, data) {
+      state.editModal = true;
+      state.qualificationDetails = data;
+    },
     closeEditModal(state) {
       state.editModal = false;
       // state.childDetails = null;
@@ -417,7 +441,7 @@ export default {
           commit("updateQualificationDataSuccess");
         }
       } catch (err) {
-        commit("updateQualificationDataerror", err);
+        commit("updateQualificationDataError", err);
       }
     },
     async updateQualification({ commit }, data) {
@@ -429,7 +453,20 @@ export default {
           commit("updateQualificationDataSuccess");
         }
       } catch (err) {
-        commit("updateQualificationDataerror", err);
+        commit("updateQualificationDataError", err);
+      }
+    },
+    async deleteQualificationById({ commit }, id) {
+      try {
+        commit("deleteQualificationBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_QUALIFICATION}?id=${id}`
+        );
+        if (response.status === 200) {
+          commit("deleteQualificationSuccess");
+        }
+      } catch (err) {
+        commit("deleteQualificationError", err);
       }
     },
 
@@ -685,6 +722,10 @@ export default {
     },
     openChildDetail({ commit }, data) {
       commit("openChildDetail", data);
+    },
+
+    openQualificationDetail({ commit }, data) {
+      commit("openQualificationDetail", data);
     },
 
     closeEditModal({ commit }) {

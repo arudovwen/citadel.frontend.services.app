@@ -243,6 +243,8 @@ const success = computed(() => store.state.profile.createChildrenDataSuccess);
 const deleteSuccess = computed(
   () => store.state.profile.deleteChildDataSuccess
 );
+const selectedChildId = ref(null);
+
 // const childrensDataLoading = computed(
 //   () => store.state.profile.getChildrensDataloading
 // );
@@ -265,8 +267,6 @@ const schema = yup.object({
   gender: yup.string(),
   dateOfBirth: yup.string(),
 });
-
-const selectedChildId = ref(null);
 
 const formValues = {
   userId: id.value,
