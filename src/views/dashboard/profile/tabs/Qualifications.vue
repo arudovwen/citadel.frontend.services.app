@@ -4,6 +4,7 @@
 
     <Card bodyClass="p-0">
       <div class="p-6">
+        <!-- {{ values }} -->
         <form @submit="onSubmit" novalidate>
           <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- <Textinput
@@ -73,7 +74,10 @@
                   <button
                     type="button"
                     class="action-btn btn-primary inline-flex items-center justify-center h-8 w-8 text-lg border rounded text-white"
-                    @click="() => $store.dispatch('openChildDetail', props.row)"
+                    @click="
+                      () =>
+                        $store.dispatch('openQualificationDetail', props.row)
+                    "
                   >
                     <Icon icon="heroicons:pencil-square" />
                   </button>
@@ -120,11 +124,15 @@
         </div>
       </template>
     </Modal>
+    <EditQualifications />
   </div>
 </template>
 <script setup>
 // import Test from "./test.vue";
-import { highestQualificationMenu } from "@/constant/data";
+import {
+  highestQualificationMenu,
+  qualificationDetailsTable,
+} from "@/constant/data";
 import { useForm, useField } from "vee-validate";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
@@ -137,8 +145,7 @@ import { inject, onMounted, computed, watch, ref } from "vue";
 import { useStore } from "vuex";
 // import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 import * as yup from "yup";
-import { qualificationDetailsTable } from "@/constant/data";
-
+import EditQualifications from "@/components/Pages/Profile/Qualifications/EditQualifications.vue";
 onMounted(() => {
   getQualificationData();
 });
@@ -171,9 +178,14 @@ const schema = yup.object({
   professionalQualification: yup.string().required("This field is required"),
 });
 
-const { handleSubmit } = useForm({
+const formValues = {
+  highestQualification: "",
+  professionalQualification: "",
+};
+
+const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: qualificationData.value,
+  initialValues: formValues.value,
 });
 
 const { value: highestQualification, errorMessage: highestQualificationError } =
@@ -185,12 +197,6 @@ const {
 } = useField("professionalQualification");
 
 const prepareDetails = (values) => {
-  // const updateObj = {
-  //   id: qualificationData.value?.id,
-  //   userId: id.value,
-  //   highestQualification: values.highestQualification,
-  //   professionalQualification: values.professionalQualification,
-  // };
   const createObj = {
     userId: id.value,
     highestQualification: values.highestQualification,
@@ -220,8 +226,11 @@ watch(qualificationData, () => {
 
 watch(success, () => {
   if (success.value) {
-    toast.success("Successful");
+    if (!store.state.profile.editModal) {
+      toast.success("Successful");
+    }
   }
+  setValues(formValues);
   getQualificationData();
 });
 

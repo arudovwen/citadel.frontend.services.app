@@ -19,7 +19,7 @@ export default {
 
     updateQualificationDataloading: false,
     updateQualificationDataSuccess: false,
-    e: null,
+    updateQualificationDataError: null,
 
     updateEmployerDataloading: false,
     updateEmployerDataSuccess: false,
@@ -36,7 +36,7 @@ export default {
     updateChurchAffiliationDataloading: false,
     updateChurchAffiliationDataSuccess: false,
     updateChurchAffiliationDataerror: null,
-
+    qualificationDetails: null,
     //get
     getAllBiodataloading: false,
     getAllBiodatasuccess: false,
@@ -138,17 +138,18 @@ export default {
     updateQualificationDataBegin(state) {
       state.updateQualificationDataloading = true;
       state.updateQualificationDataSuccess = false;
-      state.e = null;
+      state.updateQualificationDataError = null;
     },
 
     updateQualificationDataSuccess(state) {
       state.updateQualificationDataloading = false;
       state.updateQualificationDataSuccess = true;
+      state.updateQualificationDataError = null;
     },
 
-    updateQualificationDataErr(state, err) {
+    updateQualificationDataError(state, err) {
       state.updateQualificationDataloading = false;
-      state.e = err;
+      state.updateQualificationDataError = err;
       state.updateQualificationDataSuccess = false;
     },
     updateEmployerDataBegin(state) {
@@ -383,6 +384,11 @@ export default {
       state.childDetails = data;
       // console.log(data);
     },
+
+    openQualificationDetail(state, data) {
+      state.editModal = true;
+      state.qualificationDetails = data;
+    },
     closeEditModal(state) {
       state.editModal = false;
       // state.childDetails = null;
@@ -435,7 +441,7 @@ export default {
           commit("updateQualificationDataSuccess");
         }
       } catch (err) {
-        commit("e", err);
+        commit("updateQualificationDataError", err);
       }
     },
     async updateQualification({ commit }, data) {
@@ -447,7 +453,7 @@ export default {
           commit("updateQualificationDataSuccess");
         }
       } catch (err) {
-        commit("e", err);
+        commit("updateQualificationDataError", err);
       }
     },
     async deleteQualificationById({ commit }, id) {
@@ -716,6 +722,10 @@ export default {
     },
     openChildDetail({ commit }, data) {
       commit("openChildDetail", data);
+    },
+
+    openQualificationDetail({ commit }, data) {
+      commit("openQualificationDetail", data);
     },
 
     closeEditModal({ commit }) {
