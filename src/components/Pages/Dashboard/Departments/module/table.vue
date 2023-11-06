@@ -228,6 +228,7 @@ import window from "@/mixins/window";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
 import moment from "moment";
+import { useRoute } from "vue-router";
 import {
   computed,
   onMounted,
@@ -322,7 +323,7 @@ export default {
       columns: [
         {
           label: "Name",
-          field: "name",
+          field: "fullName",
         },
 
         {
@@ -332,7 +333,7 @@ export default {
 
         {
           label: "Phone",
-          field: "phone",
+          field: "mobile1",
         },
 
         {
@@ -341,7 +342,7 @@ export default {
         },
         {
           label: "Dob",
-          field: "dob",
+          field: "dateOfBirth",
         },
         {
           label: "Status",
@@ -414,11 +415,12 @@ export default {
     },
   },
   setup() {
+    const route = useRoute();
     const query = reactive({
       pageNumber: 1,
       pageSize: 10,
       sortOrder: "",
-      searchParameter: "Drama",
+      searchParameter: route.params.name,
     });
     const { state, dispatch } = useStore();
     dispatch("getAffiliationByMemberQuery", query);
@@ -440,10 +442,10 @@ export default {
       query.pageSize = currentPage;
     }
     const search = ref("");
-    const loading = computed(() => state.profile.loading);
+    const loading = computed(() => state.member.loading);
     const members = computed(() => {
-      if (state?.profile?.allbiodata) {
-        return state?.profile?.allbiodata.map((item) => {
+      if (state?.member?.data) {
+        return state?.member?.data?.map((item) => {
           item.fullName = `${item.firstName} ${item.middleName} ${item.surName}`;
           item.dateOfBirth = item?.dateOfBirth
             ? moment(item?.dateOfBirth).format("ll")
