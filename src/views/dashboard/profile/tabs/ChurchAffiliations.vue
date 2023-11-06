@@ -176,13 +176,17 @@ import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 
 onMounted(async () => {
-  await getChurchAffiliationsData();
-  await getZones();
-  await matchZone();
-  await getAffinityGroups();
-  await matchaffinityGroup();
-  await getDepartments();
-  await matchDepartment();
+  try {
+    await getChurchAffiliationsData();
+    await getZones();
+    // await matchZone();
+    await getAffinityGroups();
+    // await matchAffinityGroup();
+    await getDepartments();
+    // await matchDepartment();
+  } catch {
+    console.log("Error");
+  }
 });
 const id = inject("id");
 const store = useStore();
@@ -348,6 +352,15 @@ const matchZone = () => {
   zoneObj.value = zoneOptions.value.find(
     (zone) => zone.label === churchAffiliationsData.value.cihZone
   );
+
+  console.log("zoneObj: " + JSON.stringify(zoneObj.value));
+};
+
+const matchCenter = () => {
+  centerObj.value =
+    centerOptions.value.find(
+      (center) => center.label === churchAffiliationsData.value.cihAddress
+    ) || centerObj.value;
 };
 
 const matchDepartment = () => {
@@ -356,21 +369,31 @@ const matchDepartment = () => {
   );
 };
 
-const matchaffinityGroup = () => {
+const matchAffinityGroup = () => {
   affinityGroupObj.value = affinityGroupOptions.value.find(
     (affinityGroup) =>
       affinityGroup.label === churchAffiliationsData.value.affinityGroup
   );
 };
+watch(zoneOptions, () => {
+  matchZone();
+});
+watch(centerOptions, () => {
+  matchCenter();
+});
+watch(departmentOptions, () => {
+  matchDepartment();
+});
+watch(affinityGroupOptions, () => {
+  matchAffinityGroup();
+});
 
 watch(churchAffiliationsData, (newValue) => {
   setValues(newValue);
-
+  matchCenter();
   matchZone();
   matchDepartment();
-  matchaffinityGroup();
-
-  // console.log("ZoneObj: " + JSON.stringify(zoneObj.value));
+  matchAffinityGroup();
 });
 
 watch(zoneObj, (newValue) => {
@@ -378,6 +401,11 @@ watch(zoneObj, (newValue) => {
     ...values,
     cihZone: newValue?.label,
   });
+  //reset selected center obj when selected zoneObj changes
+  // centerObj.value = {
+  //   label: "",
+  //   centerId: "",
+  // };
 
   store.dispatch("getAllCenters", { zoneId: newValue?.zoneId });
 });
