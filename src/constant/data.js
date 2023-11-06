@@ -793,6 +793,22 @@ export const childrenDetailstable = [
   },
 ];
 
+export const qualificationDetailsTable = [
+  {
+    label: "Highrst Qualification",
+    field: "highestQualification",
+  },
+  {
+    label: "Professional Qualification",
+    field: "professionalQualification",
+  },
+
+  {
+    label: "Action",
+    field: "action",
+  },
+];
+
 export const venueMenu = [
   {
     value: "Lekki",

@@ -42,16 +42,16 @@
         classInput="h-[40px]"
       />
       <Textinput
-        label="Mobile 1"
+        label="Mobile number"
         type="text"
-        placeholder="Type your mobile 1"
+        placeholder="Type your mobile number"
         name="mobile1"
         v-model="mobile1"
         :error="mobile1Error"
         classInput="h-[40px]"
       />
 
-      <Textinput
+      <!-- <Textinput
         label="Mobile 2"
         type="text"
         placeholder="Type your mobile 2"
@@ -59,7 +59,7 @@
         v-model="mobile2"
         :error="mobile2Error"
         classInput="h-[40px]"
-      />
+      /> -->
 
       <Select
         label="Title"
@@ -79,7 +79,7 @@
         classInput="!h-[40px]"
       />
 
-      <FormGroup label="dateOfBirth" name="d1">
+      <FormGroup label="DOB" name="d1">
         <flat-pickr
           v-model="dateOfBirth"
           class="form-control"
@@ -147,7 +147,10 @@ const schema = yup.object({
   firstName: yup.string().required("First name is required"),
   surName: yup.string().required("Last name is required"),
   middleName: yup.string(),
-  email: yup.string().required("Email is required").email("Please enter a valid email address"),
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Please enter a valid email address"),
   mobile1: yup.string().required("Mobile 1 is required"),
   mobile2: yup.string(),
 
@@ -170,7 +173,7 @@ const { value: middleName, errorMessage: middleNameError } =
   useField("middleName");
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
-const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
+// const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
 
 const { value: title, errorMessage: titleError } = useField("title");
 
