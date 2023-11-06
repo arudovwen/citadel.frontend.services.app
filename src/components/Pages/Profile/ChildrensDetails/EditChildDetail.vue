@@ -9,6 +9,14 @@
       <form @submit.prevent="updateChildDetail" :validation-schema="schema">
         <div class="flex gap-x-8 mb-12">
           <div class="w-full lg:grid-cols-2 grid-cols-1 grid gap-5 last:mb-0">
+            <Select
+              label="Title"
+              :options="titleMenu"
+              v-model.value="title"
+              :modelValue="title"
+              :error="titleError"
+              classInput="!h-[40px]"
+            />
             <Textinput
               :id="firstName"
               label="First Name"
@@ -55,7 +63,7 @@
 
             <Textinput
               :id="mobile1"
-              label="Mobile 1"
+              label="Mobile Number"
               type="text"
               v-model="mobile1"
               placeholder="Type your mobile number"
@@ -64,7 +72,7 @@
               classInput="h-[40px]"
             />
 
-            <Textinput
+            <!-- <Textinput
               :id="mobile2"
               label="Mobile 2"
               type="text"
@@ -73,16 +81,7 @@
               :name="mobile2"
               :error="mobile2Error"
               classInput="h-[40px]"
-            />
-
-            <Select
-              label="Title"
-              :options="titleMenu"
-              v-model.value="title"
-              :modelValue="title"
-              :error="titleError"
-              classInput="!h-[40px]"
-            />
+            /> -->
 
             <Select
               label="Gender"
@@ -143,7 +142,10 @@ const schema = yup.object({
   firstName: yup.string().required("First name is required"),
   surName: yup.string().required("Last name is required"),
   middleName: yup.string(),
-  email: yup.string().required("Email is required").email("Please enter a valid email address"),
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Please enter a valid email address"),
   mobile1: yup.string(),
   mobile2: yup.string(),
 
@@ -177,7 +179,7 @@ const { value: middleName, errorMessage: middleNameError } =
   useField("middleName");
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
-const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
+// const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
 
 const { value: title, errorMessage: titleError } = useField("title");
 
