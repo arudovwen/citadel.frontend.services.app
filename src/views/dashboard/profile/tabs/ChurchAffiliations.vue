@@ -11,51 +11,49 @@
       <!-- <span>values: {{ values }}</span> -->
 
       <!-- {{ centerOptions }} -->
-      <Select
-        label="Level Of ATS"
-        :options="levelOfATSMenu"
-        v-model.value="levelOfATS"
-        :modelValue="levelOfATS"
-        :error="levelOfATSError"
-        classInput="!h-[40px]"
-      />
+      <div>
+        <Select
+          label="Level Of ATS"
+          :options="levelOfATSMenu"
+          v-model.value="levelOfATS"
+          :modelValue="levelOfATS"
+          :error="levelOfATSError"
+          classInput="!h-[40px]"
+        />
+      </div>
 
-      <Select
-        label="Charter Member"
-        :options="isCharterMemberMenu"
-        v-model.value="charteredMember"
-        :modelValue="charteredMember"
-        :error="charteredMemberError"
-        classInput="!h-[40px]"
-      />
+      <div>
+        <Select
+          label="Charter Member"
+          :options="isCharterMemberMenu"
+          v-model.value="charteredMember"
+          :modelValue="charteredMember"
+          :error="charteredMemberError"
+          classInput="!h-[40px]"
+        />
+      </div>
 
-      <Textinput
+      <div
         v-if="
           (Number(levelOfATS) >= 2 && charteredMember == true) ||
           charteredMember == 'true'
         "
-        label="Charter Member Number"
-        type="number"
-        placeholder="Type your charter number"
-        name="charteredMemberNumber"
-        v-model="charteredMemberNumber"
-        :error="charteredMemberNumberError"
-        classInput="h-[40px]"
-      />
-
-      <!-- <Select
-        label="CIH Zone"
-        :options="CIHZoneMenu"
-        v-model.value="cihZone"
-        :modelValue="cihZone"
-        :error="cihZoneError"
-        classInput="!h-[40px]"
-      /> -->
+      >
+        <Textinput
+          label="Charter Member Number"
+          type="number"
+          placeholder="Type your charter number"
+          name="charteredMemberNumber"
+          v-model="charteredMemberNumber"
+          :error="charteredMemberNumberError"
+          classInput="h-[40px]"
+        />
+      </div>
 
       <div>
         <CustomVueSelect
           label="CIH Zone"
-          class="min-w-[200px] w-full md:w-auto h-10"
+          class="min-w-[200px] w-full md:w-auto"
           v-model.value="zoneObj"
           :modelValue="zoneObj"
           :error="cihZoneError"
@@ -68,7 +66,7 @@
       <div>
         <CustomVueSelect
           label="CIH Address"
-          class="min-w-[200px] w-full md:w-auto h-10"
+          class="min-w-[200px] w-full md:w-auto"
           v-model.value="centerObj"
           :modelValue="centerObj"
           :error="cihAddressError"
@@ -78,75 +76,43 @@
         />
       </div>
 
-      <!-- <Select
-        label="CIH Address"
-        :options="CIHAddressMenu"
-        v-model.value="cihAddress"
-        :modelValue="cihAddress"
-        :error="cihAddressError"
-        classInput="!h-[40px]"
-      /> -->
+      <div>
+        <Textinput
+          label="Mountain of Evidence"
+          type="text"
+          placeholder="Type your charter number"
+          name="mountainOfInfluence"
+          v-model="mountainOfInfluence"
+          :error="mountainOfInfluenceError"
+          classInput="h-[40px]"
+        />
+      </div>
 
-      <Textinput
-        label="Mountain of Evidence"
-        type="text"
-        placeholder="Type your charter number"
-        name="mountainOfInfluence"
-        v-model="mountainOfInfluence"
-        :error="mountainOfInfluenceError"
-        classInput="h-[40px]"
-      />
+      <div>
+        <CustomVueSelect
+          label="Affinity Group"
+          classInput="!h-[40px]"
+          v-model.value="affinityGroupObj"
+          :modelValue="affinityGroupObj"
+          :error="affinityGroupError"
+          :options="affinityGroupOptions"
+          placeholder="Select affinity group"
+          name="Affinity Group"
+        />
+      </div>
 
-      <CustomVueSelect
-        label="Affinity Group"
-        classInput="!h-[40px]"
-        v-model.value="affinityGroupObj"
-        :modelValue="affinityGroupObj"
-        :error="affinityGroupError"
-        :options="affinityGroupOptions"
-        placeholder="Select affinity group"
-        name="Affinity Group"
-      />
-
-      <!-- <CustomVueSelect
-        name="affinityGroup"
-        v-model="affinityGroup"
-        :modelValue="affinityGroup"
-        :error="affinityGroupError"
-        :options="affinityGroupMenu"
-        label="Affinity Group"
-        @update:modelValue="defaultSelectedValue = $event"
-      /> -->
-
-      <CustomVueSelect
-        label="Department"
-        classInput="!h-[40px]"
-        v-model.value="departmentObj"
-        :modelValue="departmentObj"
-        :error="departmentError"
-        :options="departmentOptions"
-        placeholder="Select department"
-        name="Department"
-      />
-      <!-- <CustomVueSelect
-        name="department"
-        v-model="department"
-        :modelValue="department"
-        :error="departmentError"
-        :options="departmentMenu"
-        label="Department"
-        @update:modelValue="defaultSelectedValue = $event"
-      /> -->
-
-      <!-- <CustomVueSelect
-        name="cihAddress"
-        v-model="cihAddress"
-        :modelValue="cihAddress"
-        :error="cihAddressError"
-        :options="cihAddressMenu"
-        label="CIH Address"
-        @update:modelValue="defaultSelectedValue = $event"
-      /> -->
+      <div>
+        <CustomVueSelect
+          label="Department"
+          classInput="!h-[40px]"
+          v-model.value="departmentObj"
+          :modelValue="departmentObj"
+          :error="departmentError"
+          :options="departmentOptions"
+          placeholder="Select department"
+          name="Department"
+        />
+      </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">

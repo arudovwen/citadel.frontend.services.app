@@ -227,7 +227,7 @@ watch(qualificationData, () => {
 watch(success, () => {
   if (success.value) {
     if (!store.state.profile.editModal) {
-      toast.success("Successful");
+      toast.success("Successfully created");
     }
   }
   setValues(formValues);
