@@ -425,6 +425,7 @@ watch(success, () => {
   if (success.value) {
     toast.success("Successful");
   }
+  getBiodata();
 });
 
 watch(id, (newValue) => {

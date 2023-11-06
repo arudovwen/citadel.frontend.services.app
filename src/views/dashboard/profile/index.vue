@@ -117,6 +117,49 @@
                 </div>
               </div>
             </li>
+
+            <li
+              v-if="biodata?.dateOfBirth"
+              class="flex space-x-3 rtl:space-x-reverse"
+            >
+              <div
+                class="flex-none text-2xl text-slate-600 dark:text-slate-300"
+              >
+                <Icon icon="heroicons:map" />
+              </div>
+              <div class="flex-1">
+                <div
+                  class="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]"
+                >
+                  DATE OF BIRTH
+                </div>
+                <div class="text-base text-slate-600 dark:text-slate-50">
+                  {{ moment(biodata?.dateOfBirth).format("ll") }}
+                </div>
+              </div>
+            </li>
+
+            <li
+              v-if="biodata?.address"
+              class="flex space-x-3 rtl:space-x-reverse"
+            >
+              <div
+                class="flex-none text-2xl text-slate-600 dark:text-slate-300"
+              >
+                <Icon icon="heroicons:map" />
+              </div>
+              <div class="flex-1">
+                <div
+                  class="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]"
+                >
+                  ADDRESS
+                </div>
+                <div class="text-base text-slate-600 dark:text-slate-50">
+                  {{ biodata?.address }}
+                </div>
+              </div>
+            </li>
+
             <!-- end single list -->
           </ul>
         </Card>
@@ -132,15 +175,18 @@
 import ProfilePageSkeleton from "@/components/Pages/Profile/ProfilePageSkeleton.vue";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
-import { provide, ref, computed, onMounted, watch } from "vue";
+import { provide, computed, onMounted, watch } from "vue";
 import Tab from "./tabs/index.vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+import moment from "moment";
+
 onMounted(() => {
   fetchUser();
 });
 const { state, dispatch } = useStore();
 const route = useRoute();
+const biodata = computed(() => state.profile.biodata);
 
 // console.log("Member:" + JSON.stringify(state.member.profile));
 const profileData = computed(() => state.member.profile);
@@ -148,7 +194,9 @@ const profileData = computed(() => state.member.profile);
 const profileLoading = computed(() => state.member.profileloading);
 const profileError = computed(() => state.member.profileerror);
 const userId = computed(() => route.params.userId);
-const isMarried = ref(false);
+const isMarried = computed(() =>
+  state.profile.biodata?.maritalStatus == "Married" ? true : false
+);
 const isAdmin = computed(
   () => state.auth.userData.userRole === "administrator"
 );

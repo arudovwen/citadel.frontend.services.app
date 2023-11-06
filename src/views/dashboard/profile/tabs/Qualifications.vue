@@ -27,9 +27,58 @@
             />
           </div>
           <div class="ltr:text-right rtl:text-left">
-            <Button text="Submit" btnClass="btn btn-primary " />
+            <Button text="Add Qualification" btnClass="btn btn-primary " />
           </div>
         </form>
+
+        <Card v-if="qualificationsDetails.length > 0" bodyClass="p-0 mt-4">
+          <header class="px-4 pt-4 pb-3 mb-3">
+            <h5 class="card-title mb-0 !text-[18px]">List of Qualifications</h5>
+          </header>
+          <vue-good-table
+            :columns="qualificationDetailsTable"
+            :rows="qualificationsDetails"
+            styleClass="vgt-table"
+            :sort-options="{
+              enabled: false,
+            }"
+          >
+            <template v-slot:table-row="props">
+              <!-- <span
+                v-if="props.column.field == 'gender'"
+                class="text-slate-500 dark:text-slate-300"
+              >
+                {{ props.row.gender }}
+              </span> -->
+
+              <!-- <span
+                v-if="props.column.field == 'dateOfBirth'"
+                class="text-slate-500 dark:text-slate-300"
+              >
+                {{ moment(props.row.dateOfBirth).format("ll") }}
+              </span> -->
+              <span v-if="props.column.field == 'action'">
+                <div class="flex space-x-3 rtl:space-x-reverse justify-center">
+                  <button
+                    type="button"
+                    class="action-btn btn-primary inline-flex items-center justify-center h-8 w-8 text-lg border rounded text-white"
+                    @click="() => $store.dispatch('openChildDetail', props.row)"
+                  >
+                    <Icon icon="heroicons:pencil-square" />
+                  </button>
+
+                  <button
+                    type="button"
+                    class="inline-flex items-center justify-center h-8 w-8 bg-danger-500 text-lg border rounded border-danger-500 text-white"
+                    @click="openDelete(props.row.id, $refs.modal.openModal)"
+                  >
+                    <Icon icon="heroicons-outline:trash" />
+                  </button>
+                </div>
+              </span>
+            </template>
+          </vue-good-table>
+        </Card>
       </div>
     </Card>
   </div>
@@ -38,13 +87,16 @@
 // import Test from "./test.vue";
 import { useForm, useField } from "vee-validate";
 import Button from "@/components/Button";
+import Icon from "@/components/Icon";
+
 import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
 import { useToast } from "vue-toastification";
-import { inject, onMounted, computed, watch } from "vue";
+import { inject, onMounted, computed, watch, ref } from "vue";
 import { useStore } from "vuex";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 import * as yup from "yup";
+import { qualificationDetailsTable } from "@/constant/data";
 
 onMounted(() => {
   getQualificationData();
@@ -55,7 +107,7 @@ const getQualificationData = () => {
   store.dispatch("getQualificationsById", id.value);
 };
 const qualificationData = computed(() => store.state.profile.qualificationData);
-
+const qualificationsDetails = ref([]);
 const success = computed(
   () => store.state.profile.updateQualificationDataSuccess
 );
@@ -71,7 +123,7 @@ const schema = yup.object({
   professionalQualification: yup.string().required("This field is required"),
 });
 
-const { handleSubmit, setValues } = useForm({
+const { handleSubmit } = useForm({
   validationSchema: schema,
   initialValues: qualificationData.value,
 });
@@ -111,7 +163,7 @@ const onSubmit = handleSubmit((values) => {
 });
 
 watch(qualificationData, () => {
-  setValues(qualificationData.value);
+  qualificationsDetails.value = qualificationData.value;
 });
 
 watch(success, () => {
