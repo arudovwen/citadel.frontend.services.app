@@ -418,7 +418,7 @@ export default {
       pageNumber: 1,
       pageSize: 10,
       sortOrder: "",
-      searchParameter: "",
+      searchParameter: "Drama",
     });
     const { state, dispatch } = useStore();
     dispatch("getAffiliationByMemberQuery", query);

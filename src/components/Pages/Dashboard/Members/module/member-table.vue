@@ -208,16 +208,16 @@ export default {
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: ({ id }) => {
-            this.$router.push("/profile/" + id);
+          doit: ({ userId }) => {
+            this.$router.push("/profile/" + userId);
           },
         },
 
         {
           name: "edit",
           icon: "heroicons:pencil-square",
-          doit: ({ id }) => {
-            this.$router.push("/profile/" + id);
+          doit: ({ userId }) => {
+            this.$router.push("/profile/" + userId);
           },
         },
         {
@@ -313,6 +313,7 @@ export default {
       pageNumber: 1,
       pageSize: 10,
       searchParameter: "",
+      isFirstTimer: false,
     });
     const toast = useToast();
     const { state, dispatch } = useStore();
