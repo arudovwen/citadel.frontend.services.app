@@ -1,8 +1,8 @@
 <template>
   <div>
-    <ProfileInputSkeleton v-if="qualificationDataLoading" />
+    <!-- <ProfileInputSkeleton v-if="qualificationDataLoading" /> -->
 
-    <Card v-else bodyClass="p-0">
+    <Card bodyClass="p-0">
       <div class="p-6">
         <form @submit="onSubmit" novalidate>
           <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -30,6 +30,8 @@
             <Button text="Add Qualification" btnClass="btn btn-primary " />
           </div>
         </form>
+
+        <span class="hidden" v-if="qualificationDataLoading">Loading...</span>
 
         <Card v-if="qualificationsDetails.length > 0" bodyClass="p-0 mt-4">
           <header class="px-4 pt-4 pb-3 mb-3">
@@ -70,7 +72,7 @@
                   <button
                     type="button"
                     class="inline-flex items-center justify-center h-8 w-8 bg-danger-500 text-lg border rounded border-danger-500 text-white"
-                    @click="openDelete(props.row.id, $refs.modal.openModal)"
+                    @click="openDelete(props.row, $refs.modal.openModal)"
                   >
                     <Icon icon="heroicons-outline:trash" />
                   </button>
@@ -81,6 +83,35 @@
         </Card>
       </div>
     </Card>
+
+    <Modal
+      title="Delete Qualification"
+      label="Small modal"
+      labelClass="btn-outline-danger"
+      ref="modal"
+      sizeClass="max-w-md"
+      themeClass="bg-danger-500"
+    >
+      <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+        Are you sure you want to delete this child?
+        {{ selectedQualification.id }}
+      </div>
+
+      <template v-slot:footer>
+        <div class="flex gap-x-5">
+          <Button
+            text="Cancel"
+            btnClass="btn-outline-secondary btn-sm"
+            @click="$refs.modal.closeModal()"
+          />
+          <Button
+            text="Delete"
+            btnClass="btn-danger btn-sm"
+            @click="deleteQualification($refs.modal.closeModal)"
+          />
+        </div>
+      </template>
+    </Modal>
   </div>
 </template>
 <script setup>
@@ -88,13 +119,14 @@
 import { useForm, useField } from "vee-validate";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
+import Modal from "@/components/Modal/Modal";
 
 import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
 import { useToast } from "vue-toastification";
 import { inject, onMounted, computed, watch, ref } from "vue";
 import { useStore } from "vuex";
-import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
+// import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 import * as yup from "yup";
 import { qualificationDetailsTable } from "@/constant/data";
 
@@ -103,9 +135,16 @@ onMounted(() => {
 });
 const id = inject("id");
 const store = useStore();
+
 const getQualificationData = () => {
   store.dispatch("getQualificationsById", id.value);
 };
+const deleteSuccess = computed(
+  () => store.state.profile.deleteQualificationSuccess
+);
+
+const selectedQualification = ref(null);
+
 const qualificationData = computed(() => store.state.profile.qualificationData);
 const qualificationsDetails = ref([]);
 const success = computed(
@@ -136,30 +175,34 @@ const {
   errorMessage: professionalQualificationError,
 } = useField("professionalQualification");
 
-const prepareDetails = (values, type) => {
-  const updateObj = {
-    id: qualificationData.value?.id,
-    userId: id.value,
-    highestQualification: values.highestQualification,
-    professionalQualification: values.professionalQualification,
-  };
+const prepareDetails = (values) => {
+  // const updateObj = {
+  //   id: qualificationData.value?.id,
+  //   userId: id.value,
+  //   highestQualification: values.highestQualification,
+  //   professionalQualification: values.professionalQualification,
+  // };
   const createObj = {
     userId: id.value,
     highestQualification: values.highestQualification,
     professionalQualification: values.professionalQualification,
   };
-  const obj = type == "create" ? createObj : updateObj;
-  return obj;
+  return createObj;
+};
+
+const openDelete = (data, openFn) => {
+  selectedQualification.value = data;
+
+  openFn();
+};
+
+const deleteQualification = (closeFn) => {
+  store.dispatch("deleteQualificationById", selectedQualification.value.id);
+  closeFn();
 };
 
 const onSubmit = handleSubmit((values) => {
-  const hasDataError = qualificationData.value == null;
-  if (hasDataError) {
-    store.dispatch("createQualification", prepareDetails(values, "create"));
-  }
-  if (!hasDataError) {
-    store.dispatch("updateQualification", prepareDetails(values, "edit"));
-  }
+  store.dispatch("createQualification", prepareDetails(values));
 });
 
 watch(qualificationData, () => {
@@ -170,5 +213,14 @@ watch(success, () => {
   if (success.value) {
     toast.success("Successful");
   }
+  getQualificationData();
+});
+
+watch(deleteSuccess, () => {
+  if (deleteSuccess.value) {
+    toast.success("Successfully Deleted");
+  }
+
+  getQualificationData();
 });
 </script>
