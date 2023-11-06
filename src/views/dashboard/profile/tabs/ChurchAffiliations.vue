@@ -3,6 +3,14 @@
     <ProfileInputSkeleton v-if="churchAffiliationsDataLoading" />
 
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- <span> zoneObj:{{ zoneObj }}</span> -->
+      <!-- <span>zoneOptions:{{ zoneOptions }}</span> -->
+      <!-- <span>data:{{ churchAffiliationsData }}</span> -->
+
+      <!-- <span>DepObj: {{ departmentObj }}</span> -->
+      <!-- <span>values: {{ values }}</span> -->
+
+      <!-- {{ centerOptions }} -->
       <Select
         label="Level Of ATS"
         :options="levelOfATSMenu"
@@ -35,14 +43,49 @@
         classInput="h-[40px]"
       />
 
-      <Select
+      <!-- <Select
         label="CIH Zone"
         :options="CIHZoneMenu"
         v-model.value="cihZone"
         :modelValue="cihZone"
         :error="cihZoneError"
         classInput="!h-[40px]"
-      />
+      /> -->
+
+      <div>
+        <CustomVueSelect
+          label="CIH Zone"
+          class="min-w-[200px] w-full md:w-auto h-10"
+          v-model.value="zoneObj"
+          :modelValue="zoneObj"
+          :error="cihZoneError"
+          :options="zoneOptions"
+          placeholder="Select zone"
+          name="zone"
+        />
+      </div>
+
+      <div>
+        <CustomVueSelect
+          label="CIH Address"
+          class="min-w-[200px] w-full md:w-auto h-10"
+          v-model.value="centerObj"
+          :modelValue="centerObj"
+          :error="cihAddressError"
+          :options="centerOptions"
+          placeholder="Select center"
+          name="CIH Address"
+        />
+      </div>
+
+      <!-- <Select
+        label="CIH Address"
+        :options="CIHAddressMenu"
+        v-model.value="cihAddress"
+        :modelValue="cihAddress"
+        :error="cihAddressError"
+        classInput="!h-[40px]"
+      /> -->
 
       <Textinput
         label="Mountain of Evidence"
@@ -54,13 +97,15 @@
         classInput="h-[40px]"
       />
 
-      <Select
+      <CustomVueSelect
         label="Affinity Group"
-        :options="affinityGroupMenu"
-        v-model.value="affinityGroup"
-        :modelValue="affinityGroup"
-        :error="affinityGroupError"
         classInput="!h-[40px]"
+        v-model.value="affinityGroupObj"
+        :modelValue="affinityGroupObj"
+        :error="affinityGroupError"
+        :options="affinityGroupOptions"
+        placeholder="Select affinity group"
+        name="Affinity Group"
       />
 
       <!-- <CustomVueSelect
@@ -73,13 +118,15 @@
         @update:modelValue="defaultSelectedValue = $event"
       /> -->
 
-      <Select
+      <CustomVueSelect
         label="Department"
-        :options="departmentMenu"
-        v-model.value="department"
-        :modelValue="department"
-        :error="departmentError"
         classInput="!h-[40px]"
+        v-model.value="departmentObj"
+        :modelValue="departmentObj"
+        :error="departmentError"
+        :options="departmentOptions"
+        placeholder="Select department"
+        name="Department"
       />
       <!-- <CustomVueSelect
         name="department"
@@ -91,14 +138,6 @@
         @update:modelValue="defaultSelectedValue = $event"
       /> -->
 
-      <Select
-        label="CIH Address"
-        :options="CIHAddressMenu"
-        v-model.value="cihAddress"
-        :modelValue="cihAddress"
-        :error="cihAddressError"
-        classInput="!h-[40px]"
-      />
       <!-- <CustomVueSelect
         name="cihAddress"
         v-model="cihAddress"
@@ -121,29 +160,33 @@
 
 <script setup>
 import Select from "@/components/Select";
-import { computed, watch } from "vue";
+import { computed, watch, ref } from "vue";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 // import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
-
+// import VueSelect from "@/components/Select/VueSelect";
+import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
-import {
-  levelOfATSMenu,
-  isCharterMemberMenu,
-  CIHZoneMenu,
-  affinityGroupMenu,
-  departmentMenu,
-  CIHAddressMenu,
-} from "@/constant/data";
+import { levelOfATSMenu, isCharterMemberMenu } from "@/constant/data";
 
 import { inject, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 
-onMounted(() => {
-  getChurchAffiliationsData();
+onMounted(async () => {
+  try {
+    await getChurchAffiliationsData();
+    await getZones();
+    // await matchZone();
+    await getAffinityGroups();
+    // await matchAffinityGroup();
+    await getDepartments();
+    // await matchDepartment();
+  } catch {
+    console.log("Error");
+  }
 });
 const id = inject("id");
 const store = useStore();
@@ -151,6 +194,59 @@ const toast = useToast();
 const getChurchAffiliationsData = () => {
   store.dispatch("getChurchAffiliationsById", id.value);
 };
+const zoneObj = ref({
+  label: "",
+  zoneId: "",
+});
+const centerObj = ref({
+  label: "",
+  centerId: "",
+});
+
+const departmentObj = ref({
+  label: "",
+  departmentId: "",
+});
+
+const affinityGroupObj = ref({
+  label: "",
+  affinityGroupId: "",
+});
+const zoneOptions = computed(() =>
+  store.state?.zone?.zones.map((i) => {
+    return {
+      label: i.zoneName,
+      zoneId: i.id,
+    };
+  })
+);
+const centerOptions = computed(() =>
+  store.state?.center?.centers.map((i) => {
+    return {
+      label: i.centerName,
+      centerId: i.id,
+    };
+  })
+);
+
+const departmentOptions = computed(() =>
+  store.state?.department?.departments.map((i) => {
+    return {
+      label: i.departmentName,
+      departmentId: i.id,
+    };
+  })
+);
+
+const affinityGroupOptions = computed(() =>
+  store.state?.affinityGroup?.affinityGroups.map((i) => {
+    return {
+      label: i.affinityGroupName,
+      affinityGroupId: i.id,
+    };
+  })
+);
+
 const churchAffiliationsDataLoading = computed(
   () => store.state.profile.getChurchAffiliationsDataloading
 );
@@ -167,14 +263,14 @@ const schema = yup.object({
   levelOfATS: yup.string(),
   charteredMember: yup.bool(),
   charteredMemberNumber: yup.number().nullable(),
-  cihZone: yup.string(),
+  cihZone: yup.string().required("Zone is required"),
   mountainOfInfluence: yup.string(),
   affinityGroup: yup.string(),
   department: yup.string(),
   cihAddress: yup.string(),
 });
 
-const { handleSubmit, setValues } = useForm({
+const { handleSubmit, setValues, values } = useForm({
   validationSchema: schema,
   initialValues: churchAffiliationsData.value,
 });
@@ -188,17 +284,14 @@ const {
   value: charteredMemberNumber,
   errorMessage: charteredMemberNumberError,
 } = useField("charteredMemberNumber");
-const { value: cihZone, errorMessage: cihZoneError } = useField("cihZone");
+const { errorMessage: cihZoneError } = useField("cihZone");
 const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
   useField("mountainOfInfluence");
-const { value: affinityGroup, errorMessage: affinityGroupError } =
-  useField("affinityGroup");
+const { errorMessage: affinityGroupError } = useField("affinityGroup");
 
-const { value: department, errorMessage: departmentError } =
-  useField("department");
+const { errorMessage: departmentError } = useField("department");
 
-const { value: cihAddress, errorMessage: cihAddressError } =
-  useField("cihAddress");
+const { errorMessage: cihAddressError } = useField("cihAddress");
 
 const prepareDetails = (values, type) => {
   const updateObj = {
@@ -233,6 +326,17 @@ const prepareDetails = (values, type) => {
   const obj = type == "create" ? createObj : updateObj;
   return obj;
 };
+
+const getZones = () => {
+  store.dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
+};
+const getDepartments = () => {
+  store.dispatch("getDepartments", { pageNumber: 1, pageSize: 10000 });
+};
+
+const getAffinityGroups = () => {
+  store.dispatch("getAffinityGroups", { pageNumber: 1, pageSize: 10000 });
+};
 const onSubmit = handleSubmit((values) => {
   // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
   const hasDataError = churchAffiliationsData.value == null;
@@ -244,13 +348,85 @@ const onSubmit = handleSubmit((values) => {
   }
 });
 
-watch(churchAffiliationsData, () => {
-  // setValues({
-  //   charteredMember:
-  //     churchAffiliationsData.value.charteredMember == true ? "true" : "false",
-  //   ...churchAffiliationsData.value,
-  // });
-  setValues(churchAffiliationsData.value);
+const matchZone = () => {
+  zoneObj.value = zoneOptions.value.find(
+    (zone) => zone.label === churchAffiliationsData.value.cihZone
+  );
+
+  console.log("zoneObj: " + JSON.stringify(zoneObj.value));
+};
+
+const matchCenter = () => {
+  centerObj.value =
+    centerOptions.value.find(
+      (center) => center.label === churchAffiliationsData.value.cihAddress
+    ) || centerObj.value;
+};
+
+const matchDepartment = () => {
+  departmentObj.value = departmentOptions.value.find(
+    (department) => department.label === churchAffiliationsData.value.department
+  );
+};
+
+const matchAffinityGroup = () => {
+  affinityGroupObj.value = affinityGroupOptions.value.find(
+    (affinityGroup) =>
+      affinityGroup.label === churchAffiliationsData.value.affinityGroup
+  );
+};
+watch(zoneOptions, () => {
+  matchZone();
+});
+watch(centerOptions, () => {
+  matchCenter();
+});
+watch(departmentOptions, () => {
+  matchDepartment();
+});
+watch(affinityGroupOptions, () => {
+  matchAffinityGroup();
+});
+
+watch(churchAffiliationsData, (newValue) => {
+  setValues(newValue);
+  matchCenter();
+  matchZone();
+  matchDepartment();
+  matchAffinityGroup();
+});
+
+watch(zoneObj, (newValue) => {
+  setValues({
+    ...values,
+    cihZone: newValue?.label,
+  });
+  //reset selected center obj when selected zoneObj changes
+  // centerObj.value = {
+  //   label: "",
+  //   centerId: "",
+  // };
+
+  store.dispatch("getAllCenters", { zoneId: newValue?.zoneId });
+});
+watch(departmentObj, (newValue) => {
+  setValues({
+    ...values,
+    department: newValue?.label,
+  });
+});
+watch(affinityGroupObj, (newValue) => {
+  setValues({
+    ...values,
+    affinityGroup: newValue?.label,
+  });
+});
+
+watch(centerObj, (newValue) => {
+  setValues({
+    ...values,
+    cihAddress: newValue?.label,
+  });
 });
 
 watch(success, () => {
