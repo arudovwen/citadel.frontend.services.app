@@ -253,7 +253,7 @@ const schema = yup.object({
   firstName: yup.string().required("First name is required"),
   surName: yup.string().required("Last name is required"),
   middleName: yup.string(),
-  email: yup.string().required("Email is required").email(),
+  email: yup.string().required("Email is required").email("Please enter a valid email address"),
   mobile1: yup.string(),
   mobile2: yup.string(),
 

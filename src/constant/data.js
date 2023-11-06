@@ -8,24 +8,26 @@ export const menuItems = [
     icon: "heroicons-outline:home",
     link: "/overview",
   },
-  // {
-  //   title: "Profile",
-  //   icon: "heroicons-outline:user",
-  //   link: "profile",
-  // },
   {
-    title: "First Timers",
-    icon: "heroicons-outline:user-add",
-    link: "/first-timers",
+    title: "Users management",
+    icon: "la:users-cog",
+    link: "/users-management",
   },
+
   {
     title: "Members",
     icon: "heroicons-outline:user-group",
     link: "/members-management",
   },
   {
+    title: "First Timers",
+    icon: "heroicons-outline:user-add",
+    link: "/first-timers",
+  },
+
+  {
     title: "Affinity Groups",
-    icon: "mingcute:department-line",
+    icon: "ic:sharp-join-inner",
     link: "/affinity-groups",
   },
   {

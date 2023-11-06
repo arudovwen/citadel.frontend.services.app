@@ -121,7 +121,10 @@ const isSuccess = computed(() => state.auth.signupsuccess);
 const checkbox = ref(false);
 // Define a validation schema
 const schema = yup.object({
-  emailAddress: yup.string().required("Email is required").email(),
+  emailAddress: yup
+    .string()
+    .required("Email is required")
+    .email("Please enter a valid email address"),
   // password: yup
   //   .string()
   //   .required("Password is required")

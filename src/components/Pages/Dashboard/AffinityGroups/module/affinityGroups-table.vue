@@ -425,7 +425,7 @@ export default {
     // }
 
     function perPage({ currentPage }) {
-      query.pageNumber = currentPage;
+      query.pageSize = currentPage;
     }
 
     watch(deleteAffinityGroupSuccess, () => {
@@ -435,7 +435,12 @@ export default {
         dispatch("getAffinityGroups");
       }
     });
-
+    watch(
+      () => [query.pageNumber, query.pageSize],
+      () => {
+        dispatch("getAffinityGroups", query);
+      }
+    );
     return {
       query,
       total,

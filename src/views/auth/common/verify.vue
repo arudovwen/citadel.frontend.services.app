@@ -2,9 +2,11 @@
   <form @submit.prevent="onSubmit" class="space-y-4">
     <Textinput
       :label="`${
-        route.params.type.toLowerCase() === 'otp' ? 'OTP password' : 'Password'
+        route.params.type.toLowerCase() === 'otp' ? 'OTP' : 'Password'
       }`"
-      type="password"
+      :type="`${
+        route.params.type.toLowerCase() === 'otp' ? 'text' : 'password'
+      }`"
       :placeholder="`Type your ${
         route.params.type.toLowerCase() === 'otp' ? 'otp' : 'password'
       }`"
@@ -15,7 +17,16 @@
       required
       :error="passwordError"
     />
-
+    <div
+      v-if="route.params.type.toLowerCase() === 'password'"
+      class="mt-4 text-right"
+    >
+      <router-link
+        to="/forgot-password"
+        class="text-sm text-slate-800 dark:text-slate-400 leading-6 font-medium"
+        >Forgot Password?</router-link
+      >
+    </div>
     <button
       :disabled="isLoading"
       type="submit"

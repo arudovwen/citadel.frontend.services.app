@@ -98,6 +98,13 @@
           :error="nearestBusStopError"
           placeholder="Add your nearest bus-stop"
         />
+        <Textinput
+          label="State"
+          v-model="state"
+          :error="stateError"
+          type="text"
+          placeholder="Enter your state"
+        />
 
         <Textinput
           label="City"
@@ -105,14 +112,6 @@
           :error="cityError"
           type="text"
           placeholder="Enter your city"
-        />
-
-        <Textinput
-          label="State"
-          v-model="state"
-          :error="stateError"
-          type="text"
-          placeholder="Enter your state"
         />
 
         <Textinput
@@ -125,7 +124,7 @@
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Add member" btnClass="btn-dark" />
+        <Button type="submit" text="Add first timer" btnClass="btn-dark" />
       </div>
     </Card>
   </form>
@@ -166,7 +165,7 @@ const formDataSchema = yup.object().shape({
   dateOfVisit: yup.date().required("Date of Visit is required"),
   surName: yup.string().required("surName is required"),
   firstname: yup.string().required("Firstname is required"),
-  middlename: yup.string().required("Middlename is required"),
+  middlename: yup.string().nullable(),
   gender: yup.string().required("Gender is required"),
   dateOfBirth: yup.date().required("Date of Birth is required"),
   mobile1: yup.string().required("Phone Number is required"),
@@ -175,7 +174,7 @@ const formDataSchema = yup.object().shape({
     .email("Invalid email format")
     .required("Email Address is required"),
   address: yup.string().required("Residential Address is required"),
-  nearestBusStop: yup.string().required("Nearest Bus Stop is required"),
+  nearestBusStop: yup.string().nullable(),
   city: yup.string().required("City is required"),
   state: yup.string().required("State is required"),
   country: yup.string().required("Country is required"),
