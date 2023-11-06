@@ -10,6 +10,14 @@
     <!-- {{ values }} -->
     <ProfileInputSkeleton v-if="biodataLoading" />
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <Select
+        label="Title"
+        :options="titleMenu"
+        v-model.value="title"
+        :modelValue="title"
+        :error="titleError"
+        classInput="!h-[40px]"
+      />
       <Textinput
         id="firstName"
         label="First Name"
@@ -40,7 +48,7 @@
         classInput="h-[40px]"
       />
       <Textinput
-        label="Email"
+        label="Email Address"
         type="email"
         placeholder="Type your email"
         name="emil"
@@ -57,6 +65,7 @@
         :error="mobile1Error"
         classInput="h-[40px]"
       />
+
       <Textinput
         label="Mobile 2"
         type="text"
@@ -66,39 +75,70 @@
         :error="mobile2Error"
         classInput="h-[40px]"
       />
+
+      <Select
+        label="Gender"
+        :options="genderMenu"
+        v-model.value="gender"
+        :modelValue="gender"
+        :error="genderError"
+        classInput="!h-[40px]"
+      />
+
+      <FormGroup label="DOB" name="d1">
+        <flat-pickr
+          v-model="dateOfBirth"
+          class="form-control"
+          id="d1"
+          placeholder="yyyy, dd M"
+          :error="dateOfBirthError"
+        />
+      </FormGroup>
+
+      <Select
+        label="Marital Status"
+        :options="maritalStatusMenu"
+        v-model.value="maritalStatus"
+        :modelValue="maritalStatus"
+        :error="maritalStatusError"
+        classInput="!h-[40px]"
+      />
+
+      <Select
+        label="Employment Status"
+        :options="employmentStatusMenu"
+        v-model.value="employmentStatus"
+        :modelValue="employmentStatus"
+        :error="employmentStatusError"
+        classInput="!h-[40px]"
+      />
+
       <Textinput
-        label="Address 1"
+        label="Address"
         type="text"
-        placeholder="Type your address 1"
+        placeholder="Type your addres"
         name="address"
         v-model="address"
         :error="addressError"
         classInput="h-[40px]"
       />
+
       <Textinput
-        label="Address 2"
+        label="Nearest Bus Stop"
         type="text"
-        placeholder="Type your address 2"
-        name="address2"
-        v-model="address2"
-        :error="address2Error"
+        placeholder="Type your nearest bus stop"
+        name="nearestBusStop"
+        v-model="nearestBusStop"
+        :error="nearestBusStopError"
         classInput="h-[40px]"
-      />
-      <Select
-        label="Title"
-        :options="titleMenu"
-        v-model.value="title"
-        :modelValue="title"
-        :error="titleError"
-        classInput="!h-[40px]"
       />
 
       <Select
-        label="LGA"
-        :options="LGAMenu"
-        v-model.value="lga"
-        :modelValue="lga"
-        :error="lgaError"
+        label="Country"
+        :options="countryMenu"
+        v-model.value="country"
+        :modelValue="country"
+        :error="countryError"
         classInput="!h-[40px]"
       />
 
@@ -112,46 +152,20 @@
       />
 
       <Select
-        label="Country"
-        :options="countryMenu"
-        v-model.value="country"
-        :modelValue="country"
-        :error="countryError"
+        label="LGA"
+        :options="LGAMenu"
+        v-model.value="lga"
+        :modelValue="lga"
+        :error="lgaError"
         classInput="!h-[40px]"
       />
 
-      <Select
-        label="Gender"
-        :options="genderMenu"
-        v-model.value="gender"
-        :modelValue="gender"
-        :error="genderError"
-        classInput="!h-[40px]"
-      />
-
-      <Select
-        label="Employment Status"
-        :options="employmentStatusMenu"
-        v-model.value="employmentStatus"
-        :modelValue="employmentStatus"
-        :error="employmentStatusError"
-        classInput="!h-[40px]"
-      />
       <Select
         label="Nationality"
         :options="nationalityMenu"
         v-model.value="nationality"
         :modelValue="nationality"
         :error="nationalityError"
-        classInput="!h-[40px]"
-      />
-
-      <Select
-        label="Gender"
-        :options="genderMenu"
-        v-model.value="gender"
-        :modelValue="gender"
-        :error="genderError"
         classInput="!h-[40px]"
       />
 
@@ -164,24 +178,6 @@
         classInput="!h-[40px]"
       />
 
-      <Select
-        label="Marital Status"
-        :options="maritalStatusMenu"
-        v-model.value="maritalStatus"
-        :modelValue="maritalStatus"
-        :error="maritalStatusError"
-        classInput="!h-[40px]"
-      />
-
-      <Textinput
-        label="Nearest Bus Stop"
-        type="text"
-        placeholder="Type your nearest bus stop"
-        name="nearestBusStop"
-        v-model="nearestBusStop"
-        :error="nearestBusStopError"
-        classInput="h-[40px]"
-      />
       <Textinput
         label="Place Of Birth"
         type="text"
@@ -191,15 +187,6 @@
         :error="placeOfBirthError"
         classInput="h-[40px]"
       />
-      <FormGroup label="DOB" name="d1">
-        <flat-pickr
-          v-model="dateOfBirth"
-          class="form-control"
-          id="d1"
-          placeholder="yyyy, dd M"
-          :error="dateOfBirthError"
-        />
-      </FormGroup>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
       <button
@@ -265,11 +252,14 @@ const schema = yup.object({
   firstName: yup.string().required("First name is required"),
   surName: yup.string().required("Last name is required"),
   middleName: yup.string(),
-  email: yup.string().required("Email is required").email("Please enter a valid email address"),
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Please enter a valid email address"),
   mobile1: yup.string().required("Mobile 1 is required"),
   mobile2: yup.string(),
   address: yup.string(),
-  address2: yup.string(),
+  // address2: yup.string(),
   title: yup.string().required("Title text is required"),
   nearestBusStop: yup.string(),
   lga: yup.string(),
@@ -299,7 +289,7 @@ const { value: email, errorMessage: emailError } = useField("email");
 const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
 const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
 const { value: address, errorMessage: addressError } = useField("address");
-const { value: address2, errorMessage: address2Error } = useField("address2");
+// const { value: address2, errorMessage: address2Error } = useField("address2");
 const { value: title, errorMessage: titleError } = useField("title");
 const { value: nearestBusStop, errorMessage: nearestBusStopError } =
   useField("nearestBusStop");
