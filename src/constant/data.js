@@ -7,38 +7,44 @@ export const menuItems = [
     title: "Overview",
     icon: "heroicons-outline:home",
     link: "/overview",
+    roles: ["administrator", "hod", "member"],
   },
   {
     title: "Users management",
     icon: "la:users-cog",
     link: "/users-management",
+    roles: ["administrator"],
   },
 
   {
     title: "Members",
     icon: "heroicons-outline:user-group",
     link: "/members-management",
+    roles: ["administrator"],
   },
   {
     title: "First Timers",
     icon: "heroicons-outline:user-add",
     link: "/first-timers",
+    roles: ["administrator"],
   },
 
   {
     title: "Affinity Groups",
     icon: "ic:sharp-join-inner",
     link: "/affinity-groups",
+    roles: ["administrator"],
   },
   {
     title: "Departments",
     icon: "mingcute:department-line",
     link: "/departments",
+    roles: ["administrator", "hod"],
   },
   {
     title: "CIH management",
     icon: "mdi:home-group",
-
+    roles: ["administrator", "hod"],
     isOpen: true,
     child: [
       {
@@ -65,17 +71,20 @@ export const menuItems = [
     title: "Outreach",
     icon: "bx:donate-heart",
     link: "/outreach",
+    roles: ["administrator"],
   },
   {
     title: "Attendance",
     icon: "heroicons-outline:clipboard-check",
     link: "/attendance",
+    roles: ["administrator"],
   },
   // { title: "Goals", icon: "bx:football", link: "/goals" },
   {
     title: "Meetings",
     icon: "bx:merge",
     link: "/meetings",
+    roles: ["administrator"],
   },
   // {
   //   title: "Issue Management",
@@ -96,11 +105,13 @@ export const menuItems = [
     title: "Appointments",
     icon: "bx:calendar-plus",
     link: "/appointments",
+    roles: ["administrator"],
   },
   {
     title: "Venues",
     icon: "bx:buildings",
     link: "/venue-management",
+    roles: ["administrator"],
   },
   // {
   //   title: "Chat Management",
@@ -121,6 +132,7 @@ export const ProfileMenu = [
     label: "Profile",
     icon: "heroicons-outline:user",
     link: "#",
+    roles: ["administrator", "hod", "members"],
   },
   // {
   //   label: "Chat",
@@ -141,6 +153,7 @@ export const ProfileMenu = [
     label: "Settings",
     icon: "heroicons-outline:cog",
     link: "#",
+    roles: ["administrator", "hod", "members"],
   },
   // {
   //   label: "Price",

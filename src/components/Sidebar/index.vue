@@ -77,19 +77,20 @@
           }
         "
       >
-        <Navmenu :items="menuItems" />
+        <Navmenu :items="menuLink" />
       </SimpleBar>
     </div>
   </div>
 </template>
 <script>
 import { Icon } from "@iconify/vue";
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
 import { menuItems } from "../../constant/data";
 import Navmenu from "./Navmenu";
 import { gsap } from "gsap";
 import { SimpleBar } from "simplebar-vue3";
 import { ref, onMounted } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   components: {
@@ -106,8 +107,17 @@ export default defineComponent({
   },
 
   setup() {
+    const { state } = useStore();
     const shadowbase = ref(false);
     const simplebarInstance = ref(null);
+    const menuLink = computed(() => {
+      const newItems = menuItems
+        .slice(1)
+        .filter((i) =>
+          i.roles.includes(state.auth.userData.userRole.toLowerCase())
+        );
+      return [menuItems[0], ...newItems];
+    });
     onMounted(() => {
       simplebarInstance.value
         .getScrollElement()
@@ -140,6 +150,7 @@ export default defineComponent({
     };
 
     return {
+      menuLink,
       enterWidget,
       leaveWidget,
       simplebarInstance,
