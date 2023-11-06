@@ -6,7 +6,7 @@
       <div class="p-6">
         <form @submit="onSubmit" novalidate>
           <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Textinput
+            <!-- <Textinput
               label="highestQualification"
               type="text"
               placeholder="Type your highest qualification"
@@ -14,10 +14,19 @@
               v-model="highestQualification"
               :error="highestQualificationError"
               classInput="h-[40px]"
+            /> -->
+
+            <Select
+              label="Highest Qualification"
+              :options="highestQualificationMenu"
+              v-model.value="highestQualification"
+              :modelValue="highestQualification"
+              :error="highestQualificationError"
+              classInput="!h-[40px]"
             />
 
             <Textinput
-              label="professionalQualification"
+              label="Professional Qualification"
               type="text"
               placeholder="Type your professional qualification"
               name="professionalQualification"
@@ -94,7 +103,6 @@
     >
       <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
         Are you sure you want to delete this child?
-        {{ selectedQualification.id }}
       </div>
 
       <template v-slot:footer>
@@ -116,11 +124,12 @@
 </template>
 <script setup>
 // import Test from "./test.vue";
+import { highestQualificationMenu } from "@/constant/data";
 import { useForm, useField } from "vee-validate";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import Modal from "@/components/Modal/Modal";
-
+import Select from "@/components/Select";
 import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
 import { useToast } from "vue-toastification";

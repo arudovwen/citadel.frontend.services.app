@@ -830,3 +830,18 @@ export const attendeeMenu = [
     label: "Femi Falana",
   },
 ];
+
+export const highestQualificationMenu = [
+  {
+    value: "OND",
+    label: "OND",
+  },
+  {
+    value: "HND",
+    label: "HND",
+  },
+  {
+    value: "B.Sc",
+    label: "B.Sc",
+  },
+];
