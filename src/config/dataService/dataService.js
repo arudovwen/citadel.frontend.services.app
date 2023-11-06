@@ -94,7 +94,7 @@ client.interceptors.response.use(
         localStorage.clear();
         window.location.href = `?redirect_from=${window.location.href}`;
       } else if (response.status > 399 && response.status < 500) {
-        toast.error(response.data.message || "Something went wrong");
+        // toast.error(response.data.message || "Something went wrong");
         if (
           response.data &&
           response.data.message &&
