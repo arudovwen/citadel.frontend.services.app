@@ -2,6 +2,8 @@
   <ProfileInputSkeleton v-if="spouseDataLoading" />
   <form v-else @submit.prevent="onSubmit" class="space-y-4">
     <!-- {{ values }} -->
+    <!-- <span>Spoust Title: {{ spouseTitle }}</span>
+    <span>Spouse GenderL {{ spouseGender }}</span> -->
     <!-- {{ $store.state.auth.userData.userName }} -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
@@ -61,15 +63,15 @@
         classInput="h-[40px]"
       /> -->
 
-      <Select
+      <!-- <Select
         label="Title"
         :options="titleMenu"
         v-model.value="title"
         :modelValue="title"
         :error="titleError"
         classInput="!h-[40px]"
-      />
-
+      /> -->
+      <!-- 
       <Select
         label="Gender"
         :options="genderMenu"
@@ -77,7 +79,7 @@
         :modelValue="gender"
         :error="genderError"
         classInput="!h-[40px]"
-      />
+      /> -->
 
       <FormGroup label="DOB" name="d1">
         <flat-pickr
@@ -108,7 +110,7 @@
 </template>
 
 <script setup>
-import Select from "@/components/Select";
+// import Select from "@/components/Select";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 import { useToast } from "vue-toastification";
 import FormGroup from "@/components/FormGroup";
@@ -117,7 +119,7 @@ import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 // import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
-import { titleMenu, genderMenu } from "@/constant/data";
+// import { titleMenu, genderMenu } from "@/constant/data";
 import { inject, onMounted, computed, watch } from "vue";
 import { useStore } from "vuex";
 
@@ -126,6 +128,8 @@ onMounted(() => {
 });
 const id = inject("id");
 const store = useStore();
+const spouseTitle = inject("spouseTitle");
+const spouseGender = inject("spouseGender");
 const getSpouseData = () => {
   store.dispatch("getSpouseDetailById", id.value);
 };
@@ -154,8 +158,8 @@ const schema = yup.object({
   mobile1: yup.string().required("Mobile 1 is required"),
   mobile2: yup.string(),
 
-  title: yup.string().required("Title text is required"),
-  gender: yup.string(),
+  // title: yup.string().required("Title text is required"),
+  // gender: yup.string(),
   dateOfBirth: yup.string(),
   weddingAnniversary: yup.string(),
 });
@@ -175,9 +179,9 @@ const { value: email, errorMessage: emailError } = useField("email");
 const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
 // const { value: mobile2, errorMessage: mobile2Error } = useField("mobile2");
 
-const { value: title, errorMessage: titleError } = useField("title");
+// const { value: title, errorMessage: titleError } = useField("title");
 
-const { value: gender, errorMessage: genderError } = useField("gender");
+// const { value: gender, errorMessage: genderError } = useField("gender");
 
 const { value: dateOfBirth } = useField("dateOfBirth");
 const { value: weddingAnniversary } = useField("weddingAnniversary");
@@ -187,14 +191,14 @@ const { value: weddingAnniversary } = useField("weddingAnniversary");
 const prepareDetails = (values, type) => {
   const updateObj = {
     userId: id.value,
-    title: values.title,
+    title: spouseTitle.value,
     firstName: values.firstName,
     middleName: values.middleName,
     surName: values.surName,
     mobile1: values.mobile1,
     mobile2: values.mobile2,
     email: values.email,
-    gender: values.gender,
+    gender: spouseGender.value,
     dateOfBirth: values.dateOfBirth,
     weddingAnniversary: values.weddingAnniversary,
 
@@ -202,14 +206,14 @@ const prepareDetails = (values, type) => {
   };
   const createObj = {
     userId: id.value,
-    title: values.title,
+    title: spouseTitle.value,
     firstName: values.firstName,
     middleName: values.middleName,
     surName: values.surName,
     mobile1: values.mobile1,
     mobile2: values.mobile2,
     email: values.email,
-    gender: values.gender,
+    gender: spouseGender.value,
     dateOfBirth: values.dateOfBirth,
     weddingAnniversary: values.weddingAnniversary,
   };

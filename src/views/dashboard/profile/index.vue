@@ -197,6 +197,14 @@ const userId = computed(() => route.params.userId);
 const isMarried = computed(() =>
   state.profile.biodata?.maritalStatus == "Married" ? true : false
 );
+
+const spouseTitle = computed(() =>
+  state.profile.biodata?.gender == "Male" ? "Mrs" : "Mr"
+);
+
+const spouseGender = computed(() =>
+  state.profile.biodata?.gender == "Male" ? "Female" : "Male"
+);
 const isAdmin = computed(
   () => state.auth.userData.userRole === "administrator"
 );
@@ -213,6 +221,8 @@ provide("isMarried", isMarried);
 provide("profileData", profileData);
 provide("id", userId);
 provide("isAdmin", isAdmin);
+provide("spouseTitle", spouseTitle);
+provide("spouseGender", spouseGender);
 </script>
 
 <style lang="scss" scoped></style>
