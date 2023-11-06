@@ -11,6 +11,7 @@
       <!-- <span>values: {{ values }}</span> -->
 
       <!-- {{ centerOptions }} -->
+      <!-- {{ centersLoading }} -->
       <div>
         <Select
           label="Level Of ATS"
@@ -65,6 +66,8 @@
 
       <div>
         <CustomVueSelect
+          :disabled="centersLoading"
+          :menuLoading="centersLoading"
           label="CIH Address"
           class="min-w-[200px] w-full md:w-auto"
           v-model.value="centerObj"
@@ -160,6 +163,7 @@ const toast = useToast();
 const getChurchAffiliationsData = () => {
   store.dispatch("getChurchAffiliationsById", id.value);
 };
+const centersLoading = computed(() => store.state.center.getcentersloading);
 const zoneObj = ref({
   label: "",
   zoneId: "",

@@ -12,7 +12,10 @@
     >
       {{ label }}</label
     >
-    <div class="relative">
+    <!-- <div>Loading...{{ menuLoading }}</div> -->
+    <!-- <span>{{ menuLoading }}</span> -->
+    <div v-if="menuLoading">Loading...</div>
+    <div v-else class="relative">
       <div v-if="!$slots.default">
         <vSelect
           :name="name"
@@ -109,6 +112,10 @@ export default {
       default: false,
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    menuLoading: {
       type: Boolean,
       default: false,
     },
