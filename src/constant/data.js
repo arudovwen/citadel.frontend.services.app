@@ -809,7 +809,7 @@ export const childrenDetailstable = [
 
 export const qualificationDetailsTable = [
   {
-    label: "Highrst Qualification",
+    label: "Highest Qualification",
     field: "highestQualification",
   },
   {

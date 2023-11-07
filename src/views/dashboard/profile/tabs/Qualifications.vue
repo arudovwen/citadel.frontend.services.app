@@ -106,7 +106,7 @@
       themeClass="bg-danger-500"
     >
       <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-        Are you sure you want to delete this child?
+        Are you sure you want to delete this qualification?
       </div>
 
       <template v-slot:footer>
