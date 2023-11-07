@@ -18,7 +18,7 @@
         </Tab>
       </div>
     </TabList>
-    <TabPanels>
+    <!-- <TabPanels>
       <TabPanel>
         <PersonalInfo />
       </TabPanel>
@@ -36,6 +36,29 @@
       </TabPanel>
       <TabPanel v-if="buttons[5].isShowing === true">
         <ChurchAffiliations />
+      </TabPanel>
+    </TabPanels> -->
+
+    <TabPanels>
+      <TabPanel v-for="item in buttons" :key="item.title">
+        <div v-if="item.title == 'Personal Information'">
+          <PersonalInfo />
+        </div>
+        <div v-if="item.title == 'Qualifications'">
+          <Qualifications />
+        </div>
+        <div v-if="item.title == 'Employer'">
+          <Employer />
+        </div>
+        <div v-if="item.title == 'Spouse Details'">
+          <SpouseDetails />
+        </div>
+        <div v-if="item.title == 'Children Details'">
+          <ChildrenDetails />
+        </div>
+        <div v-if="item.title == 'Church Affiliations'">
+          <ChurchAffiliations />
+        </div>
       </TabPanel>
     </TabPanels>
   </TabGroup>
@@ -72,7 +95,7 @@ const buttons = ref([
   },
   {
     title: "Children Details",
-    isShowing: true,
+    isShowing: false,
   },
   {
     title: "Church Affiliations",
@@ -83,8 +106,10 @@ const buttons = ref([
 watch(isMarried, (newValue) => {
   if (newValue === true) {
     buttons.value[3].isShowing = true;
+    buttons.value[4].isShowing = true;
   } else {
     buttons.value[3].isShowing = false;
+    buttons.value[4].isShowing = true;
   }
 });
 </script>

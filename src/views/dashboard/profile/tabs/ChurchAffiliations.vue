@@ -83,7 +83,7 @@
         <Textinput
           label="Mountain of Evidence"
           type="text"
-          placeholder="Type your charter number"
+          placeholder="Type your mountain of evidence"
           name="mountainOfInfluence"
           v-model="mountainOfInfluence"
           :error="mountainOfInfluenceError"

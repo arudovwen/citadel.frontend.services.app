@@ -12,7 +12,7 @@ export default {
     creatingProfile: false,
     profileCreated: false,
     createProfileError: null,
-
+    isReqDepartmentOpen: false,
     createChildrenDataloading: false,
     createChildrenDataSuccess: false,
     createChildrenDataerror: null,
@@ -401,6 +401,9 @@ export default {
     openDeleteModal(state) {
       state.deleteModal = true;
     },
+    toggleReqDepartment(state, boolean) {
+      state.isReqDepartmentOpen = boolean;
+    },
   },
   actions: {
     //post
@@ -738,6 +741,10 @@ export default {
 
     closeDeleteModal({ commit }) {
       commit("closeDeleteModal");
+    },
+
+    toggleReqDepartment({ commit }, boolean) {
+      commit("toggleReqDepartment", boolean);
     },
   },
 };
