@@ -6,7 +6,7 @@
       <div class="md:flex pb-6 items-center justify-between">
         <div class="flex gap-x-4 rounded text-sm">
           <InputGroup
-            v-model="query.searchTerm"
+            v-model="query.searchParameter"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
@@ -38,14 +38,14 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
+          mode="remote"
           styleClass=" vgt-table  centered "
           :rows="centers"
           :sort-options="{
             enabled: false,
           }"
           :pagination-options="{
-            enabled: true,
-            perPage: perpage,
+            enabled: false,
           }"
         >
           <template v-slot:table-row="props">
@@ -123,24 +123,6 @@
                 </template>
               </Dropdown>
             </span>
-          </template>
-          <template #pagination-bottom>
-            <div class="py-4 px-3">
-              <!-- <Pagination
-                :total="total"
-                :current="query.pageNumber"
-                :per-page="query.pageSize"
-                :pageRange="pageRange"
-                @page-changed="query.pageNumber = $event"
-                :pageChanged="perPage"
-                :perPageChanged="props.perPageChanged"
-                enableSearch
-                enableSelect
-                :options="options"
-              >
-                >
-              </Pagination> -->
-            </div>
           </template>
         </vue-good-table>
       </div>
@@ -290,9 +272,17 @@ export default {
     onMounted(() => {
       dispatch("getAllCenters", query);
       dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
+      dispatch("getUsers", { pageSize: 100000, pageNumber: 1 });
       id.value = getCurrentInstance().data.id;
     });
-
+    const membersOptions = computed(() =>
+      state?.member?.data.map((i) => {
+        return {
+          label: i.fullName,
+          value: i.userId,
+        };
+      })
+    );
     const { state, dispatch } = useStore();
     const toast = useToast();
     const deleteCenterSuccess = computed(
@@ -308,8 +298,8 @@ export default {
       pageNumber: 1,
       pageSize: 10,
       name: "",
-      searchTerm: "",
-      zoneId: "",
+      searchParameter: "",
+      zoneId: route.params.zoneId,
     };
     // const zoneId = computed(() => zone.value.zoneId);
     const query = reactive({
@@ -336,7 +326,13 @@ export default {
       state.center.centers.map((i) => {
         i.createdAt = moment(i.createdAt).format("ll");
         i.location = i.location ? i.location : "-";
+        i.zone = zoneOptions?.value?.find(
+          (b) => b?.zoneId === i?.zoneId
+        )?.label;
         i.total = i.total ? i.total : 0;
+        i.cordinator = i?.userId
+          ? membersOptions?.value?.find((b) => b?.value === i?.userId)?.label
+          : "-";
         return i;
       })
     );
@@ -359,8 +355,9 @@ export default {
         dispatch("getAllCenters", query);
       }
     });
-    function perPage({ currentPage }) {
-      query.pageSize = currentPage;
+    function perPage({ currentPerPage }) {
+      query.pageNumber = 1;
+      query.pageSize = currentPerPage;
     }
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
@@ -380,9 +377,9 @@ export default {
     });
 
     watch(
-      () => query.searchTerm,
+      () => query.searchParameter,
       () => {
-        debouncedSearch(query.searchTerm);
+        debouncedSearch(query.searchParameter);
       }
     );
     watch(
@@ -429,7 +426,7 @@ export default {
       current: 1,
       perpage: 10,
       pageRange: 5,
-      searchTerm: "",
+      searchParameter: "",
       type: "",
       id: null,
       reason: "",
@@ -532,7 +529,7 @@ export default {
         },
         {
           label: "coordinator",
-          field: "coordinator",
+          field: "cordinator",
         },
         {
           label: "Total members",

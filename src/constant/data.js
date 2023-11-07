@@ -9,12 +9,6 @@ export const menuItems = [
     link: "/overview",
     roles: ["administrator", "hod", "member"],
   },
-  {
-    title: "Users management",
-    icon: "la:users-cog",
-    link: "/users-management",
-    roles: ["administrator"],
-  },
 
   {
     title: "Members",
@@ -40,31 +34,6 @@ export const menuItems = [
     icon: "mingcute:department-line",
     link: "/departments",
     roles: ["administrator", "hod"],
-  },
-  {
-    title: "CIH management",
-    icon: "mdi:home-group",
-    roles: ["administrator", "hod"],
-    isOpen: true,
-    child: [
-      {
-        childtitle: "Zones",
-        childlink: "/cih/zones",
-      },
-
-      {
-        childtitle: "Centers",
-        childlink: "/cih/centers",
-      },
-      {
-        childtitle: "Reports",
-        childlink: "/cih/reports",
-      },
-      {
-        childtitle: "Events",
-        childlink: "/cih/events",
-      },
-    ],
   },
 
   {
@@ -111,6 +80,38 @@ export const menuItems = [
     title: "Venues",
     icon: "bx:buildings",
     link: "/venue-management",
+    roles: ["administrator"],
+  },
+
+  {
+    title: "CIH management",
+    icon: "mdi:home-group",
+    roles: ["administrator", "hod"],
+    isOpen: true,
+    child: [
+      {
+        childtitle: "Zones",
+        childlink: "/cih/zones",
+      },
+
+      {
+        childtitle: "Centers",
+        childlink: "/cih/centers",
+      },
+      {
+        childtitle: "Reports",
+        childlink: "/cih/reports",
+      },
+      {
+        childtitle: "Events",
+        childlink: "/cih/events",
+      },
+    ],
+  },
+  {
+    title: "Users management",
+    icon: "la:users-cog",
+    link: "/users-management",
     roles: ["administrator"],
   },
   // {

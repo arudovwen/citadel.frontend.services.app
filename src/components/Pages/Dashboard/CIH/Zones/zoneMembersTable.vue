@@ -22,6 +22,7 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
+          mode="remote"
           styleClass=" vgt-table  centered "
           :rows="advancedTable"
           :sort-options="{
@@ -37,6 +38,12 @@
           }"
         >
           <template v-slot:table-row="props">
+            <span
+              v-if="props.column.field == 'email'"
+              class="font-medium lowercase"
+            >
+              {{ props.row.email }}
+            </span>
             <span
               v-if="props.column.field == 'customer'"
               class="flex items-center"

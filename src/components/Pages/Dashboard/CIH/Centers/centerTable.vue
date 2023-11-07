@@ -10,7 +10,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <InputGroup
-            v-model="searchTerm"
+            v-model="searchParameter"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
@@ -55,6 +55,7 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
+          mode="remote"
           styleClass=" vgt-table  centered "
           :rows="advancedTable"
           :sort-options="{
@@ -66,7 +67,7 @@
           }"
           :search-options="{
             enabled: true,
-            externalQuery: searchTerm,
+            externalQuery: searchParameter,
           }"
         >
           <template v-slot:table-row="props">
@@ -117,6 +118,12 @@
               >
                 {{ props.row.status }}
               </span>
+            </span>
+            <span
+              v-if="props.column.field == 'email'"
+              class="font-medium lowercase"
+            >
+              {{ props.row.email }}
             </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
@@ -265,7 +272,7 @@ export default {
       current: 1,
       perpage: 10,
       pageRange: 5,
-      searchTerm: "",
+      searchParameter: "",
       type: "",
       id: null,
       filters: ["all", "pending"],

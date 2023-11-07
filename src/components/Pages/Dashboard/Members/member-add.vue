@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <Card title="">
+    <Card noborder className="border-none shadow-none" bodyClass="p-2" title="">
       <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
         <Textinput
           label="First Name"
@@ -17,11 +17,11 @@
           placeholder="Add your middle name"
         />
         <Textinput
-          label="surName"
+          label="Surname"
           type="text"
           v-model="surName"
           :error="surNameError"
-          placeholder="Add your surnanme"
+          placeholder="Add your surname"
         />
         <Select
           label="Gender"

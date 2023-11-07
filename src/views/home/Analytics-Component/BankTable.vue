@@ -17,6 +17,7 @@
       <div class="-mx-6 -mb-6">
         <vue-good-table
           :columns="columns"
+          mode="remote"
           styleClass=" vgt-table lesspadding v-middle   rounded-md"
           :rows="advancedTable"
           :pagination-options="{

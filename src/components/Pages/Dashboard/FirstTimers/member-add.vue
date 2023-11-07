@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <Card title="">
+    <Card noborder className="border-none shadow-none" bodyClass="p-2" title="">
       <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
         <Textinput
           label="First Name"
@@ -17,11 +17,11 @@
           placeholder="Add your middle name"
         />
         <Textinput
-          label="surName"
+          label="Surname"
           type="text"
           v-model="surName"
           :error="surNameError"
-          placeholder="Add your surnanme"
+          placeholder="Add your surname"
         />
         <Select
           label="Gender"
@@ -98,28 +98,31 @@
           :error="nearestBusStopError"
           placeholder="Add your nearest bus-stop"
         />
-        <Textinput
-          label="State"
-          v-model="state"
-          :error="stateError"
-          type="text"
-          placeholder="Enter your state"
-        />
+        <FormGroup label="Country" :error="countryError">
+          <VueSelect
+            class="w-full"
+            v-model.value="country"
+            :options="countriesOption"
+            placeholder="Select your country"
+            name="country"
+          />
+        </FormGroup>
 
+        <FormGroup label="State" :error="stateError">
+          <VueSelect
+            class="w-full"
+            v-model.value="state"
+            :options="statesOption"
+            placeholder="Select your state"
+            name="state"
+          />
+        </FormGroup>
         <Textinput
           label="City"
           v-model="city"
           :error="cityError"
           type="text"
           placeholder="Enter your city"
-        />
-
-        <Textinput
-          label="Country"
-          v-model="country"
-          :error="countryError"
-          type="text"
-          placeholder="Enter your country"
         />
       </div>
 
@@ -130,6 +133,7 @@
   </form>
 </template>
 <script setup>
+import VueSelect from "@/components/Select/VueSelect";
 import { reactive, computed, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { useField, useForm } from "vee-validate";
@@ -140,15 +144,29 @@ import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import Select from "@/components/Select";
+import Countries from "@/util/countries.json";
 
 const toast = useToast();
+// eslint-disable-next-line no-unused-vars
+const countriesOption = computed(() =>
+  Countries.map((i) => {
+    return { label: i.name, value: i.name };
+  })
+);
+const statesOption = computed(() => {
+  return Countries.find((i) => i.name === country.value.label)?.states?.map(
+    (i) => {
+      return { label: i.name, value: i.name };
+    }
+  );
+});
 const { state: vState, dispatch } = useStore();
 const success = computed(() => vState.profile.profileCreated);
 const formData = reactive({
   dateOfVisit: "",
   surName: "",
-  firstname: "",
-  middlename: "",
+  firstName: "",
+  middleName: "",
   gender: "",
   dateOfBirth: "",
   mobile1: "",
@@ -176,8 +194,8 @@ const formDataSchema = yup.object().shape({
   address: yup.string().required("Residential Address is required"),
   nearestBusStop: yup.string().nullable(),
   city: yup.string().required("City is required"),
-  state: yup.string().required("State is required"),
-  country: yup.string().required("Country is required"),
+  state: yup.object().required("State is required"),
+  country: yup.object().required("Country is required"),
   purposeOfVisit: yup.string().required("Purpose of Visit is required"),
   placeOfVisit: yup.string().required("Place of Visit is required"),
 });
@@ -229,6 +247,8 @@ const onSubmit = handleSubmit((values) => {
   });
   dispatch("createProfile", {
     ...values,
+    country: values.country.value,
+    state: values.state.value,
     isFirstTime: true,
   });
 });

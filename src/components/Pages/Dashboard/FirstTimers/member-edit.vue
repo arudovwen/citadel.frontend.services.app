@@ -1,27 +1,27 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <Card title="">
+    <Card noborder className="border-none shadow-none" bodyClass="p-2" title="">
       <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
         <Textinput
           label="First Name"
           type="text"
-          v-model="firstname"
-          :error="firstnameError"
+          v-model="firstName"
+          :error="firstNameError"
           placeholder="Add your first name"
         />
         <Textinput
           label="Middle name"
           type="text"
-          v-model="middlename"
-          :error="middlenameError"
+          v-model="middleName"
+          :error="middleNameError"
           placeholder="Add your middle name"
         />
         <Textinput
           label="Surname"
           type="text"
-          v-model="surname"
-          :error="surnameError"
-          placeholder="Add your surnanme"
+          v-model="surName"
+          :error="surNameError"
+          placeholder="Add your surname"
         />
         <Select
           label="Gender"
@@ -44,16 +44,16 @@
         <Textinput
           label="Phone"
           type="text"
-          v-model="phoneNumber"
-          :error="phoneNumberError"
+          v-model="mobile1"
+          :error="mobile1Error"
           placeholder="Add your phone"
         />
         <div class="lg:col-span-2 col-span-1">
           <Textinput
             label="Email"
             type="email"
-            v-model="emailAddress"
-            :error="emailAddressError"
+            v-model="email"
+            :error="emailError"
             placeholder="Add your email"
           />
         </div>
@@ -85,8 +85,8 @@
         <div class="lg:col-span-2 col-span-1">
           <Textinput
             label="Residential Address"
-            v-model="residentialAddress"
-            :error="residentialAddressError"
+            v-model="address"
+            :error="addressError"
             placeholder="Enter our residential address"
           />
         </div>
@@ -98,29 +98,31 @@
           :error="nearestBusStopError"
           placeholder="Add your nearest bus-stop"
         />
+        <FormGroup label="Country" :error="countryError">
+          <VueSelect
+            class="w-full"
+            v-model.value="country"
+            :options="countriesOption"
+            placeholder="Select your country"
+            name="country"
+          />
+        </FormGroup>
 
+        <FormGroup label="State" :error="stateError">
+          <VueSelect
+            class="w-full"
+            v-model.value="state"
+            :options="statesOption"
+            placeholder="Select your state"
+            name="state"
+          />
+        </FormGroup>
         <Textinput
           label="City"
           v-model="city"
           :error="cityError"
           type="text"
           placeholder="Enter your city"
-        />
-
-        <Textinput
-          label="State"
-          v-model="state"
-          :error="stateError"
-          type="text"
-          placeholder="Enter your state"
-        />
-
-        <Textinput
-          label="Country"
-          v-model="country"
-          :error="countryError"
-          type="text"
-          placeholder="Enter your country"
         />
       </div>
 
@@ -131,25 +133,46 @@
   </form>
 </template>
 <script setup>
+import VueSelect from "@/components/Select/VueSelect";
 import { reactive } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
+import { useToast } from "vue-toastification";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import Select from "@/components/Select";
+import { defineProps, watch, computed } from "vue";
+import { useStore } from "vuex";
+import Countries from "@/util/countries.json";
 
+const toast = useToast();
+// eslint-disable-next-line no-unused-vars
+const countriesOption = computed(() =>
+  Countries.map((i) => {
+    return { label: i.name, value: i.name };
+  })
+);
+const statesOption = computed(() => {
+  return Countries.find((i) => i.name === country.value.label)?.states?.map(
+    (i) => {
+      return { label: i.name, value: i.name };
+    }
+  );
+});
+const { dispatch, state: vState } = useStore();
+const props = defineProps(["detail"]);
 const formData = reactive({
   dateOfVisit: "",
-  surname: "",
-  firstname: "",
-  middlename: "",
+  surName: "",
+  firstName: "",
+  middleName: "",
   gender: "",
   dateOfBirth: "",
-  phoneNumber: "",
-  emailAddress: "",
-  residentialAddress: "",
+  mobile1: "",
+  email: "",
+  address: "",
   nearestBusStop: "",
   city: "",
   state: "",
@@ -159,21 +182,21 @@ const formData = reactive({
 });
 const formDataSchema = yup.object().shape({
   dateOfVisit: yup.date().required("Date of Visit is required"),
-  surname: yup.string().required("Surname is required"),
-  firstname: yup.string().required("Firstname is required"),
-  middlename: yup.string().required("Middlename is required"),
+  surName: yup.string().required("surName is required"),
+  firstName: yup.string().required("firstName is required"),
+  middleName: yup.string().required("middleName is required"),
   gender: yup.string().required("Gender is required"),
   dateOfBirth: yup.date().required("Date of Birth is required"),
-  phoneNumber: yup.string().required("Phone Number is required"),
-  emailAddress: yup
+  mobile1: yup.string().required("Phone Number is required"),
+  email: yup
     .string()
     .email("Invalid email format")
     .required("Email Address is required"),
-  residentialAddress: yup.string().required("Residential Address is required"),
+  address: yup.string().required("Residential Address is required"),
   nearestBusStop: yup.string().required("Nearest Bus Stop is required"),
   city: yup.string().required("City is required"),
-  state: yup.string().required("State is required"),
-  country: yup.string().required("Country is required"),
+  state: yup.object().required("State is required"),
+  country: yup.object().required("Country is required"),
   purposeOfVisit: yup.string().required("Purpose of Visit is required"),
   placeOfVisit: yup.string().required("Place of Visit is required"),
 });
@@ -192,25 +215,34 @@ const genderOptions = [
 ];
 const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
-  initialValues: formData,
+  initialValues: {
+    ...formData,
+    ...props.detail,
+    country: {
+      label: props.detail.country,
+      value: props.detail.country,
+    },
+    state: {
+      label: props.detail.state,
+      value: props.detail.state,
+    },
+    dateOfBirth: new Date(props.detail.dateOfBirth),
+  },
 });
 
-const { value: emailAddress, errorMessage: emailAddressError } =
-  useField("emailAddress");
+const { value: email, errorMessage: emailError } = useField("email");
 const { value: dateOfVisit, errorMessage: dateOfVisitError } =
   useField("dateOfVisit");
-const { value: surname, errorMessage: surnameError } = useField("surname");
-const { value: firstname, errorMessage: firstnameError } =
-  useField("firstname");
-const { value: middlename, errorMessage: middlenameError } =
-  useField("middlename");
+const { value: surName, errorMessage: surNameError } = useField("surName");
+const { value: firstName, errorMessage: firstNameError } =
+  useField("firstName");
+const { value: middleName, errorMessage: middleNameError } =
+  useField("middleName");
 const { value: gender, errorMessage: genderError } = useField("gender");
 const { value: dateOfBirth, errorMessage: dateOfBirthError } =
   useField("dateOfBirth");
-const { value: phoneNumber, errorMessage: phoneNumberError } =
-  useField("phoneNumber");
-const { value: residentialAddress, errorMessage: residentialAddressError } =
-  useField("residentialAddress");
+const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
+const { value: address, errorMessage: addressError } = useField("address");
 const { value: nearestBusStop, errorMessage: nearestBusStopError } =
   useField("nearestBusStop");
 const { value: city, errorMessage: cityError } = useField("city");
@@ -221,8 +253,18 @@ const { value: purposeOfVisit, errorMessage: purposeOfVisitError } =
 const { value: placeOfVisit, errorMessage: placeOfVisitError } =
   useField("placeOfVisit");
 
+const profileCreated = computed(() => vState.profile.profileCreated);
 const onSubmit = handleSubmit((values) => {
-  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
+  dispatch("updateProfile", {
+    ...values,
+    country: values.country.value,
+    state: values.state.value,
+  });
+});
+watch(profileCreated, () => {
+  if (profileCreated.value) {
+    toast.success("Detail updated");
+  }
 });
 </script>
 <style lang=""></style>

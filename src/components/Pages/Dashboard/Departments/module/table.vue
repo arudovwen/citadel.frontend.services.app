@@ -91,6 +91,12 @@
             >
               {{ props.row.date }}
             </span>
+            <span
+              v-if="props.column.field == 'email'"
+              class="font-medium lowercase"
+            >
+              {{ props.row.email }}
+            </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
                 class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
@@ -138,7 +144,7 @@
               </Dropdown>
             </span>
           </template>
-          <template #pagination-bottom="props">
+          <template #pagination-bottom>
             <div class="py-4 px-3">
               <Pagination
                 :total="total"
@@ -146,8 +152,7 @@
                 :per-page="query.pageSize"
                 :pageRange="pageRange"
                 @page-changed="query.pageNumber = $event"
-                :pageChanged="perPage"
-                :perPageChanged="props.perPageChanged"
+                :perPageChanged="perPage"
                 enableSearch
                 enableSelect
                 :options="options"
@@ -438,8 +443,9 @@ export default {
       dispatch("getAffiliationByMemberQuery", { ...query, pageNumber: page });
     }
 
-    function perPage({ currentPage }) {
-      query.pageSize = currentPage;
+    function perPage({ currentPerPage }) {
+      query.pageNumber = 1;
+      query.pageSize = currentPerPage;
     }
     const search = ref("");
     const loading = computed(() => state.member.loading);

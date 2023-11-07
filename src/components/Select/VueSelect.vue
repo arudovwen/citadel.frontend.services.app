@@ -141,9 +141,16 @@ export default {
       type: Array,
     },
   },
+  mounted() {
+    this.selectedValue = this.modelValue;
+  },
   watch: {
     selectedValue(newValue) {
       this.$emit("update:modelValue", newValue);
+    },
+
+    modelValue(newValue) {
+      this.selectedValue = newValue;
     },
   },
 };

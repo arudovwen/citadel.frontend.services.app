@@ -211,7 +211,7 @@ const routes = [
                   import("@/components/Pages/Dashboard/CIH/Zones/zones"),
               },
               {
-                path: "view-centers/:id",
+                path: "view-centers/:zoneId",
                 name: "Centers",
 
                 component: () =>

@@ -2,7 +2,7 @@
   <div
     :class="`card rounded-md bg-white dark:bg-slate-800 lg:h-full  ${
       this.$store.state.skin === 'bordered'
-        ? ' border border-gray-5002 dark:border-slate-700'
+        ? ' border border-gray-500 dark:border-slate-700'
         : 'shadow-base'
     }
    

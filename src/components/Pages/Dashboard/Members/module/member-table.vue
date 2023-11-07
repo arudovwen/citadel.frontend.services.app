@@ -41,6 +41,7 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
+          mode="remote"
           styleClass="vgt-table"
           :isLoading="loading"
           :rows="members || []"
@@ -53,6 +54,12 @@
           }"
         >
           <template v-slot:table-row="props">
+            <span
+              v-if="props.column.field == 'email'"
+              class="font-medium lowercase"
+            >
+              {{ props.row.email }}
+            </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
                 <span class="text-xl"
@@ -79,7 +86,7 @@
               </Dropdown>
             </span>
           </template>
-          <template #pagination-bottom="props">
+          <template #pagination-bottom>
             <div class="py-4 px-3">
               <Pagination
                 :total="total"
@@ -87,8 +94,7 @@
                 :per-page="query.pageSize"
                 :pageRange="pageRange"
                 @page-changed="query.pageNumber = $event"
-                :pageChanged="perPage"
-                :perPageChanged="props.perPageChanged"
+                :perPageChanged="perPage"
                 enableSearch
                 enableSelect
                 :options="options"
@@ -141,7 +147,7 @@
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
-    sizeClass="max-w-lg"
+    sizeClass="max-w-xl"
   >
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />
@@ -325,8 +331,9 @@ export default {
       dispatch("getAllBiodata", { ...query, pageNumber: page });
     }
 
-    function perPage({ currentPage }) {
-      query.pageSize = currentPage;
+    function perPage({ currentPerPage }) {
+      query.pageNumber = 1;
+      query.pageSize = currentPerPage;
     }
     const search = ref("");
     const loading = computed(() => state.profile.loading);

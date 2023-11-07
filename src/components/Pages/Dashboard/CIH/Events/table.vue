@@ -4,7 +4,7 @@
       <div class="md:flex pb-6 items-center justify-between">
         <div class="flex gap-x-4 items-center">
           <InputGroup
-            v-model="searchTerm"
+            v-model="searchParameter"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
@@ -60,6 +60,7 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
+          mode="remote"
           styleClass=" vgt-table  centered "
           :rows="advancedTable"
           :sort-options="{
@@ -71,7 +72,7 @@
           }"
           :search-options="{
             enabled: true,
-            externalQuery: searchTerm,
+            externalQuery: searchParameter,
           }"
         >
           <template v-slot:table-row="props">
@@ -267,7 +268,7 @@ export default {
       current: 1,
       perpage: 10,
       pageRange: 5,
-      searchTerm: "",
+      searchParameter: "",
       filterType: "",
       type: "",
       id: null,

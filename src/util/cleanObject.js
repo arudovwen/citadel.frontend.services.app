@@ -8,6 +8,5 @@ export function cleanObject(obj) {
       cleaned[key] = value;
     }
   });
-  console.log("🚀 ~ file: cleanObject.js:13 ~ cleanObject ~ cleaned:", cleaned);
   return cleaned;
 }

@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <Card title="">
+    <Card noborder className="border-none shadow-none" bodyClass="p-2" title="">
       <div class="flex flex-col gap-y-5">
         <Textinput
           label="First Name"

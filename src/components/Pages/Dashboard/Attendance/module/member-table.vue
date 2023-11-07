@@ -37,6 +37,7 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
+          mode="remote"
           styleClass=" vgt-table  centered "
           :rows="advancedTable"
           :sort-options="{

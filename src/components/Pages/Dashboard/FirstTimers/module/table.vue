@@ -38,6 +38,7 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
+          mode="remote"
           styleClass="vgt-table"
           :isLoading="loading"
           :rows="members || []"
@@ -74,6 +75,12 @@
               {{ "#" + props.row.order }}
             </span>
             <span
+              v-if="props.column.field == 'email'"
+              class="font-medium lowercase"
+            >
+              {{ props.row.email }}
+            </span>
+            <span
               v-if="props.column.field == 'date'"
               class="text-slate-500 dark:text-slate-400"
             >
@@ -92,6 +99,12 @@
               >
                 {{ props.row.status }}
               </span>
+            </span>
+            <span
+              v-if="props.column.field == 'email'"
+              class="font-medium lowercase"
+            >
+              {{ props.row.email }}
             </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems="w-[140px]">
@@ -182,8 +195,8 @@
     sizeClass="max-w-3xl"
   >
     <AddRecord v-if="type === 'add'" />
-    <EditRecord v-if="type === 'edit'" />
-    <ViewRecord v-if="type === 'view'" />
+    <EditRecord v-if="type === 'edit'" :detail="detail" />
+    <ViewRecord v-if="type === 'view'" :detail="detail" />
   </Modal>
 </template>
 
@@ -204,13 +217,12 @@ import ViewRecord from "../member-preview.vue";
 import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
-import { useRouter } from "vue-router";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
-const router = useRouter();
 const pageRange = ref(5);
 
 const timerid = ref(null);
+const detail = ref(null);
 const type = ref("");
 
 const dateValue = ref(null);
@@ -223,24 +235,25 @@ const actions = ref([
   {
     name: "view",
     icon: "heroicons-outline:eye",
-    doit: (name, { userId }) => {
+    doit: (name, data) => {
       type.value = name;
-      router.push("/profile/" + userId);
+      detail.value = data;
+      modalChange.value.openModal();
     },
   },
   {
     name: "edit",
     icon: "heroicons:pencil-square",
-    doit: (name, { userId }) => {
+    doit: (name, data) => {
       type.value = name;
-      router.push("/profile/" + userId);
+      detail.value = data;
+      modalChange.value.openModal();
     },
   },
   {
     name: "delete",
     icon: "heroicons-outline:trash",
     doit: (name, { id }) => {
-      console.log("🚀 ~ file: table.vue:273 ~ data ~ id:", id);
       type.value = name;
       timerid.value = id;
       modal.value.openModal();
