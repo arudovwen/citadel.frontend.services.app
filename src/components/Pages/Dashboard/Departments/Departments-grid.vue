@@ -219,7 +219,11 @@ const actions = ref([
 const query = inject("query");
 onMounted(() => {
   dispatch("getDepartments", query);
-  dispatch("getUsers", { pageSize: 100000, pageNumber: 1 });
+  dispatch("getUsers", {
+    pageSize: 100000,
+    pageNumber: 1,
+    searchParameter: "hod",
+  });
 });
 // eslint-disable-next-line no-unused-vars
 function handleDelete() {

@@ -21,8 +21,8 @@
             iconClass="text-lg"
           />
           <Button
-            icon="heroicons-outline:filter"
-            text="Filter"
+            icon="clarity:export-line"
+            text="Export"
             btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
             iconClass="text-lg"
           />

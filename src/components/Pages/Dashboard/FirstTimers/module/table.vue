@@ -21,6 +21,19 @@
           />
         </div>
         <div class="md:flex md:space-x-3 items-center flex-none">
+          <export-excel
+            :data="members"
+            worksheet="First timers"
+            name="firsttimers.xls"
+          >
+            <Button
+              icon="clarity:export-line"
+              text="Export"
+              btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+              iconClass="text-lg"
+            />
+          </export-excel>
+
           <Button
             icon="ri:user-add-line"
             text="Add First timer"
@@ -100,12 +113,7 @@
                 {{ props.row.status }}
               </span>
             </span>
-            <span
-              v-if="props.column.field == 'email'"
-              class="font-medium lowercase"
-            >
-              {{ props.row.email }}
-            </span>
+
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems="w-[140px]">
                 <span class="text-xl">

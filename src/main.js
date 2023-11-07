@@ -22,6 +22,7 @@ import store from "./store";
 import VCalendar from "v-calendar";
 import "v-calendar/dist/style.css";
 import VOtpInput from "vue3-otp-input";
+import excel from "vue-excel-export";
 
 if (localStorage.users === undefined) {
   let users = [
@@ -78,6 +79,7 @@ createApp(App)
     bodyClassName: "dashcode-toast-body",
   })
   .use(router)
+  .use(excel)
   .use(VueClickAway)
   .use(VueTippy)
   .use(VueFlatPickr)

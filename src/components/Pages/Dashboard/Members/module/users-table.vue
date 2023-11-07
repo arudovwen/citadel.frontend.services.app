@@ -24,6 +24,14 @@
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
+          <export-excel :data="members" worksheet="Users" name="users.xls">
+            <Button
+              icon="clarity:export-line"
+              text="Export"
+              btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+              iconClass="text-lg"
+            />
+          </export-excel>
           <Button
             icon="ri:user-add-line"
             text="Add user"
