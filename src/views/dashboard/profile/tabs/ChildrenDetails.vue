@@ -297,7 +297,7 @@ const openDelete = (id, openFn) => {
 
 // const router = useRouter();
 
-const { handleSubmit, values, setValues } = useForm({
+const { handleSubmit, values, resetForm } = useForm({
   validationSchema: schema,
   initialValues: formValues,
 });
@@ -376,7 +376,7 @@ watch(success, () => {
     toast.success("Successfully Created");
   }
 
-  setValues(formValues);
+  resetForm();
 
   getChildrensData();
 });

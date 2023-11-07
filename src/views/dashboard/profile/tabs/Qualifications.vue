@@ -2,12 +2,12 @@
   <div>
     <!-- <ProfileInputSkeleton v-if="qualificationDataLoading" /> -->
 
-    <Card bodyClass="p-0">
-      <div class="p-6">
-        <!-- {{ values }} -->
-        <form @submit="onSubmit" novalidate>
-          <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- <Textinput
+    <!-- <Card bodyClass="p-0"> -->
+    <div class="py-6">
+      <!-- {{ values }} -->
+      <form @submit="onSubmit" novalidate>
+        <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- <Textinput
               label="highestQualification"
               type="text"
               placeholder="Type your highest qualification"
@@ -17,85 +17,71 @@
               classInput="h-[40px]"
             /> -->
 
-            <Select
-              label="Highest Qualification"
-              :options="highestQualificationMenu"
-              v-model.value="highestQualification"
-              :modelValue="highestQualification"
-              :error="highestQualificationError"
-              classInput="!h-[40px]"
-            />
+          <Select
+            label="Highest Qualification"
+            :options="highestQualificationMenu"
+            v-model.value="highestQualification"
+            :modelValue="highestQualification"
+            :error="highestQualificationError"
+            classInput="!h-[40px]"
+          />
 
-            <Textinput
-              label="Professional Qualification"
-              type="text"
-              placeholder="Type your professional qualification"
-              name="professionalQualification"
-              v-model="professionalQualification"
-              :error="professionalQualificationError"
-              classInput="h-[40px]"
-            />
-          </div>
-          <div class="ltr:text-right rtl:text-left">
-            <Button text="Add Qualification" btnClass="btn btn-primary " />
-          </div>
-        </form>
+          <Textinput
+            label="Professional Qualification"
+            type="text"
+            placeholder="Type your professional qualification"
+            name="professionalQualification"
+            v-model="professionalQualification"
+            :error="professionalQualificationError"
+            classInput="h-[40px]"
+          />
+        </div>
+        <div class="ltr:text-right rtl:text-left">
+          <Button text="Add Qualification" btnClass="btn btn-primary " />
+        </div>
+      </form>
 
-        <span class="hidden" v-if="qualificationDataLoading">Loading...</span>
+      <span class="hidden" v-if="qualificationDataLoading">Loading...</span>
 
-        <Card v-if="qualificationsDetails.length > 0" bodyClass="p-0 mt-4">
-          <header class="px-4 pt-4 pb-3 mb-3">
-            <h5 class="card-title mb-0 !text-[18px]">List of Qualifications</h5>
-          </header>
-          <vue-good-table
-            :columns="qualificationDetailsTable"
-            :rows="qualificationsDetails"
-            styleClass="vgt-table"
-            :sort-options="{
-              enabled: false,
-            }"
-          >
-            <template v-slot:table-row="props">
-              <!-- <span
-                v-if="props.column.field == 'gender'"
-                class="text-slate-500 dark:text-slate-300"
-              >
-                {{ props.row.gender }}
-              </span> -->
+      <Card v-if="qualificationsDetails.length > 0" bodyClass="p-0 mt-4">
+        <header class="px-4 pt-4 pb-3 mb-3">
+          <h5 class="card-title mb-0 !text-[18px]">List of Qualifications</h5>
+        </header>
+        <vue-good-table
+          :columns="qualificationDetailsTable"
+          :rows="qualificationsDetails"
+          styleClass="vgt-table !pb-0"
+          :sort-options="{
+            enabled: false,
+          }"
+        >
+          <template v-slot:table-row="props">
+            <span v-if="props.column.field == 'action'">
+              <div class="flex space-x-3 rtl:space-x-reverse justify-center">
+                <button
+                  type="button"
+                  class="action-btn btn-primary inline-flex items-center justify-center h-8 w-8 text-lg border rounded text-white"
+                  @click="
+                    () => $store.dispatch('openQualificationDetail', props.row)
+                  "
+                >
+                  <Icon icon="heroicons:pencil-square" />
+                </button>
 
-              <!-- <span
-                v-if="props.column.field == 'dateOfBirth'"
-                class="text-slate-500 dark:text-slate-300"
-              >
-                {{ moment(props.row.dateOfBirth).format("ll") }}
-              </span> -->
-              <span v-if="props.column.field == 'action'">
-                <div class="flex space-x-3 rtl:space-x-reverse justify-center">
-                  <button
-                    type="button"
-                    class="action-btn btn-primary inline-flex items-center justify-center h-8 w-8 text-lg border rounded text-white"
-                    @click="
-                      () =>
-                        $store.dispatch('openQualificationDetail', props.row)
-                    "
-                  >
-                    <Icon icon="heroicons:pencil-square" />
-                  </button>
-
-                  <button
-                    type="button"
-                    class="inline-flex items-center justify-center h-8 w-8 bg-danger-500 text-lg border rounded border-danger-500 text-white"
-                    @click="openDelete(props.row, $refs.modal.openModal)"
-                  >
-                    <Icon icon="heroicons-outline:trash" />
-                  </button>
-                </div>
-              </span>
-            </template>
-          </vue-good-table>
-        </Card>
-      </div>
-    </Card>
+                <button
+                  type="button"
+                  class="inline-flex items-center justify-center h-8 w-8 bg-danger-500 text-lg border rounded border-danger-500 text-white"
+                  @click="openDelete(props.row, $refs.modal.openModal)"
+                >
+                  <Icon icon="heroicons-outline:trash" />
+                </button>
+              </div>
+            </span>
+          </template>
+        </vue-good-table>
+      </Card>
+    </div>
+    <!-- </Card> -->
 
     <Modal
       title="Delete Qualification"
@@ -106,7 +92,7 @@
       themeClass="bg-danger-500"
     >
       <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-        Are you sure you want to delete this child?
+        Are you sure you want to delete this qualification?
       </div>
 
       <template v-slot:footer>
@@ -183,7 +169,7 @@ const formValues = {
   professionalQualification: "",
 };
 
-const { handleSubmit, setValues } = useForm({
+const { handleSubmit, resetForm } = useForm({
   validationSchema: schema,
   initialValues: formValues.value,
 });
@@ -230,7 +216,8 @@ watch(success, () => {
       toast.success("Successfully created");
     }
   }
-  setValues(formValues);
+  // setValues(formValues);
+  resetForm();
   getQualificationData();
 });
 
@@ -242,3 +229,19 @@ watch(deleteSuccess, () => {
   getQualificationData();
 });
 </script>
+
+<style lang="scss" scoped>
+// .vgt-responsive {
+//   padding-bottom: 10px !important;
+// }
+// .vgt-responsive {
+//   width: 100%;
+//   overflow-x: auto;
+//   position: relative;
+// }
+
+// .vgt-wrap .vgt-responsive {
+//   // border-radius: 100px !important;
+//   padding-bottom: 10px !important;
+// }
+</style>
