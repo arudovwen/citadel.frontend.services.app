@@ -556,12 +556,12 @@ router.beforeEach((to, from, next) => {
   document.title = "Citadel  - " + words;
   if (store.state.auth.accessToken) {
     if (
-      to.meta.roles.includes(store.state.auth.userData.userRole.toLowerCase())
+      to?.meta?.roles?.includes(
+        store?.state?.auth?.userData?.userRole?.toLowerCase()
+      )
     ) {
-      console.log("🚀 ~ file: index.js:573 ~ router.beforeEach ~ true:");
       next();
     } else {
-      console.log("🚀 ~ file: index.js:573 ~ router.beforeEach ~ false:");
       next({ name: "overview" });
     }
   } else {
