@@ -125,7 +125,7 @@
               <div
                 class="flex-none text-2xl text-slate-600 dark:text-slate-300"
               >
-                <Icon icon="heroicons:map" />
+                <Icon icon="heroicons:calendar" />
               </div>
               <div class="flex-1">
                 <div
@@ -146,7 +146,7 @@
               <div
                 class="flex-none text-2xl text-slate-600 dark:text-slate-300"
               >
-                <Icon icon="heroicons:map" />
+                <Icon icon="heroicons:map-pin" />
               </div>
               <div class="flex-1">
                 <div
@@ -160,6 +160,29 @@
               </div>
             </li>
 
+            <li class="flex space-x-3 rtl:space-x-reverse">
+              <div
+                class="flex-none text-2xl text-slate-600 dark:text-slate-300"
+              >
+                <Icon icon="mingcute:department-line" />
+              </div>
+              <div class="flex-1">
+                <div
+                  class="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]"
+                >
+                  DEPARTMENT
+                </div>
+                <div class="text-base text-slate-600 dark:text-slate-50">
+                  <span
+                    @click="toggleReqDepartment(true)"
+                    class="cursor-pointer"
+                  >
+                    Click here to request to join department
+                  </span>
+                </div>
+              </div>
+            </li>
+
             <!-- end single list -->
           </ul>
         </Card>
@@ -168,10 +191,21 @@
         <Card title="User Profile"> <Tab /></Card>
       </div>
     </div>
+    <!-- 
+    <Modal
+      :activeModal="state.profile.isReqDepartmentOpen"
+      @close="toggleReqDepartment(false)"
+      title="Request Department"
+      centered
+    >
+      Stuff
+    </Modal> -->
+    <RequestDepartment />
   </div>
 </template>
 
 <script setup>
+import RequestDepartment from "@/components/Pages/Profile/ChurchAffiliation/RequestDepartment.vue";
 import ProfilePageSkeleton from "@/components/Pages/Profile/ProfilePageSkeleton.vue";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
@@ -180,14 +214,19 @@ import Tab from "./tabs/index.vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import moment from "moment";
+// import Modal from "@/components/Modal";
 
 onMounted(() => {
   fetchUser();
 });
 const { state, dispatch } = useStore();
+// const isReqDepartmentOpen = computed(() => state.profile.isReqDepartmentOpen);
+const toggleReqDepartment = (boolean) => {
+  dispatch("toggleReqDepartment", boolean);
+};
 const route = useRoute();
 const biodata = computed(() => state.profile.biodata);
-
+console.log(state.auth.accessToken);
 // console.log("Member:" + JSON.stringify(state.member.profile));
 const profileData = computed(() => state.member.profile);
 // const success = computed(() => state.member.profilesuccess);

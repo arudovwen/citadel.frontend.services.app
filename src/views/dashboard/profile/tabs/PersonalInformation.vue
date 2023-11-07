@@ -8,7 +8,7 @@
     <!-- <span>UserData: {{ profileData }}</span> -->
     <!-- <span>FormVal: {{ formValues }}</span> -->
     <!-- {{ values }} -->
-    <ProfileInputSkeleton v-if="biodataLoading" />
+    <ProfileInputSkeleton v-if="biodataLoading || isShowing == false" />
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Select
         label="Title"
@@ -220,7 +220,7 @@ import {
   maritalStatusMenu,
 } from "@/constant/data";
 import { useStore } from "vuex";
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted, watch, ref } from "vue";
 import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
@@ -235,6 +235,8 @@ const toast = useToast();
 const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
+
+const isShowing = ref(false);
 
 const biodataLoading = computed(() => store.state.profile.getBiodataloading);
 const success = computed(() => store.state.profile.profileCreated);
@@ -260,7 +262,8 @@ const schema = yup.object({
   mobile2: yup.string(),
   address: yup.string(),
   // address2: yup.string(),
-  title: yup.string().required("Title text is required"),
+  // .required("Title text is required")
+  title: yup.string(),
   nearestBusStop: yup.string(),
   lga: yup.string(),
   state: yup.string(),
@@ -394,8 +397,10 @@ watch(creationSuccess, () => {
 watch(biodataLoading, () => {
   if (biodata.value !== null) {
     setValues(biodata.value);
+    isShowing.value = true;
   } else {
     setValues({
+      // ...values,
       firstName: profileData.value.firstName,
       surName: profileData.value.lastName,
       middleName: profileData.value.middleName,
@@ -403,6 +408,8 @@ watch(biodataLoading, () => {
       mobile1: profileData.value.phoneNumber,
     });
   }
+
+  isShowing.value = true;
 });
 
 // watch(getBiodataloading, (newValue) => {

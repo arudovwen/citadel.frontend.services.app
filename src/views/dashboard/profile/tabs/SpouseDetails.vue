@@ -211,7 +211,7 @@ const prepareDetails = (values, type) => {
     middleName: values.middleName,
     surName: values.surName,
     mobile1: values.mobile1,
-    mobile2: values.mobile2,
+    mobile2: "string",
     email: values.email,
     gender: spouseGender.value,
     dateOfBirth: values.dateOfBirth,
