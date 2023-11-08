@@ -230,18 +230,9 @@ watch(deleteSuccess, () => {
 });
 </script>
 
-<style lang="scss" scoped>
-// .vgt-responsive {
-//   padding-bottom: 10px !important;
-// }
-// .vgt-responsive {
-//   width: 100%;
-//   overflow-x: auto;
-//   position: relative;
-// }
-
-// .vgt-wrap .vgt-responsive {
-//   // border-radius: 100px !important;
-//   padding-bottom: 10px !important;
-// }
+<style lang="scss">
+.vgt-wrap .vgt-responsive {
+  border-radius: 0px !important;
+  padding-bottom: 0px !important;
+}
 </style>

@@ -386,4 +386,9 @@ watch(success, () => {
 .action-btn {
   @apply flex flex-col items-center justify-center border border-slate-200 dark:border-slate-700 rounded;
 }
+
+.vgt-wrap .vgt-responsive {
+  border-radius: 0px !important;
+  padding-bottom: 0px !important;
+}
 </style>
