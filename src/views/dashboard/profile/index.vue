@@ -3,7 +3,6 @@
     ><ProfilePageSkeleton
   /></span>
   <div v-else class="space-y-5 profile-page">
-    <!-- {{ profileData }} -->
     <div
       class="profiel-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0 space-y-6 justify-between items-end relative z-[1]"
     >
@@ -180,12 +179,11 @@
                     v-if="churchAffiliationsDataLoading && !department"
                     class="animate-pulse h-[16px] w-full bg-slate-600 dark:bg-slate-50"
                   ></span>
+                  <span v-if="!churchAffiliationsDataLoading && department">{{
+                    department
+                  }}</span>
                   <span
-                    v-else-if="!churchAffiliationsDataLoading && department"
-                    >{{ department }}</span
-                  >
-                  <span
-                    v-else
+                    v-if="!churchAffiliationsDataLoading && !department"
                     @click="toggleReqDepartment(true)"
                     class="cursor-pointer"
                   >
