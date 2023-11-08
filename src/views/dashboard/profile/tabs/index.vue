@@ -39,24 +39,99 @@
       </TabPanel>
     </TabPanels> -->
 
-    <TabPanels>
-      <TabPanel v-for="item in buttons" :key="item.title">
-        <div v-if="item.title == 'Personal Information'">
+    <TabPanels v-if="buttonType == 'defaultButtons'">
+      <TabPanel v-for="item in defaultButtons" :key="item.title">
+        <!-- {{ item.title }} -->
+        <div
+          v-if="item.title == 'Personal Information' && item.isShowing === true"
+        >
           <PersonalInfo />
         </div>
-        <div v-if="item.title == 'Qualifications'">
+        <div v-if="item.title == 'Qualifications' && item.isShowing === true">
           <Qualifications />
         </div>
-        <div v-if="item.title == 'Employer'">
-          <Employer />
+        <div
+          v-if="item.title == 'Church Affiliations' && item.isShowing === true"
+        >
+          <ChurchAffiliations />
         </div>
-        <div v-if="item.title == 'Spouse Details'">
+      </TabPanel>
+    </TabPanels>
+
+    <TabPanels v-if="buttonType == 'isMarriedButtons'">
+      <TabPanel v-for="item in isMarriedButtons" :key="item.title">
+        <!-- {{ item.title }} -->
+        <div
+          v-if="item.title == 'Personal Information' && item.isShowing === true"
+        >
+          <PersonalInfo />
+        </div>
+        <div v-if="item.title == 'Qualifications' && item.isShowing === true">
+          <Qualifications />
+        </div>
+
+        <div v-if="item.title == 'Spouse Details' && item.isShowing === true">
           <SpouseDetails />
         </div>
-        <div v-if="item.title == 'Children Details'">
+        <div v-if="item.title == 'Children Details' && item.isShowing === true">
           <ChildrenDetails />
         </div>
-        <div v-if="item.title == 'Church Affiliations'">
+        <div
+          v-if="item.title == 'Church Affiliations' && item.isShowing === true"
+        >
+          <ChurchAffiliations />
+        </div>
+      </TabPanel>
+    </TabPanels>
+
+    <TabPanels v-if="buttonType == 'employedButtons'">
+      <TabPanel v-for="item in employedButtons" :key="item.title">
+        <!-- {{ item.title }} -->
+        <div
+          v-if="item.title == 'Personal Information' && item.isShowing === true"
+        >
+          <PersonalInfo />
+        </div>
+        <div v-if="item.title == 'Qualifications' && item.isShowing === true">
+          <Qualifications />
+        </div>
+        <div v-if="item.title == 'Employer' && item.isShowing === true">
+          <Employer />
+        </div>
+
+        <div
+          v-if="item.title == 'Church Affiliations' && item.isShowing === true"
+        >
+          <ChurchAffiliations />
+        </div>
+      </TabPanel>
+    </TabPanels>
+
+    <TabPanels v-if="buttonType == 'marriedAndEmployedButtons'">
+      <TabPanel v-for="item in marriedAndEmployedButtons" :key="item.title">
+        <!-- {{ item.title }} -->
+        <div
+          v-if="item.title == 'Personal Information' && item.isShowing === true"
+        >
+          <PersonalInfo />
+        </div>
+        <div v-if="item.title == 'Qualifications' && item.isShowing === true">
+          <Qualifications />
+        </div>
+
+        <div v-if="item.title == 'Employer' && item.isShowing === true">
+          <Employer />
+        </div>
+
+        <div v-if="item.title == 'Spouse Details' && item.isShowing === true">
+          <SpouseDetails />
+        </div>
+        <div v-if="item.title == 'Children Details' && item.isShowing === true">
+          <ChildrenDetails />
+        </div>
+        <div
+          v-if="item.title == 'Church Affiliations' && item.isShowing === true"
+        >
           <ChurchAffiliations />
         </div>
       </TabPanel>
@@ -72,11 +147,88 @@ import SpouseDetails from "./SpouseDetails.vue";
 import ChildrenDetails from "./ChildrenDetails.vue";
 import ChurchAffiliations from "./ChurchAffiliations.vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
-import { inject, ref, watch } from "vue";
+import { inject, ref, watchEffect } from "vue";
 
 const isMarried = inject("isMarried");
+const buttonType = ref("defaultButtons");
+const isEmployed = inject("isEmployed");
 const isAdmin = inject("isAdmin");
 const buttons = ref([
+  {
+    title: "Personal Information",
+    isShowing: true,
+  },
+  {
+    title: "Qualifications",
+    isShowing: true,
+  },
+
+  {
+    title: "Church Affiliations",
+    isShowing: isAdmin.value,
+  },
+]);
+
+const defaultButtons = ref([
+  {
+    title: "Personal Information",
+    isShowing: true,
+  },
+  {
+    title: "Qualifications",
+    isShowing: true,
+  },
+
+  {
+    title: "Church Affiliations",
+    isShowing: isAdmin.value,
+  },
+]);
+
+const isMarriedButtons = ref([
+  {
+    title: "Personal Information",
+    isShowing: true,
+  },
+  {
+    title: "Qualifications",
+    isShowing: true,
+  },
+
+  {
+    title: "Spouse Details",
+    isShowing: true,
+  },
+  {
+    title: "Children Details",
+    isShowing: true,
+  },
+  {
+    title: "Church Affiliations",
+    isShowing: isAdmin.value,
+  },
+]);
+
+const employedButtons = ref([
+  {
+    title: "Personal Information",
+    isShowing: true,
+  },
+  {
+    title: "Qualifications",
+    isShowing: true,
+  },
+  {
+    title: "Employer",
+    isShowing: true,
+  },
+  {
+    title: "Church Affiliations",
+    isShowing: isAdmin.value,
+  },
+]);
+
+const marriedAndEmployedButtons = ref([
   {
     title: "Personal Information",
     isShowing: true,
@@ -91,11 +243,11 @@ const buttons = ref([
   },
   {
     title: "Spouse Details",
-    isShowing: false,
+    isShowing: true,
   },
   {
     title: "Children Details",
-    isShowing: false,
+    isShowing: true,
   },
   {
     title: "Church Affiliations",
@@ -103,13 +255,29 @@ const buttons = ref([
   },
 ]);
 
-watch(isMarried, (newValue) => {
-  if (newValue === true) {
-    buttons.value[3].isShowing = true;
-    buttons.value[4].isShowing = true;
-  } else {
-    buttons.value[3].isShowing = false;
-    buttons.value[4].isShowing = true;
+watchEffect(() => {
+  if (!isEmployed.value && !isMarried.value) {
+    buttons.value = defaultButtons.value;
+    buttonType.value = "defaultButtons";
+    return;
+  }
+
+  if (!isEmployed.value && isMarried.value) {
+    buttons.value = isMarriedButtons.value;
+    buttonType.value = "isMarriedButtons";
+    return;
+  }
+
+  if (isEmployed.value && !isMarried.value) {
+    buttons.value = employedButtons.value;
+    buttonType.value = "employedButtons";
+    return;
+  }
+
+  if (isEmployed.value && isMarried.value) {
+    buttons.value = marriedAndEmployedButtons.value;
+    buttonType.value = "marriedAndEmployedButtons";
+    return;
   }
 });
 </script>

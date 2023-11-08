@@ -54,6 +54,8 @@ import { useStore } from "vuex";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { onMounted, ref, watch, computed } from "vue";
+import { useToast } from "vue-toastification";
+
 onMounted(() => {
   getDepartments();
 });
@@ -62,6 +64,10 @@ const departmentObj = ref({
   label: "",
   departmentId: "",
 });
+
+const toast = useToast();
+const reqSuccess = computed(() => state.profile.requestToJoinDeptSuccess);
+const reqError = computed(() => state.profile.requestToJoinDeptError);
 
 const departmentOptions = computed(() =>
   state?.department?.departments.map((i) => {
@@ -92,6 +98,8 @@ const { value: reason, errorMessage: reasonError } = useField("reason");
 
 const onSubmit = handleSubmit((values) => {
   console.log(values);
+
+  dispatch("requestToJoinDept", values);
 });
 
 const getDepartments = () => {
@@ -106,6 +114,20 @@ watch(departmentObj, (newValue) => {
     ...values,
     department: newValue?.label,
   });
+});
+
+watch(reqSuccess, () => {
+  if (reqSuccess.value) {
+    toast.success("Request successful");
+    toggleReqDepartment(false);
+  }
+});
+
+watch(reqError, () => {
+  if (reqError.value) {
+    toast.error("Request failed");
+    toggleReqDepartment(false);
+  }
 });
 </script>
 <style lang=""></style>

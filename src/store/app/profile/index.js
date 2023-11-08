@@ -37,6 +37,10 @@ export default {
     updateChurchAffiliationDataSuccess: false,
     updateChurchAffiliationDataerror: null,
     qualificationDetails: null,
+
+    requestToJoinDeptLoading: false,
+    requestToJoinDeptSuccess: false,
+    requestToJoinDeptError: null,
     //get
     getAllBiodataloading: false,
     getAllBiodatasuccess: false,
@@ -133,6 +137,23 @@ export default {
       state.creatingProfile = false;
       state.profileCreated = false;
       state.createProfileError = err;
+    },
+
+    requestToJoinDeptBegin(state) {
+      state.requestToJoinDeptLoading = true;
+      state.requestToJoinDeptSuccess = false;
+      state.requestToJoinDeptError = null;
+    },
+
+    requestToJoinDeptSuccess(state) {
+      state.requestToJoinDeptLoading = false;
+      state.requestToJoinDeptSuccess = true;
+      state.requestToJoinDeptError = null;
+    },
+    requestToJoinDeptError(state, err) {
+      state.requestToJoinDeptLoading = false;
+      state.requestToJoinDeptSuccess = false;
+      state.requestToJoinDeptError = err;
     },
 
     updateQualificationDataBegin(state) {
@@ -406,14 +427,27 @@ export default {
     },
   },
   actions: {
-    //post
+    async requestToJoinDept({ commit }, data) {
+      try {
+        commit("requestToJoinDeptBegin");
+        const response = await DataService.put(
+          `${urls.REQUEST_BY_MEMBER_TO_JOIN_DEPT}?department=${data.department}&Reason=${data.reason}`
+          // data
+        );
+        if (response.status === 200) {
+          commit("requestToJoinDeptSuccess");
+        }
+      } catch (err) {
+        commit("requestToJoinDeptError", err);
+      }
+    },
+
     async createProfile({ commit }, data) {
       try {
         commit("creatingProfile");
         const response = await DataService.post(urls.CREATE_BIODATA, data);
         if (response.status === 200) {
           commit("profileCreated");
-          // console.log("SuccessResponse:" + response);
         }
       } catch (err) {
         commit("createProfileError", err);

@@ -237,6 +237,10 @@ const isMarried = computed(() =>
   state.profile.biodata?.maritalStatus == "Married" ? true : false
 );
 
+const isEmployed = computed(() =>
+  state.profile.biodata?.employmentStatus == "Employed" ? true : false
+);
+
 const spouseTitle = computed(() =>
   state.profile.biodata?.gender == "Male" ? "Mrs" : "Mr"
 );
@@ -257,6 +261,7 @@ watch(userId, () => {
 });
 
 provide("isMarried", isMarried);
+provide("isEmployed", isEmployed);
 provide("profileData", profileData);
 provide("id", userId);
 provide("isAdmin", isAdmin);
