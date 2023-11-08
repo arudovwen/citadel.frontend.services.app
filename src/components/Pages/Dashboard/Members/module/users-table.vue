@@ -65,21 +65,21 @@
             <span v-if="props.column.field == 'statusText'">
               <span
                 :class="`whitespace-nowrap text-[12.5px] rounded-full px-3 py-1 ${
-                  props.row.statusText.toLowerCase() === 'pendingactivation'
+                  props?.row?.statusText?.toLowerCase() === 'pendingactivation'
                     ? 'text-gray-700 bg-gray-100'
-                    : props.row.statusText.toLowerCase() === 'active'
+                    : props?.row?.statusText?.toLowerCase() === 'active'
                     ? 'text-green-700 bg-green-100'
                     : 'text-red-700 bg-red-100'
                 }`"
                 >{{
                   props?.row?.statusText?.toLowerCase() === "pendingactivation"
                     ? "Pending"
-                    : props.row.statusText
+                    : props?.row?.statusText
                 }}</span
               >
             </span>
             <span
-              v-if="props.column.field == 'email'"
+              v-if="props.column.field == 'emailAddress'"
               class="font-medium lowercase"
             >
               {{ props.row.emailAddress }}
@@ -500,8 +500,10 @@ export default {
       dispatch("getUsers", { ...query, name: searchValue });
     }, debounceDelay);
     watch(addsuccess, () => {
-      addsuccess.value && dispatch("getUsers", query);
-      modalChange.value.closeModal();
+      if (addsuccess.value) {
+        dispatch("getUsers", query);
+        modalChange.value.closeModal();
+      }
     });
 
     watch(deletesuccess, () => {

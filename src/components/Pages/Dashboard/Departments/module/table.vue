@@ -430,7 +430,8 @@ export default {
       pageNumber: 1,
       pageSize: 10,
       sortOrder: "",
-      searchParameter: route.params.name,
+      searchParameter: "",
+      department: route.params.name,
     });
     const { state, dispatch } = useStore();
     dispatch("getAffiliationByMemberQuery", query);

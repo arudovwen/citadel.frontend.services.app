@@ -219,10 +219,11 @@ const actions = ref([
 const query = inject("query");
 onMounted(() => {
   dispatch("getDepartments", query);
-  dispatch("getUsers", {
+  dispatch("getAffiliationByMemberQuery", {
     pageSize: 100000,
     pageNumber: 1,
-    searchParameter: "hod",
+    searchParameter: "",
+    role: "administrator",
   });
 });
 // eslint-disable-next-line no-unused-vars
