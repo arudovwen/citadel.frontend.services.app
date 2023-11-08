@@ -53,7 +53,7 @@ import Modal from "@/components/Modal";
 import { useStore } from "vuex";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import { onMounted, ref, watch, computed } from "vue";
+import { onMounted, ref, watch, computed, inject } from "vue";
 import { useToast } from "vue-toastification";
 
 onMounted(() => {
@@ -66,6 +66,7 @@ const departmentObj = ref({
 });
 
 const toast = useToast();
+const userId = inject("id");
 const reqSuccess = computed(() => state.profile.requestToJoinDeptSuccess);
 const reqError = computed(() => state.profile.requestToJoinDeptError);
 
@@ -83,11 +84,12 @@ const schema = yup.object({
 });
 
 const formValues = {
+  userId: userId.value,
   department: "",
   reason: "",
 };
 
-const { handleSubmit, setValues, values } = useForm({
+const { handleSubmit, setValues, values, resetForm } = useForm({
   validationSchema: schema,
   initialValues: formValues,
 });
@@ -97,7 +99,7 @@ const { errorMessage: departmentError } = useField("department");
 const { value: reason, errorMessage: reasonError } = useField("reason");
 
 const onSubmit = handleSubmit((values) => {
-  console.log(values);
+  //   console.log(values);
 
   dispatch("requestToJoinDept", values);
 });
@@ -120,13 +122,19 @@ watch(reqSuccess, () => {
   if (reqSuccess.value) {
     toast.success("Request successful");
     toggleReqDepartment(false);
+    resetForm();
+    departmentObj.value = {
+      label: "",
+      departmentId: "",
+    };
   }
 });
 
 watch(reqError, () => {
   if (reqError.value) {
-    toast.error("Request failed");
+    // toast.error("Request failed");
     toggleReqDepartment(false);
+    return;
   }
 });
 </script>

@@ -441,8 +441,8 @@ export default {
       try {
         commit("requestToJoinDeptBegin");
         const response = await DataService.put(
-          `${urls.REQUEST_BY_MEMBER_TO_JOIN_DEPT}?department=${data.department}&Reason=${data.reason}`
-          // data
+          `${urls.REQUEST_BY_MEMBER_TO_JOIN_DEPT}?userId=${data.userId}&department=${data.department}&Reason=${data.reason}`,
+          "string"
         );
         if (response.status === 200) {
           commit("requestToJoinDeptSuccess");

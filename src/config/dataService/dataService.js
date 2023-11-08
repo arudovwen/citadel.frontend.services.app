@@ -98,7 +98,8 @@ client.interceptors.response.use(
         if (
           errMsg == "Employer not found!" ||
           errMsg == "Biodata not found!" ||
-          errMsg == "Spouse Detail not found!"
+          errMsg == "Spouse Detail not found!" ||
+          errMsg == "Church Affiliation not found!"
         ) {
           return;
         }
