@@ -15,7 +15,7 @@
             <div class="flex space-x-4 items-center">
               <div class="flex-none">
                 <div
-                  class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal capitalize"
+                  class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal uppercase"
                 >
                   {{ item.zoneName.charAt(0) + item.zoneName.charAt(1) }}
                 </div>

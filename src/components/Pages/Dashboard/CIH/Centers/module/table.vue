@@ -477,28 +477,28 @@ export default {
       //   closeModal: () => this.$refs.Modal.closeModal(),
       // },
       actions: [
-        {
-          name: "approve",
-          icon: "ph:check",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modalStatus.openModal();
-          },
-        },
-        {
-          name: "delist",
-          icon: "ph:x-light",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modalStatus.openModal();
-          },
-        },
+        // {
+        //   name: "approve",
+        //   icon: "ph:check",
+        //   doit: (name) => {
+        //     this.type = name;
+        //     this.$refs.modalStatus.openModal();
+        //   },
+        // },
+        // {
+        //   name: "delist",
+        //   icon: "ph:x-light",
+        //   doit: (name) => {
+        //     this.type = name;
+        //     this.$refs.modalStatus.openModal();
+        //   },
+        // },
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: (name) => {
+          doit: (name, { id }) => {
             this.type = name;
-            this.$refs.modalChange.openModal();
+            this.$router.push(`/cih/centers/center/${id}`);
           },
         },
         {

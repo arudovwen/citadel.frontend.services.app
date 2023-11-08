@@ -28,7 +28,7 @@
         >
           <router-link :to="`/cih/zones/zone-members/${route.params.id}`">
             <Button
-              text="View members"
+              text="View all members in this zone"
               btnClass=" btn-dark font-normal btn-sm "
               iconClass="text-lg"
             />
@@ -98,7 +98,7 @@
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
-              <Dropdown classMenuItems=" w-[140px]">
+              <Dropdown classMenuItems=" w-[160px]">
                 <span class="text-xl"
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
@@ -465,27 +465,11 @@ export default {
       // },
       actions: [
         {
-          name: "approve",
-          icon: "ph:check",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modalStatus.openModal();
-          },
-        },
-        {
-          name: "delist",
-          icon: "ph:x-light",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modalStatus.openModal();
-          },
-        },
-        {
-          name: "view",
+          name: "view members",
           icon: "heroicons-outline:eye",
-          doit: (name) => {
+          doit: (name, id) => {
             this.type = name;
-            this.$refs.modalChange.openModal();
+            this.$router.push(`/cih/centers/center/${id}`);
           },
         },
 

@@ -193,9 +193,9 @@ const formDataSchema = yup.object().shape({
     .required("Email Address is required"),
   address: yup.string().required("Residential Address is required"),
   nearestBusStop: yup.string().nullable(),
-  city: yup.string().required("City is required"),
-  state: yup.object().required("State is required"),
-  country: yup.object().required("Country is required"),
+  city: yup.string().required("City is required").nullable(),
+  state: yup.object().required("State is required").nullable(),
+  country: yup.object().required("Country is required").nullable(),
   purposeOfVisit: yup.string().required("Purpose of Visit is required"),
   placeOfVisit: yup.string().required("Place of Visit is required"),
 });

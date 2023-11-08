@@ -2,11 +2,11 @@
   <div class="">
     <div class="mb-10">
       <Card>
-        <div class="grid grid-cols-5 gap-x-6">
+        <div class="grid grid-cols-5 gap-x-4">
           <div
             v-for="item in content"
             :key="item.title"
-            class="border rounded-lg px-6 py-4 bg-gray-100"
+            class="border rounded-lg px-4 py-4 bg-gray-100"
           >
             <div class="flex mb-5 gap-x-8">
               <span class="font-bold text-lg flex gap-x-8 capitalize"
@@ -14,7 +14,7 @@
                 <span>{{ item.total }}</span></span
               >
             </div>
-            <div class="flex justify-between">
+            <div class="flex text-sm gap-x-4">
               <span class="flex gap-x-1">
                 <span>{{ item.males }}</span
                 ><span>Male(s)</span></span
