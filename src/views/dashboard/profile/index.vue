@@ -3,6 +3,7 @@
     ><ProfilePageSkeleton
   /></span>
   <div v-else class="space-y-5 profile-page">
+    <!-- {{ profileData }} -->
     <div
       class="profiel-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0 space-y-6 justify-between items-end relative z-[1]"
     >
@@ -172,8 +173,19 @@
                 >
                   DEPARTMENT
                 </div>
-                <div class="text-base text-slate-600 dark:text-slate-50">
+                <div
+                  class="flex flex-col text-base text-slate-600 dark:text-slate-50"
+                >
                   <span
+                    v-if="churchAffiliationsDataLoading && !department"
+                    class="animate-pulse h-[16px] w-full bg-slate-600 dark:bg-slate-50"
+                  ></span>
+                  <span
+                    v-else-if="!churchAffiliationsDataLoading && department"
+                    >{{ department }}</span
+                  >
+                  <span
+                    v-else
                     @click="toggleReqDepartment(true)"
                     class="cursor-pointer"
                   >
@@ -191,15 +203,7 @@
         <Card title="User Profile"> <Tab /></Card>
       </div>
     </div>
-    <!-- 
-    <Modal
-      :activeModal="state.profile.isReqDepartmentOpen"
-      @close="toggleReqDepartment(false)"
-      title="Request Department"
-      centered
-    >
-      Stuff
-    </Modal> -->
+
     <RequestDepartment />
   </div>
 </template>
@@ -218,13 +222,16 @@ import moment from "moment";
 
 onMounted(() => {
   fetchUser();
+  getChurchAffiliationsData();
 });
 const { state, dispatch } = useStore();
 // const isReqDepartmentOpen = computed(() => state.profile.isReqDepartmentOpen);
 const toggleReqDepartment = (boolean) => {
   dispatch("toggleReqDepartment", boolean);
 };
+
 const route = useRoute();
+const userId = computed(() => route.params.userId);
 const biodata = computed(() => state.profile.biodata);
 console.log(state.auth.accessToken);
 // console.log("Member:" + JSON.stringify(state.member.profile));
@@ -232,7 +239,6 @@ const profileData = computed(() => state.member.profile);
 // const success = computed(() => state.member.profilesuccess);
 const profileLoading = computed(() => state.member.profileloading);
 const profileError = computed(() => state.member.profileerror);
-const userId = computed(() => route.params.userId);
 const isMarried = computed(() =>
   state.profile.biodata?.maritalStatus == "Married" ? true : false
 );
@@ -251,7 +257,18 @@ const spouseGender = computed(() =>
 const isAdmin = computed(
   () => state.auth.userData.userRole === "administrator"
 );
-console.log("route" + userId.value);
+
+const churchAffiliationsDataLoading = computed(
+  () => state.profile.getChurchAffiliationsDataloading
+);
+
+const department = computed(
+  () => state.profile.churchAffiliationsData?.department
+);
+const getChurchAffiliationsData = () => {
+  dispatch("getChurchAffiliationsById", userId.value);
+};
+
 const fetchUser = () => {
   dispatch("getUserById", userId.value);
 };
