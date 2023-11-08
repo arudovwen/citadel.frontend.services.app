@@ -84,6 +84,7 @@ client.interceptors.response.use(
   (error) => {
     const { response } = error;
     const originalRequest = error.config;
+    const errMsg = response?.data?.message;
 
     if (response) {
       if (response.status === 500) {
@@ -94,6 +95,13 @@ client.interceptors.response.use(
         localStorage.clear();
         window.location.href = `?redirect_from=${window.location.href}`;
       } else if (response.status > 399 && response.status < 500) {
+        if (
+          errMsg == "Employer not found!" ||
+          errMsg == "Biodata not found!" ||
+          errMsg == "Spouse Detail not found!"
+        ) {
+          return;
+        }
         toast.error(response.data.message || "Something went wrong");
         if (
           response.data &&

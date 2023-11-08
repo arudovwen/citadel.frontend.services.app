@@ -343,9 +343,19 @@ export default {
     },
 
     getEmployerDataErr(state, err) {
+      // const errMsg = err?.response?.data?.message;
+
+      // if (errMsg == "Employer not found!") {
+      //   console.log("Error: " + JSON.stringify(err.response.data.message));
+      //   state.getEmployerDataloading = false;
+      //   state.getEmployerDatasuccess = false;
+      //   state.getEmployerDataerror = null;
+      //   return;
+      // } else {
       state.getEmployerDataloading = false;
-      state.getEmployerDataerror = err;
       state.getEmployerDatasuccess = false;
+      state.getEmployerDataerror = err;
+      // }
     },
     getQualificationDataBegin(state) {
       state.getQualificationDataloading = true;
