@@ -77,7 +77,7 @@ import SpouseDetails from "./SpouseDetails.vue";
 import ChildrenDetails from "./ChildrenDetails.vue";
 import ChurchAffiliations from "./ChurchAffiliations.vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
-import { inject, ref, watch } from "vue";
+import { inject, ref, watch, watchEffect } from "vue";
 
 const isMarried = inject("isMarried");
 
@@ -92,17 +92,46 @@ const buttons = ref([
     title: "Qualifications",
     isShowing: true,
   },
+
   {
-    title: "Employer",
-    isShowing: false,
+    title: "Church Affiliations",
+    isShowing: isAdmin.value,
+  },
+]);
+
+const defaultButtons = ref([
+  {
+    title: "Personal Information",
+    isShowing: true,
   },
   {
+    title: "Qualifications",
+    isShowing: true,
+  },
+
+  {
+    title: "Church Affiliations",
+    isShowing: isAdmin.value,
+  },
+]);
+
+const isMarriedButtons = ref([
+  {
+    title: "Personal Information",
+    isShowing: true,
+  },
+  {
+    title: "Qualifications",
+    isShowing: true,
+  },
+
+  {
     title: "Spouse Details",
-    isShowing: false,
+    isShowing: true,
   },
   {
     title: "Children Details",
-    isShowing: false,
+    isShowing: true,
   },
   {
     title: "Church Affiliations",
@@ -110,21 +139,89 @@ const buttons = ref([
   },
 ]);
 
-watch(isMarried, (newValue) => {
-  if (newValue === true) {
-    buttons.value[3].isShowing = true;
-    buttons.value[4].isShowing = true;
-  } else {
-    buttons.value[3].isShowing = false;
-    buttons.value[4].isShowing = true;
-  }
-});
+const employedButtons = ref([
+  {
+    title: "Personal Information",
+    isShowing: true,
+  },
+  {
+    title: "Qualifications",
+    isShowing: true,
+  },
+  {
+    title: "Employer",
+    isShowing: true,
+  },
+  {
+    title: "Church Affiliations",
+    isShowing: isAdmin.value,
+  },
+]);
 
-watch(isEmployed, (newValue) => {
-  if (newValue === true) {
-    buttons.value[2].isShowing = true;
-  } else {
-    buttons.value[2].isShowing = false;
+const marriedAndEmployedButtons = ref([
+  {
+    title: "Personal Information",
+    isShowing: true,
+  },
+  {
+    title: "Qualifications",
+    isShowing: true,
+  },
+  {
+    title: "Employer",
+    isShowing: true,
+  },
+  {
+    title: "Spouse Details",
+    isShowing: true,
+  },
+  {
+    title: "Children Details",
+    isShowing: true,
+  },
+  {
+    title: "Church Affiliations",
+    isShowing: isAdmin.value,
+  },
+]);
+
+// watch(isMarried, (newValue) => {
+//   if (newValue === true) {
+//     buttons.value[3].isShowing = true;
+//     buttons.value[4].isShowing = true;
+//   } else {
+//     buttons.value[3].isShowing = false;
+//     buttons.value[4].isShowing = true;
+//   }
+// });
+
+// watch(isEmployed, (newValue) => {
+//   if (newValue === true) {
+//     buttons.value[2].isShowing = true;
+//   } else {
+//     buttons.value[2].isShowing = false;
+//   }
+// });
+
+watchEffect(() => {
+  if (!isEmployed.value && !isMarried.value) {
+    buttons.value = defaultButtons.value;
+    return;
+  }
+
+  if (!isEmployed.value && isMarried.value) {
+    buttons.value = isMarriedButtons.value;
+    return;
+  }
+
+  if (isEmployed.value && !isMarried.value) {
+    buttons.value = employedButtons.value;
+    return;
+  }
+
+  if (isEmployed.value && isMarried.value) {
+    buttons.value = marriedAndEmployedButtons.value;
+    return;
   }
 });
 </script>
