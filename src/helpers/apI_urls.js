@@ -55,6 +55,8 @@ export const urls = {
   GET_ALL_CHURCH_AFFILIATION: "/ChurchAffiliation/GetAllChurchAffiliation",
   DELETE_CHURCH_AFFILIATION: "/ChurchAffiliation/DeleteChurchAffiliation",
   GET_CHURCH_AFFILIATION_BY_MEMBER: "/ChurchAffiliation/GetMemberQuery",
+  REQUEST_BY_MEMBER_TO_JOIN_DEPT:
+    "/ChurchAffiliation/RequestByMemberToJoinDepartment",
 
   // Department
   CREATE_DEPARTMENT: "/Department/CreateDepartment",

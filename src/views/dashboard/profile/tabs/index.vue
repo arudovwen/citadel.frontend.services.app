@@ -41,22 +41,27 @@
 
     <TabPanels>
       <TabPanel v-for="item in buttons" :key="item.title">
-        <div v-if="item.title == 'Personal Information'">
+        <!-- {{ item.title }} -->
+        <div
+          v-if="item.title == 'Personal Information' && item.isShowing === true"
+        >
           <PersonalInfo />
         </div>
-        <div v-if="item.title == 'Qualifications'">
+        <div v-if="item.title == 'Qualifications' && item.isShowing === true">
           <Qualifications />
         </div>
-        <div v-if="item.title == 'Employer'">
+        <div v-if="item.title == 'Employer' && item.isShowing === true">
           <Employer />
         </div>
-        <div v-if="item.title == 'Spouse Details'">
+        <div v-if="item.title == 'Spouse Details' && item.isShowing === true">
           <SpouseDetails />
         </div>
-        <div v-if="item.title == 'Children Details'">
+        <div v-if="item.title == 'Children Details' && item.isShowing === true">
           <ChildrenDetails />
         </div>
-        <div v-if="item.title == 'Church Affiliations'">
+        <div
+          v-if="item.title == 'Church Affiliations' && item.isShowing === true"
+        >
           <ChurchAffiliations />
         </div>
       </TabPanel>
@@ -75,6 +80,8 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import { inject, ref, watch } from "vue";
 
 const isMarried = inject("isMarried");
+
+const isEmployed = inject("isEmployed");
 const isAdmin = inject("isAdmin");
 const buttons = ref([
   {
@@ -87,7 +94,7 @@ const buttons = ref([
   },
   {
     title: "Employer",
-    isShowing: true,
+    isShowing: false,
   },
   {
     title: "Spouse Details",
@@ -110,6 +117,14 @@ watch(isMarried, (newValue) => {
   } else {
     buttons.value[3].isShowing = false;
     buttons.value[4].isShowing = true;
+  }
+});
+
+watch(isEmployed, (newValue) => {
+  if (newValue === true) {
+    buttons.value[2].isShowing = true;
+  } else {
+    buttons.value[2].isShowing = false;
   }
 });
 </script>
