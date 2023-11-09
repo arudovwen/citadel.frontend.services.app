@@ -81,7 +81,7 @@ const routes = [
         name: "home",
         component: () => import("@/views/index.vue"),
         meta: {
-          roles: ["administrator", "hod", "member"],
+          roles: ["administrator", "hod", "member", "inspectorate"],
         },
       },
       {
@@ -99,7 +99,7 @@ const routes = [
         name: "profile",
         component: ProfileIndex,
         meta: {
-          roles: ["administrator", "hod", "member"],
+          roles: ["administrator", "hod", "member", "inspectorate"],
         },
       },
       {
@@ -108,7 +108,7 @@ const routes = [
         component: () => import("@/components/Pages/Dashboard/Members"),
         meta: {
           activeName: "members-management",
-          roles: ["administrator"],
+          roles: ["administrator", "inspectorate", "hod"],
         },
       },
       {
@@ -117,7 +117,7 @@ const routes = [
         component: () => import("@/components/Pages/Dashboard/Members/users"),
         meta: {
           activeName: "users-management",
-          roles: ["administrator"],
+          roles: ["administrator", "inspectorate", "hod"],
         },
       },
       {
@@ -168,7 +168,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "hod"],
+          roles: ["administrator", "inspectorate", "hod"],
         },
       },
 
@@ -303,7 +303,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "hod"],
+          roles: ["administrator", "hod", "inspectorate"],
         },
       },
       {
@@ -321,7 +321,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator"],
+          roles: ["administrator", "inspectorate", "hod"],
         },
       },
       {

@@ -2,7 +2,7 @@
   <div>
     <div class="flex justify-space-between items-center mb-4">
       <Button
-        v-if="state.auth.userData.userRole === 'directorate'"
+        v-if="state.auth.userData.userRole.toLowerCase() === 'inspectorate'"
         icon="heroicons-outline:plus"
         text="Add zone"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"

@@ -255,7 +255,7 @@ const spouseGender = computed(() =>
   state.profile.biodata?.gender == "Male" ? "Female" : "Male"
 );
 const isAdmin = computed(
-  () => state.auth.userData.userRole === "administrator"
+  () => state.auth.userData.userRole.toLowerCase() === "administrator"
 );
 
 const churchAffiliationsDataLoading = computed(

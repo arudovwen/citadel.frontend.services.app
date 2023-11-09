@@ -33,7 +33,9 @@
             />
           </export-excel>
           <Button
-            v-if="state.auth.userData.userRole === 'administrator'"
+            v-if="
+              state.auth.userData.userRole.toLowerCase() === 'administrator'
+            "
             icon="ri:user-add-line"
             text="Add user"
             btnClass=" btn-primary font-normal btn-sm "
@@ -537,6 +539,7 @@ export default {
       modalChange,
       modalStatus,
       perPage,
+      state,
     };
   },
 };

@@ -3,7 +3,7 @@
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div
-          v-if="state.auth.userData.userRole === 'hod'"
+          v-if="state.auth.userData.userRole.toLowerCase() === 'hod'"
           class="flex md:mb-0 mb-3 border border-gray-200 rounded text-sm"
         >
           <button
@@ -442,7 +442,7 @@ export default {
     const modalChange = ref(null);
     const modalStatus = ref(null);
     const filters = computed(() => {
-      if (state.auth.userData.userRole === "hod") {
+      if (state.auth.userData.userRole.toLowerCase() === "hod") {
         return ["all", "pending"];
       } else {
         return ["all"];
@@ -466,9 +466,7 @@ export default {
     const members = computed(() => {
       if (state?.member?.data) {
         return state?.member?.data?.map((item) => {
-          item.fullName = `${item.firstName} ${item.middleName || "-"} ${
-            item.surName
-          }`;
+          item.fullName = `${item.firstName} ${item.surName}`;
           item.dateOfBirth = item?.dateOfBirth
             ? moment(item?.dateOfBirth).format("ll")
             : "-";
