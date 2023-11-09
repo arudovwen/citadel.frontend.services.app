@@ -57,7 +57,7 @@
 
       <div>
         <CustomVueSelect
-          :request="requestFnObj('Request for Zone', 'toggleReqZone')"
+          :request="requestFnObj('Request to change zone', 'toggleReqZone')"
           :disabled="isAdmin ? false : true"
           label="CIH Zone"
           class="min-w-[200px] w-full md:w-auto"
@@ -117,6 +117,9 @@
 
       <div>
         <CustomVueSelect
+          :request="
+            requestFnObj('Request to join department', 'toggleReqDepartment')
+          "
           :disabled="isAdmin ? false : true"
           label="Department"
           classInput="!h-[40px]"
@@ -142,6 +145,7 @@
     </div>
     <RequestZone />
     <RequestGroup />
+    <!-- <RequestDepartment :affiliation="churchAffiliationsData" /> -->
   </form>
 </template>
 
@@ -159,6 +163,8 @@ import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { levelOfATSMenu, isCharterMemberMenu } from "@/constant/data";
 import RequestZone from "@/components/Pages/Profile/ChurchAffiliation/RequestZone.vue";
 import RequestGroup from "@/components/Pages/Profile/ChurchAffiliation/RequestGroup.vue";
+// import RequestDepartment from "@/components/Pages/Profile/ChurchAffiliation/RequestDepartment.vue";
+
 import { inject, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";

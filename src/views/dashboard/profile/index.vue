@@ -215,6 +215,9 @@ const toggleReqDepartment = (boolean) => {
 
 const route = useRoute();
 const userId = computed(() => route.params.userId);
+const isUserProfile = computed(
+  () => route.params.userId === state.auth.userData.id
+);
 const biodata = computed(() => state.profile.biodata);
 console.log(state.auth.accessToken);
 // console.log("Member:" + JSON.stringify(state.member.profile));
@@ -272,6 +275,7 @@ provide("id", userId);
 provide("isAdmin", isAdmin);
 provide("spouseTitle", spouseTitle);
 provide("spouseGender", spouseGender);
+provide("isUserProfile", isUserProfile);
 </script>
 
 <style lang="scss" scoped></style>

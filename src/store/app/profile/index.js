@@ -913,5 +913,8 @@ export default {
     toggleReqAffinityGroup({ commit }, boolean) {
       commit("toggleReqAffinityGroup", boolean);
     },
+    // toggleReqDepartment({ commit }, boolean) {
+    //   commit("toggleReqDepartment", boolean);
+    // },
   },
 };
