@@ -195,7 +195,7 @@ import RequestDepartment from "@/components/Pages/Profile/ChurchAffiliation/Requ
 import ProfilePageSkeleton from "@/components/Pages/Profile/ProfilePageSkeleton.vue";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
-import { provide, computed, onMounted, watch } from "vue";
+import { provide, computed, onMounted, watch, ref } from "vue";
 import Tab from "./tabs/index.vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
@@ -234,9 +234,9 @@ const isMarried = computed(() =>
 
 // const isMarried = ref(false);
 
-const isEmployed = computed(() =>
-  state.profile.biodata?.employmentStatus == "Employed" ? true : false
-);
+const showMarriedTab = ref(false);
+
+const isEmployed = ref(false);
 
 const spouseTitle = computed(() =>
   state.profile.biodata?.gender == "Male" ? "Mrs" : "Mr"
@@ -276,6 +276,7 @@ provide("isAdmin", isAdmin);
 provide("spouseTitle", spouseTitle);
 provide("spouseGender", spouseGender);
 provide("isUserProfile", isUserProfile);
+provide("showMarriedTab", showMarriedTab);
 </script>
 
 <style lang="scss" scoped></style>
