@@ -27,13 +27,14 @@
         >Forgot Password?</router-link
       >
     </div>
-    <button
+    <Button
       :disabled="isLoading"
+      :isLoading="isLoading"
       type="submit"
       class="btn btn-primary block w-full text-center disabled:opacity-60"
     >
       Verify
-    </button>
+    </Button>
 
     <button
       v-if="route.params.type.toLowerCase() === 'otp'"
@@ -51,6 +52,7 @@
 </template>
 
 <script setup>
+import Button from "@/components/Button";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { useRoute } from "vue-router";

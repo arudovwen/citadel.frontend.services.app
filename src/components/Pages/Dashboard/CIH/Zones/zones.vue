@@ -31,7 +31,9 @@ import ZoneAddmodal from "./AddZone";
 import UpdateModal from "./EditZone";
 import Grid from "./zones-grid";
 import { useStore } from "vuex";
+
 const store = useStore();
+const { state } = useStore();
 
 let fillter = ref("grid");
 const openZone = () => {

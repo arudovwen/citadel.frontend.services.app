@@ -181,6 +181,7 @@
         />
         <Button
           :disabled="deleteloading"
+          :isLoading="deleteloading"
           text="Proceed"
           :btnClass="` btn-sm ${
             type === 'approve' ? 'btn-success' : 'btn-danger'
@@ -213,6 +214,7 @@
         />
         <Button
           text="Delete"
+          :isLoading="deleteloading"
           :disabled="deleteloading"
           btnClass="btn-danger btn-sm"
           @click="handleDelete"

@@ -104,6 +104,7 @@
           <Button
             text="Add department"
             type="submit"
+            :isLoading="loading"
             :disabled="loading"
             btnClass="btn-dark"
           ></Button>

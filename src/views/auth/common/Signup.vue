@@ -82,16 +82,18 @@
       >
     </div>
 
-    <button
+    <Button
       type="submit"
       class="btn btn-primary block w-full text-center disabled:opacity-60"
+      :isLoading="isLoading"
       :disabled="!checkbox || isLoading"
     >
       Create an account
-    </button>
+    </Button>
   </form>
 </template>
 <script setup>
+import Button from "@/components/Button";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";

@@ -48,16 +48,18 @@
       </label>
     </div>
 
-    <button
+    <Button
       :disabled="isLoading"
+      :isLoading="isLoading"
       type="submit"
       class="btn btn-primary block w-full text-center disabled:opacity-60"
     >
       Sign in
-    </button>
+    </Button>
   </form>
 </template>
 <script>
+import Button from "@/components/Button";
 import { computed, watch } from "vue";
 import { useStore } from "vuex";
 import Textinput from "@/components/Textinput";
@@ -68,6 +70,7 @@ import { useRouter } from "vue-router";
 export default {
   components: {
     Textinput,
+    Button,
   },
   data() {
     return {

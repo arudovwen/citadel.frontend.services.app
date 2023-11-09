@@ -223,6 +223,7 @@
           />
           <Button
             :disabled="convertloading"
+            :isLoading="convertloading"
             text="Change"
             btnClass="btn-primary btn-sm"
             @click="changeRole"

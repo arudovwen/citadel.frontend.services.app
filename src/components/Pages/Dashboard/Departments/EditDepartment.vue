@@ -35,6 +35,7 @@
             text="Update department"
             type="submit"
             :disabled="loading"
+            :isLoading="loading"
             btnClass="btn-dark"
           ></Button>
         </div>

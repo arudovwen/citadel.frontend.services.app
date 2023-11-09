@@ -10,13 +10,14 @@
       :error="tokenError"
     />
 
-    <button
+    <Button
       :disabled="isLoading"
+      :isLoading="isLoading"
       type="submit"
       class="btn btn-primary block w-full text-center disabled:opacity-60"
     >
       Verify Email
-    </button>
+    </Button>
 
     <button
       type="button"
@@ -33,6 +34,7 @@
 </template>
 
 <script setup>
+import Button from "@/components/Button";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { useRouter, useRoute } from "vue-router";

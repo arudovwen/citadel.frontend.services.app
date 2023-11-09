@@ -76,6 +76,7 @@
           <template #selected-row-actions>
             <button
               :disabled="convertloading"
+              :isLoading="convertloading"
               @click="handleBulk"
               class="text-[#232322] font-medium"
             >
@@ -223,6 +224,7 @@
         />
         <Button
           :disabled="convertloading"
+          :isLoading="convertloading"
           text="Upgrade"
           btnClass="btn-primary btn-sm"
           @click="handleUpgrade"

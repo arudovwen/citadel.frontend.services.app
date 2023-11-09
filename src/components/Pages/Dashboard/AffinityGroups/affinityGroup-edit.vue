@@ -31,6 +31,7 @@
           type="submit"
           text="Add Affinity Group"
           btnClass="btn-dark w-full disabled:opacity-50"
+          :isLoading="loading"
           :disabled="loading"
         />
       </div>

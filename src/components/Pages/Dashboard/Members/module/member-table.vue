@@ -139,6 +139,7 @@
         <Button
           text="Delete"
           :disabled="deleteloading"
+          :isLoading="deleteloading"
           btnClass="btn-danger btn-sm"
           @click="handleDelete(id)"
         />

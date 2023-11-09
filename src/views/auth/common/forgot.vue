@@ -10,16 +10,18 @@
       classInput="h-[48px]"
     />
 
-    <button
+    <Button
       type="submit"
       :disabled="isLoading"
+      :isLoading="isLoading"
       class="btn btn-primary block w-full text-center disabled:opacity-50"
     >
       Send recovery email
-    </button>
+    </Button>
   </form>
 </template>
 <script>
+import Button from "@/components/Button";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
@@ -30,6 +32,7 @@ import { useRouter } from "vue-router";
 export default {
   components: {
     Textinput,
+    Button,
   },
   data() {
     return {

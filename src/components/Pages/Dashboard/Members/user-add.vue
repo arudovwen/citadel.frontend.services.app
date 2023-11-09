@@ -53,6 +53,7 @@
           text="Add member"
           btnClass="btn-dark w-full disabled:opacity-50"
           :disabled="loading"
+          :isLoading="loading"
         />
       </div>
     </Card>

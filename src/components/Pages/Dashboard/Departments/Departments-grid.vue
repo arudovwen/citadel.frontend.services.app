@@ -127,6 +127,7 @@
         />
         <Button
           :disabled="loading"
+          :isLoading="loading"
           text="Delete"
           btnClass="btn-danger btn-sm"
           @click="handleDelete"
