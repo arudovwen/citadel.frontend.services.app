@@ -234,7 +234,7 @@ const detail = ref(null);
 const type = ref("");
 
 const dateValue = ref(null);
-
+// upgradeToMember
 const formatter = ref({
   date: "DD MMM YYYY",
   month: "MMM",
@@ -251,6 +251,15 @@ const actions = ref([
   },
   {
     name: "edit",
+    icon: "heroicons:pencil-square",
+    doit: (name, data) => {
+      type.value = name;
+      detail.value = data;
+      modalChange.value.openModal();
+    },
+  },
+  {
+    name: "upgrade",
     icon: "heroicons:pencil-square",
     doit: (name, data) => {
       type.value = name;

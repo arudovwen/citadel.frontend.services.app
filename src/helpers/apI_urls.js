@@ -6,6 +6,8 @@ export const urls = {
   ADMIN_GET_ALL_USERS: "/Admin/GetAllUsers",
   GET_USER_ROLES: "/Admin/GetUserRoles",
   GET_CIH_ROLES: "/Admin/GetCIHRoles",
+  CONVERT_FURST_TO_MEMBER: "/Admin/ConvertFirstTimersToMembers",
+  UPDATE_ROLE: "/Admin/ChangeUserRole",
 
   //Affinity Groups
   CREATE_AFFINITY_GROUP: "/AffinityGroup/CreateAffinityGroup",
