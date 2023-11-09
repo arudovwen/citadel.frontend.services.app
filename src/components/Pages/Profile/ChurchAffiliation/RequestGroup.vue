@@ -11,14 +11,14 @@
       <div class="grid grid-cols-1 gap-4">
         <div>
           <CustomVueSelect
-            label="Department"
+            label="CIH Zone"
             classInput="!h-[40px]"
-            v-model.value="departmentObj"
-            :modelValue="departmentObj"
-            :error="departmentError"
-            :options="departmentOptions"
-            placeholder="Select department"
-            name="Department"
+            v-model.value="zoneObj"
+            :modelValue="zoneObj"
+            :error="cihZoneError"
+            :options="zoneOptions"
+            placeholder="Select zone"
+            name="zone"
           />
         </div>
         <!-- <div>
@@ -66,12 +66,12 @@ import { useToast } from "vue-toastification";
 //   },
 // });
 onMounted(() => {
-  getDepartments();
+  getZones();
 });
 const { state, dispatch } = useStore();
-const departmentObj = ref({
+const zoneObj = ref({
   label: "",
-  departmentId: "",
+  zoneId: "",
 });
 
 const toast = useToast();
@@ -79,16 +79,16 @@ const userId = inject("id");
 const reqSuccess = computed(() => state.profile.requestToJoinDeptSuccess);
 const reqError = computed(() => state.profile.requestToJoinDeptError);
 
-const departmentOptions = computed(() =>
-  state?.department?.departments.map((i) => {
+const zoneOptions = computed(() =>
+  state?.zone?.zones.map((i) => {
     return {
-      label: i.departmentName,
-      departmentId: i.id,
+      label: i.zoneName,
+      zoneId: i.id,
     };
   })
 );
 const schema = yup.object({
-  department: yup.string().required(),
+  cihZone: yup.string(),
   reason: yup.string().required(),
 });
 
@@ -103,27 +103,27 @@ const { handleSubmit, setValues, values, resetForm } = useForm({
   initialValues: formValues,
 });
 
-const { errorMessage: departmentError } = useField("department");
+const { errorMessage: cihZoneError } = useField("cihZone");
 
 const { value: reason, errorMessage: reasonError } = useField("reason");
 
 const onSubmit = handleSubmit((values) => {
-  //   console.log(values);
+  console.log(values);
 
-  dispatch("requestToJoinDept", values);
+  //   dispatch("requestToJoinDept", values);
 });
 
-const getDepartments = () => {
-  dispatch("getDepartments", { pageNumber: 1, pageSize: 10000 });
+const getZones = () => {
+  dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
 };
 const toggleReqAffinityGroup = (boolean) => {
   dispatch("toggleReqAffinityGroup", boolean);
 };
 
-watch(departmentObj, (newValue) => {
+watch(zoneObj, (newValue) => {
   setValues({
     ...values,
-    department: newValue?.label,
+    cihZone: newValue?.label,
   });
 });
 
@@ -132,7 +132,7 @@ watch(reqSuccess, () => {
     toast.success("Request successful");
     toggleReqAffinityGroup(false);
     resetForm();
-    departmentObj.value = {
+    zoneObj.value = {
       label: "",
       departmentId: "",
     };

@@ -57,6 +57,7 @@ export const urls = {
   GET_CHURCH_AFFILIATION_BY_MEMBER: "/ChurchAffiliation/GetMemberQuery",
   REQUEST_BY_MEMBER_TO_JOIN_DEPT:
     "/ChurchAffiliation/RequestByMemberToJoinDepartment",
+  REQUEST_BY_MEMBER_TO_CHANGE_ZONE: "/ChurchAffiliation/RequestChangeOfCIHZone",
 
   // Department
   CREATE_DEPARTMENT: "/Department/CreateDepartment",

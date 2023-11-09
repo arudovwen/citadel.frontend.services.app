@@ -47,6 +47,10 @@ export default {
     requestToJoinDeptLoading: false,
     requestToJoinDeptSuccess: false,
     requestToJoinDeptError: null,
+
+    requestToChangeZoneLoading: false,
+    requestToChangeZoneSuccess: false,
+    requestToChangeZoneError: null,
     //get
     getAllBiodataloading: false,
     getAllBiodatasuccess: false,
@@ -176,6 +180,22 @@ export default {
       state.requestToJoinDeptLoading = false;
       state.requestToJoinDeptSuccess = false;
       state.requestToJoinDeptError = err;
+    },
+    requestToChangeZoneBegin(state) {
+      state.requestToChangeZoneLoading = true;
+      state.requestToChangeZoneSuccess = false;
+      state.requestToChangeZoneError = null;
+    },
+
+    requestToChangeZoneSuccess(state) {
+      state.requestToChangeZoneLoading = false;
+      state.requestToChangeZoneSuccess = true;
+      state.requestToChangeZoneError = null;
+    },
+    requestToChangeZoneError(state, err) {
+      state.requestToChangeZoneLoading = false;
+      state.requestToChangeZoneSuccess = false;
+      state.requestToChangeZoneError = err;
     },
 
     updateQualificationDataBegin(state) {
@@ -492,6 +512,24 @@ export default {
         }
       } catch (err) {
         commit("requestToJoinDeptError", err);
+      }
+    },
+
+    async requestToChangeZone(
+      { commit },
+      { userId, cihZone, cihAddress, reason }
+    ) {
+      try {
+        commit("requestToChangeZoneBegin");
+        const response = await DataService.put(
+          `${urls.REQUEST_BY_MEMBER_TO_CHANGE_ZONE}?userId=${userId}&newCihZone=${cihZone}&newCenter=${cihAddress}&Reason=${reason}`,
+          ""
+        );
+        if (response.status === 200) {
+          commit("requestToChangeZoneSuccess");
+        }
+      } catch (err) {
+        commit("requestToChangeZoneError", err);
       }
     },
 
