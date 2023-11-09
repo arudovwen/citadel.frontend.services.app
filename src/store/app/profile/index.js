@@ -51,6 +51,10 @@ export default {
     requestToChangeZoneLoading: false,
     requestToChangeZoneSuccess: false,
     requestToChangeZoneError: null,
+
+    requestToChangeGroupLoading: false,
+    requestToChangeGroupSuccess: false,
+    requestToChangeGroupError: null,
     //get
     getAllBiodataloading: false,
     getAllBiodatasuccess: false,
@@ -196,6 +200,23 @@ export default {
       state.requestToChangeZoneLoading = false;
       state.requestToChangeZoneSuccess = false;
       state.requestToChangeZoneError = err;
+    },
+
+    requestToChangeGroupBegin(state) {
+      state.requestToChangeGroupLoading = true;
+      state.requestToChangeGroupSuccess = false;
+      state.requestToChangeGroupError = null;
+    },
+
+    requestToChangeGroupSuccess(state) {
+      state.requestToChangeGroupLoading = false;
+      state.requestToChangeGroupSuccess = true;
+      state.requestToChangeGroupError = null;
+    },
+    requestToChangeGroupError(state, err) {
+      state.requestToChangeGroupLoading = false;
+      state.requestToChangeGroupSuccess = false;
+      state.requestToChangeGroupError = err;
     },
 
     updateQualificationDataBegin(state) {
@@ -512,6 +533,21 @@ export default {
         }
       } catch (err) {
         commit("requestToJoinDeptError", err);
+      }
+    },
+
+    async requestToChangeGroup({ commit }, data) {
+      try {
+        commit("requestToChangeGroupBegin");
+        const response = await DataService.put(
+          `${urls.REQUEST_BY_MEMBER_TO_CHANGE_GROUP}?userId=${data.userId}&newAffinityGroup=${data.affinityGroup}&Reason=${data.reason}`,
+          "string"
+        );
+        if (response.status === 200) {
+          commit("requestToChangeGroupSuccess");
+        }
+      } catch (err) {
+        commit("requestToChangeGroupError", err);
       }
     },
 

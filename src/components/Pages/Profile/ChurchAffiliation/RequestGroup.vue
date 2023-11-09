@@ -11,14 +11,14 @@
       <div class="grid grid-cols-1 gap-4">
         <div>
           <CustomVueSelect
-            label="CIH Zone"
+            label="Affinity Group"
             classInput="!h-[40px]"
-            v-model.value="zoneObj"
-            :modelValue="zoneObj"
-            :error="cihZoneError"
-            :options="zoneOptions"
-            placeholder="Select zone"
-            name="zone"
+            v-model.value="affinityGroupObj"
+            :modelValue="affinityGroupObj"
+            :error="affinityGroupError"
+            :options="affinityGroupOptions"
+            placeholder="Select affinity group"
+            name="Affinity Group"
           />
         </div>
         <!-- <div>
@@ -66,35 +66,36 @@ import { useToast } from "vue-toastification";
 //   },
 // });
 onMounted(() => {
-  getZones();
+  getAffinityGroups();
 });
 const { state, dispatch } = useStore();
-const zoneObj = ref({
+const affinityGroupObj = ref({
   label: "",
-  zoneId: "",
+  affinityGroupId: "",
 });
 
 const toast = useToast();
 const userId = inject("id");
-const reqSuccess = computed(() => state.profile.requestToJoinDeptSuccess);
-const reqError = computed(() => state.profile.requestToJoinDeptError);
+const reqSuccess = computed(() => state.profile.requestToChangeGroupSuccess);
+const reqError = computed(() => state.profile.requestToChangeGroupError);
 
-const zoneOptions = computed(() =>
-  state?.zone?.zones.map((i) => {
+const affinityGroupOptions = computed(() =>
+  state?.affinityGroup?.affinityGroups.map((i) => {
     return {
-      label: i.zoneName,
-      zoneId: i.id,
+      label: i.affinityGroupName,
+      affinityGroupId: i.id,
     };
   })
 );
 const schema = yup.object({
-  cihZone: yup.string(),
-  reason: yup.string().required(),
+  affinityGroup: yup.string(),
+
+  reason: yup.string(),
 });
 
 const formValues = {
   userId: userId.value,
-  department: "",
+  affinityGroup: "",
   reason: "",
 };
 
@@ -103,27 +104,27 @@ const { handleSubmit, setValues, values, resetForm } = useForm({
   initialValues: formValues,
 });
 
-const { errorMessage: cihZoneError } = useField("cihZone");
+const { errorMessage: affinityGroupError } = useField("affinityGroup");
 
 const { value: reason, errorMessage: reasonError } = useField("reason");
 
 const onSubmit = handleSubmit((values) => {
   console.log(values);
 
-  //   dispatch("requestToJoinDept", values);
+  dispatch("requestToChangeGroup", values);
 });
 
-const getZones = () => {
-  dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
+const getAffinityGroups = () => {
+  dispatch("getAffinityGroups", { pageNumber: 1, pageSize: 10000 });
 };
 const toggleReqAffinityGroup = (boolean) => {
   dispatch("toggleReqAffinityGroup", boolean);
 };
 
-watch(zoneObj, (newValue) => {
+watch(affinityGroupObj, (newValue) => {
   setValues({
     ...values,
-    cihZone: newValue?.label,
+    affinityGroup: newValue?.label,
   });
 });
 
@@ -132,9 +133,9 @@ watch(reqSuccess, () => {
     toast.success("Request successful");
     toggleReqAffinityGroup(false);
     resetForm();
-    zoneObj.value = {
+    affinityGroupObj.value = {
       label: "",
-      departmentId: "",
+      affinityGroupId: "",
     };
   }
 });

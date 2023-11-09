@@ -58,7 +58,8 @@ export const urls = {
   REQUEST_BY_MEMBER_TO_JOIN_DEPT:
     "/ChurchAffiliation/RequestByMemberToJoinDepartment",
   REQUEST_BY_MEMBER_TO_CHANGE_ZONE: "/ChurchAffiliation/RequestChangeOfCIHZone",
-
+  REQUEST_BY_MEMBER_TO_CHANGE_GROUP:
+    "/ChurchAffiliation/RequestChangeOfAffinityGroup",
   // Department
   CREATE_DEPARTMENT: "/Department/CreateDepartment",
   UPDATE_DEPARTMENT: "/Department/UpdateDepartment",
