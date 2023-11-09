@@ -7,7 +7,7 @@ export const urls = {
   GET_USER_ROLES: "/Admin/GetUserRoles",
   GET_CIH_ROLES: "/Admin/GetCIHRoles",
   CONVERT_FIRST_TO_MEMBER: "/Admin/ConvertFirstTimersToMembers",
-  BULK_CONVERT_FiRST_TO_MEMBER: "/Admin/ConvertFirstTimersToMembers",
+  BULK_CONVERT_FIRST_TO_MEMBER: "/Admin/BulkConvertFirstTimersToMembers",
   UPDATE_ROLE: "/Admin/ChangeUserRole",
 
   //Affinity Groups

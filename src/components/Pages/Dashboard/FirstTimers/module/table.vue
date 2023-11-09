@@ -84,24 +84,15 @@
           </template>
           <template v-slot:table-row="props">
             <span
-              v-if="props.column.field == 'customer'"
+              v-if="props.column.field == 'fullName'"
               class="flex items-center"
             >
-              <span class="w-7 h-7 rounded-full mr-3 flex-none">
-                <img
-                  :src="
-                    require('@/assets/images/all-img/' +
-                      props.row.customer.image)
-                  "
-                  :alt="props.row.customer.name"
-                  class="object-cover w-full h-full rounded-full"
-                />
-              </span>
               <span
-                class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium"
+                class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium hover:underline"
+                ><router-link :to="`/profile/${props.row.userId}`">{{
+                  props.row.fullName
+                }}</router-link></span
               >
-                {{ props.row.customer.name }}
-              </span>
             </span>
             <span v-if="props.column.field == 'order'" class="font-medium">
               {{ "#" + props.row.order }}
@@ -400,7 +391,7 @@ function selectionChanged(val) {
 
 function handleBulk() {
   const bulkIds = mytable.value["selectedRows"].map((i) => i.id);
-  dispatch("multiUpgradeToMember", { ids: bulkIds });
+  dispatch("multiUpgradeToMember", { userId: bulkIds });
 }
 onMounted(() => {
   dispatch("getAllBiodata", query);

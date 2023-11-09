@@ -335,11 +335,12 @@ watch(convertsuccess, () => {
   if (convertsuccess.value) {
     fetchUser();
     toast.success("Role updated");
+    modal.value.closeModal();
   }
 });
 function changeRole() {
   dispatch("updateRole", {
-    userId: profileData.value.id,
+    UserId: profileData.value.email,
     userRole: role.value,
   });
 }
