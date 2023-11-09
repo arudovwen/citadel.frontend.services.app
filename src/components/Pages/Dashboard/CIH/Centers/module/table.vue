@@ -27,7 +27,10 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
-            v-if="state.auth.userData.userRole.toLowerCase() === 'inspectorate'"
+            v-if="
+              state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
+              state.auth.userData.userRole.toLowerCase() === 'administrator'
+            "
             icon="mdi:house-group-add"
             text="Add center"
             btnClass=" btn-primary font-normal btn-sm "
