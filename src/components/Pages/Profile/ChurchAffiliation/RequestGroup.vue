@@ -7,8 +7,15 @@
   >
     <form @submit.prevent="onSubmit" class="space-y-4">
       <!-- {{ props.affiliation }} -->
+      <!-- {{ hasAffinityGroup }} -->
+      <div class="py-6 flex flex-col" v-if="props.affiliation == null">
+        <span class="text-lg"
+          >Only members with church affiliations can request to join affinity
+          group. Contact your admin for assistance.</span
+        >
+      </div>
 
-      <div class="grid grid-cols-1 gap-4">
+      <div v-else class="grid grid-cols-1 gap-4">
         <div>
           <CustomVueSelect
             label="Affinity Group"
@@ -57,14 +64,14 @@ import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { onMounted, ref, watch, computed, inject } from "vue";
 import { useToast } from "vue-toastification";
-// import { defineProps } from "vue";
+import { defineProps } from "vue";
 
-// const props = defineProps({
-//   affiliation: {
-//     type: Object,
-//     default: null,
-//   },
-// });
+const props = defineProps({
+  affiliation: {
+    type: Object,
+    default: null,
+  },
+});
 onMounted(() => {
   getAffinityGroups();
 });
@@ -87,6 +94,10 @@ const affinityGroupOptions = computed(() =>
     };
   })
 );
+
+const hasAffinityGroup = computed(() => {
+  return state.profile.churchAffiliationsData?.affinityGroup ? true : false;
+});
 const schema = yup.object({
   affinityGroup: yup.string(),
 
@@ -109,9 +120,13 @@ const { errorMessage: affinityGroupError } = useField("affinityGroup");
 const { value: reason, errorMessage: reasonError } = useField("reason");
 
 const onSubmit = handleSubmit((values) => {
-  console.log(values);
+  // console.log(values);
 
-  dispatch("requestToChangeGroup", values);
+  if (hasAffinityGroup.value) {
+    dispatch("requestToChangeGroup", values);
+  } else {
+    dispatch("requestToJoinGroup", values);
+  }
 });
 
 const getAffinityGroups = () => {

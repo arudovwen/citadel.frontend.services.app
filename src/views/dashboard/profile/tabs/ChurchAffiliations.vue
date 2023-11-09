@@ -13,6 +13,7 @@
       <!-- {{ centerOptions }} -->
       <!-- {{ centersLoading }} -->
       <!-- {{ typeof Number(levelOfATS) }} -->
+      <!-- {{ hasDepartment }} -->
       <div>
         <Select
           :disabled="isAdmin ? false : true"
@@ -57,6 +58,7 @@
 
       <div>
         <CustomVueSelect
+          :isAdmin="isAdmin"
           :request="requestFnObj('Request to change zone', 'toggleReqZone')"
           :disabled="isAdmin ? false : true"
           label="CIH Zone"
@@ -101,8 +103,14 @@
       <div>
         <CustomVueSelect
           :request="
-            requestFnObj('Request to join group', 'toggleReqAffinityGroup')
+            requestFnObj(
+              hasAffinityGroup
+                ? 'Request to change group'
+                : 'Request to join group',
+              'toggleReqAffinityGroup'
+            )
           "
+          :isAdmin="isAdmin"
           :disabled="isAdmin ? false : true"
           label="Affinity Group"
           classInput="!h-[40px]"
@@ -118,8 +126,14 @@
       <div>
         <CustomVueSelect
           :request="
-            requestFnObj('Request to join department', 'toggleReqDepartment')
+            requestFnObj(
+              hasDepartment
+                ? 'Request to change department'
+                : 'Request to join department',
+              'toggleReqDepartment'
+            )
           "
+          :isAdmin="isAdmin"
           :disabled="isAdmin ? false : true"
           label="Department"
           classInput="!h-[40px]"
@@ -143,8 +157,8 @@
       </button>
       <div class="hidden sm:block"></div>
     </div>
-    <RequestZone />
-    <RequestGroup />
+    <RequestZone :affiliation="churchAffiliationsData" />
+    <RequestGroup :affiliation="churchAffiliationsData" />
     <!-- <RequestDepartment :affiliation="churchAffiliationsData" /> -->
   </form>
 </template>
@@ -254,6 +268,16 @@ const churchAffiliationsDataLoading = computed(
 const churchAffiliationsData = computed(
   () => store.state.profile.churchAffiliationsData
 );
+
+const hasDepartment = computed(() => {
+  return store.state.profile.churchAffiliationsData?.department ? true : false;
+});
+
+const hasAffinityGroup = computed(() => {
+  return store.state.profile.churchAffiliationsData?.affinityGroup
+    ? true
+    : false;
+});
 
 const success = computed(
   () => store.state.profile.updateChurchAffiliationDataSuccess
