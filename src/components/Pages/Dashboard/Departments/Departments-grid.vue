@@ -164,7 +164,7 @@ const departments = computed(() => state.department.departments);
 const membersOptions = computed(() =>
   state?.member?.data.map((i) => {
     return {
-      label: i.fullName,
+      label: `${i.firstName} ${i.surName}`,
       value: i.userId,
     };
   })
@@ -224,7 +224,7 @@ onMounted(() => {
     pageSize: 100000,
     pageNumber: 1,
     searchParameter: "",
-    role: "administrator",
+    role: "hod",
   });
 });
 // eslint-disable-next-line no-unused-vars

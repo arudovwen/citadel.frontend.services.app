@@ -72,7 +72,7 @@ const schema = yup.object({
 const membersOptions = computed(() =>
   state?.member?.data.map((i) => {
     return {
-      label: i.fullName,
+      label: `${i.firstName} ${i.surName}`,
       value: i.userId,
     };
   })

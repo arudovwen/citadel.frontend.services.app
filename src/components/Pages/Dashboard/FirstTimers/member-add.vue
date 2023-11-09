@@ -127,7 +127,13 @@
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Add first timer" btnClass="btn-dark" />
+        <Button
+          :disabled="loading"
+          :isLoading="loading"
+          type="submit"
+          text="Add first timer"
+          btnClass="btn-dark"
+        />
       </div>
     </Card>
   </form>
@@ -162,6 +168,7 @@ const statesOption = computed(() => {
 });
 const { state: vState, dispatch } = useStore();
 const success = computed(() => vState.profile.profileCreated);
+const loading = computed(() => vState.profile.creatingProfile);
 const formData = reactive({
   dateOfVisit: "",
   surName: "",
