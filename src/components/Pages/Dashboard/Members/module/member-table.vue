@@ -412,6 +412,7 @@ export default {
       modalChange,
       modalStatus,
       perPage,
+      state,
     };
   },
 };

@@ -533,6 +533,7 @@ export default {
       modalStatus,
       perPage,
       filters,
+      state,
     };
   },
 };
