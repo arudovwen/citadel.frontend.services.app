@@ -429,7 +429,7 @@ export default {
 
     return {
       // zoneId,
-
+      state,
       zone,
       zoneObj,
       zoneOptions,

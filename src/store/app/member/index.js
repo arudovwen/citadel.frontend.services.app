@@ -380,6 +380,32 @@ export default {
         commit("editErr", err);
       }
     },
+    async upgradeToMember({ commit }, data) {
+      try {
+        commit("deleteBegin");
+        const response = await DataService.put(
+          `${urls.ENABLE_USER}?UserId=${data}`
+        );
+        if (response.status === 200) {
+          commit("deleteSuccess");
+        }
+      } catch (err) {
+        commit("deleteErr", err);
+      }
+    },
+    async updateRole({ commit }, data) {
+      try {
+        commit("deleteBegin");
+        const response = await DataService.put(
+          `${urls.ENABLE_USER}?UserId=${data}`
+        );
+        if (response.status === 200) {
+          commit("deleteSuccess");
+        }
+      } catch (err) {
+        commit("deleteErr", err);
+      }
+    },
     addMember({ commit }, data) {
       commit("addMember", data);
     },
