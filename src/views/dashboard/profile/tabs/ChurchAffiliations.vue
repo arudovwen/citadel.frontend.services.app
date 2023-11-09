@@ -127,7 +127,11 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-      <button type="submit" class="btn btn-primary block w-full text-center">
+      <button
+        :disabled="!isAdmin"
+        type="submit"
+        class="btn btn-primary block w-full text-center"
+      >
         Save Changes
       </button>
       <div class="hidden sm:block"></div>
@@ -246,7 +250,7 @@ const schema = yup.object({
   levelOfATS: yup.string(),
   charteredMember: yup.bool(),
   charteredMemberNumber: yup.number().nullable(),
-  cihZone: yup.string().required("Zone is required"),
+  cihZone: yup.string(),
   mountainOfInfluence: yup.string(),
   affinityGroup: yup.string(),
   department: yup.string(),
@@ -333,29 +337,30 @@ const onSubmit = handleSubmit((values) => {
 
 const matchZone = () => {
   zoneObj.value = zoneOptions.value.find(
-    (zone) => zone.label === churchAffiliationsData.value.cihZone
+    (zone) => zone.label === churchAffiliationsData.value?.cihZone
   );
 
-  console.log("zoneObj: " + JSON.stringify(zoneObj.value));
+  // console.log("zoneObj: " + JSON.stringify(zoneObj.value));
 };
 
 const matchCenter = () => {
   centerObj.value =
     centerOptions.value.find(
-      (center) => center.label === churchAffiliationsData.value.cihAddress
+      (center) => center.label === churchAffiliationsData.value?.cihAddress
     ) || centerObj.value;
 };
 
 const matchDepartment = () => {
   departmentObj.value = departmentOptions.value.find(
-    (department) => department.label === churchAffiliationsData.value.department
+    (department) =>
+      department.label === churchAffiliationsData.value?.department
   );
 };
 
 const matchAffinityGroup = () => {
   affinityGroupObj.value = affinityGroupOptions.value.find(
     (affinityGroup) =>
-      affinityGroup.label === churchAffiliationsData.value.affinityGroup
+      affinityGroup.label === churchAffiliationsData.value?.affinityGroup
   );
 };
 watch(zoneOptions, () => {

@@ -166,6 +166,13 @@
                   >
                     Click here to request to join department
                   </span>
+
+                  <span
+                    @click="toggleReqDepartment(true)"
+                    class="cursor-pointer text-blue-400 hidden"
+                  >
+                    Request Department
+                  </span>
                 </div>
               </div>
             </li>
@@ -179,7 +186,7 @@
       </div>
     </div>
 
-    <RequestDepartment />
+    <RequestDepartment :affiliation="churchAffiliationsData" />
   </div>
 </template>
 
@@ -215,9 +222,14 @@ const profileData = computed(() => state.member.profile);
 // const success = computed(() => state.member.profilesuccess);
 const profileLoading = computed(() => state.member.profileloading);
 const profileError = computed(() => state.member.profileerror);
+const churchAffiliationsData = computed(
+  () => state.profile.churchAffiliationsData
+);
 const isMarried = computed(() =>
   state.profile.biodata?.maritalStatus == "Married" ? true : false
 );
+
+// const isMarried = ref(false);
 
 const isEmployed = computed(() =>
   state.profile.biodata?.employmentStatus == "Employed" ? true : false

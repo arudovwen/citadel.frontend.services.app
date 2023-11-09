@@ -22,7 +22,7 @@ import affinityGroup from "./app/affinityGroup";
 
 export default createStore({
   state: {
-    sidebarCollasp: true,
+    sidebarCollasp: false,
     sidebarHidden: false,
     mobielSidebar: false,
     semidark: false,

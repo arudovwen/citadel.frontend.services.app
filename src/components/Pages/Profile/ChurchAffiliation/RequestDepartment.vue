@@ -6,7 +6,14 @@
     centered
   >
     <form @submit.prevent="onSubmit" class="space-y-4">
-      <div class="grid grid-cols-1 gap-4">
+      <!-- {{ props.affiliation }} -->
+      <div class="py-6 flex flex-col" v-if="props.affiliation == null">
+        <span class="text-lg"
+          >Only members with church affiliations can request to join department.
+          Contact your admin for assistance.</span
+        >
+      </div>
+      <div v-else class="grid grid-cols-1 gap-4">
         <div>
           <CustomVueSelect
             label="Department"
@@ -55,7 +62,14 @@ import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { onMounted, ref, watch, computed, inject } from "vue";
 import { useToast } from "vue-toastification";
+import { defineProps } from "vue";
 
+const props = defineProps({
+  affiliation: {
+    type: Object,
+    default: null,
+  },
+});
 onMounted(() => {
   getDepartments();
 });
