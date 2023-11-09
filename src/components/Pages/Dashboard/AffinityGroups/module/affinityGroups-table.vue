@@ -453,7 +453,7 @@ export default {
       deleteLoading,
       affinityGroups,
       search,
-
+      state,
       modal,
       modalChange,
       modalStatus,
