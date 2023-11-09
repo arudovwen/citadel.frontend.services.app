@@ -42,6 +42,9 @@ export default {
     adminstatloading: false,
     adminstatsuccess: false,
     adminstaterror: null,
+    convertloading: false,
+    converterror: false,
+    convertsuccess: false,
   },
   getters: {
     members: (state) => state.members,
@@ -413,7 +416,7 @@ export default {
       try {
         commit("convertBegin");
         const response = await DataService.put(
-          `${urls.BULT_CONVERT_FIRST_TO_MEMBER}?id=${data}`,
+          `${urls.BULK_CONVERT_FIRST_TO_MEMBER}`,
           data
         );
         if (response.status === 200) {
@@ -427,10 +430,10 @@ export default {
       try {
         commit("convertBegin");
         const response = await DataService.put(
-          `${urls.UPDATE_ROLE}?UserId=${data}`
+          `${urls.UPDATE_ROLE}?${new URLSearchParams(cleanObject(data))}`
         );
         if (response.status === 200) {
-          commit("converySuccess");
+          commit("convertSuccess");
         }
       } catch (err) {
         commit("convertErr", err);

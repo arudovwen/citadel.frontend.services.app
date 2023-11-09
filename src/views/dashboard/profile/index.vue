@@ -18,8 +18,20 @@
             >
               {{ profileData?.fullName }}
             </div>
-            <div class="text-sm font-light text-slate-600 dark:text-slate-400">
+            <div
+              class="text-sm font-light text-slate-600 dark:text-slate-400 capitalize flex gap-x-2 items-center"
+            >
               {{ profileData?.userRole }}
+              <span
+                v-if="
+                  state.auth.userData.userRole === 'administrator' &&
+                  state.auth.userData.id !== userId
+                "
+                @click="() => $refs.modal.openModal()"
+                class="p-1"
+              >
+                <Icon icon="heroicons:pencil-square"
+              /></span>
             </div>
           </div>
         </div>
@@ -186,11 +198,45 @@
       </div>
     </div>
 
+    <RequestDepartment />
+    <Modal
+      title="Change Role"
+      label="Small modal"
+      labelClass="btn-primary-600"
+      ref="modal"
+      sizeClass="max-w-md"
+      themeClass="bg-primary-500"
+    >
+      <div>
+        <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+          Are you sure you want to this role?
+        </div>
+        <Select label="Role" :options="roles" v-model="role" />
+      </div>
+      <template v-slot:footer>
+        <div class="flex gap-x-5">
+          <Button
+            :disabled="convertloading"
+            text="Cancel"
+            btnClass="btn-outline-secondary btn-sm"
+            @click="modal.closeModal()"
+          />
+          <Button
+            :disabled="convertloading"
+            text="Change"
+            btnClass="btn-primary btn-sm"
+            @click="changeRole"
+          />
+        </div>
+      </template>
+    </Modal>
     <RequestDepartment :affiliation="churchAffiliationsData" />
   </div>
 </template>
 
 <script setup>
+import Button from "@/components/Button";
+import Select from "@/components/Select";
 import RequestDepartment from "@/components/Pages/Profile/ChurchAffiliation/RequestDepartment.vue";
 import ProfilePageSkeleton from "@/components/Pages/Profile/ProfilePageSkeleton.vue";
 import Card from "@/components/Card";
@@ -200,19 +246,24 @@ import Tab from "./tabs/index.vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import moment from "moment";
+import Modal from "@/components/Modal/Modal";
+import { useToast } from "vue-toastification";
 import ProfileAvatar from "@/components/Pages/Profile/ProfileAvatar.vue";
 // import Modal from "@/components/Modal";
 
+const { state, dispatch } = useStore();
 onMounted(() => {
   fetchUser();
   getChurchAffiliationsData();
+  dispatch("getRoles");
 });
-const { state, dispatch } = useStore();
+
 // const isReqDepartmentOpen = computed(() => state.profile.isReqDepartmentOpen);
 const toggleReqDepartment = (boolean) => {
   dispatch("toggleReqDepartment", boolean);
 };
-
+const toast = useToast();
+const modal = ref(null);
 const route = useRoute();
 const userId = computed(() => route.params.userId);
 const isUserProfile = computed(
@@ -225,6 +276,16 @@ const profileData = computed(() => state.member.profile);
 // const success = computed(() => state.member.profilesuccess);
 const profileLoading = computed(() => state.member.profileloading);
 const profileError = computed(() => state.member.profileerror);
+const convertsuccess = computed(() => state.member.convertsuccess);
+const convertloading = computed(() => state.member.convertloading);
+const roles = computed(() =>
+  state.member.roles
+    .filter((i) => i.toLowerCase() !== "firsttimers")
+    .map((i) => {
+      return { value: i.toLowerCase(), label: i };
+    })
+);
+const role = ref("");
 const churchAffiliationsData = computed(
   () => state.profile.churchAffiliationsData
 );
@@ -267,7 +328,22 @@ const fetchUser = () => {
 watch(userId, () => {
   fetchUser();
 });
-
+watch(profileData, () => {
+  role.value = profileData?.value?.userRole;
+});
+watch(convertsuccess, () => {
+  if (convertsuccess.value) {
+    fetchUser();
+    toast.success("Role updated");
+    modal.value.closeModal();
+  }
+});
+function changeRole() {
+  dispatch("updateRole", {
+    UserId: profileData.value.email,
+    userRole: role.value,
+  });
+}
 provide("isMarried", isMarried);
 provide("isEmployed", isEmployed);
 provide("profileData", profileData);

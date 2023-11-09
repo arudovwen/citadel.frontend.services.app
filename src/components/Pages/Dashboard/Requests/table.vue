@@ -73,22 +73,14 @@
         >
           <template v-slot:table-row="props">
             <span
-              v-if="props.column.field == 'customer'"
+              v-if="props.column.field == 'fullName'"
               class="flex items-center"
             >
-              <span class="w-7 h-7 rounded-full mr-3 flex-none">
-                <img
-                  :src="
-                    require('@/assets/images/all-img/' +
-                      props.row.customer.image)
-                  "
-                  :alt="props.row.customer.name"
-                  class="object-cover w-full h-full rounded-full"
-                />
-              </span>
               <span
-                class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium"
-                >{{ props.row.customer.name }}</span
+                class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium hover:underline cursor-pointer"
+                ><router-link :to="`/profile/${props.row.userId}`">{{
+                  props.row.fullName
+                }}</router-link></span
               >
             </span>
             <span v-if="props.column.field == 'order'" class="font-medium">
@@ -132,9 +124,9 @@
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in filteredActions" :key="i">
+                  <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="item.doit(item.name)"
+                      @click="item.doit(item.name, props.row)"
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -275,14 +267,14 @@ export default {
             this.$refs.modal.openModal();
           },
         },
-        {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modalChange.openModal();
-          },
-        },
+        // {
+        //   name: "view",
+        //   icon: "heroicons-outline:eye",
+        //   doit: (name) => {
+        //     this.type = name;
+        //     this.$refs.modalChange.openModal();
+        //   },
+        // },
 
         {
           name: "delete",
@@ -331,14 +323,14 @@ export default {
           label: "Email",
           field: "email",
         },
-        {
-          label: "Dob",
-          field: "dateOfBirth",
-        },
-        {
-          label: "Status",
-          field: "status",
-        },
+        // {
+        //   label: "Dob",
+        //   field: "dateOfBirth",
+        // },
+        // {
+        //   label: "Status",
+        //   field: "status",
+        // },
         {
           label: "Action",
           field: "action",
