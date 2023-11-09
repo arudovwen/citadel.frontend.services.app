@@ -42,7 +42,7 @@
         <Select
           label="Role"
           :options="roles"
-          v-model="role"
+          v-model="userRole"
           :error="roleError"
         />
       </div>
@@ -82,7 +82,7 @@ const formData = reactive({
   lastName: "",
   firstname: "",
   middlename: "",
-  role: "",
+  userRole: "",
   phoneNumber: "",
   emailAddress: "",
 });
@@ -90,8 +90,11 @@ const formDataSchema = yup.object().shape({
   lastName: yup.string().required("lastName is required"),
   firstname: yup.string().required("Firstname is required"),
   middlename: yup.string(),
-  role: yup.string().required("Please select a role"),
-  phoneNumber: yup.string().required("Phone Number is required"),
+  userRole: yup.string().required("Please select a role"),
+  phoneNumber: yup
+    .string()
+    .max(11, "Phone number must be 11 digits or less")
+    .required("Phone number is required"),
   emailAddress: yup
     .string()
     .email("Invalid email format")
@@ -111,7 +114,7 @@ const { value: firstname, errorMessage: firstnameError } =
   useField("firstname");
 const { value: middlename, errorMessage: middlenameError } =
   useField("middlename");
-const { value: role, errorMessage: roleError } = useField("role");
+const { value: userRole, errorMessage: roleError } = useField("userRole");
 
 const { value: phoneNumber, errorMessage: phoneNumberError } =
   useField("phoneNumber");

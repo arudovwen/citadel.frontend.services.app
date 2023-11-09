@@ -164,7 +164,10 @@ const formDataSchema = yup.object().shape({
   middlename: yup.string().required("Middlename is required"),
   gender: yup.string().required("Gender is required"),
   dateOfBirth: yup.date().required("Date of Birth is required"),
-  phoneNumber: yup.string().required("Phone Number is required"),
+  phoneNumber: yup
+    .string()
+    .max(11, "Phone number must be 11 digits or less")
+    .required("Phone number is required"),
   emailAddress: yup
     .string()
     .email("Invalid email format")
