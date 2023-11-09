@@ -148,6 +148,8 @@ watch(zoneObj, (newValue) => {
     ...values,
     cihZone: newValue?.label,
   });
+
+  dispatch("getAllCenters", { zoneId: newValue?.zoneId });
 });
 
 watch(centerObj, (newValue) => {

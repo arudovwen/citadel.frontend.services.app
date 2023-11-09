@@ -403,11 +403,6 @@ watch(zoneObj, (newValue) => {
     ...values,
     cihZone: newValue?.label,
   });
-  //reset selected center obj when selected zoneObj changes
-  // centerObj.value = {
-  //   label: "",
-  //   centerId: "",
-  // };
 
   store.dispatch("getAllCenters", { zoneId: newValue?.zoneId });
 });
