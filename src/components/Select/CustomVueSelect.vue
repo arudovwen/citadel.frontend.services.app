@@ -14,7 +14,7 @@
       <span
         class="ml-4 text-blue-400"
         @click="$store.dispatch(`${request.toggle}`, true)"
-        v-if="request"
+        v-if="request && !isAdmin"
         >{{ request.name }}</span
       >
     </label>
@@ -81,12 +81,17 @@
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import Icon from "@/components/Icon";
+
 export default {
   components: {
     vSelect,
     Icon,
   },
   props: {
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
     request: {
       type: Object,
       default: null,

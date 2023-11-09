@@ -58,6 +58,7 @@
 
       <div>
         <CustomVueSelect
+          :isAdmin="isAdmin"
           :request="requestFnObj('Request to change zone', 'toggleReqZone')"
           :disabled="isAdmin ? false : true"
           label="CIH Zone"
@@ -109,6 +110,7 @@
               'toggleReqAffinityGroup'
             )
           "
+          :isAdmin="isAdmin"
           :disabled="isAdmin ? false : true"
           label="Affinity Group"
           classInput="!h-[40px]"
@@ -131,6 +133,7 @@
               'toggleReqDepartment'
             )
           "
+          :isAdmin="isAdmin"
           :disabled="isAdmin ? false : true"
           label="Department"
           classInput="!h-[40px]"
