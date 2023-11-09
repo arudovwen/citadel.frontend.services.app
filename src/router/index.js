@@ -307,6 +307,52 @@ const routes = [
         },
       },
       {
+        path: "/requests",
+        name: "Requests",
+        component: () => import("@/views/dashboard/requests/index.vue"),
+        children: [
+          {
+            path: ":name",
+            name: "Requests",
+            component: () =>
+              import("@/components/Pages/Dashboard/Requests/table"),
+            meta: {
+              activeName: "requests",
+            },
+          },
+          // {
+          //   path: "center",
+          //   name: "Center requests",
+          //   component: () =>
+          //     import("@/components/Pages/Dashboard/Requests/table"),
+          //   meta: {
+          //     activeName: "requests",
+          //   },
+          // },
+          // {
+          //   path: "affinity-group",
+          //   name: "Affinity Group requests",
+          //   component: () =>
+          //     import("@/components/Pages/Dashboard/Requests/table"),
+          //   meta: {
+          //     activeName: "requests",
+          //   },
+          // },
+          // {
+          //   path: "department",
+          //   name: "Department requests",
+          //   component: () =>
+          //     import("@/components/Pages/Dashboard/Requests/table"),
+          //   meta: {
+          //     activeName: "requests",
+          //   },
+          // },
+        ],
+        meta: {
+          roles: ["administrator", "hod", "inspectorate"],
+        },
+      },
+      {
         path: "/outreach",
         name: "outreach",
         component: () => import("@/views/dashboard/outreach/index.vue"),

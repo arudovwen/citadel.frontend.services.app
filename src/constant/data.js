@@ -7,33 +7,33 @@ export const menuItems = [
     title: "Overview",
     icon: "heroicons-outline:home",
     link: "/overview",
-    roles: ["administrator", "hod", "member"],
+    roles: ["administrator", "hod", "member", "inspectorate"],
   },
 
   {
     title: "Members",
     icon: "heroicons-outline:user-group",
     link: "/members-management",
-    roles: ["administrator"],
+    roles: ["administrator", "inspectorate"],
   },
   {
     title: "First Timers",
     icon: "heroicons-outline:user-add",
     link: "/first-timers",
-    roles: ["administrator"],
+    roles: ["administrator", "inspectorate"],
   },
 
   {
     title: "Affinity Groups",
     icon: "ic:sharp-join-inner",
     link: "/affinity-groups",
-    roles: ["administrator"],
+    roles: ["administrator", "inspectorate"],
   },
   {
     title: "Departments",
     icon: "mingcute:department-line",
     link: "/departments",
-    roles: ["administrator", "hod"],
+    roles: ["administrator", "hod", "inspectorate"],
   },
 
   {
@@ -109,10 +109,16 @@ export const menuItems = [
     ],
   },
   {
+    title: "Requests",
+    icon: "fluent-mdl2:message-friend-request",
+    link: "/requests/zone",
+    roles: ["administrator", "inspectorate"],
+  },
+  {
     title: "Users management",
     icon: "la:users-cog",
     link: "/users-management",
-    roles: ["administrator"],
+    roles: ["administrator", "inspectorate"],
   },
   // {
   //   title: "Chat Management",
@@ -133,7 +139,7 @@ export const ProfileMenu = [
     label: "Profile",
     icon: "heroicons-outline:user",
     link: "#",
-    roles: ["administrator", "hod", "members"],
+    roles: ["administrator", "hod", "members", "inspectorate"],
   },
   // {
   //   label: "Chat",
@@ -154,7 +160,7 @@ export const ProfileMenu = [
     label: "Settings",
     icon: "heroicons-outline:cog",
     link: "#",
-    roles: ["administrator", "hod", "members"],
+    roles: ["administrator", "hod", "members", "inspectorate"],
   },
   // {
   //   label: "Price",

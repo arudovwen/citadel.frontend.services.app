@@ -1,21 +1,21 @@
+<!-- eslint-disable vue/no-use-v-if-with-v-for -->
 <template>
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex gap-x-3">
-          <div
-            v-if="state.auth.userData.userRole.toLowerCase() === 'hod'"
-            class="flex md:mb-0 mb-3 border border-gray-200 rounded text-sm"
-          >
-            <button
-              class="px-4 py-2 border-r border-gray-200 last:border-none capitalize min-w-[90px] text-center"
-              :class="activeFilter === n ? 'bg-gray-100' : ''"
-              @click="activeFilter = n"
+        <div class="flex gap-x-3 md:mb-0 mb-3 text-sm">
+          <div class="flex border border-gray-200 rounded text-sm">
+            <router-link
+              :to="`/requests/${n}`"
               v-for="n in filters"
               :key="n"
+              :class="activeFilter === n ? 'bg-gray-100' : ''"
+              class="px-4 py-2 border-r border-gray-200 last:border-none min-w-[90px] text-center capitalize"
             >
-              {{ n }}
-            </button>
+              <button class="capitalize" @click="activeFilter = n">
+                {{ n }}
+              </button>
+            </router-link>
           </div>
           <InputGroup
             v-model="query.searchParameter"
@@ -27,7 +27,7 @@
           />
         </div>
         <div
-          class="md:flex md:space-x-3 items-center flex-none"
+          class="md:flex md:space-x-3 items-center flex-none justify-between"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <VueTailwindDatePicker
@@ -207,23 +207,6 @@
       </div>
     </template>
   </Modal>
-
-  <Modal
-    :title="
-      type === 'add'
-        ? 'Add member'
-        : type === 'edit'
-        ? 'Edit member'
-        : 'View member'
-    "
-    labelClass="btn-outline-dark"
-    ref="modalChange"
-    sizeClass="max-w-3xl"
-  >
-    <AddRecord v-if="type === 'add'" />
-    <EditRecord v-if="type === 'edit'" />
-    <ViewRecord v-if="type === 'view'" />
-  </Modal>
 </template>
 <script>
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
@@ -235,9 +218,6 @@ import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
-import AddRecord from "../member-add.vue";
-import EditRecord from "../member-edit.vue";
-import ViewRecord from "../member-preview.vue";
 import window from "@/mixins/window";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
@@ -255,9 +235,6 @@ import {
 export default {
   mixins: [window],
   components: {
-    AddRecord,
-    EditRecord,
-    ViewRecord,
     Pagination,
     InputGroup,
     Modal,
@@ -273,9 +250,10 @@ export default {
     return {
       type: "",
       id: null,
-      activeFilter: "all",
+
       dateValue: null,
       pageRange: 5,
+
       formatter: {
         date: "DD MMM YYYY",
         month: "MMM",
@@ -416,39 +394,24 @@ export default {
       return actions[name] || null;
     },
   },
-  computed: {
-    filteredActions() {
-      return this.activeFilter === "all"
-        ? this.actions.filter(
-            (i) =>
-              i.name.toLowerCase() !== "approve" &&
-              i.name.toLowerCase() !== "reject"
-          )
-        : this.actions;
-    },
-  },
+
   setup() {
+    const filters = ref(["zone", "center", "affinity-group", "department"]);
     const route = useRoute();
     const query = reactive({
       pageNumber: 1,
       pageSize: 10,
       sortOrder: "",
       searchParameter: "",
-      department: route.params.name,
     });
+    const activeFilter = ref(route.params.name);
     const { state, dispatch } = useStore();
     dispatch("getAffiliationByMemberQuery", query);
     const id = ref(null);
     const modal = ref(null);
     const modalChange = ref(null);
     const modalStatus = ref(null);
-    const filters = computed(() => {
-      if (state.auth.userData.userRole.toLowerCase() === "hod") {
-        return ["all", "pending"];
-      } else {
-        return ["all"];
-      }
-    });
+
     onMounted(() => {
       dispatch("getAffiliationByMemberQuery", query);
       dispatch("getRoles");
@@ -512,6 +475,12 @@ export default {
       }
     );
     watch(
+      () => activeFilter.value,
+      () => {
+        activeFilter.value = route.params.name;
+      }
+    );
+    watch(
       () => [query.pageNumber, query.pageSize],
       () => {
         dispatch("getAffiliationByMemberQuery", query);
@@ -533,6 +502,7 @@ export default {
       perPage,
       filters,
       state,
+      activeFilter,
     };
   },
 };

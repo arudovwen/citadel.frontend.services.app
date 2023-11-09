@@ -400,7 +400,21 @@ export default {
       try {
         commit("convertBegin");
         const response = await DataService.put(
-          `${urls.CONVERT_FURST_TO_MEMBER}?UserId=${data}`
+          `${urls.CONVERT_FIRST_TO_MEMBER}?id=${data}`
+        );
+        if (response.status === 200) {
+          commit("convertSuccess");
+        }
+      } catch (err) {
+        commit("convertErr", err);
+      }
+    },
+    async multiUpgradeToMember({ commit }, data) {
+      try {
+        commit("convertBegin");
+        const response = await DataService.put(
+          `${urls.BULT_CONVERT_FIRST_TO_MEMBER}?id=${data}`,
+          data
         );
         if (response.status === 200) {
           commit("convertSuccess");

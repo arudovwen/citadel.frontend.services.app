@@ -50,6 +50,7 @@
       </div>
       <div class="-mx-6">
         <vue-good-table
+          ref="mytable"
           :columns="columns"
           mode="remote"
           styleClass="vgt-table"
@@ -62,7 +63,25 @@
             enabled: true,
             perPage: query.pageSize,
           }"
+          :select-options="{
+            enabled: true,
+            selectionInfoClass: 'top-select',
+            selectionText:
+              'first timers selected, Do you wish to upgrade all these first timers?',
+            selectOnCheckboxOnly: true,
+            clearSelectionText: 'Clear selection',
+          }"
+          @on-selected-rows-change="selectionChanged"
         >
+          <template #selected-row-actions>
+            <button
+              :disabled="convertloading"
+              @click="handleBulk"
+              class="text-[#232322] font-medium"
+            >
+              Upgrade all
+            </button>
+          </template>
           <template v-slot:table-row="props">
             <span
               v-if="props.column.field == 'customer'"
@@ -190,6 +209,37 @@
       </div>
     </template>
   </Modal>
+
+  <Modal
+    title="Upgrade First-Timer to Member"
+    label="Small modal"
+    labelClass="btn-primary-600"
+    ref="modalUpdate"
+    sizeClass="max-w-md"
+    themeClass="bg-primary-500"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure you want to upgrade this first timer?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          :disabled="convertloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
+          @click="modalUpdate.closeModal()"
+        />
+        <Button
+          :disabled="convertloading"
+          text="Upgrade"
+          btnClass="btn-primary btn-sm"
+          @click="handleUpgrade"
+        />
+      </div>
+    </template>
+  </Modal>
+
   <Modal
     :title="
       type === 'add'
@@ -228,11 +278,11 @@ import { debounce } from "lodash";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
 const pageRange = ref(5);
-
+const modalUpdate = ref(null);
 const timerid = ref(null);
 const detail = ref(null);
 const type = ref("");
-
+const mytable = ref(null);
 const dateValue = ref(null);
 // upgradeToMember
 const formatter = ref({
@@ -260,11 +310,11 @@ const actions = ref([
   },
   {
     name: "upgrade",
-    icon: "heroicons:pencil-square",
+    icon: "game-icons:upgrade",
     doit: (name, data) => {
       type.value = name;
       detail.value = data;
-      modalChange.value.openModal();
+      modalUpdate.value.openModal();
     },
   },
   {
@@ -343,6 +393,15 @@ const query = reactive({
 });
 const { state, dispatch } = useStore();
 const profileCreated = computed(() => state.profile.profileCreated);
+
+function selectionChanged(val) {
+  console.log("🚀 ~ file: table.vue:385 ~ selectionChanged ~ val:", val);
+}
+
+function handleBulk() {
+  const bulkIds = mytable.value["selectedRows"].map((i) => i.id);
+  dispatch("multiUpgradeToMember", { ids: bulkIds });
+}
 onMounted(() => {
   dispatch("getAllBiodata", query);
   dispatch("getRoles");
@@ -371,12 +430,17 @@ const total = computed(() => state.profile.total);
 const addsuccess = computed(() => state.profile.addsuccess);
 // const deleteloading = computed(() => state.profile.deleteloading);
 const deletesuccess = computed(() => state.profile.deletesuccess);
+const convertsuccess = computed(() => state.member.convertsuccess);
+const convertloading = computed(() => state.member.convertloading);
 
 function handleDelete() {
   dispatch("deleteBiodata", timerid.value);
 }
 function perPage({ currentPage }) {
   query.pageSize = currentPage;
+}
+function handleUpgrade() {
+  dispatch("upgradeToMember", detail.value.id);
 }
 // Define a debounce delay (e.g., 500 milliseconds)
 const debounceDelay = 800;
@@ -387,6 +451,14 @@ watch(addsuccess, () => {
   addsuccess.value && dispatch("getAllBiodata", query);
   modalChange.value.closeModal();
 });
+watch(convertsuccess, () => {
+  if (convertsuccess.value) {
+    dispatch("getAllBiodata", query);
+    modalUpdate.value.closeModal();
+    toast.success("Upgrade successful");
+  }
+});
+
 watch(profileCreated, () => {
   if (profileCreated.value) {
     dispatch("getAllBiodata", query);
