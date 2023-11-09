@@ -21,6 +21,7 @@
       </div>
 
       <Button
+        v-if="state.auth.userData.userRole === 'administrator'"
         icon="heroicons-outline:plus"
         text="Add Department"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
@@ -48,6 +49,7 @@ import UpdateModal from "./EditDepartment";
 import Grid from "./Departments-grid";
 import { useStore } from "vuex";
 const store = useStore();
+const { state } = useStore();
 
 const filters = [
   {

@@ -2,7 +2,10 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex md:mb-0 mb-3 border border-gray-200 rounded text-sm">
+        <div
+          v-if="state.auth.userData.userRole === 'hod'"
+          class="flex md:mb-0 mb-3 border border-gray-200 rounded text-sm"
+        >
           <button
             class="px-4 py-2 border-r border-gray-200 last:border-none capitalize min-w-[90px] text-center"
             :class="activeFilter === n ? 'bg-gray-100' : ''"
@@ -39,7 +42,7 @@
             btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
             iconClass="text-lg"
           />
-          <Button
+          <!-- <Button
             icon="ri:user-add-line"
             text="Add Member"
             btnClass=" btn-primary font-normal btn-sm "
@@ -50,7 +53,7 @@
                 $refs.modalChange.openModal();
               }
             "
-          />
+          /> -->
         </div>
       </div>
       <div class="-mx-6">
@@ -269,7 +272,6 @@ export default {
     return {
       type: "",
       id: null,
-      filters: ["all", "pending"],
       activeFilter: "all",
       dateValue: null,
       pageRange: 5,
@@ -439,7 +441,13 @@ export default {
     const modal = ref(null);
     const modalChange = ref(null);
     const modalStatus = ref(null);
-
+    const filters = computed(() => {
+      if (state.auth.userData.userRole === "hod") {
+        return ["all", "pending"];
+      } else {
+        return ["all"];
+      }
+    });
     onMounted(() => {
       dispatch("getAffiliationByMemberQuery", query);
       dispatch("getRoles");
@@ -458,7 +466,9 @@ export default {
     const members = computed(() => {
       if (state?.member?.data) {
         return state?.member?.data?.map((item) => {
-          item.fullName = `${item.firstName} ${item.middleName} ${item.surName}`;
+          item.fullName = `${item.firstName} ${item.middleName || "-"} ${
+            item.surName
+          }`;
           item.dateOfBirth = item?.dateOfBirth
             ? moment(item?.dateOfBirth).format("ll")
             : "-";
@@ -522,6 +532,7 @@ export default {
       modalChange,
       modalStatus,
       perPage,
+      filters,
     };
   },
 };

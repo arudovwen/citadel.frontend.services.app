@@ -33,6 +33,7 @@
             />
           </export-excel>
           <Button
+            v-if="state.auth.userData.userRole === 'administrator'"
             icon="ri:user-add-line"
             text="Add user"
             btnClass=" btn-primary font-normal btn-sm "

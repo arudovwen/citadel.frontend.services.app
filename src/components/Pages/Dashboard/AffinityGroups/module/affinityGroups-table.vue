@@ -25,6 +25,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
+            v-if="state.auth.userData.userRole === 'administrator'"
             icon="ri:user-add-line"
             text="Add Affinity Group"
             btnClass=" btn-primary font-normal btn-sm "
