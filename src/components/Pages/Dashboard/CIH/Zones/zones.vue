@@ -3,7 +3,8 @@
     <div class="flex justify-space-between items-center mb-4">
       <Button
         v-if="
-          store.state.auth.userData.userRole.toLowerCase() === 'inspectorate'
+          store.state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
+          state.auth.userData.userRole.toLowerCase() === 'administrator'
         "
         icon="heroicons-outline:plus"
         text="Add zone"

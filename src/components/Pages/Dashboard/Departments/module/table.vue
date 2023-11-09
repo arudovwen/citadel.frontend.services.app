@@ -357,10 +357,10 @@ export default {
           label: "Dob",
           field: "dateOfBirth",
         },
-        {
-          label: "Status",
-          field: "status",
-        },
+        // {
+        //   label: "Status",
+        //   field: "status",
+        // },
         {
           label: "Action",
           field: "action",

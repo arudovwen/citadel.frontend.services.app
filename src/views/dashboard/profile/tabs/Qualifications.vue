@@ -233,6 +233,5 @@ watch(deleteSuccess, () => {
 <style lang="scss">
 .vgt-wrap .vgt-responsive {
   border-radius: 0px !important;
-  padding-bottom: 0px !important;
 }
 </style>
