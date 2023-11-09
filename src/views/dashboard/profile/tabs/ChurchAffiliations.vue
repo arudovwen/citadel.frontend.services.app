@@ -57,6 +57,7 @@
 
       <div>
         <CustomVueSelect
+          :request="requestFnObj('Request for Zone', 'toggleReqZone')"
           :disabled="isAdmin ? false : true"
           label="CIH Zone"
           class="min-w-[200px] w-full md:w-auto"
@@ -99,6 +100,9 @@
 
       <div>
         <CustomVueSelect
+          :request="
+            requestFnObj('Request to join group', 'toggleReqAffinityGroup')
+          "
           :disabled="isAdmin ? false : true"
           label="Affinity Group"
           classInput="!h-[40px]"
@@ -136,6 +140,8 @@
       </button>
       <div class="hidden sm:block"></div>
     </div>
+    <RequestZone />
+    <RequestGroup />
   </form>
 </template>
 
@@ -151,7 +157,8 @@ import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleto
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
 import { levelOfATSMenu, isCharterMemberMenu } from "@/constant/data";
-
+import RequestZone from "@/components/Pages/Profile/ChurchAffiliation/RequestZone.vue";
+import RequestGroup from "@/components/Pages/Profile/ChurchAffiliation/RequestGroup.vue";
 import { inject, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
@@ -362,6 +369,13 @@ const matchAffinityGroup = () => {
     (affinityGroup) =>
       affinityGroup.label === churchAffiliationsData.value?.affinityGroup
   );
+};
+
+const requestFnObj = (name, toggle) => {
+  return {
+    name: name,
+    toggle: toggle,
+  };
 };
 watch(zoneOptions, () => {
   matchZone();

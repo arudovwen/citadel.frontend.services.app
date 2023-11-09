@@ -13,6 +13,8 @@ export default {
     profileCreated: false,
     createProfileError: null,
     isReqDepartmentOpen: false,
+    isReqZoneOpen: false,
+    isReqAffinityGroupOpen: false,
     createChildrenDataloading: false,
     createChildrenDataSuccess: false,
     createChildrenDataerror: null,
@@ -455,6 +457,12 @@ export default {
     toggleReqDepartment(state, boolean) {
       state.isReqDepartmentOpen = boolean;
     },
+    toggleReqZone(state, boolean) {
+      state.isReqZoneOpen = boolean;
+    },
+    toggleReqAffinityGroup(state, boolean) {
+      state.isReqAffinityGroupOpen = boolean;
+    },
   },
   actions: {
     async uploadFile({ commit }, data) {
@@ -824,6 +832,12 @@ export default {
 
     toggleReqDepartment({ commit }, boolean) {
       commit("toggleReqDepartment", boolean);
+    },
+    toggleReqZone({ commit }, boolean) {
+      commit("toggleReqZone", boolean);
+    },
+    toggleReqAffinityGroup({ commit }, boolean) {
+      commit("toggleReqAffinityGroup", boolean);
     },
   },
 };
