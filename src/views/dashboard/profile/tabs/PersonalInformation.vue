@@ -237,7 +237,9 @@ const createProfileLoading = computed(
 );
 
 const isShowing = ref(false);
-const isMarried = inject("isMarried");
+const showMarriedTab = inject("showMarriedTab");
+const isEmployed = inject("isEmployed");
+
 const biodataLoading = computed(() => store.state.profile.getBiodataloading);
 const success = computed(() => store.state.profile.profileCreated);
 const biodata = computed(() => store.state.profile.biodata);
@@ -445,9 +447,20 @@ watch(
   () => values.maritalStatus,
   (newValue) => {
     if (newValue == "Married") {
-      isMarried.value = true;
+      showMarriedTab.value = true;
     } else {
-      isMarried.value = false;
+      showMarriedTab.value = false;
+    }
+  }
+);
+
+watch(
+  () => values.employmentStatus,
+  (newValue) => {
+    if (newValue == "Employed") {
+      isEmployed.value = true;
+    } else {
+      isEmployed.value = false;
     }
   }
 );

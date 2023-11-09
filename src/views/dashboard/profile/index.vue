@@ -295,9 +295,9 @@ const isMarried = computed(() =>
 
 // const isMarried = ref(false);
 
-const isEmployed = computed(() =>
-  state.profile.biodata?.employmentStatus == "Employed" ? true : false
-);
+const showMarriedTab = ref(false);
+
+const isEmployed = ref(false);
 
 const spouseTitle = computed(() =>
   state.profile.biodata?.gender == "Male" ? "Mrs" : "Mr"
@@ -352,6 +352,7 @@ provide("isAdmin", isAdmin);
 provide("spouseTitle", spouseTitle);
 provide("spouseGender", spouseGender);
 provide("isUserProfile", isUserProfile);
+provide("showMarriedTab", showMarriedTab);
 </script>
 
 <style lang="scss" scoped></style>
