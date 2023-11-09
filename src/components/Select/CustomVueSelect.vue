@@ -10,8 +10,15 @@
       :class="`${classLabel} inline-block input-label `"
       :for="name"
     >
-      {{ label }}</label
-    >
+      {{ label }}
+      <span
+        class="ml-4 text-blue-400"
+        @click="$store.dispatch(`${request.toggle}`, true)"
+        v-if="request"
+        >{{ request.name }}</span
+      >
+    </label>
+
     <!-- <div>Loading...{{ menuLoading }}</div> -->
     <!-- <span>{{ menuLoading }}</span> -->
     <div v-if="menuLoading">Loading...</div>
@@ -80,6 +87,10 @@ export default {
     Icon,
   },
   props: {
+    request: {
+      type: Object,
+      default: null,
+    },
     placeholder: {
       type: String,
       default: "Select Option",

@@ -18,26 +18,6 @@
         </Tab>
       </div>
     </TabList>
-    <!-- <TabPanels>
-      <TabPanel>
-        <PersonalInfo />
-      </TabPanel>
-      <TabPanel>
-        <Qualifications />
-      </TabPanel>
-      <TabPanel>
-        <Employer />
-      </TabPanel>
-      <TabPanel v-if="isMarried === true">
-        <SpouseDetails />
-      </TabPanel>
-      <TabPanel>
-        <ChildrenDetails />
-      </TabPanel>
-      <TabPanel v-if="buttons[5].isShowing === true">
-        <ChurchAffiliations />
-      </TabPanel>
-    </TabPanels> -->
 
     <TabPanels v-if="buttonType == 'defaultButtons'">
       <TabPanel v-for="item in defaultButtons" :key="item.title">
@@ -152,7 +132,6 @@ import { inject, ref, watchEffect } from "vue";
 const isMarried = inject("isMarried");
 const buttonType = ref("defaultButtons");
 const isEmployed = inject("isEmployed");
-const isAdmin = inject("isAdmin");
 const buttons = ref([
   {
     title: "Personal Information",
@@ -165,7 +144,7 @@ const buttons = ref([
 
   {
     title: "Church Affiliations",
-    isShowing: isAdmin.value,
+    isShowing: true,
   },
 ]);
 
@@ -181,7 +160,7 @@ const defaultButtons = ref([
 
   {
     title: "Church Affiliations",
-    isShowing: isAdmin.value,
+    isShowing: true,
   },
 ]);
 
@@ -205,7 +184,7 @@ const isMarriedButtons = ref([
   },
   {
     title: "Church Affiliations",
-    isShowing: isAdmin.value,
+    isShowing: true,
   },
 ]);
 
@@ -224,7 +203,7 @@ const employedButtons = ref([
   },
   {
     title: "Church Affiliations",
-    isShowing: isAdmin.value,
+    isShowing: true,
   },
 ]);
 
@@ -251,7 +230,7 @@ const marriedAndEmployedButtons = ref([
   },
   {
     title: "Church Affiliations",
-    isShowing: isAdmin.value,
+    isShowing: true,
   },
 ]);
 

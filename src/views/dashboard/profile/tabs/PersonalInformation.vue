@@ -220,7 +220,7 @@ import {
   maritalStatusMenu,
 } from "@/constant/data";
 import { useStore } from "vuex";
-import { computed, onMounted, watch, ref } from "vue";
+import { computed, onMounted, watch, ref, inject } from "vue";
 import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
@@ -237,7 +237,7 @@ const createProfileLoading = computed(
 );
 
 const isShowing = ref(false);
-
+const isMarried = inject("isMarried");
 const biodataLoading = computed(() => store.state.profile.getBiodataloading);
 const success = computed(() => store.state.profile.profileCreated);
 const biodata = computed(() => store.state.profile.biodata);
@@ -277,7 +277,7 @@ const schema = yup.object({
   dateOfBirth: yup.string(),
 });
 
-const { handleSubmit, setValues } = useForm({
+const { handleSubmit, setValues, values } = useForm({
   validationSchema: schema,
   initialValues: null,
 });
@@ -440,5 +440,16 @@ watch(id, (newValue) => {
     getBiodata();
   }
 });
+
+watch(
+  () => values.maritalStatus,
+  (newValue) => {
+    if (newValue == "Married") {
+      isMarried.value = true;
+    } else {
+      isMarried.value = false;
+    }
+  }
+);
 </script>
 <style lang="scss" scoped></style>
