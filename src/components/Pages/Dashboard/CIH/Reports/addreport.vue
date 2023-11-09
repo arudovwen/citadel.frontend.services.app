@@ -180,7 +180,9 @@ const formData = reactive({
   },
 });
 const formDataSchema = Yup.object().shape({
-  date: Yup.date().required("Date is required"),
+  date: Yup.date()
+    .typeError("Please enter a valid date")
+    .required("Date is required"),
   type: Yup.string().required("Type is required"),
   center: Yup.string().required("Center is required"),
   zone: Yup.string().required("Zone is required"),

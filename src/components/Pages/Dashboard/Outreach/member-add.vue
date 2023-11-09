@@ -65,9 +65,15 @@ const formData = reactive({
   name: "",
 });
 const formDataSchema = yup.object().shape({
-  name: yup.date().required("Please provie a name"),
+  name: yup
+    .date()
+    .typeError("Please enter a valid date")
+    .required("Please provie a name"),
 
-  dateOfOutreach: yup.date().required("Date is required"),
+  dateOfOutreach: yup
+    .date()
+    .typeError("Please enter a valid date")
+    .required("Date is required"),
 
   location: yup.string().required("Location is required"),
   description: yup.string().required("A short description is required"),

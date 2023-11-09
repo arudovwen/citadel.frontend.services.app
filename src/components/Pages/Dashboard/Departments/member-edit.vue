@@ -158,12 +158,18 @@ const formData = reactive({
   placeOfVisit: "",
 });
 const formDataSchema = yup.object().shape({
-  dateOfVisit: yup.date().required("Date of Visit is required"),
+  dateOfVisit: yup
+    .date()
+    .typeError("Please enter a valid date")
+    .required("Date of Visit is required"),
   surname: yup.string().required("Surname is required"),
   firstname: yup.string().required("Firstname is required"),
   middlename: yup.string().required("Middlename is required"),
   gender: yup.string().required("Gender is required"),
-  dateOfBirth: yup.date().required("Date of Birth is required"),
+  dateOfBirth: yup
+    .date()
+    .typeError("Please enter a valid date")
+    .required("Date of Birth is required"),
   phoneNumber: yup
     .string()
     .max(11, "Phone number must be 11 digits or less")
