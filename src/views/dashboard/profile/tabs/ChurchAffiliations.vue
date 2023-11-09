@@ -15,6 +15,7 @@
       <!-- {{ typeof Number(levelOfATS) }} -->
       <div>
         <Select
+          :disabled="isAdmin ? false : true"
           label="Level Of ATS"
           :options="levelOfATSMenu"
           v-model.value="levelOfATS"
@@ -26,6 +27,7 @@
 
       <div>
         <Select
+          :disabled="isAdmin ? false : true"
           label="Charter Member"
           :options="isCharterMemberMenu"
           v-model.value="charteredMember"
@@ -42,6 +44,7 @@
         "
       >
         <Textinput
+          :disabled="isAdmin ? false : true"
           label="Charter Member Number"
           type="number"
           placeholder="Type your charter number"
@@ -54,6 +57,7 @@
 
       <div>
         <CustomVueSelect
+          :disabled="isAdmin ? false : true"
           label="CIH Zone"
           class="min-w-[200px] w-full md:w-auto"
           v-model.value="zoneObj"
@@ -67,9 +71,9 @@
 
       <div>
         <CustomVueSelect
-          :disabled="centersLoading"
+          :disabled="centersLoading || !isAdmin"
           :menuLoading="centersLoading"
-          label="CIH Address"
+          label="Center Address"
           class="min-w-[200px] w-full md:w-auto"
           v-model.value="centerObj"
           :modelValue="centerObj"
@@ -82,6 +86,7 @@
 
       <div>
         <Textinput
+          :disabled="isAdmin ? false : true"
           label="Mountain of Evidence"
           type="text"
           placeholder="Type your mountain of evidence"
@@ -94,6 +99,7 @@
 
       <div>
         <CustomVueSelect
+          :disabled="isAdmin ? false : true"
           label="Affinity Group"
           classInput="!h-[40px]"
           v-model.value="affinityGroupObj"
@@ -107,6 +113,7 @@
 
       <div>
         <CustomVueSelect
+          :disabled="isAdmin ? false : true"
           label="Department"
           classInput="!h-[40px]"
           v-model.value="departmentObj"
@@ -163,6 +170,7 @@ onUnmounted(() => {
   // store.state.profile.churchAffiliationsData =
 });
 const id = inject("id");
+const isAdmin = inject("isAdmin");
 const store = useStore();
 const toast = useToast();
 const getChurchAffiliationsData = () => {
