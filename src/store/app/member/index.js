@@ -47,6 +47,22 @@ export default {
     members: (state) => state.members,
   },
   mutations: {
+    convertBegin(state) {
+      state.convertloading = true;
+      state.convertuccess = false;
+      state.converterror = null;
+    },
+
+    convertSuccess(state) {
+      state.convertloading = false;
+      state.convertsuccess = true;
+    },
+
+    convertErr(state, err) {
+      state.convertloading = false;
+      state.converterror = err;
+      state.convertsuccess = false;
+    },
     adminStatBegin(state) {
       state.adminstatloading = true;
       state.adminstatsuccess = false;
@@ -378,6 +394,46 @@ export default {
         }
       } catch (err) {
         commit("editErr", err);
+      }
+    },
+    async upgradeToMember({ commit }, data) {
+      try {
+        commit("convertBegin");
+        const response = await DataService.put(
+          `${urls.CONVERT_FIRST_TO_MEMBER}?id=${data}`
+        );
+        if (response.status === 200) {
+          commit("convertSuccess");
+        }
+      } catch (err) {
+        commit("convertErr", err);
+      }
+    },
+    async multiUpgradeToMember({ commit }, data) {
+      try {
+        commit("convertBegin");
+        const response = await DataService.put(
+          `${urls.BULT_CONVERT_FIRST_TO_MEMBER}?id=${data}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("convertSuccess");
+        }
+      } catch (err) {
+        commit("convertErr", err);
+      }
+    },
+    async updateRole({ commit }, data) {
+      try {
+        commit("convertBegin");
+        const response = await DataService.put(
+          `${urls.UPDATE_ROLE}?UserId=${data}`
+        );
+        if (response.status === 200) {
+          commit("converySuccess");
+        }
+      } catch (err) {
+        commit("convertErr", err);
       }
     },
     addMember({ commit }, data) {

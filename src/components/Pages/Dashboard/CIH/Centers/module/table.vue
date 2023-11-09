@@ -27,6 +27,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
+            v-if="state.auth.userData.userRole.toLowerCase() === 'inspectorate'"
             icon="mdi:house-group-add"
             text="Add center"
             btnClass=" btn-primary font-normal btn-sm "
@@ -428,7 +429,7 @@ export default {
 
     return {
       // zoneId,
-
+      state,
       zone,
       zoneObj,
       zoneOptions,

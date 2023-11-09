@@ -348,7 +348,7 @@ export default {
     const members = computed(() => {
       if (state?.profile?.allbiodata) {
         return state?.profile?.allbiodata.map((item) => {
-          item.fullName = `${item.firstName} ${item.middleName} ${item.surName}`;
+          item.fullName = `${item.firstName}  ${item.surName}`;
           item.dateOfBirth = item?.dateOfBirth
             ? moment(item?.dateOfBirth).format("ll")
             : "-";
@@ -410,6 +410,7 @@ export default {
       modalChange,
       modalStatus,
       perPage,
+      state,
     };
   },
 };

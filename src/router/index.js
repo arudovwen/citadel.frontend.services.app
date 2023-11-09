@@ -81,7 +81,7 @@ const routes = [
         name: "home",
         component: () => import("@/views/index.vue"),
         meta: {
-          roles: ["administrator", "hod", "member"],
+          roles: ["administrator", "hod", "member", "inspectorate"],
         },
       },
       {
@@ -99,7 +99,7 @@ const routes = [
         name: "profile",
         component: ProfileIndex,
         meta: {
-          roles: ["administrator", "hod", "member"],
+          roles: ["administrator", "hod", "member", "inspectorate"],
         },
       },
       {
@@ -108,7 +108,7 @@ const routes = [
         component: () => import("@/components/Pages/Dashboard/Members"),
         meta: {
           activeName: "members-management",
-          roles: ["administrator"],
+          roles: ["administrator", "inspectorate", "hod"],
         },
       },
       {
@@ -117,7 +117,7 @@ const routes = [
         component: () => import("@/components/Pages/Dashboard/Members/users"),
         meta: {
           activeName: "users-management",
-          roles: ["administrator"],
+          roles: ["administrator", "inspectorate", "hod"],
         },
       },
       {
@@ -168,7 +168,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "hod"],
+          roles: ["administrator", "inspectorate", "hod"],
         },
       },
 
@@ -303,7 +303,53 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "hod"],
+          roles: ["administrator", "hod", "inspectorate"],
+        },
+      },
+      {
+        path: "/requests",
+        name: "Requests",
+        component: () => import("@/views/dashboard/requests/index.vue"),
+        children: [
+          {
+            path: ":name",
+            name: "Requests",
+            component: () =>
+              import("@/components/Pages/Dashboard/Requests/table"),
+            meta: {
+              activeName: "requests",
+            },
+          },
+          // {
+          //   path: "center",
+          //   name: "Center requests",
+          //   component: () =>
+          //     import("@/components/Pages/Dashboard/Requests/table"),
+          //   meta: {
+          //     activeName: "requests",
+          //   },
+          // },
+          // {
+          //   path: "affinity-group",
+          //   name: "Affinity Group requests",
+          //   component: () =>
+          //     import("@/components/Pages/Dashboard/Requests/table"),
+          //   meta: {
+          //     activeName: "requests",
+          //   },
+          // },
+          // {
+          //   path: "department",
+          //   name: "Department requests",
+          //   component: () =>
+          //     import("@/components/Pages/Dashboard/Requests/table"),
+          //   meta: {
+          //     activeName: "requests",
+          //   },
+          // },
+        ],
+        meta: {
+          roles: ["administrator", "hod", "inspectorate"],
         },
       },
       {
@@ -321,7 +367,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator"],
+          roles: ["administrator", "inspectorate", "hod"],
         },
       },
       {
