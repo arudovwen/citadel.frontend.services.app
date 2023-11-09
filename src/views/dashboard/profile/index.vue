@@ -3,7 +3,6 @@
     ><ProfilePageSkeleton
   /></span>
   <div v-else class="space-y-5 profile-page">
-    <!-- {{ profileData }} -->
     <div
       class="profiel-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0 space-y-6 justify-between items-end relative z-[1]"
     >
@@ -12,30 +11,7 @@
       ></div>
       <div class="profile-box flex-none md:text-start text-center">
         <div class="md:flex items-end md:space-x-6 rtl:space-x-reverse">
-          <div class="flex-none">
-            <div
-              class="md:h-[186px] md:w-[186px] h-[140px] w-[140px] md:ml-0 md:mr-0 ml-auto mr-auto md:mb-0 mb-4 rounded-full ring-4 ring-slate-100 relative"
-            >
-              <span
-                class="inline-block h-1full w-full overflow-hidden rounded-full bg-gray-100"
-              >
-                <svg
-                  class="h-full w-full text-gray-300"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
-                  />
-                </svg>
-              </span>
-              <router-link
-                to="/app/profile-setting"
-                class="absolute right-2 h-8 w-8 bg-slate-50 text-slate-600 rounded-full shadow-sm flex flex-col items-center justify-center md:top-[140px] top-[100px]"
-                ><Icon icon="heroicons:pencil-square" />
-              </router-link>
-            </div>
-          </div>
+          <ProfileAvatar />
           <div class="flex-1">
             <div
               class="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]"
@@ -180,16 +156,22 @@
                     v-if="churchAffiliationsDataLoading && !department"
                     class="animate-pulse h-[16px] w-full bg-slate-600 dark:bg-slate-50"
                   ></span>
+                  <span v-if="!churchAffiliationsDataLoading && department">{{
+                    department
+                  }}</span>
                   <span
-                    v-else-if="!churchAffiliationsDataLoading && department"
-                    >{{ department }}</span
-                  >
-                  <span
-                    v-else
+                    v-if="!churchAffiliationsDataLoading && !department"
                     @click="toggleReqDepartment(true)"
                     class="cursor-pointer"
                   >
                     Click here to request to join department
+                  </span>
+
+                  <span
+                    @click="toggleReqDepartment(true)"
+                    class="cursor-pointer text-blue-400 hidden"
+                  >
+                    Request Department
                   </span>
                 </div>
               </div>
@@ -204,7 +186,7 @@
       </div>
     </div>
 
-    <RequestDepartment />
+    <RequestDepartment :affiliation="churchAffiliationsData" />
   </div>
 </template>
 
@@ -218,6 +200,7 @@ import Tab from "./tabs/index.vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import moment from "moment";
+import ProfileAvatar from "@/components/Pages/Profile/ProfileAvatar.vue";
 // import Modal from "@/components/Modal";
 
 onMounted(() => {
@@ -239,9 +222,14 @@ const profileData = computed(() => state.member.profile);
 // const success = computed(() => state.member.profilesuccess);
 const profileLoading = computed(() => state.member.profileloading);
 const profileError = computed(() => state.member.profileerror);
+const churchAffiliationsData = computed(
+  () => state.profile.churchAffiliationsData
+);
 const isMarried = computed(() =>
   state.profile.biodata?.maritalStatus == "Married" ? true : false
 );
+
+// const isMarried = ref(false);
 
 const isEmployed = computed(() =>
   state.profile.biodata?.employmentStatus == "Employed" ? true : false

@@ -13,9 +13,15 @@ export default {
     profileCreated: false,
     createProfileError: null,
     isReqDepartmentOpen: false,
+    isReqZoneOpen: false,
+    isReqAffinityGroupOpen: false,
     createChildrenDataloading: false,
     createChildrenDataSuccess: false,
     createChildrenDataerror: null,
+
+    uploadFileLoading: false,
+    uploadFileSuccess: false,
+    uploadFileError: null,
 
     updateQualificationDataloading: false,
     updateQualificationDataSuccess: false,
@@ -41,6 +47,14 @@ export default {
     requestToJoinDeptLoading: false,
     requestToJoinDeptSuccess: false,
     requestToJoinDeptError: null,
+
+    requestToChangeZoneLoading: false,
+    requestToChangeZoneSuccess: false,
+    requestToChangeZoneError: null,
+
+    requestToChangeGroupLoading: false,
+    requestToChangeGroupSuccess: false,
+    requestToChangeGroupError: null,
     //get
     getAllBiodataloading: false,
     getAllBiodatasuccess: false,
@@ -94,6 +108,22 @@ export default {
     },
   },
   mutations: {
+    uploadFileBegin(state) {
+      state.uploadFileLoading = true;
+      state.uploadFileSuccess = false;
+      state.uploadFileError = null;
+    },
+    uploadFileSuccess(state) {
+      state.uploadFileLoading = false;
+      state.uploadFileSuccess = true;
+      state.uploadFileError = null;
+    },
+    uploadFileError(state, err) {
+      state.uploadFileLoading = false;
+      state.uploadFileSuccess = false;
+      state.uploadFileError = err;
+    },
+
     deleteQualificationBegin(state) {
       state.deleteQualificationLoading = true;
       state.deleteQualificationError = null;
@@ -154,6 +184,39 @@ export default {
       state.requestToJoinDeptLoading = false;
       state.requestToJoinDeptSuccess = false;
       state.requestToJoinDeptError = err;
+    },
+    requestToChangeZoneBegin(state) {
+      state.requestToChangeZoneLoading = true;
+      state.requestToChangeZoneSuccess = false;
+      state.requestToChangeZoneError = null;
+    },
+
+    requestToChangeZoneSuccess(state) {
+      state.requestToChangeZoneLoading = false;
+      state.requestToChangeZoneSuccess = true;
+      state.requestToChangeZoneError = null;
+    },
+    requestToChangeZoneError(state, err) {
+      state.requestToChangeZoneLoading = false;
+      state.requestToChangeZoneSuccess = false;
+      state.requestToChangeZoneError = err;
+    },
+
+    requestToChangeGroupBegin(state) {
+      state.requestToChangeGroupLoading = true;
+      state.requestToChangeGroupSuccess = false;
+      state.requestToChangeGroupError = null;
+    },
+
+    requestToChangeGroupSuccess(state) {
+      state.requestToChangeGroupLoading = false;
+      state.requestToChangeGroupSuccess = true;
+      state.requestToChangeGroupError = null;
+    },
+    requestToChangeGroupError(state, err) {
+      state.requestToChangeGroupLoading = false;
+      state.requestToChangeGroupSuccess = false;
+      state.requestToChangeGroupError = err;
     },
 
     updateQualificationDataBegin(state) {
@@ -435,8 +498,29 @@ export default {
     toggleReqDepartment(state, boolean) {
       state.isReqDepartmentOpen = boolean;
     },
+    toggleReqZone(state, boolean) {
+      state.isReqZoneOpen = boolean;
+    },
+    toggleReqAffinityGroup(state, boolean) {
+      state.isReqAffinityGroupOpen = boolean;
+    },
   },
   actions: {
+    async uploadFile({ commit }, data) {
+      try {
+        commit("uploadFileBegin");
+        const response = await DataService.post(urls.UPLOAD_FILE, data, {
+          // Set the Content-Type to multipart/form-data and include the boundary
+          "Content-Type": "multipart/form-data",
+          // Add any other headers if needed
+        });
+        if (response.status === 200) {
+          commit("uploadFileSuccess");
+        }
+      } catch (err) {
+        commit("uploadFileError", err);
+      }
+    },
     async requestToJoinDept({ commit }, data) {
       try {
         commit("requestToJoinDeptBegin");
@@ -449,6 +533,39 @@ export default {
         }
       } catch (err) {
         commit("requestToJoinDeptError", err);
+      }
+    },
+
+    async requestToChangeGroup({ commit }, data) {
+      try {
+        commit("requestToChangeGroupBegin");
+        const response = await DataService.put(
+          `${urls.REQUEST_BY_MEMBER_TO_CHANGE_GROUP}?userId=${data.userId}&newAffinityGroup=${data.affinityGroup}&Reason=${data.reason}`,
+          "string"
+        );
+        if (response.status === 200) {
+          commit("requestToChangeGroupSuccess");
+        }
+      } catch (err) {
+        commit("requestToChangeGroupError", err);
+      }
+    },
+
+    async requestToChangeZone(
+      { commit },
+      { userId, cihZone, cihAddress, reason }
+    ) {
+      try {
+        commit("requestToChangeZoneBegin");
+        const response = await DataService.put(
+          `${urls.REQUEST_BY_MEMBER_TO_CHANGE_ZONE}?userId=${userId}&newCihZone=${cihZone}&newCenter=${cihAddress}&Reason=${reason}`,
+          ""
+        );
+        if (response.status === 200) {
+          commit("requestToChangeZoneSuccess");
+        }
+      } catch (err) {
+        commit("requestToChangeZoneError", err);
       }
     },
 
@@ -789,6 +906,12 @@ export default {
 
     toggleReqDepartment({ commit }, boolean) {
       commit("toggleReqDepartment", boolean);
+    },
+    toggleReqZone({ commit }, boolean) {
+      commit("toggleReqZone", boolean);
+    },
+    toggleReqAffinityGroup({ commit }, boolean) {
+      commit("toggleReqAffinityGroup", boolean);
     },
   },
 };
