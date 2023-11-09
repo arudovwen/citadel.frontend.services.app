@@ -74,7 +74,7 @@ export const urls = {
   DELETE_EMPLOYER: "/Employer/DeleteEmployer",
 
   // Files
-  UPLOAD_FILE: "/Files/Upload",
+  UPLOAD_FILE: "/Files/upload",
 
   // Qualification
   CREATE_QUALIFICATION: "/Qualification/CreateQualification",

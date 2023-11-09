@@ -17,6 +17,10 @@ export default {
     createChildrenDataSuccess: false,
     createChildrenDataerror: null,
 
+    uploadFileLoading: false,
+    uploadFileSuccess: false,
+    uploadFileError: null,
+
     updateQualificationDataloading: false,
     updateQualificationDataSuccess: false,
     updateQualificationDataError: null,
@@ -94,6 +98,22 @@ export default {
     },
   },
   mutations: {
+    uploadFileBegin(state) {
+      state.uploadFileLoading = true;
+      state.uploadFileSuccess = false;
+      state.uploadFileError = null;
+    },
+    uploadFileSuccess(state) {
+      state.uploadFileLoading = false;
+      state.uploadFileSuccess = true;
+      state.uploadFileError = null;
+    },
+    uploadFileError(state, err) {
+      state.uploadFileLoading = false;
+      state.uploadFileSuccess = false;
+      state.uploadFileError = err;
+    },
+
     deleteQualificationBegin(state) {
       state.deleteQualificationLoading = true;
       state.deleteQualificationError = null;
@@ -437,6 +457,21 @@ export default {
     },
   },
   actions: {
+    async uploadFile({ commit }, data) {
+      try {
+        commit("uploadFileBegin");
+        const response = await DataService.post(urls.UPLOAD_FILE, data, {
+          // Set the Content-Type to multipart/form-data and include the boundary
+          "Content-Type": "multipart/form-data",
+          // Add any other headers if needed
+        });
+        if (response.status === 200) {
+          commit("uploadFileSuccess");
+        }
+      } catch (err) {
+        commit("uploadFileError", err);
+      }
+    },
     async requestToJoinDept({ commit }, data) {
       try {
         commit("requestToJoinDeptBegin");

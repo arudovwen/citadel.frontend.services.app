@@ -161,7 +161,7 @@ const toast = useToast();
 
 const schema = yup.object({
   highestQualification: yup.string().required("This field is required"),
-  professionalQualification: yup.string().required("This field is required"),
+  professionalQualification: yup.string(),
 });
 
 const formValues = {
