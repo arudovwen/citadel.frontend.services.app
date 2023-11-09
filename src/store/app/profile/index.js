@@ -536,11 +536,41 @@ export default {
       }
     },
 
+    async requestToChangeDept({ commit }, data) {
+      try {
+        commit("requestToJoinDeptBegin");
+        const response = await DataService.put(
+          `${urls.REQUEST_BY_MEMBER_TO_CHANGE_DEPT}?userId=${data.userId}&newDepartment=${data.department}&Reason=${data.reason}`,
+          "string"
+        );
+        if (response.status === 200) {
+          commit("requestToJoinDeptSuccess");
+        }
+      } catch (err) {
+        commit("requestToJoinDeptError", err);
+      }
+    },
+
     async requestToChangeGroup({ commit }, data) {
       try {
         commit("requestToChangeGroupBegin");
         const response = await DataService.put(
           `${urls.REQUEST_BY_MEMBER_TO_CHANGE_GROUP}?userId=${data.userId}&newAffinityGroup=${data.affinityGroup}&Reason=${data.reason}`,
+          "string"
+        );
+        if (response.status === 200) {
+          commit("requestToChangeGroupSuccess");
+        }
+      } catch (err) {
+        commit("requestToChangeGroupError", err);
+      }
+    },
+
+    async requestToJoinGroup({ commit }, data) {
+      try {
+        commit("requestToChangeGroupBegin");
+        const response = await DataService.put(
+          `${urls.REQUEST_BY_MEMBER_TO_JOIN_GROUP}?userId=${data.userId}&affinityGroup=${data.affinityGroup}&Reason=${data.reason}`,
           "string"
         );
         if (response.status === 200) {

@@ -58,11 +58,17 @@ export const urls = {
   GET_ALL_CHURCH_AFFILIATION: "/ChurchAffiliation/GetAllChurchAffiliation",
   DELETE_CHURCH_AFFILIATION: "/ChurchAffiliation/DeleteChurchAffiliation",
   GET_CHURCH_AFFILIATION_BY_MEMBER: "/ChurchAffiliation/GetMemberQuery",
+  REQUEST_BY_MEMBER_TO_CHANGE_ZONE: "/ChurchAffiliation/RequestChangeOfCIHZone",
+
   REQUEST_BY_MEMBER_TO_JOIN_DEPT:
     "/ChurchAffiliation/RequestByMemberToJoinDepartment",
-  REQUEST_BY_MEMBER_TO_CHANGE_ZONE: "/ChurchAffiliation/RequestChangeOfCIHZone",
+  REQUEST_BY_MEMBER_TO_CHANGE_DEPT:
+    "/ChurchAffiliation/RequestChangeOfDepartment",
+  REQUEST_BY_MEMBER_TO_JOIN_GROUP:
+    "/ChurchAffiliation/RequestByMemberToJoinAffinityGroup",
   REQUEST_BY_MEMBER_TO_CHANGE_GROUP:
     "/ChurchAffiliation/RequestChangeOfAffinityGroup",
+
   // Department
   CREATE_DEPARTMENT: "/Department/CreateDepartment",
   UPDATE_DEPARTMENT: "/Department/UpdateDepartment",
