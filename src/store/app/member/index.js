@@ -413,8 +413,7 @@ export default {
       try {
         commit("convertBegin");
         const response = await DataService.put(
-          `${urls.BULT_CONVERT_FIRST_TO_MEMBER}?id=${data}`,
-          data
+          `${urls.BULT_CONVERT_FIRST_TO_MEMBER}?id=${data}`
         );
         if (response.status === 200) {
           commit("convertSuccess");
@@ -427,10 +426,10 @@ export default {
       try {
         commit("convertBegin");
         const response = await DataService.put(
-          `${urls.UPDATE_ROLE}?UserId=${data}`
+          `${urls.UPDATE_ROLE}?${new URLSearchParams(cleanObject(data))}`
         );
         if (response.status === 200) {
-          commit("converySuccess");
+          commit("convertSuccess");
         }
       } catch (err) {
         commit("convertErr", err);
