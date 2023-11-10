@@ -1,3 +1,4 @@
+<!-- eslint-disable no-unused-vars -->
 <template>
   <div>
     <Card noborder>
@@ -11,14 +12,20 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
-
-          <VueTailwindDatePicker
+          <Select
+            label=""
+            :options="roleFilters"
+            v-model="query.sortOrder"
+            placeholder="Sort by"
+            classInput="bg-white !h-9 min-w-[150px] !min-h-auto"
+          />
+          <!-- <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
             input-classes="form-control h-[36px]"
             placeholder="Select date"
             as-single
-          />
+          /> -->
         </div>
         <div class="md:flex md:space-x-3 items-center flex-none">
           <export-excel
@@ -252,8 +259,9 @@
 </template>
 
 <script setup>
+import Select from "@/components/Select";
 import { useToast } from "vue-toastification";
-import VueTailwindDatePicker from "vue-tailwind-datepicker";
+// import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -269,6 +277,7 @@ import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
 import { computed, onMounted, watch, reactive, ref } from "vue";
+import { roleFilters } from "@/constant/data";
 
 const pageRange = ref(5);
 const modalUpdate = ref(null);
@@ -276,12 +285,12 @@ const timerid = ref(null);
 const detail = ref(null);
 const type = ref("");
 const mytable = ref(null);
-const dateValue = ref(null);
+// const dateValue = ref(null);
 // upgradeToMember
-const formatter = ref({
-  date: "DD MMM YYYY",
-  month: "MMM",
-});
+// const formatter = ref({
+//   date: "DD MMM YYYY",
+//   month: "MMM",
+// });
 const actions = ref([
   {
     name: "view",
@@ -429,8 +438,9 @@ const convertloading = computed(() => state.member.convertloading);
 function handleDelete() {
   dispatch("deleteBiodata", timerid.value);
 }
-function perPage({ currentPage }) {
-  query.pageSize = currentPage;
+function perPage({ currentPerPage }) {
+  query.pageNumber = 1;
+  query.pageSize = currentPerPage;
 }
 function handleUpgrade() {
   dispatch("upgradeToMember", detail.value.id);
@@ -473,7 +483,7 @@ watch(
   }
 );
 watch(
-  () => [query.pageNumber, query.pageSize],
+  () => [query.pageNumber, query.pageSize, query.sortOrder],
   () => {
     dispatch("getAllBiodata", query);
   }

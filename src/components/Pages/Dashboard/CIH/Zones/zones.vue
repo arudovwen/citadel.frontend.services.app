@@ -1,6 +1,25 @@
 <template>
   <div>
-    <div class="flex justify-space-between items-center mb-4">
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex gap-x-4 items-center">
+        <InputGroup
+          v-model="query.searchParameter"
+          placeholder="Search zone"
+          type="search"
+          prependIcon="heroicons-outline:search"
+          merged
+          classInput="min-w-[320px] !h-9"
+        />
+
+        <Select
+          label=""
+          :options="filters"
+          v-model="query.sortOrder"
+          placeholder="Sort by"
+          classInput="bg-white !h-9 min-w-[150px] !min-h-auto"
+        />
+      </div>
+
       <Button
         v-if="
           store.state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
@@ -26,7 +45,9 @@
 <script setup>
 import Button from "@/components/Button";
 import GridSkletion from "@/components/Skeleton/grid";
-import { computed, ref, watch, onMounted } from "vue";
+import Select from "@/components/Select";
+import InputGroup from "@/components/InputGroup";
+import { computed, ref, watch, onMounted, reactive, provide } from "vue";
 import ZoneAddmodal from "./AddZone";
 import UpdateModal from "./EditZone";
 import Grid from "./zones-grid";
@@ -35,6 +56,16 @@ import { useStore } from "vuex";
 const store = useStore();
 const { state } = useStore();
 
+const filters = [
+  {
+    label: "Name",
+    value: "zoneName",
+  },
+  {
+    label: "Description",
+    value: "description",
+  },
+];
 let fillter = ref("grid");
 const openZone = () => {
   store.dispatch("openZone");
@@ -48,7 +79,12 @@ onMounted(() => {
   window.addEventListener("resize", handleResize);
   handleResize();
 });
-
+const query = reactive({
+  pageNumber: 1,
+  pageSize: 10,
+  sortOrder: null,
+  searchParameter: null,
+});
 const zones = computed(() => store.getters.zones);
 
 const isSkeletion = ref(true);
@@ -81,5 +117,6 @@ watch(fillter, () => {
       break;
   }
 });
+provide("query", query);
 </script>
 <style lang=""></style>

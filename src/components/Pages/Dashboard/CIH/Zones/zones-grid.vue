@@ -1,77 +1,98 @@
 <template>
-  <div>
+  <div class="bg-white p-6">
     <div v-if="getZonesLoading && zones?.length == 0" class="">
       <EmptyGrid />
     </div>
-    <div v-else class="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5">
-      <!-- <span>Zones: {{ zones }}</span> -->
-      <Card bodyClass="p-6" v-for="(item, i) in zones" :key="i">
-        <!-- header -->
-        <header class="flex justify-between items-end">
-          <router-link
-            :to="`/cih/zones/view-centers/${item.id}`"
-            class="flex-1"
-          >
-            <div class="flex space-x-4 items-center">
-              <div class="flex-none">
-                <div
-                  class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal uppercase"
-                >
-                  {{ item.zoneName.charAt(0) + item.zoneName.charAt(1) }}
-                </div>
-              </div>
-              <div class="font-medium text-lg leading-6">
-                <div class="dark:text-slate-200 text-slate-900">
-                  {{ item.zoneName }}
-                </div>
-              </div>
-            </div>
-          </router-link>
-          <div>
-            <Dropdown classMenuItems=" w-[130px]">
-              <span
-                class="text-lg inline-flex flex-col items-center justify-center h-8 w-8 rounded-full bg-gray-500-f7 dark:bg-slate-900 dark:text-slate-400"
-                ><Icon icon="heroicons-outline:dots-vertical"
-              /></span>
-              <template v-slot:menus>
-                <MenuItem v-for="(menu, i) in actions" :key="i">
+    <div v-else>
+      <div
+        v-if="zones.length"
+        class="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5"
+      >
+        <!-- <span>Zones: {{ zones }}</span> -->
+        <Card bodyClass="p-6" v-for="(item, i) in zones" :key="i">
+          <!-- header -->
+          <header class="flex justify-between items-end">
+            <router-link
+              :to="`/cih/zones/view-centers/${item.id}`"
+              class="flex-1"
+            >
+              <div class="flex space-x-4 items-center">
+                <div class="flex-none">
                   <div
-                    @click="menu.doit(item)"
-                    :class="`
+                    class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal uppercase"
+                  >
+                    {{ item.zoneName.charAt(0) + item.zoneName.charAt(1) }}
+                  </div>
+                </div>
+                <div class="font-medium text-lg leading-6">
+                  <div class="dark:text-slate-200 text-slate-900">
+                    {{ item.zoneName }}
+                  </div>
+                </div>
+              </div>
+            </router-link>
+            <div>
+              <Dropdown classMenuItems=" w-[130px]">
+                <span
+                  class="text-lg inline-flex flex-col items-center justify-center h-8 w-8 rounded-full bg-gray-500-f7 dark:bg-slate-900 dark:text-slate-400"
+                  ><Icon icon="heroicons-outline:dots-vertical"
+                /></span>
+                <template v-slot:menus>
+                  <MenuItem v-for="(menu, i) in actions" :key="i">
+                    <div
+                      @click="menu.doit(item)"
+                      :class="`
                 
                   ${'hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white'}
                    w-full border-b border-b-gray-500 border-opacity-10   px-4 py-2 text-sm dark:text-slate-300  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center  capitalize `"
-                  >
-                    <span class="text-base"><Icon :icon="menu.icon" /></span>
-                    <span>{{ menu.name }}</span>
-                  </div>
-                </MenuItem>
-              </template>
-            </Dropdown>
-          </div>
-        </header>
-        <router-link :to="`/cih/zones/view-centers/${item.id}`">
-          <!-- description -->
-          <!-- <div class="text-slate-600 dark:text-slate-400 text-sm pt-4 pb-4">
+                    >
+                      <span class="text-base"><Icon :icon="menu.icon" /></span>
+                      <span>{{ menu.name }}</span>
+                    </div>
+                  </MenuItem>
+                </template>
+              </Dropdown>
+            </div>
+          </header>
+          <router-link :to="`/cih/zones/view-centers/${item.id}`">
+            <!-- description -->
+            <!-- <div class="text-slate-600 dark:text-slate-400 text-sm pt-4 pb-4">
           {{ item.des }}
         </div> -->
 
-          <!-- assign and time count -->
-          <div class="flex justify-start mt-6">
-            <!-- assign -->
+            <!-- assign and time count -->
+            <div class="flex justify-start mt-6">
+              <!-- assign -->
 
-            <!-- total date -->
-            <div class="text-left">
-              <span
-                class="inline-flex items-center space-x-1 bg-gray-500 bg-opacity-[0.16] text-gray-500 text-xs font-normal px-2 py-1 rounded-full"
-              >
-                <span> <Icon icon="heroicons-outline:user-group" /></span>
-                <span>3 centers</span>
-              </span>
+              <!-- total date -->
+              <div class="text-left">
+                <span
+                  class="inline-flex items-center space-x-1 bg-gray-500 bg-opacity-[0.16] text-gray-500 text-xs font-normal px-2 py-1 rounded-full"
+                >
+                  <span> <Icon icon="heroicons-outline:user-group" /></span>
+                  <span>3 centers</span>
+                </span>
+              </div>
             </div>
-          </div>
-        </router-link>
-      </Card>
+          </router-link>
+        </Card>
+        <div class="py-4">
+          <Pagination
+            :total="total"
+            :current="query.pageNumber"
+            :per-page="query.pageSize"
+            :pageRange="5"
+            :perPageChanged="perPage"
+            @page-changed="query.pageNumber = $event"
+            enableSearch
+            enableSelect
+            :options="options"
+          >
+            >
+          </Pagination>
+        </div>
+      </div>
+      <Empty v-else />
     </div>
   </div>
   <Modal
@@ -103,15 +124,16 @@
   </Modal>
 </template>
 <script setup>
+import Pagination from "@/components/Pagination";
 import EmptyGrid from "@/components/Skeleton/Project-grid.vue";
-
+import Empty from "@/components/Empty";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Dropdown from "@/components/Dropdown";
 import Icon from "@/components/Icon";
 import { MenuItem } from "@headlessui/vue";
 import Modal from "@/components/Modal/Modal";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch, inject } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
@@ -123,11 +145,13 @@ const { dispatch, state } = useStore();
 const router = useRouter();
 
 const zones = computed(() => state.zone.zones);
+const total = computed(() => state.zone.total);
 const getZonesLoading = computed(() => state.zone.getZonesLoading);
 const deleteZoneSuccess = computed(() => state.zone.deleteZoneSuccess);
 const toast = useToast();
 const modal = ref(null);
 const detail = ref(null);
+const query = inject("query");
 const actions = ref([
   {
     name: "view",
@@ -154,13 +178,16 @@ const actions = ref([
 ]);
 
 const getZones = () => {
-  dispatch("getZones");
+  dispatch("getZones", query);
 };
 
 const deleteZone = () => {
   dispatch("deleteZone", detail.value.id);
 };
-
+function perPage({ currentPerPage }) {
+  query.pageNumber = 1;
+  query.pageSize = currentPerPage;
+}
 watch(deleteZoneSuccess, () => {
   if (deleteZoneSuccess.value) {
     toast.success("Successfully Deleted");
@@ -177,6 +204,9 @@ watch(deleteZoneSuccess, () => {
 function handleDelete() {
   dispatch("removeZone", detail.value);
 }
+watch(query, () => {
+  dispatch("getZones", query);
+});
 </script>
 <style lang="scss" scoped>
 .date-label {

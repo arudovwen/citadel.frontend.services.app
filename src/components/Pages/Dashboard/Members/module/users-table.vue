@@ -458,8 +458,6 @@ export default {
       pageNumber: 1,
       pageSize: 10,
       name: "",
-      email: "",
-      mobileNo: "",
     });
     const { state, dispatch } = useStore();
     onMounted(() => {

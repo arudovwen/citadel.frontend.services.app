@@ -11,14 +11,20 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
-
-          <VueTailwindDatePicker
+          <Select
+            label=""
+            :options="roleFilters"
+            v-model="query.sortOrder"
+            placeholder="Sort by"
+            classInput="bg-white !h-9 min-w-[150px] !min-h-auto"
+          />
+          <!-- <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
             input-classes="form-control h-[36px]"
             placeholder="Select date"
             as-single
-          />
+          /> -->
         </div>
         <div
           class="md:flex md:space-x-3 items-center flex-none"
@@ -164,6 +170,7 @@
   </Modal>
 </template>
 <script>
+import Select from "@/components/Select";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
@@ -183,6 +190,7 @@ import { debounce } from "lodash";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 import window from "@/mixins/window";
 import { useToast } from "vue-toastification";
+import { roleFilters } from "@/constant/data";
 // import store from "@/store";
 
 export default {
@@ -198,7 +206,9 @@ export default {
     Icon,
     Card,
     MenuItem,
+    Select,
     Button,
+    // eslint-disable-next-line vue/no-unused-components
     VueTailwindDatePicker,
   },
 
@@ -329,6 +339,7 @@ export default {
       pageSize: 10,
       searchParameter: "",
       isFirstTimer: false,
+      sortOrder: "",
     });
     const toast = useToast();
     const { state, dispatch } = useStore();
@@ -392,7 +403,7 @@ export default {
       debouncedSearch(search.value);
     });
     watch(
-      () => [query.pageNumber, query.pageSize],
+      () => [query.pageNumber, query.pageSize, query.sortOrder],
       () => {
         dispatch("getAllBiodata", query);
       }
@@ -412,6 +423,7 @@ export default {
       modalStatus,
       perPage,
       state,
+      roleFilters,
     };
   },
 };

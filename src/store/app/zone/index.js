@@ -2,6 +2,7 @@
 import { useToast } from "vue-toastification";
 import { DataService } from "@/config/dataService/dataService";
 import { urls } from "@/helpers/apI_urls";
+import { cleanObject } from "@/util/cleanObject";
 const toast = useToast();
 export default {
   state: {
@@ -31,6 +32,7 @@ export default {
     zone: null,
 
     zones: [],
+    total: 0,
   },
   getters: {
     zones: (state) => state.zones,
@@ -58,11 +60,12 @@ export default {
       state.getZonesSuccess = false;
       state.getZonesError = null;
     },
-    getZonesSuccess(state, data) {
+    getZonesSuccess(state, { data, totalCount }) {
       state.getZonesLoading = false;
       state.getZonesSuccess = true;
       state.getZonesError = null;
       state.zones = data;
+      state.total = totalCount;
     },
     getZonesError(state, err) {
       state.getZonesLoading = false;
@@ -167,13 +170,15 @@ export default {
         commit("addZoneError", err);
       }
     },
-    async getZones({ commit }) {
+    async getZones({ commit }, data) {
       try {
         commit("getZonesBegin");
-        const response = await DataService.get(urls.GET_ALL_ZONES);
+        const response = await DataService.get(
+          `${urls.GET_ALL_ZONES}??${new URLSearchParams(cleanObject(data))}`
+        );
 
         if (response.status === 200) {
-          commit("getZonesSuccess", response.data.data);
+          commit("getZonesSuccess", response.data);
         }
       } catch (err) {
         commit("getZonesError", err);

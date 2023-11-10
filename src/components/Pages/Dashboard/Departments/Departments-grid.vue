@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div className="bg-white p-6">
     <div
       v-if="departments.length"
       class="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mb-6"
@@ -87,13 +87,12 @@
       </Card>
     </div>
     <Empty v-if="!departments.length" />
-    <div class="py-4">
+    <div class="py-4" v-if="departments.length">
       <Pagination
         :total="total"
         :current="query.pageNumber"
         :per-page="query.pageSize"
         :pageRange="5"
-        :pageChanged="perPage"
         :perPageChanged="perPage"
         @page-changed="query.pageNumber = $event"
         enableSearch
@@ -250,8 +249,9 @@ watch(
     dispatch("getDepartments", query);
   }
 );
-function perPage({ currentPage }) {
-  query.pageSize = currentPage;
+function perPage({ currentPerPage }) {
+  query.pageNumber = 1;
+  query.pageSize = currentPerPage;
 }
 function handleSuccess() {
   dispatch("getDepartments", query);

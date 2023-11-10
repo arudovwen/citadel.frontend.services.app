@@ -865,3 +865,38 @@ export const highestQualificationMenu = [
     label: "B.Sc",
   },
 ];
+
+export const roleFilters = [
+  {
+    label: "Default",
+    value: "",
+  },
+  {
+    label: "First name",
+    value: "firstName",
+  },
+  {
+    label: "Surname",
+    value: "surName",
+  },
+  {
+    label: "Dob",
+    value: "dob",
+  },
+  {
+    label: "Gender",
+    value: "gender",
+  },
+  {
+    label: "Marital status",
+    value: "maritalStatus",
+  },
+  {
+    label: "Employment",
+    value: "employmentStatus",
+  },
+  {
+    label: "State",
+    value: "state",
+  },
+];
