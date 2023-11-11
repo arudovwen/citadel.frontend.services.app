@@ -101,9 +101,14 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-      <button type="submit" class="btn btn-primary block w-full text-center">
+      <Button
+        :disabled="submitLoading"
+        :isLoading="submitLoading"
+        type="submit"
+        class="btn btn-primary block w-full text-center"
+      >
         Save Changes
-      </button>
+      </Button>
       <div class="hidden sm:block"></div>
     </div>
   </form>
@@ -117,6 +122,8 @@ import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
+import Button from "@/components/Button";
+
 // import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
 // import { titleMenu, genderMenu } from "@/constant/data";
@@ -138,7 +145,9 @@ const spouseDataLoading = computed(
 );
 
 const success = computed(() => store.state.profile.updateSpouseDataSuccess);
-
+const submitLoading = computed(
+  () => store.state.profile.updateSpouseDataloading
+);
 // const getSpouseDataloading = computed(
 //   () => store.state.profile.getSpouseDataloading
 // );
@@ -160,13 +169,24 @@ const schema = yup.object({
 
   // title: yup.string().required("Title text is required"),
   // gender: yup.string(),
-  dateOfBirth: yup.string(),
-  weddingAnniversary: yup.string(),
+  dateOfBirth: yup.string().nullable(),
+  weddingAnniversary: yup.string().nullable(),
 });
+
+const formValues = {
+  firstName: "",
+  surName: "",
+  middleName: "",
+  email: "",
+  mobile1: "",
+  mobile2: "",
+  dateOfBirth: null,
+  weddingAnniversary: null,
+};
 
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: spouseData.value,
+  initialValues: spouseData.value ? spouseData.value : formValues,
 });
 // No need to define rules for fields
 
@@ -211,7 +231,7 @@ const prepareDetails = (values, type) => {
     middleName: values.middleName,
     surName: values.surName,
     mobile1: values.mobile1,
-    mobile2: "string",
+    mobile2: "",
     email: values.email,
     gender: spouseGender.value,
     dateOfBirth: values.dateOfBirth,
@@ -222,9 +242,6 @@ const prepareDetails = (values, type) => {
 };
 
 const onSubmit = handleSubmit((values) => {
-  // console.log("PersonalDetails: " + JSON.stringify(values));
-  // toast.success("Update successful");
-
   const hasDataError = spouseData.value == null;
   if (hasDataError) {
     store.dispatch("createSpouse", prepareDetails(values, "create"));

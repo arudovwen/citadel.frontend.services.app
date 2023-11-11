@@ -90,9 +90,9 @@
       <div>
         <Textinput
           :disabled="isAdmin ? false : true"
-          label="Mountain of Evidence"
+          label="Mountain of Influence"
           type="text"
-          placeholder="Type your mountain of evidence"
+          placeholder="Type your mountain of influence"
           name="mountainOfInfluence"
           v-model="mountainOfInfluence"
           :error="mountainOfInfluenceError"

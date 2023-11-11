@@ -8,7 +8,9 @@
     <!-- <span>UserData: {{ profileData }}</span> -->
     <!-- <span>FormVal: {{ formValues }}</span> -->
     <!-- {{ values }} -->
-    <ProfileInputSkeleton v-if="biodataLoading || isShowing == false" />
+    <ProfileInputSkeleton
+      v-if="(!biodata && biodataLoading) || isShowing == false"
+    />
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Select
         label="Title"
@@ -189,18 +191,21 @@
       />
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-      <button
-        :disabled="createProfileLoading"
+      <!-- {{ submitLoading }} -->
+      <Button
+        :disabled="createProfileLoading || submitLoading"
+        :isLoading="submitLoading"
         type="submit"
         class="btn btn-primary block w-full text-center"
       >
         Save Changes
-      </button>
+      </Button>
       <div class="hidden sm:block"></div>
     </div>
   </form>
 </template>
 <script setup>
+import Button from "@/components/Button";
 import Select from "@/components/Select";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
@@ -245,7 +250,7 @@ const success = computed(() => store.state.profile.profileCreated);
 const biodata = computed(() => store.state.profile.biodata);
 const profileData = computed(() => store.state.member.profile);
 const id = computed(() => route.params.userId);
-
+const submitLoading = computed(() => store.state.profile.creatingProfile);
 const getBiodata = () => {
   store.dispatch("getBiodataByUserId", id.value);
 };
