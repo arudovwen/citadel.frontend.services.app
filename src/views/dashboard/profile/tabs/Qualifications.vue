@@ -37,7 +37,12 @@
           />
         </div>
         <div class="ltr:text-right rtl:text-left">
-          <Button text="Add Qualification" btnClass="btn btn-primary " />
+          <Button
+            :disabled="submitLoading"
+            :isLoading="submitLoading"
+            text="Add Qualification"
+            btnClass="btn btn-primary "
+          />
         </div>
       </form>
 
@@ -141,6 +146,10 @@ const store = useStore();
 const getQualificationData = () => {
   store.dispatch("getQualificationsById", id.value);
 };
+const submitLoading = computed(
+  () => store.state.profile.updateQualificationDataloading
+);
+
 const deleteSuccess = computed(
   () => store.state.profile.deleteQualificationSuccess
 );
@@ -186,7 +195,9 @@ const prepareDetails = (values) => {
   const createObj = {
     userId: id.value,
     highestQualification: values.highestQualification,
-    professionalQualification: values.professionalQualification,
+    professionalQualification: values.professionalQualification
+      ? values.professionalQualification
+      : "",
   };
   return createObj;
 };
