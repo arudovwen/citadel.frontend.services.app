@@ -230,6 +230,12 @@ export default {
         commit("rolesSuccess", response.data);
       }
     },
+    async getAdminRoles({ commit }) {
+      const response = await DataService.get(`${urls.GET_ADMIN_ROLES}`);
+      if (response.status === 200) {
+        commit("rolesSuccess", response.data);
+      }
+    },
     async getUsers({ commit }, data) {
       try {
         commit("fetchUserBegin");
