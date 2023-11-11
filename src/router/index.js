@@ -1,10 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useToast } from "vue-toastification";
 import store from "@/store";
 import ProfileIndex from "@/views/dashboard/profile/index.vue";
 // import MembersIndex from "@/views/dashboard/members/index.vue";
 import VenuesIndex from "@/views/dashboard/venues/index.vue";
 import AppointmentsIndex from "@/views/dashboard/appointments/index.vue";
 import AffinityGroupsIndex from "@/views/dashboard/affinityGroups/index.vue";
+import "vue-toastification/dist/index.css";
+
+const toast = useToast();
+
 function guard(to, from, next) {
   if (store.state.auth.accessToken) {
     next();
@@ -81,7 +86,16 @@ const routes = [
         name: "home",
         component: () => import("@/views/index.vue"),
         meta: {
-          roles: ["administrator", "hod", "member", "inspectorate"],
+          roles: [
+            "administrator",
+            "hod",
+            "member",
+            "inspectorate",
+            "dsa",
+            "headaffinity",
+            "support",
+            "coordinator",
+          ],
         },
       },
       {
@@ -91,7 +105,15 @@ const routes = [
         meta: {
           hide: true,
           activeName: "overview",
-          roles: ["administrator", "hod", "member"],
+          roles: [
+            "administrator",
+            "hod",
+            "member",
+            "inspectorate",
+            "dsa",
+            "headaffinity",
+            "support",
+          ],
         },
       },
       {
@@ -108,7 +130,7 @@ const routes = [
         component: () => import("@/components/Pages/Dashboard/Members"),
         meta: {
           activeName: "members-management",
-          roles: ["administrator", "inspectorate", "hod"],
+          roles: ["administrator", "hod"],
         },
       },
       {
@@ -117,7 +139,7 @@ const routes = [
         component: () => import("@/components/Pages/Dashboard/Members/users"),
         meta: {
           activeName: "users-management",
-          roles: ["administrator", "inspectorate", "hod"],
+          roles: ["administrator"],
         },
       },
       {
@@ -125,7 +147,7 @@ const routes = [
         name: "affinity-groups",
         component: AffinityGroupsIndex,
         meta: {
-          roles: ["administrator"],
+          roles: ["administrator", "headaffinity"],
         },
         children: [
           {
@@ -168,7 +190,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "inspectorate", "hod"],
+          roles: ["administrator", "hod", "dsa"],
         },
       },
 
@@ -222,6 +244,7 @@ const routes = [
                     name: "CIH Zones",
                     url: "/cih/zones",
                   },
+                  roles: ["administrator", "inspectorate", "coordinator"],
                 },
               },
               {
@@ -238,6 +261,7 @@ const routes = [
                     name: "CIH Zones",
                     url: "/cih/zones",
                   },
+                  roles: ["administrator", "inspectorate", "coordinator"],
                 },
               },
             ],
@@ -258,6 +282,7 @@ const routes = [
                   import("@/components/Pages/Dashboard/CIH/Centers/centers"),
                 meta: {
                   activeName: "cih management",
+                  roles: ["administrator", "inspectorate", "pastor"],
                 },
               },
               {
@@ -267,6 +292,7 @@ const routes = [
                   import("@/components/Pages/Dashboard/CIH/Centers/centers"),
                 meta: {
                   activeName: "cih management",
+                  roles: ["administrator", "inspectorate", "pastor"],
                 },
               },
               {
@@ -276,7 +302,7 @@ const routes = [
                   import("@/components/Pages/Dashboard/CIH/Centers/center"),
                 meta: {
                   activeName: "cih management",
-
+                  roles: ["administrator", "inspectorate", "pastor"],
                   groupParent: {
                     name: "CIH Centers",
                     url: "/cih/centers",
@@ -291,6 +317,7 @@ const routes = [
             component: () => import("@/components/Pages/Dashboard/CIH/Reports"),
             meta: {
               activeName: "cih management",
+              roles: ["administrator", "inspectorate", "report"],
             },
           },
           {
@@ -299,11 +326,18 @@ const routes = [
             component: () => import("@/components/Pages/Dashboard/CIH/Events"),
             meta: {
               activeName: "cih management",
+              roles: ["administrator", "inspectorate", "accreditor"],
             },
           },
         ],
         meta: {
-          roles: ["administrator", "hod", "inspectorate"],
+          roles: [
+            "administrator",
+            "inspectorate",
+            "pastor",
+            "coordinator",
+            "accreditor",
+          ],
         },
       },
       {
@@ -608,6 +642,7 @@ router.beforeEach((to, from, next) => {
     ) {
       next();
     } else {
+      toast.error("You are not authorised");
       next({ name: "overview" });
     }
   } else {

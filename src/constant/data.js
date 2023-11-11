@@ -7,33 +7,42 @@ export const menuItems = [
     title: "Overview",
     icon: "heroicons-outline:home",
     link: "/overview",
-    roles: ["administrator", "hod", "member", "inspectorate"],
+    roles: [
+      "administrator",
+      "hod",
+      "member",
+      "inspectorate",
+      "dsa",
+      "coordinator",
+      "headaffinity",
+      "support",
+    ],
   },
 
   {
     title: "Members",
     icon: "heroicons-outline:user-group",
     link: "/members-management",
-    roles: ["administrator", "inspectorate"],
+    roles: ["administrator"],
   },
   {
     title: "First Timers",
     icon: "heroicons-outline:user-add",
     link: "/first-timers",
-    roles: ["administrator", "inspectorate"],
+    roles: ["administrator"],
   },
 
   {
     title: "Affinity Groups",
     icon: "ic:sharp-join-inner",
     link: "/affinity-groups",
-    roles: ["administrator", "inspectorate"],
+    roles: ["administrator", "headaffinity"],
   },
   {
     title: "Departments",
     icon: "mingcute:department-line",
     link: "/departments",
-    roles: ["administrator", "hod", "inspectorate"],
+    roles: ["administrator", "hod", "inspectorate", "dsa"],
   },
 
   {
@@ -86,7 +95,13 @@ export const menuItems = [
   {
     title: "CIH management",
     icon: "mdi:home-group",
-    roles: ["administrator", "hod"],
+    roles: [
+      "administrator",
+      "inspectorate",
+      "pastor",
+      "coordinator",
+      "accreditor",
+    ],
     isOpen: true,
     child: [
       {
@@ -118,7 +133,7 @@ export const menuItems = [
     title: "Users management",
     icon: "la:users-cog",
     link: "/users-management",
-    roles: ["administrator", "inspectorate"],
+    roles: ["administrator"],
   },
   // {
   //   title: "Chat Management",

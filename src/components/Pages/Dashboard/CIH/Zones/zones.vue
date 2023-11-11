@@ -21,10 +21,7 @@
       </div>
 
       <Button
-        v-if="
-          store.state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
-          state.auth.userData.userRole.toLowerCase() === 'administrator'
-        "
+        v-if="state.auth.userData.userRole.toLowerCase() === 'inspectorate'"
         icon="heroicons-outline:plus"
         text="Add zone"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"

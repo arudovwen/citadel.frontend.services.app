@@ -419,7 +419,7 @@ export default {
       }
     );
     watch(zoneObj, (newValue) => {
-      query.zoneId = newValue.zoneId;
+      query.zoneId = newValue?.zoneId;
     });
     watch(
       () => query.zoneId,

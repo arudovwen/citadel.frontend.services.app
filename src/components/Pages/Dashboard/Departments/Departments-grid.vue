@@ -31,7 +31,11 @@
               </div>
             </div>
           </router-link>
-          <div>
+          <div
+            v-if="
+              state.auth.userData.userRole.toLowerCase() === 'administrator'
+            "
+          >
             <Dropdown classMenuItems=" w-[130px]">
               <span
                 class="text-lg inline-flex flex-col items-center justify-center h-8 w-8 rounded-full bg-gray-500-f7 dark:bg-slate-900 dark:text-slate-400"
