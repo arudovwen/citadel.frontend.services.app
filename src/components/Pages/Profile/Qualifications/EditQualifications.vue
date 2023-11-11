@@ -30,12 +30,14 @@
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <button
+          <Button
+            :disabled="submitLoading"
+            :isLoading="submitLoading"
             type="submit"
             class="btn btn-primary block w-full text-center"
           >
             Save Changes
-          </button>
+          </Button>
           <div class="hidden sm:block"></div>
         </div>
       </form>
@@ -43,7 +45,7 @@
   </div>
 </template>
 <script setup>
-// import Button from "@/components/Button";
+import Button from "@/components/Button";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import Select from "@/components/Select";
@@ -62,10 +64,12 @@ const details = computed(() => state.profile.qualificationDetails);
 const id = inject("id");
 
 const success = computed(() => state.profile.updateQualificationDataSuccess);
-// const loading = computed(() => false);
+const submitLoading = computed(
+  () => state.profile.updateQualificationDataloading
+);
 const schema = yup.object({
   highestQualification: yup.string().required("This field is required"),
-  professionalQualification: yup.string().required("This field is required"),
+  professionalQualification: yup.string().nullable(),
 });
 
 const formValues = {
@@ -91,7 +95,9 @@ const prepareDetails = (values) => {
     id: values.id,
     userId: id.value,
     highestQualification: values.highestQualification,
-    professionalQualification: values.professionalQualification,
+    professionalQualification: values.professionalQualification
+      ? values.professionalQualification
+      : "",
   };
   return updateObj;
 };
