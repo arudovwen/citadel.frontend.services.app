@@ -110,12 +110,14 @@
             </div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <button
+            <Button
+              :disabled="submitLoading"
+              :isLoading="submitLoading"
               type="submit"
               class="btn btn-primary block w-full text-center"
             >
               Add Child
-            </button>
+            </Button>
             <div class="hidden sm:block"></div>
           </div>
         </form>
@@ -245,9 +247,9 @@ const deleteSuccess = computed(
 );
 const selectedChildId = ref(null);
 
-// const childrensDataLoading = computed(
-//   () => store.state.profile.getChildrensDataloading
-// );
+const submitLoading = computed(
+  () => store.state.profile.createChildrenDataloading
+);
 
 const toast = useToast();
 const childrenDetails = ref([]);
@@ -255,17 +257,14 @@ const schema = yup.object({
   firstName: yup.string().required("First name is required"),
   surName: yup.string().required("Last name is required"),
   middleName: yup.string(),
-  email: yup
-    .string()
-    .required("Email is required")
-    .email("Please enter a valid email address"),
+  email: yup.string(),
   mobile1: yup.string(),
   mobile2: yup.string(),
 
   title: yup.string(),
 
   gender: yup.string(),
-  dateOfBirth: yup.string(),
+  dateOfBirth: yup.string().nullable(),
 });
 
 const formValues = {
@@ -278,7 +277,7 @@ const formValues = {
   mobile1: "",
   mobile2: "",
   gender: "",
-  dateOfBirth: "",
+  dateOfBirth: null,
 };
 
 const openDelete = (id, openFn) => {
@@ -286,16 +285,6 @@ const openDelete = (id, openFn) => {
 
   openFn();
 };
-
-// const removeChild = (idx) => {
-//   // Index of the item you want to remove
-//   const indexToRemove = idx; // For example, removing "item3"
-
-//   // Use splice to remove the item at the specified index
-//   childrenDetails.value.splice(indexToRemove, 1);
-// };
-
-// const router = useRouter();
 
 const { handleSubmit, values, resetForm } = useForm({
   validationSchema: schema,
@@ -318,16 +307,6 @@ const { value: gender, errorMessage: genderError } = useField("gender");
 
 const { value: dateOfBirth, errorMessage: dateOfBirthError } =
   useField("dateOfBirth");
-
-// const { remove, push, fields } = useFieldArray("childrenDetails");
-
-// console.log(
-//   firstName + surName + middleName + email + mobile1 + mobile2 + title + dateOfBirth
-// );
-
-// const resetForm = () => {
-//   setValues(formValues);
-// };
 
 const prepareDetails = (values) => {
   const createObj = {

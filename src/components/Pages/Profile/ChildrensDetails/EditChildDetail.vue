@@ -104,12 +104,14 @@
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <button
+          <Button
+            :disabled="submitLoading"
+            :isLoading="submitLoading"
             type="submit"
             class="btn btn-primary block w-full text-center"
           >
             Save Changes
-          </button>
+          </Button>
           <div class="hidden sm:block"></div>
         </div>
       </form>
@@ -117,7 +119,7 @@
   </div>
 </template>
 <script setup>
-// import Button from "@/components/Button";
+import Button from "@/components/Button";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
@@ -135,24 +137,21 @@ let { dispatch, state } = useStore();
 const toast = useToast();
 const details = computed(() => state.profile.childDetails);
 const id = inject("id");
-
+const submitLoading = computed(() => state.profile.updateChildrenDataloading);
 const success = computed(() => state.profile.updateChildrenDataSuccess);
 // const loading = computed(() => false);
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
   surName: yup.string().required("Last name is required"),
   middleName: yup.string(),
-  email: yup
-    .string()
-    .required("Email is required")
-    .email("Please enter a valid email address"),
+  email: yup.string(),
   mobile1: yup.string(),
   mobile2: yup.string(),
 
   title: yup.string(),
 
   gender: yup.string(),
-  dateOfBirth: yup.string(),
+  dateOfBirth: yup.string().nullable(),
 });
 
 const formValues = {
@@ -165,7 +164,7 @@ const formValues = {
   mobile1: "",
   mobile2: "",
   gender: "",
-  dateOfBirth: "",
+  dateOfBirth: null,
 };
 
 const { handleSubmit, values, setValues } = useForm({
