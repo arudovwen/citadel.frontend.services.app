@@ -135,9 +135,29 @@
         classInput="h-[40px]"
       />
 
-      <Select
+      <FormGroup label="Country" :error="countryError">
+        <VueSelect
+          class="w-full"
+          v-model.value="country"
+          :options="countriesOption"
+          placeholder="Select your country"
+          name="country"
+        />
+      </FormGroup>
+
+      <FormGroup label="State" :error="stateError">
+        <VueSelect
+          class="w-full"
+          v-model.value="state"
+          :options="statesOption"
+          placeholder="Select your state"
+          name="state"
+        />
+      </FormGroup>
+
+      <!-- <Select
         label="Country"
-        :options="countryMenu"
+        :options="countriesOption"
         v-model.value="country"
         :modelValue="country"
         :error="countryError"
@@ -146,12 +166,12 @@
 
       <Select
         label="State"
-        :options="stateMenu"
+        :options="statesOption"
         v-model.value="state"
         :modelValue="state"
         :error="stateError"
         classInput="!h-[40px]"
-      />
+      /> -->
 
       <Select
         label="LGA"
@@ -211,13 +231,12 @@ import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-// import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
-// import { useRouter } from "vue-router";
+import Countries from "@/util/countries.json";
+import VueSelect from "@/components/Select/VueSelect";
+
 import {
   titleMenu,
   LGAMenu,
-  stateMenu,
-  countryMenu,
   genderMenu,
   employmentStatusMenu,
   nationalityMenu,
@@ -240,6 +259,18 @@ const toast = useToast();
 const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
+const countriesOption = computed(() =>
+  Countries.map((i) => {
+    return { label: i.name, value: i.name };
+  })
+);
+const statesOption = computed(() => {
+  return Countries.find((i) => i.name === country.value.label)?.states?.map(
+    (i) => {
+      return { label: i.name, value: i.name };
+    }
+  );
+});
 
 const isShowing = ref(false);
 const showMarriedTab = inject("showMarriedTab");
@@ -273,8 +304,8 @@ const schema = yup.object({
   title: yup.string(),
   nearestBusStop: yup.string(),
   lga: yup.string(),
-  state: yup.string(),
-  country: yup.string(),
+  state: yup.object().nullable(),
+  country: yup.object().nullable(),
   gender: yup.string(),
   employmentStatus: yup.string(),
   placeOfBirth: yup.string(),
@@ -337,8 +368,8 @@ const prepareDetails = (values, type) => {
     address: values.address,
     nearestBusStop: values.nearestBusStop,
     lga: values.lga,
-    state: values.state,
-    country: values.country,
+    state: values.state.value,
+    country: values.country.value,
     gender: values.gender,
     employmentStatus: values.employmentStatus,
     dateOfBirth: values.dateOfBirth,
@@ -360,8 +391,8 @@ const prepareDetails = (values, type) => {
     address: values.address,
     nearestBusStop: values.nearestBusStop,
     lga: values.lga,
-    state: values.state,
-    country: values.country,
+    state: values.state.value,
+    country: values.country.value,
     gender: values.gender,
     employmentStatus: values.employmentStatus,
     dateOfBirth: values.dateOfBirth,
@@ -390,17 +421,6 @@ watch(creationSuccess, () => {
   toast.success("Successfully created profile");
 });
 
-// watch(profileData, (newValue) => {
-//   if (newValue !== null) {
-//     setValues({
-//       firstName: profileData.value.firstName,
-//       surName: profileData.value.surName,
-//       middleName: profileData.value.middleName,
-//       email: profileData.value.email,
-//       mobile1: profileData.value.phoneNumber,
-//     });
-//   }
-// });
 watch(biodataLoading, () => {
   if (biodata.value !== null) {
     setValues(biodata.value);
@@ -418,22 +438,6 @@ watch(biodataLoading, () => {
 
   isShowing.value = true;
 });
-
-// watch(getBiodataloading, (newValue) => {
-//   if (newValue == false) {
-//     if (biodata.value !== null && biodata.value !== undefined) {
-//       setValues(biodata.value);
-//     } else {
-//       setValues({
-//         firstName: profileData.value.firstName,
-//         surName: profileData.value.surName,
-//         middleName: profileData.value.middleName,
-//         email: profileData.value.email,
-//         mobile1: profileData.value.phoneNumber,
-//       });
-//     }
-//   }
-// });
 
 watch(success, () => {
   if (success.value) {
