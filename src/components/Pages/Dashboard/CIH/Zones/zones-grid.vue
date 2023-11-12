@@ -182,7 +182,28 @@ const actions = ref([
     },
   },
 ]);
-
+const options = [
+  {
+    value: "5",
+    label: "5",
+  },
+  {
+    value: "25",
+    label: "25",
+  },
+  {
+    value: "50",
+    label: "50",
+  },
+  {
+    value: "75",
+    label: "75",
+  },
+  {
+    value: "100",
+    label: "100",
+  },
+];
 const getZones = () => {
   dispatch("getZones", query);
 };
