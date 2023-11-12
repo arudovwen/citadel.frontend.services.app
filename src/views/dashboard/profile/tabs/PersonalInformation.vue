@@ -7,8 +7,8 @@
     <span>{{  }}</span> -->
     <!-- <span>UserData: {{ profileData }}</span> -->
     <!-- <span>FormVal: {{ formValues }}</span> -->
-    {{ values }}
-    {{ values.country }}{{ values.state }}
+    <!-- {{ values }}
+    {{ values.country }}{{ values.state }} -->
     <ProfileInputSkeleton
       v-if="(!biodata && biodataLoading) || isShowing == false"
     />
@@ -182,10 +182,10 @@
         :error="lgaError"
         classInput="!h-[40px]"
       />
-
+      <!-- 
       <Select
         label="Nationality"
-        :options="nationalityMenu"
+        :options="nationalityOption"
         v-model.value="nationality"
         :modelValue="nationality"
         :error="nationalityError"
@@ -194,12 +194,32 @@
 
       <Select
         label="State Of Origin"
-        :options="stateOfOriginMenu"
+        :options="stateOfOriginOption"
         v-model.value="stateOfOrigin"
         :modelValue="stateOfOrigin"
         :error="stateOfOriginError"
         classInput="!h-[40px]"
-      />
+      /> -->
+
+      <FormGroup label="Nationality" :error="nationalityError">
+        <VueSelect
+          class="w-full"
+          v-model.value="nationality"
+          :options="nationalityOption"
+          placeholder="Select your nationality"
+          name="nationality"
+        />
+      </FormGroup>
+
+      <FormGroup label="State Of Origin" :error="stateOfOriginError">
+        <VueSelect
+          class="w-full"
+          v-model.value="stateOfOrigin"
+          :options="stateOfOriginOption"
+          placeholder="Select your state of origin"
+          name="state of origin"
+        />
+      </FormGroup>
 
       <Textinput
         label="Place Of Birth"
@@ -240,8 +260,8 @@ import {
   LGAMenu,
   genderMenu,
   employmentStatusMenu,
-  nationalityMenu,
-  stateOfOriginMenu,
+  // nationalityMenu,
+  // stateOfOriginMenu,
   maritalStatusMenu,
 } from "@/constant/data";
 import { useStore } from "vuex";
@@ -260,18 +280,6 @@ const toast = useToast();
 const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
-const countriesOption = computed(() =>
-  Countries.map((i) => {
-    return { label: i.name, value: i.name };
-  })
-);
-const statesOption = computed(() => {
-  return Countries.find((i) => i.name === country?.value?.label)?.states?.map(
-    (i) => {
-      return { label: i.name, value: i.name };
-    }
-  );
-});
 
 const isShowing = ref(false);
 const showMarriedTab = inject("showMarriedTab");
@@ -310,8 +318,8 @@ const schema = yup.object({
   gender: yup.string(),
   employmentStatus: yup.string(),
   placeOfBirth: yup.string(),
-  nationality: yup.string(),
-  stateOfOrigin: yup.string(),
+  nationality: yup.object().nullable(),
+  stateOfOrigin: yup.object().nullable(),
   maritalStatus: yup.string(),
   dateOfBirth: yup.string(),
 });
@@ -355,6 +363,32 @@ const { value: dateOfBirth, errorMessage: dateOfBirthError } =
 
 // const { value: email, errorMessage: emailError } = useField("email");
 
+const countriesOption = computed(() =>
+  Countries.map((i) => {
+    return { label: i.name, value: i.name };
+  })
+);
+const statesOption = computed(() => {
+  return Countries.find((i) => i.name === country?.value?.label)?.states?.map(
+    (i) => {
+      return { label: i.name, value: i.name };
+    }
+  );
+});
+
+const nationalityOption = computed(() =>
+  Countries.map((i) => {
+    return { label: i.name, value: i.name };
+  })
+);
+const stateOfOriginOption = computed(() => {
+  return Countries.find(
+    (i) => i.name === nationality?.value?.label
+  )?.states?.map((i) => {
+    return { label: i.name, value: i.name };
+  });
+});
+
 const prepareDetails = (values, type) => {
   const updateObj = {
     title: values.title,
@@ -375,8 +409,8 @@ const prepareDetails = (values, type) => {
     employmentStatus: values.employmentStatus,
     dateOfBirth: values.dateOfBirth,
     placeOfBirth: values.placeOfBirth,
-    nationality: values.nationality,
-    stateOfOrigin: values.stateOfOrigin,
+    nationality: values.nationality.value,
+    stateOfOrigin: values.stateOfOrigin.value,
     maritalStatus: values.maritalStatus,
   };
   const createObj = {
@@ -433,6 +467,14 @@ watch(biodataLoading, () => {
       state: {
         value: biodata.value.state,
         label: biodata.value.state,
+      },
+      nationality: {
+        value: biodata.value.nationality,
+        label: biodata.value.nationality,
+      },
+      stateOfOrigin: {
+        value: biodata.value.stateOfOrigin,
+        label: biodata.value.stateOfOrigin,
       },
     });
     isShowing.value = true;
