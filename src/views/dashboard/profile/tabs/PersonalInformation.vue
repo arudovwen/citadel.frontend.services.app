@@ -265,7 +265,7 @@ const countriesOption = computed(() =>
   })
 );
 const statesOption = computed(() => {
-  return Countries.find((i) => i.name === country.value.label)?.states?.map(
+  return Countries.find((i) => i.name === country?.value?.label)?.states?.map(
     (i) => {
       return { label: i.name, value: i.name };
     }
