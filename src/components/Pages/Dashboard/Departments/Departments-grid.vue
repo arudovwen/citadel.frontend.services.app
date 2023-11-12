@@ -259,11 +259,7 @@ function perPage({ currentPerPage }) {
 }
 function handleSuccess() {
   dispatch("getDepartments", query);
-
-  if (deletesuccess.value) {
-    modal.value.closeModal();
-    toast.success("Department removed");
-  }
+  modal.value.closeModal();
 }
 
 function handleHod(id) {
@@ -273,7 +269,14 @@ function handleHod(id) {
 }
 watch(updatesuccess, handleSuccess);
 watch(success, handleSuccess);
-watch(deletesuccess, handleSuccess);
+
+watch(deletesuccess, () => {
+  if (deletesuccess.value) {
+    dispatch("getDepartments", query);
+    modal.value.closeModal();
+    toast.success("Department removed");
+  }
+});
 
 provide("membersOptions", membersOptions);
 </script>

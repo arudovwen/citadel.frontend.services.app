@@ -142,7 +142,7 @@ const loading = computed(() => state.department.loading);
 const schema = yup.object({
   departmentName: yup.string().required("Name is required"),
   description: yup.string().required("Please provide a short description"),
-  hod: yup.string().required("Please select a HOD"),
+  hod: yup.string().nullable(),
 });
 
 const { handleSubmit } = useForm({
@@ -155,7 +155,7 @@ const { value: description, errorMessage: descriptionError } =
 const { value: hod, errorMessage: hodError } = useField("hod");
 const createDepartment = handleSubmit((values) => {
   dispatch("addDepartment", {
-    userId: hod,
+    userId: values.hod,
     departmentCode:
       values.departmentName.slice(0, 2).toUpperCase() +
       Math.floor(Math.random() * 100 + 100),

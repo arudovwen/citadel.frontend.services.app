@@ -199,7 +199,7 @@ const formDataSchema = yup.object().shape({
     .email("Invalid email format")
     .required("Email Address is required"),
   address: yup.string().required("Residential Address is required"),
-  nearestBusStop: yup.string().required("Nearest Bus Stop is required"),
+  nearestBusStop: yup.string().nullable(),
   city: yup.string().required("City is required"),
   state: yup.object().required("State is required"),
   country: yup.object().required("Country is required"),

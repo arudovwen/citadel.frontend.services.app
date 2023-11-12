@@ -363,10 +363,10 @@ export default {
         //   field: "dob",
         // },
 
-        {
-          label: "Department",
-          field: "department",
-        },
+        // {
+        //   label: "Department",
+        //   field: "department",
+        // },
         {
           label: "Status",
           field: "statusText",

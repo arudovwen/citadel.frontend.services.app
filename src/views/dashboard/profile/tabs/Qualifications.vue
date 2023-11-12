@@ -241,7 +241,7 @@ watch(deleteSuccess, () => {
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .vgt-wrap .vgt-responsive {
   border-radius: 0px !important;
 }

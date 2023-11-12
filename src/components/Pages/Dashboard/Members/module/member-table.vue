@@ -303,10 +303,10 @@ export default {
           field: "dateOfBirth",
         },
 
-        {
-          label: "Department",
-          field: "department",
-        },
+        // {
+        //   label: "Department",
+        //   field: "department",
+        // },
         {
           label: "Action",
           field: "action",
@@ -394,7 +394,7 @@ export default {
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
         dispatch("getAllBiodata", query);
-        toast.success("Mmeber deleted");
+        toast.success("Member deleted");
         modal.value.closeModal();
       }
     });

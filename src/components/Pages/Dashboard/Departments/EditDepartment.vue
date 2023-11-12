@@ -67,7 +67,7 @@ const loading = computed(() => state.department.loading);
 const schema = yup.object({
   departmentName: yup.string().required("Name is required"),
   description: yup.string().required("Please provide a short description"),
-  hod: yup.string().required("Please select a HOD"),
+  hod: yup.string().nullable(),
 });
 const membersOptions = computed(() =>
   state?.member?.data.map((i) => {
@@ -88,7 +88,7 @@ const { value: description, errorMessage: descriptionError } =
 const { value: hod, errorMessage: hodError } = useField("hod");
 
 const updateDepartment = handleSubmit((values) => {
-  dispatch("editDepartment", values);
+  dispatch("editDepartment", { ...values, userId: values.hod });
 });
 
 const closeModal = () => {
