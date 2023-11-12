@@ -52,7 +52,7 @@ export default {
   mutations: {
     convertBegin(state) {
       state.convertloading = true;
-      state.convertuccess = false;
+      state.convertsuccess = false;
       state.converterror = null;
     },
 
