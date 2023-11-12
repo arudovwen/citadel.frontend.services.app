@@ -508,15 +508,16 @@ export default {
   },
   actions: {
     async uploadFile({ commit }, data) {
+      console.log("🚀 ~ file: index.js:511 ~ uploadFile ~ data:", data);
       try {
         commit("uploadFileBegin");
         const response = await DataService.post(
           `${urls.UPLOAD_FILE}?UserId=${data.UserId}&FileType=${data.FileType}`,
-          data,
+          data.file,
           {
-            // Set the Content-Type to multipart/form-data and include the boundary
-            "Content-Type": "multipart/form-data",
-            // Add any other headers if needed
+            headers: {
+              "Content-Type": "multipart/form-data", // Set the content type
+            },
           }
         );
         if (response.status === 200) {

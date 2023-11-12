@@ -33,6 +33,7 @@
 </template>
 
 <script setup>
+import { useToast } from "vue-toastification";
 import Icon from "@/components/Icon";
 import { ref, inject } from "vue";
 import { useStore } from "vuex";
@@ -40,12 +41,29 @@ import { useStore } from "vuex";
 const { dispatch } = useStore();
 const userId = inject("id");
 const file = ref(null);
-
+const toast = useToast();
 const browse = () => {
   file.value.click();
 };
 const onFileSelected = async (e) => {
   const file = e.target.files[0];
+  const allowedTypes = [
+    "image/svg+xml",
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+  ];
+  if (!allowedTypes.includes(file.type)) {
+    toast.error(
+      `${file.name} is not a valid image file (SVG, JPEG, JPG, PNG allowed)`
+    );
+  }
+  if (file.size > 800 * 1024) {
+    // 800KB = 800 * 1024 bytes
+    toast.error(`${file.name} exceeds the maximum file size (800KB)`);
+    return false; // Prevent the upload
+  }
+
   const formData = new FormData();
   formData.append("file", file);
 
