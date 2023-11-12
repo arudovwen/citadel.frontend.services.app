@@ -7,7 +7,8 @@
     <span>{{  }}</span> -->
     <!-- <span>UserData: {{ profileData }}</span> -->
     <!-- <span>FormVal: {{ formValues }}</span> -->
-    <!-- {{ values }} -->
+    {{ values }}
+    {{ values.country }}{{ values.state }}
     <ProfileInputSkeleton
       v-if="(!biodata && biodataLoading) || isShowing == false"
     />
@@ -317,7 +318,7 @@ const schema = yup.object({
 
 const { handleSubmit, setValues, values } = useForm({
   validationSchema: schema,
-  initialValues: null,
+  initialValues: biodata.value,
 });
 
 // No need to define rules for fields
@@ -423,7 +424,17 @@ watch(creationSuccess, () => {
 
 watch(biodataLoading, () => {
   if (biodata.value !== null) {
-    setValues(biodata.value);
+    setValues({
+      ...biodata.value,
+      country: {
+        value: biodata.value.country,
+        label: biodata.value.country,
+      },
+      state: {
+        value: biodata.value.state,
+        label: biodata.value.state,
+      },
+    });
     isShowing.value = true;
   } else {
     setValues({
@@ -451,6 +462,10 @@ watch(id, (newValue) => {
     getBiodata();
   }
 });
+
+// watch(biodata, () => {
+//   setValues(biodata.value);
+// });
 
 watch(
   () => values.maritalStatus,

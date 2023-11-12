@@ -236,7 +236,17 @@ const onSubmit = handleSubmit((values) => {
 });
 
 watch(employerData, () => {
-  setValues(employerData.value);
+  setValues({
+    ...employerData.value,
+    country: {
+      value: employerData.value.country,
+      label: employerData.value.country,
+    },
+    state: {
+      value: employerData.value.state,
+      label: employerData.value.state,
+    },
+  });
 });
 
 watch(success, () => {
