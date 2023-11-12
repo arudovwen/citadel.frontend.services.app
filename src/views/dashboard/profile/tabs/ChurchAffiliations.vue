@@ -111,7 +111,7 @@
             )
           "
           :isAdmin="isAdmin"
-          :disabled="isAdmin ? false : true"
+          :disabled="true"
           label="Affinity Group"
           classInput="!h-[40px]"
           v-model.value="affinityGroupObj"

@@ -62,7 +62,7 @@
         :error="employerAddress2Error"
         classInput="h-[40px]"
       /> -->
-      <Select
+      <!-- <Select
         label="Country"
         :options="countryMenu"
         v-model.value="country"
@@ -78,7 +78,27 @@
         :modelValue="state"
         :error="stateError"
         classInput="!h-[40px]"
-      />
+      /> -->
+
+      <FormGroup label="Country" :error="countryError">
+        <VueSelect
+          class="w-full"
+          v-model.value="country"
+          :options="countriesOption"
+          placeholder="Select your country"
+          name="country"
+        />
+      </FormGroup>
+
+      <FormGroup label="State" :error="stateError">
+        <VueSelect
+          class="w-full"
+          v-model.value="state"
+          :options="statesOption"
+          placeholder="Select your state"
+          name="state"
+        />
+      </FormGroup>
 
       <Select
         label="LGA"
@@ -104,11 +124,14 @@ import Select from "@/components/Select";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import { LGAMenu, stateMenu, countryMenu, industryMenu } from "@/constant/data";
+import { LGAMenu, industryMenu } from "@/constant/data";
 import { useToast } from "vue-toastification";
 import { inject, onMounted, computed, watch } from "vue";
 import { useStore } from "vuex";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
+import Countries from "@/util/countries.json";
+import VueSelect from "@/components/Select/VueSelect";
+import FormGroup from "@/components/FormGroup";
 
 onMounted(() => {
   getEmployerData();
@@ -124,7 +147,18 @@ const employerDataLoading = computed(
 
 const employerData = computed(() => store.state.profile.employerData);
 const success = computed(() => store.state.profile.updateEmployerDataSuccess);
-
+const countriesOption = computed(() =>
+  Countries.map((i) => {
+    return { label: i.name, value: i.name };
+  })
+);
+const statesOption = computed(() => {
+  return Countries.find((i) => i.name === country?.value?.label)?.states?.map(
+    (i) => {
+      return { label: i.name, value: i.name };
+    }
+  );
+});
 const toast = useToast();
 // Define a validation schema
 const schema = yup.object({
@@ -133,8 +167,8 @@ const schema = yup.object({
   // employerAddress2: yup.string(),
   positionHeld: yup.string(),
   lga: yup.string(),
-  state: yup.string(),
-  country: yup.string(),
+  state: yup.object().nullable(),
+  country: yup.object().nullable(),
   sector: yup.string(),
 
   subSector: yup.string(),
@@ -170,11 +204,11 @@ const prepareDetails = (values, type) => {
     employerName: values.employerName,
     employerAddress: values.employerAddress,
     lga: values.lga,
-    state: values.state,
+    state: values.state.value,
     positionHeld: values.positionHeld,
     sector: values.sector,
     subSector: values.subSector,
-    country: values.country,
+    country: values.country.value,
     id: employerData.value?.id,
   };
   const createObj = {
@@ -182,11 +216,11 @@ const prepareDetails = (values, type) => {
     employerName: values.employerName,
     employerAddress: values.employerAddress,
     lga: values.lga,
-    state: values.state,
+    state: values.state.value,
     positionHeld: values.positionHeld,
     sector: values.sector,
     subSector: values.subSector,
-    country: values.country,
+    country: values.country.value,
   };
   const obj = type == "create" ? createObj : updateObj;
   return obj;
@@ -202,7 +236,17 @@ const onSubmit = handleSubmit((values) => {
 });
 
 watch(employerData, () => {
-  setValues(employerData.value);
+  setValues({
+    ...employerData.value,
+    country: {
+      value: employerData.value.country,
+      label: employerData.value.country,
+    },
+    state: {
+      value: employerData.value.state,
+      label: employerData.value.state,
+    },
+  });
 });
 
 watch(success, () => {

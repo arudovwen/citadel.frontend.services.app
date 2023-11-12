@@ -44,7 +44,7 @@
         />
         <div class="nav-tools flex items-center lg:space-x-6 space-x-3">
           <!-- <LanguageVue /> -->
-          <SwitchDark />
+          <!-- <SwitchDark /> -->
           <!-- <Message v-if="window.width > 768" /> -->
           <Notification v-if="window.width > 768" />
           <Profile v-if="window.width > 768" />
@@ -58,7 +58,7 @@
 import Profile from "./Navtools/Profile.vue";
 import Notification from "./Navtools/Notification.vue";
 // import Message from "./Navtools/Message.vue";
-import SwitchDark from "./Navtools/SwitchDark.vue";
+// import SwitchDark from "./Navtools/SwitchDark.vue";
 import Mainnav from "./horizental-nav.vue";
 import Icon from "../Icon";
 import SearchModal from "./Navtools/SearchModal.vue";
@@ -74,7 +74,7 @@ export default {
     Profile,
     Notification,
     // Message,
-    SwitchDark,
+    // SwitchDark,
     Mainnav,
     Icon,
     // LanguageVue,
