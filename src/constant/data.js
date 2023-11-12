@@ -915,3 +915,47 @@ export const roleFilters = [
     value: "state",
   },
 ];
+
+export const ageRangeMenu = [
+  {
+    label: "0-10",
+    value: "0-10",
+  },
+  {
+    label: "0-20",
+    value: "0-20",
+  },
+  {
+    label: "0-30",
+    value: "0-30",
+  },
+  {
+    label: "0-40",
+    value: "0-40",
+  },
+  {
+    label: "0-50",
+    value: "0-50",
+  },
+  {
+    label: "0-60",
+    value: "0-60",
+  },
+  {
+    label: "0-70",
+    value: "0-70",
+  },
+
+  {
+    label: "0-80",
+    value: "0-80",
+  },
+  {
+    label: "0-90",
+    value: "0-90",
+  },
+  {
+    label: "0-100",
+    value: "0-100",
+  },
+];

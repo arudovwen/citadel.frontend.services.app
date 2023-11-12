@@ -11,7 +11,7 @@
       ></div>
       <div class="profile-box flex-none md:text-start text-center">
         <div class="md:flex items-end md:space-x-6 rtl:space-x-reverse">
-          <ProfileAvatar />
+          <ProfileAvatar :avatar="avatar" />
           <div class="flex-1">
             <div
               class="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]"
@@ -254,6 +254,7 @@ import ProfileAvatar from "@/components/Pages/Profile/ProfileAvatar.vue";
 
 const { state, dispatch } = useStore();
 onMounted(() => {
+  getUserAvatar();
   fetchUser();
   getChurchAffiliationsData();
   dispatch("getRoles");
@@ -270,6 +271,7 @@ const userId = computed(() => route.params.userId);
 const isUserProfile = computed(
   () => route.params.userId === state.auth.userData.id
 );
+const avatar = computed(() => state.member.avatar);
 const biodata = computed(() => state.profile.biodata);
 console.log(state.auth.accessToken);
 // console.log("Member:" + JSON.stringify(state.member.profile));
@@ -326,8 +328,14 @@ const fetchUser = () => {
   dispatch("getUserById", userId.value);
 };
 
+const getUserAvatar = () => {
+  dispatch("getUserAvatar", userId.value);
+};
+
 watch(userId, () => {
+  getUserAvatar();
   fetchUser();
+  getChurchAffiliationsData();
 });
 watch(profileData, () => {
   role.value = profileData?.value?.userRole;
@@ -354,6 +362,7 @@ provide("spouseTitle", spouseTitle);
 provide("spouseGender", spouseGender);
 provide("isUserProfile", isUserProfile);
 provide("showMarriedTab", showMarriedTab);
+provide("getUserAvatar", getUserAvatar);
 </script>
 
 <style lang="scss" scoped></style>

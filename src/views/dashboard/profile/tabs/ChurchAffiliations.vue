@@ -100,6 +100,18 @@
         />
       </div>
 
+      <!-- <div>
+        <Select
+          :disabled="isAdmin ? false : true"
+          label="Age Range"
+          :options="ageRangeMenu"
+          v-model.value="ageRange"
+          :modelValue="ageRange"
+          :error="ageRangeError"
+          classInput="!h-[40px]"
+        />
+      </div> -->
+
       <div>
         <CustomVueSelect
           :request="
@@ -292,6 +304,7 @@ const schema = yup.object({
   affinityGroup: yup.string(),
   department: yup.string(),
   cihAddress: yup.string(),
+  // ageRange: yup.string(),
 });
 
 const { handleSubmit, setValues, values } = useForm({
