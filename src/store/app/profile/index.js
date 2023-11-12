@@ -279,6 +279,7 @@ export default {
     createChildrenDataSuccess(state) {
       state.createChildrenDataloading = false;
       state.createChildrenDataSuccess = true;
+      state.createChildrenDataerror = null;
     },
 
     createChildrenDataErr(state, err) {
@@ -509,11 +510,15 @@ export default {
     async uploadFile({ commit }, data) {
       try {
         commit("uploadFileBegin");
-        const response = await DataService.post(urls.UPLOAD_FILE, data, {
-          // Set the Content-Type to multipart/form-data and include the boundary
-          "Content-Type": "multipart/form-data",
-          // Add any other headers if needed
-        });
+        const response = await DataService.post(
+          `${urls.UPLOAD_FILE}?UserId=${data.UserId}&FileType=${data.FileType}`,
+          data,
+          {
+            // Set the Content-Type to multipart/form-data and include the boundary
+            "Content-Type": "multipart/form-data",
+            // Add any other headers if needed
+          }
+        );
         if (response.status === 200) {
           commit("uploadFileSuccess");
         }

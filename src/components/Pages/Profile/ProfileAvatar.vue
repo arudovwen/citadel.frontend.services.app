@@ -1,7 +1,8 @@
 <template>
   <div class="flex-none">
     <div
-      class="md:h-[186px] md:w-[186px] h-[140px] w-[140px] md:ml-0 md:mr-0 ml-auto mr-auto md:mb-0 mb-4 rounded-full ring-4 ring-slate-100 relative"
+      @click="browse"
+      class="cursor-pointer md:h-[186px] md:w-[186px] h-[140px] w-[140px] md:ml-0 md:mr-0 ml-auto mr-auto md:mb-0 mb-4 rounded-full ring-4 ring-slate-100 hover:ring-slate-200 relative"
     >
       <span
         class="inline-block h-1full w-full overflow-hidden rounded-full bg-gray-100"
@@ -16,14 +17,14 @@
           />
         </svg>
       </span>
-      <router-link
-        to="/app/profile-setting"
+      <span
         class="absolute right-2 h-8 w-8 bg-slate-50 text-slate-600 rounded-full shadow-sm flex flex-col items-center justify-center md:top-[140px] top-[100px]"
         ><Icon icon="heroicons:pencil-square" />
-      </router-link>
+      </span>
     </div>
     <input
       class="hidden"
+      ref="file"
       type="file"
       @change="onFileSelected"
       accept=".jpeg, .jpg, .png"
@@ -33,31 +34,30 @@
 
 <script setup>
 import Icon from "@/components/Icon";
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import { useStore } from "vuex";
 
 const { dispatch } = useStore();
-const selectedFile = ref(null);
-const onFileSelected = (e) => {
-  selectedFile.value = e.target.files[0];
-  console.log(selectedFile.value);
+const userId = inject("id");
+const file = ref(null);
 
-  //   let reader = new FileReader();
-  //   reader.readAsDataURL(file);
-  //   reader.onload = (e) => {
-  //     let res = e.target.result;
-
-  //     console.log(res);
-
-  //     selectedFile.value = file;
-  //     console.log(selectedFile.value);
-  dispatch("uploadFile", selectedFile.value);
-  //   };
+const browse = () => {
+  file.value.click();
 };
+const onFileSelected = async (e) => {
+  const file = e.target.files[0];
+  const formData = new FormData();
+  formData.append("file", file);
 
-// const onUpload = async () => {
-//   dispatch("uploadFile", selectedFile.value);
-// };
+  const payload = {
+    UserId: userId.value,
+    FileType: "avatar",
+    file: formData,
+  };
+
+  console.log(payload);
+  dispatch("uploadFile", payload);
+};
 </script>
 
 <style lang="scss" scoped></style>
