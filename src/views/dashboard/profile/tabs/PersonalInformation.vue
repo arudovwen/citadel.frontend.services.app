@@ -279,7 +279,15 @@ import {
   maritalStatusMenu,
 } from "@/constant/data";
 import { useStore } from "vuex";
-import { computed, onMounted, watch, ref, inject } from "vue";
+import {
+  computed,
+  onMounted,
+  watch,
+  ref,
+  inject,
+  onBeforeUnmount,
+  watchEffect,
+} from "vue";
 import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
@@ -287,6 +295,10 @@ import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleto
 
 onMounted(() => {
   getBiodata();
+});
+
+onBeforeUnmount(() => {
+  console.log("Shoulkd reset");
 });
 
 const store = useStore();
@@ -535,26 +547,40 @@ watch(id, (newValue) => {
 //   setValues(biodata.value);
 // });
 
-watch(
-  () => values.maritalStatus,
-  (newValue) => {
-    if (newValue == "Married") {
-      showMarriedTab.value = true;
-    } else {
-      showMarriedTab.value = false;
-    }
-  }
-);
+// watch(
+//   () => values.maritalStatus,
+//   (newValue) => {
+//     if (newValue == "Married") {
+//       showMarriedTab.value = true;
+//     } else {
+//       showMarriedTab.value = false;
+//     }
+//   }
+// );
 
-watch(
-  () => values.employmentStatus,
-  (newValue) => {
-    if (newValue == "Employed") {
-      isEmployed.value = true;
-    } else {
-      isEmployed.value = false;
-    }
+watchEffect(() => {
+  if (values.maritalStatus == "Married") {
+    showMarriedTab.value = true;
+  } else {
+    showMarriedTab.value = false;
   }
-);
+
+  if (values.employmentStatus == "Employed") {
+    isEmployed.value = true;
+  } else {
+    isEmployed.value = false;
+  }
+});
+
+// watch(
+//   () => values.employmentStatus,
+//   (newValue) => {
+//     if (newValue == "Employed") {
+//       isEmployed.value = true;
+//     } else {
+//       isEmployed.value = false;
+//     }
+//   }
+// );
 </script>
 <style lang="scss" scoped></style>

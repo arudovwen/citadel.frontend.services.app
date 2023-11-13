@@ -54,8 +54,8 @@ import { defineProps, computed, watch } from "vue";
 
 defineProps({
   avatar: {
-    type: String,
-    default: "",
+    type: Object,
+    default: null,
   },
 });
 const { state, dispatch } = useStore();
