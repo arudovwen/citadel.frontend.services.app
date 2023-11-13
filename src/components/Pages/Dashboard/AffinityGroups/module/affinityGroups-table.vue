@@ -4,14 +4,20 @@
       <div class="md:flex pb-6 items-center justify-between">
         <div class="flex rounded-[6px] text-sm overflow-hidden gap-x-4">
           <InputGroup
-            v-model="search"
+            v-model="query.searchParameter"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
             merged
             classInput="min-w-[220px] !h-9"
           />
-
+          <Select
+            label=""
+            :options="filters"
+            v-model="query.sortOrder"
+            placeholder="Sort by"
+            classInput="bg-white !h-9 min-w-[150px] !min-h-[36px]"
+          />
           <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
@@ -178,15 +184,14 @@ import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal";
 import { MenuItem } from "@headlessui/vue";
-// import { affinityGroups } from "@/constant/c";
+import Select from "@/components/Select";
 import AddRecord from "../affinityGroup-add.vue";
 import EditRecord from "../affinityGroup-edit.vue";
 import ViewRecord from "../affinityGroup-preview.vue";
 import moment from "moment";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-
-// import { debounce } from "lodash";
+import { debounce } from "lodash";
 import {
   computed,
   onMounted,
@@ -201,6 +206,7 @@ import window from "@/mixins/window";
 export default {
   mixins: [window],
   components: {
+    Select,
     AddRecord,
     EditRecord,
     ViewRecord,
@@ -223,7 +229,6 @@ export default {
       searchTerm: "",
       type: "",
       id: null,
-      filters: ["all", "pending"],
       activeFilter: "",
       dateValue: null,
       reason: "",
@@ -346,6 +351,24 @@ export default {
     onMounted(() => {
       getAllAffinityGroups();
     });
+    const filters = [
+      {
+        label: "Default",
+        value: "",
+      },
+      {
+        label: "Name",
+        value: "affinityGroupName",
+      },
+      {
+        label: "Code",
+        value: "affinityGroupCode",
+      },
+      {
+        label: "Description",
+        value: "description",
+      },
+    ];
     const { state, dispatch } = useStore();
     const total = computed(() => state.affinityGroup.total);
     const deleteLoading = ref(false);
@@ -389,6 +412,19 @@ export default {
       query.pageNumber = 1;
       query.pageSize = currentPerPage;
     }
+
+    // Define a debounce delay (e.g., 500 milliseconds)
+    const debounceDelay = 800;
+    const debouncedSearch = debounce(() => {
+      dispatch("getAffinityGroups", query);
+    }, debounceDelay);
+
+    watch(
+      () => query.searchParameter,
+      () => {
+        debouncedSearch();
+      }
+    );
     watch(deleteAffinityGroupSuccess, () => {
       if (deleteAffinityGroupSuccess.value) {
         dispatch("setDeleteModal", false);
@@ -397,7 +433,7 @@ export default {
       }
     });
     watch(
-      () => [query.pageNumber, query.pageSize],
+      () => [query.pageNumber, query.pageSize, query.sortOrder],
       () => {
         dispatch("getAffinityGroups", query);
       }
@@ -405,7 +441,7 @@ export default {
     return {
       query,
       total,
-      // fetchRecords,
+      filters,
       deleteModal,
       loading,
       deleteLoading,

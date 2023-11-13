@@ -16,7 +16,7 @@
           :options="filters"
           v-model="query.sortOrder"
           placeholder="Sort by"
-          classInput="bg-white !h-9 min-w-[150px] !min-h-auto"
+          classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
         />
       </div>
 

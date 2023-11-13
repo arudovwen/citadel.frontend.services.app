@@ -2,6 +2,7 @@
 import { useToast } from "vue-toastification";
 import { DataService } from "@/config/dataService/dataService";
 import { urls } from "@/helpers/apI_urls";
+import { cleanObject } from "@/util/cleanObject";
 const toast = useToast();
 export default {
   state: {
@@ -206,10 +207,14 @@ export default {
         commit("addAffinityGroupError", err);
       }
     },
-    async getAffinityGroups({ commit }) {
+    async getAffinityGroups({ commit }, data) {
       try {
         commit("getAffinityGroupsBegin");
-        const response = await DataService.get(urls.GET_ALL_AFFINITY_GROUPS);
+        const response = await DataService.get(
+          `${urls.GET_ALL_AFFINITY_GROUPS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
 
         if (response.status === 200) {
           commit("getAffinityGroupsSuccess", response.data);
