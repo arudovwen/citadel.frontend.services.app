@@ -86,13 +86,11 @@ const { value: description, errorMessage: descriptionError } =
 const onSubmit = handleSubmit((values) => {
   dispatch("updateCenter", {
     id: values.id,
-
     userId: "string",
     zoneId: values.zoneId,
     centerName: values.centerName,
     description: values.description,
   });
-  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
 });
 
 watch(centerToUpdate, () => {
