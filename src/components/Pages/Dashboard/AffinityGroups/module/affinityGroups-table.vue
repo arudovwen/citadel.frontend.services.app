@@ -57,6 +57,11 @@
           }"
         >
           <template v-slot:table-row="props">
+            <span v-if="props.column.field == 'ageRange'">
+              {{ props.row.startAge }} <span class="lowercase">-</span>
+              {{ props.row.endAge }}
+              <span class="lowercase">yrs</span>
+            </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
                 <span class="text-xl"
@@ -112,45 +117,6 @@
       </div>
     </Card>
   </div>
-  <!-- <Modal
-    title="Confirm action"
-    label="Small modal"
-    labelClass="btn-outline-dark"
-    ref="modalStatus"
-    sizeClass="max-w-md"
-    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
-  >
-    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to {{ type.toLowerCase() }} this member?
-    </div>
-    <div v-if="type.toLowerCase() === 'delist'">
-      <textarea
-        resize="none"
-        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
-        rows="4"
-        placeholder="Provide reason"
-        v-model="reason"
-      ></textarea>
-    </div>
-    <template v-slot:footer>
-      <div class="flex gap-x-5">
-        <Button
-          :disabled="deleteLoading"
-          text="Cancel"
-          btnClass="btn-outline-secondary btn-sm "
-          @click="toggleDeleteModal(false)"
-        />
-        <Button
-          :disabled="deleteLoading"
-          text="Proceed"
-          :btnClass="` btn-sm ${
-            type === 'approve' ? 'btn-success' : 'btn-danger'
-          }`"
-          @click="handleStatus"
-        />
-      </div>
-    </template>
-  </Modal> -->
 
   <Modal
     :activeModal="$store.state.affinityGroup.deleteModal"

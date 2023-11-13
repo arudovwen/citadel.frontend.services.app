@@ -120,7 +120,7 @@
                 :total="total"
                 :current="query.pageNumber"
                 :per-page="query.pageSize"
-                :pageRange="pageRange"
+                :pageRange="5"
                 @page-changed="query.pageNumber = $event"
                 :perPageChanged="perPage"
                 enableSearch
@@ -207,7 +207,8 @@
     </template>
   </Modal>
 </template>
-<script>
+<script setup>
+import { useToast } from "vue-toastification";
 import ViewRecord from "./preview";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
@@ -222,290 +223,158 @@ import window from "@/mixins/window";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
 import moment from "moment";
-import { useRoute } from "vue-router";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
-export default {
-  mixins: [window],
-  components: {
-    Pagination,
-    InputGroup,
-    Modal,
-    Dropdown,
-    Icon,
-    Card,
-    MenuItem,
-    Button,
-    VueTailwindDatePicker,
-    ViewRecord,
-  },
+const toast = useToast();
+const { state, dispatch } = useStore();
+const modal = ref(null);
+const modalChange = ref(null);
 
-  data() {
-    return {
-      type: "",
-      id: null,
-      detail: null,
-      dateValue: null,
-      comment: "",
-      pageRange: 5,
+const query = reactive({
+  pageNumber: 1,
+  pageSize: 25,
+  sortOrder: "",
+  searchParameter: "",
+  userId: state.auth.userData.id,
+});
+const type = ref("");
+const detail = ref(null);
+const dateValue = ref(null);
+const comment = ref("");
 
-      formatter: {
-        date: "DD MMM YYYY",
-        month: "MMM",
-      },
-      actions: [
-        {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: (name, data) => {
-            this.detail = data;
-            this.$refs.modalChange.openModal();
-          },
-        },
-        // {
-        //   name: "Approve",
-        //   icon: "ph:check",
-        //   doit: (name) => {
-        //     this.type = name;
-        //     this.$refs.modal.openModal();
-        //   },
-        // },
-        // {
-        //   name: "Reject",
-        //   icon: "ph:x-light",
-        //   doit: (name) => {
-        //     this.type = name;
-        //     this.$refs.modal.openModal();
-        //   },
-        // },
-
-        // {
-        //   name: "delete",
-        //   icon: "heroicons-outline:trash",
-        //   doit: (name) => {
-        //     this.type = name;
-        //     this.$refs.modal.openModal();
-        //   },
-        // },
-      ],
-      options: [
-        {
-          value: "25",
-          label: "25",
-        },
-        {
-          value: "50",
-          label: "50",
-        },
-        {
-          value: "75",
-          label: "75",
-        },
-        {
-          value: "100",
-          label: "100",
-        },
-      ],
-      columns: [
-        {
-          label: "Request",
-          field: "actionDescription",
-        },
-
-        // {
-        //   label: "Type",
-        //   field: "type",
-        // },
-
-        {
-          label: "Date",
-          field: "date",
-        },
-
-        {
-          label: "Action",
-          field: "action",
-        },
-      ],
-    };
-  },
-  methods: {
-    handleRequest() {
-      this.$store.dispatch(
-        this.$store.state.auth.userData.userRole.toLowerCase() === "hod"
-          ? "approveCOD"
-          : "approveCOZ",
-        {
-          approveUserId: this.$store.state.auth.userData.id,
-          reqUserId: this.detail.userId,
-          actionId: this.detail.id,
-          Comments: this.comment,
-          status: this.type === "approve" ? true : false,
-        }
-      );
-    },
-    generateAction(name, id) {
-      this.id = id;
-
-      const actions = {
-        Approve: {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        Reject: {
-          name: "Reject",
-          icon: "ph:x-light",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        view: {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: () => {
-            this.$router.push("/members-management/preview/" + id);
-          },
-        },
-        edit: {
-          name: "edit",
-          icon: "heroicons:pencil-square",
-          doit: () => {
-            this.$router.push("/members-management/edit/" + id);
-          },
-        },
-        delete: {
-          name: "delete",
-          icon: "heroicons-outline:trash",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-      };
-
-      return actions[name] || null;
-    },
-  },
-
-  setup() {
-    const { state, dispatch } = useStore();
-    const filters = ref(["zone", "center", "affinity-group", "department"]);
-    const route = useRoute();
-    const query = reactive({
-      pageNumber: 1,
-      pageSize: 25,
-      sortOrder: "",
-      searchParameter: "",
-      userId: state.auth.userData.id,
-    });
-    const activeFilter = ref(route.params.name);
-
-    const id = ref(null);
-    const modal = ref(null);
-    const modalChange = ref(null);
-    const modalStatus = ref(null);
-
-    onMounted(() => {
-      if (state.auth.userData.userRole.toLowerCase() === "hod") {
-        dispatch("getAllHodRequests", query);
-      }
-      if (state.auth.userData.userRole.toLowerCase() === "inspectorate") {
-        dispatch("getAllInspectorateRequests", query);
-      }
-    });
-
-    function perPage({ currentPerPage }) {
-      query.pageNumber = 1;
-      query.pageSize = currentPerPage;
-    }
-    const search = ref("");
-    const loading = computed(() => state.request.loading);
-    const requests = computed(() =>
-      state.request.data.map((i) => {
-        return {
-          ...i,
-          date: moment(i.actionDate).format("lll"),
-        };
-      })
-    );
-
-    const total = computed(() => state.profile.total);
-    const roles = computed(() => state.profile.roles);
-    const success = computed(() => state.request.approvesuccess);
-    const deleteloading = computed(() => state.profile.deleteloading);
-    const deletesuccess = computed(() => state.profile.deletesuccess);
-
-    function handleDelete() {
-      dispatch("disableUser", id.value);
-    }
-
-    // Define a debounce delay (e.g., 500 milliseconds)
-    const debounceDelay = 800;
-    const debouncedSearch = debounce((searchValue) => {
-      dispatch("getAllHodRequests", { ...query, name: searchValue });
-    }, debounceDelay);
-
-    watch(success, () => {
-      if (success.value) {
-        dispatch(
-          state.auth.userData.userRole.toLowerCase() === "hod"
-            ? "getAllHodRequests"
-            : "getAllInspectorateRequests",
-          query
-        );
-        modalChange.value.closeModal();
-        modal.value.closeModal();
-      }
-    });
-
-    watch(deletesuccess, () => {
-      if (deletesuccess.value) {
-        dispatch("getAllHodRequests", query);
-        modalStatus.value.closeModal();
-      }
-    });
-
-    watch(
-      () => query.searchParameter,
-      () => {
-        debouncedSearch(query.searchParameter);
-      }
-    );
-    watch(
-      () => activeFilter.value,
-      () => {
-        activeFilter.value = route.params.name;
-      }
-    );
-    watch(
-      () => [query.pageNumber, query.pageSize],
-      () => {
-        dispatch("getAllHodRequests", query);
-      }
-    );
-    return {
-      query,
-      total,
-      loading,
-      deleteloading,
-      requests,
-      roles,
-      search,
-      handleDelete,
-      modal,
-      modalChange,
-      modalStatus,
-      perPage,
-      filters,
-      state,
-      activeFilter,
-    };
-  },
+const formatter = {
+  date: "DD MMM YYYY",
+  month: "MMM",
 };
+const actions = [
+  {
+    name: "view",
+    icon: "heroicons-outline:eye",
+    doit: (name, data) => {
+      detail.value = data;
+      modalChange.value.openModal();
+    },
+  },
+];
+const options = [
+  {
+    value: "25",
+    label: "25",
+  },
+  {
+    value: "50",
+    label: "50",
+  },
+  {
+    value: "75",
+    label: "75",
+  },
+  {
+    value: "100",
+    label: "100",
+  },
+];
+const columns = [
+  {
+    label: "Request",
+    field: "actionDescription",
+  },
+
+  // {
+  //   label: "Type",
+  //   field: "type",
+  // },
+
+  {
+    label: "Date",
+    field: "date",
+  },
+
+  {
+    label: "Action",
+    field: "action",
+  },
+];
+
+function handleRequest() {
+  dispatch(
+    state.auth.userData.userRole.toLowerCase() === "hod"
+      ? "approveCOD"
+      : "approveCOZ",
+    {
+      approveUserId: state.auth.userData.id,
+      reqUserId: detail.value.userId,
+      actionId: detail.value.id,
+      Comments: comment.value,
+      status: type.value === "approve" ? true : false,
+    }
+  );
+}
+
+onMounted(() => {
+  if (state.auth.userData.userRole.toLowerCase() === "hod") {
+    dispatch("getAllHodRequests", query);
+  }
+  if (state.auth.userData.userRole.toLowerCase() === "inspectorate") {
+    dispatch("getAllInspectorateRequests", query);
+  }
+});
+
+function perPage({ currentPerPage }) {
+  query.pageNumber = 1;
+  query.pageSize = currentPerPage;
+}
+
+const loading = computed(() => state.request.loading);
+const requests = computed(() =>
+  state.request.data.map((i) => {
+    return {
+      ...i,
+      date: moment(i.actionDate).format("lll"),
+    };
+  })
+);
+
+const total = computed(() => state.profile.total);
+
+const success = computed(() => state.request.approvesuccess);
+
+// Define a debounce delay (e.g., 500 milliseconds)
+const debounceDelay = 800;
+const debouncedSearch = debounce((searchValue) => {
+  dispatch("getAllHodRequests", { ...query, name: searchValue });
+}, debounceDelay);
+
+watch(success, () => {
+  if (success.value) {
+    dispatch(
+      state.auth.userData.userRole.toLowerCase() === "hod"
+        ? "getAllHodRequests"
+        : "getAllInspectorateRequests",
+      query
+    );
+    modalChange.value.closeModal();
+    modal.value.closeModal();
+    if (type.value === "approved") {
+      toast.success("Approve Successfully");
+    } else {
+      toast.success("Request Rejected");
+    }
+  }
+});
+
+watch(
+  () => query.searchParameter,
+  () => {
+    debouncedSearch(query.searchParameter);
+  }
+);
+
+watch(
+  () => [query.pageNumber, query.pageSize],
+  () => {
+    dispatch("getAllHodRequests", query);
+  }
+);
 </script>
 <style lang="scss"></style>

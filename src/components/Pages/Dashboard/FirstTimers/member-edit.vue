@@ -117,13 +117,15 @@
             name="state"
           />
         </FormGroup>
-        <Textinput
-          label="City"
-          v-model="city"
-          :error="cityError"
-          type="text"
-          placeholder="Enter your city"
-        />
+        <FormGroup label="Lga" :error="lgaError">
+          <VueSelect
+            class="w-full"
+            v-model.value="lga"
+            :options="lgasOption"
+            placeholder="Select your lga"
+            name="lga"
+          />
+        </FormGroup>
       </div>
 
       <div class="text-right space-x-3 mt-8">
@@ -147,6 +149,7 @@ import { defineProps, watch, computed } from "vue";
 import { useStore } from "vuex";
 import Countries from "@/util/countries.json";
 import { genderMenu } from "@/constant/data";
+import Lgas from "@/util/lgastate.json";
 
 const toast = useToast();
 // eslint-disable-next-line no-unused-vars
@@ -162,6 +165,14 @@ const statesOption = computed(() => {
     }
   );
 });
+
+const lgasOption = computed(() => {
+  return Lgas.find(
+    (i) => i?.state?.toLowerCase() === state?.value?.label?.toLowerCase()
+  )?.lgas?.map((i) => {
+    return { label: i, value: i };
+  });
+});
 const { dispatch, state: vState } = useStore();
 const props = defineProps(["detail"]);
 const formData = reactive({
@@ -175,7 +186,7 @@ const formData = reactive({
   email: "",
   address: "",
   nearestBusStop: "",
-  city: "",
+  lga: "",
   state: "",
   country: "",
   purposeOfVisit: "",
@@ -201,9 +212,12 @@ const formDataSchema = yup.object().shape({
     .required("Email Address is required"),
   address: yup.string().required("Residential Address is required"),
   nearestBusStop: yup.string().nullable(),
-  city: yup.string().required("City is required"),
-  state: yup.object().required("State is required"),
-  country: yup.object().required("Country is required"),
+  lga: yup.object().typeError("Invalid lga").nullable(),
+  state: yup.object().typeError("Invalid state").required("State is required"),
+  country: yup
+    .object()
+    .typeError("Invalid country")
+    .required("Country is required"),
   purposeOfVisit: yup.string().required("Purpose of Visit is required"),
   placeOfVisit: yup.string().required("Place of Visit is required"),
 });
@@ -223,12 +237,16 @@ const { handleSubmit } = useForm({
     ...formData,
     ...props.detail,
     country: {
-      label: props.detail.country,
-      value: props.detail.country,
+      label: props?.detail?.country,
+      value: props?.detail?.country,
     },
     state: {
-      label: props.detail.state,
-      value: props.detail.state,
+      label: props?.detail?.state,
+      value: props?.detail?.state,
+    },
+    lga: {
+      label: props?.detail?.lga,
+      value: props?.detail?.lga,
     },
     dateOfBirth: new Date(props.detail.dateOfBirth),
   },
@@ -249,7 +267,7 @@ const { value: mobile1, errorMessage: mobile1Error } = useField("mobile1");
 const { value: address, errorMessage: addressError } = useField("address");
 const { value: nearestBusStop, errorMessage: nearestBusStopError } =
   useField("nearestBusStop");
-const { value: city, errorMessage: cityError } = useField("city");
+const { value: lga, errorMessage: lgaError } = useField("lga");
 const { value: state, errorMessage: stateError } = useField("state");
 const { value: country, errorMessage: countryError } = useField("country");
 const { value: purposeOfVisit, errorMessage: purposeOfVisitError } =
@@ -263,6 +281,7 @@ const onSubmit = handleSubmit((values) => {
     ...values,
     country: values.country.value,
     state: values.state.value,
+    lga: values.lga.value,
   });
 });
 watch(profileCreated, () => {
