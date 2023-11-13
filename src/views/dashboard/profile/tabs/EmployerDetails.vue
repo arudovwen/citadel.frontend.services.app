@@ -1,5 +1,9 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
+    <div
+      v-if="!canEditDetails"
+      class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
+    ></div>
     <!-- {{ values }} -->
     <!-- {{ employerData == null }} -->
 
@@ -163,7 +167,7 @@ const submitLoading = computed(
 const employerDataLoading = computed(
   () => store.state.profile.getEmployerDataloading
 );
-
+const canEditDetails = inject("canEditDetails");
 const employerData = computed(() => store.state.profile.employerData);
 const success = computed(() => store.state.profile.updateEmployerDataSuccess);
 const countriesOption = computed(() =>
