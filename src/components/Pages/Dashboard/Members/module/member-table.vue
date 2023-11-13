@@ -356,7 +356,7 @@ export default {
       query.pageSize = currentPerPage;
     }
     const search = ref("");
-    const loading = computed(() => state.profile.loading);
+    const loading = computed(() => state.profile.getAllBiodataloading);
     const members = computed(() => {
       if (state?.profile?.allbiodata) {
         return state?.profile?.allbiodata.map((item) => {
