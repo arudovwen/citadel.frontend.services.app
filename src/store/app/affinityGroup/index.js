@@ -51,7 +51,15 @@ export default {
     },
     setSelectedGroupToEdit(
       state,
-      { id, userId, affinityGroupName, affinityGroupCode, description }
+      {
+        id,
+        userId,
+        affinityGroupName,
+        affinityGroupCode,
+        description,
+        startAge,
+        endAge,
+      }
     ) {
       state.selectedGroupToEdit = {
         id,
@@ -59,6 +67,8 @@ export default {
         affinityGroupName,
         affinityGroupCode,
         description,
+        startAge,
+        endAge,
       };
     },
     addAffinityGroupBegin(state) {

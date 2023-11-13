@@ -11,13 +11,17 @@
           placeholder="Type in your group name"
         />
         <Textinput
-          label="Affinity Group Code"
-          type="text"
-          v-model="affinityGroupCode"
-          :error="affinityGroupCodeError"
-          placeholder="Type in your group code"
+          label="Minimum age"
+          placeholder="Enter a minimum age"
+          v-model.value="startAge"
+          :error="startAgeError"
         />
-
+        <Textinput
+          label="Maximum age"
+          placeholder="Enter a maximum age"
+          v-model.value="endAge"
+          :error="endAgeError"
+        />
         <Textarea
           label="Affinity Group description"
           placeholder="Type in your group description"
@@ -25,18 +29,7 @@
           :error="descriptionError"
         />
       </div>
-      <Textinput
-        label="Minimum age"
-        placeholder="Enter a minimum age"
-        v-model.value="startAge"
-        :error="startAgeError"
-      />
-      <Textinput
-        label="Maximum age"
-        placeholder="Enter a maximum age"
-        v-model.value="endAge"
-        :error="endAgeError"
-      />
+
       <div class="text-right space-x-3 mt-8">
         <Button
           type="submit"
@@ -70,13 +63,14 @@ const success = computed(() => state.affinityGroup.updateAffinityGroupSuccess);
 
 const schema = yup.object().shape({
   affinityGroupName: yup.string().required("Group is required"),
-  affinityGroupCode: yup.string().required("Group code is required"),
   startAge: yup
     .number()
+    .typeError("Invalid value")
     .required("Enter a min age")
     .integer("Start age must be an integer"),
   endAge: yup
     .number()
+    .typeError("Invalid value")
     .required("Enter a max age")
     .integer("End age must be an integer")
     .min(
@@ -95,8 +89,6 @@ const { handleSubmit, setValues } = useForm({
 
 const { value: affinityGroupName, errorMessage: affinityGroupNameError } =
   useField("affinityGroupName");
-const { value: affinityGroupCode, errorMessage: affinityGroupCodeError } =
-  useField("affinityGroupCode");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 const { value: startAge, errorMessage: startAgeError } = useField("startAge");
@@ -110,7 +102,10 @@ const onSubmit = handleSubmit((values) => {
 
 watch(defaultData, () => {
   console.log("Changed");
-  setValues({ ...defaultData.value });
+  setValues({
+    ...defaultData.value,
+    startAge: parseInt(defaultData.value.startAge),
+  });
 });
 
 watch(success, () => {

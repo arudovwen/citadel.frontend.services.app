@@ -216,7 +216,7 @@ import { MenuItem } from "@headlessui/vue";
 import AddRecord from "../affinityGroup-add.vue";
 import EditRecord from "../affinityGroup-edit.vue";
 import ViewRecord from "../affinityGroup-preview.vue";
-// import moment from "moment";
+import moment from "moment";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 
@@ -317,8 +317,8 @@ export default {
           field: "createdAt",
         },
         {
-          label: "Date Modified",
-          field: "modifiedAt",
+          label: "Age range",
+          field: "ageRange",
         },
 
         {
@@ -403,7 +403,12 @@ export default {
       () => state.affinityGroup.getAffinityGroupsLoading
     );
     const affinityGroups = computed(() => {
-      return state.affinityGroup.affinityGroups;
+      return state.affinityGroup.affinityGroups.map((i) => {
+        return {
+          ...i,
+          createdAt: moment(i.createdAt).format("ll"),
+        };
+      });
     });
 
     const getAllAffinityGroups = () => {
