@@ -25,7 +25,7 @@
         />
         <Select
           label="Gender"
-          :options="genderOptions"
+          :options="genderMenu"
           v-model="gender"
           :error="genderError"
         />
@@ -146,6 +146,7 @@ import Select from "@/components/Select";
 import { defineProps, watch, computed } from "vue";
 import { useStore } from "vuex";
 import Countries from "@/util/countries.json";
+import { genderMenu } from "@/constant/data";
 
 const toast = useToast();
 // eslint-disable-next-line no-unused-vars
@@ -215,10 +216,7 @@ const placeOptions = [
   { value: "church", label: "The Church" },
   { value: "cih", label: "CIH" },
 ];
-const genderOptions = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
-];
+
 const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
   initialValues: {

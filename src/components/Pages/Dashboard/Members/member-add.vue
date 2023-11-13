@@ -25,7 +25,7 @@
         />
         <Select
           label="Gender"
-          :options="genderOptions"
+          :options="genderMenu"
           v-model="gender"
           :error="genderError"
         />
@@ -129,7 +129,7 @@ import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import Select from "@/components/Select";
 import Countries from "@/util/countries.json";
-
+import { genderMenu } from "@/constant/data";
 const toast = useToast();
 // eslint-disable-next-line no-unused-vars
 const countriesOption = computed(() =>
@@ -185,10 +185,6 @@ const formDataSchema = yup.object().shape({
   country: yup.object().required("Country is required").nullable(),
 });
 
-const genderOptions = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
-];
 const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,

@@ -25,7 +25,7 @@
         />
         <Select
           label="Gender"
-          :options="genderOptions"
+          :options="genderMenu"
           v-model="gender"
           :error="genderError"
         />
@@ -139,6 +139,7 @@ import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import Select from "@/components/Select";
+import { genderMenu } from "@/constant/data";
 
 const formData = reactive({
   dateOfVisit: "",
@@ -195,10 +196,7 @@ const placeOptions = [
   { value: "church", label: "The Church" },
   { value: "cih", label: "CIH" },
 ];
-const genderOptions = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
-];
+
 const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
