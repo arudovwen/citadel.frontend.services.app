@@ -37,7 +37,6 @@
         </div>
       </div>
       <!-- end profile box -->
-
       <!-- profile info-500 -->
     </div>
     <div class="grid grid-cols-12 gap-6">
@@ -106,7 +105,6 @@
                 </div>
               </div>
             </li>
-
             <li
               v-if="biodata?.dateOfBirth"
               class="flex space-x-3 rtl:space-x-reverse"
@@ -127,7 +125,6 @@
                 </div>
               </div>
             </li>
-
             <li
               v-if="biodata?.address"
               class="flex space-x-3 rtl:space-x-reverse"
@@ -148,7 +145,6 @@
                 </div>
               </div>
             </li>
-
             <li class="flex space-x-3 rtl:space-x-reverse">
               <div
                 class="flex-none text-2xl text-slate-600 dark:text-slate-300"
@@ -178,7 +174,6 @@
                   >
                     Click here to request to join department
                   </span>
-
                   <span
                     @click="toggleReqDepartment(true)"
                     class="cursor-pointer text-blue-400 hidden"
@@ -188,7 +183,6 @@
                 </div>
               </div>
             </li>
-
             <!-- end single list -->
           </ul>
         </Card>
@@ -197,7 +191,6 @@
         <Card title="User Profile"> <Tab /></Card>
       </div>
     </div>
-
     <RequestDepartment />
     <Modal
       title="Change Role"
@@ -234,7 +227,6 @@
     <RequestDepartment :affiliation="churchAffiliationsData" />
   </div>
 </template>
-
 <script setup>
 import Button from "@/components/Button";
 import Select from "@/components/Select";
@@ -251,7 +243,6 @@ import Modal from "@/components/Modal/Modal";
 import { useToast } from "vue-toastification";
 import ProfileAvatar from "@/components/Pages/Profile/ProfileAvatar.vue";
 // import Modal from "@/components/Modal";
-
 const { state, dispatch } = useStore();
 onMounted(() => {
   getUserAvatar();
@@ -259,7 +250,6 @@ onMounted(() => {
   getChurchAffiliationsData();
   dispatch("getRoles");
 });
-
 // const isReqDepartmentOpen = computed(() => state.profile.isReqDepartmentOpen);
 const toggleReqDepartment = (boolean) => {
   dispatch("toggleReqDepartment", boolean);
@@ -295,47 +285,43 @@ const churchAffiliationsData = computed(
 const isMarried = computed(() =>
   state.profile.biodata?.maritalStatus == "Married" ? true : false
 );
-
 // const isMarried = ref(false);
-
 const showMarriedTab = ref(false);
-
 const isEmployed = ref(false);
-
 const spouseTitle = computed(() =>
   state.profile.biodata?.gender == "Male" ? "Mrs" : "Mr"
 );
-
 const spouseGender = computed(() =>
   state.profile.biodata?.gender == "Male" ? "Female" : "Male"
 );
 const isAdmin = computed(
   () => state.auth.userData.userRole.toLowerCase() === "administrator"
 );
-
 const isInspectorate = computed(
   () => state.auth.userData.userRole.toLowerCase() === "inspectorate"
 );
-
+const canEditDetails = computed(() =>
+  route.params.userId === state.auth.userData.id ||
+  state.auth.userData.userRole.toLowerCase() === "inspectorate" ||
+  state.auth.userData.userRole.toLowerCase() === "administrator"
+    ? true
+    : false
+);
 const churchAffiliationsDataLoading = computed(
   () => state.profile.getChurchAffiliationsDataloading
 );
-
 const department = computed(
   () => state.profile.churchAffiliationsData?.department
 );
 const getChurchAffiliationsData = () => {
   dispatch("getChurchAffiliationsById", userId.value);
 };
-
 const fetchUser = () => {
   dispatch("getUserById", userId.value);
 };
-
 const getUserAvatar = () => {
   dispatch("getUserAvatar", userId.value);
 };
-
 watch(userId, () => {
   getUserAvatar();
   fetchUser();
@@ -368,6 +354,6 @@ provide("isUserProfile", isUserProfile);
 provide("showMarriedTab", showMarriedTab);
 provide("getUserAvatar", getUserAvatar);
 provide("isInspectorate", isInspectorate);
+provide("canEditDetails", canEditDetails);
 </script>
-
 <style lang="scss" scoped></style>

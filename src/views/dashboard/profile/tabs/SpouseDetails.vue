@@ -5,6 +5,10 @@
     <!-- <span>Spoust Title: {{ spouseTitle }}</span>
     <span>Spouse GenderL {{ spouseGender }}</span> -->
     <!-- {{ $store.state.auth.userData.userName }} -->
+    <div
+      v-if="!canEditDetails"
+      class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
+    ></div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
         label="First Name"
@@ -140,6 +144,8 @@ const spouseGender = inject("spouseGender");
 const getSpouseData = () => {
   store.dispatch("getSpouseDetailById", id.value);
 };
+const canEditDetails = inject("canEditDetails");
+
 const spouseDataLoading = computed(
   () => store.state.profile.getSpouseDataloading
 );

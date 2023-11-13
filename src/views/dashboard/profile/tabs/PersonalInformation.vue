@@ -1,5 +1,9 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
+    <div
+      v-if="!canEditDetails"
+      class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
+    ></div>
     <!-- {{ biodata }}s -->
 
     <!-- {{ getBiodataError !== null }} -->
@@ -9,6 +13,7 @@
     <!-- <span>FormVal: {{ formValues }}</span> -->
     <!-- {{ values }}
     {{ values.country }}{{ values.state }} -->
+    <!-- {{ canEditDetails }} -->
     <ProfileInputSkeleton
       v-if="(!biodata && biodataLoading) || isShowing == false"
     />
@@ -274,7 +279,15 @@ import {
   maritalStatusMenu,
 } from "@/constant/data";
 import { useStore } from "vuex";
-import { computed, onMounted, watch, ref, inject } from "vue";
+import {
+  computed,
+  onMounted,
+  watch,
+  ref,
+  inject,
+  onBeforeUnmount,
+  watchEffect,
+} from "vue";
 import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
@@ -284,12 +297,17 @@ onMounted(() => {
   getBiodata();
 });
 
+onBeforeUnmount(() => {
+  console.log("Shoulkd reset");
+});
+
 const store = useStore();
 const route = useRoute();
 const toast = useToast();
 const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
+const canEditDetails = inject("canEditDetails");
 
 const isShowing = ref(false);
 const showMarriedTab = inject("showMarriedTab");
@@ -529,26 +547,40 @@ watch(id, (newValue) => {
 //   setValues(biodata.value);
 // });
 
-watch(
-  () => values.maritalStatus,
-  (newValue) => {
-    if (newValue == "Married") {
-      showMarriedTab.value = true;
-    } else {
-      showMarriedTab.value = false;
-    }
-  }
-);
+// watch(
+//   () => values.maritalStatus,
+//   (newValue) => {
+//     if (newValue == "Married") {
+//       showMarriedTab.value = true;
+//     } else {
+//       showMarriedTab.value = false;
+//     }
+//   }
+// );
 
-watch(
-  () => values.employmentStatus,
-  (newValue) => {
-    if (newValue == "Employed") {
-      isEmployed.value = true;
-    } else {
-      isEmployed.value = false;
-    }
+watchEffect(() => {
+  if (values.maritalStatus == "Married") {
+    showMarriedTab.value = true;
+  } else {
+    showMarriedTab.value = false;
   }
-);
+
+  if (values.employmentStatus == "Employed") {
+    isEmployed.value = true;
+  } else {
+    isEmployed.value = false;
+  }
+});
+
+// watch(
+//   () => values.employmentStatus,
+//   (newValue) => {
+//     if (newValue == "Employed") {
+//       isEmployed.value = true;
+//     } else {
+//       isEmployed.value = false;
+//     }
+//   }
+// );
 </script>
 <style lang="scss" scoped></style>

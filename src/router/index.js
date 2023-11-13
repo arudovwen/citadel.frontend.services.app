@@ -130,7 +130,7 @@ const routes = [
         component: () => import("@/components/Pages/Dashboard/Members"),
         meta: {
           activeName: "members-management",
-          roles: ["administrator", "hod"],
+          roles: ["administrator", "hod", "inspectorate"],
         },
       },
       {

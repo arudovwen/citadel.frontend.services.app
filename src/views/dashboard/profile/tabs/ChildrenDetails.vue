@@ -12,6 +12,10 @@
       <div class="p-6">
         <!-- {{ values }} -->
         <form @submit.prevent="onSubmit()" :validation-schema="schema">
+          <div
+            v-if="!canEditDetails"
+            class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
+          ></div>
           <div class="flex gap-x-8 mb-12">
             <div class="w-full lg:grid-cols-2 grid-cols-1 grid gap-5 last:mb-0">
               <Select
@@ -239,6 +243,7 @@ const store = useStore();
 const getChildrensData = () => {
   store.dispatch("getChildrenDetailByUserId", id.value);
 };
+const canEditDetails = inject("canEditDetails");
 
 const childrensData = computed(() => store.state.profile.childrensData);
 const success = computed(() => store.state.profile.createChildrenDataSuccess);

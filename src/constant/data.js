@@ -23,7 +23,7 @@ export const menuItems = [
     title: "Members",
     icon: "heroicons-outline:user-group",
     link: "/members-management",
-    roles: ["administrator"],
+    roles: ["administrator", "inspectorate"],
   },
   {
     title: "First Timers",

@@ -6,17 +6,11 @@
     <div class="py-6">
       <!-- {{ values }} -->
       <form @submit="onSubmit" novalidate>
+        <div
+          v-if="!canEditDetails"
+          class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
+        ></div>
         <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- <Textinput
-              label="highestQualification"
-              type="text"
-              placeholder="Type your highest qualification"
-              name="highestQualification"
-              v-model="highestQualification"
-              :error="highestQualificationError"
-              classInput="h-[40px]"
-            /> -->
-
           <Select
             label="Highest Qualification"
             :options="highestQualificationMenu"
@@ -142,6 +136,7 @@ onMounted(() => {
 });
 const id = inject("id");
 const store = useStore();
+const canEditDetails = inject("canEditDetails");
 
 const getQualificationData = () => {
   store.dispatch("getQualificationsById", id.value);
