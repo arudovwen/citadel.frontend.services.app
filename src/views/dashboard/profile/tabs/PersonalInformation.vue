@@ -279,15 +279,7 @@ import {
   maritalStatusMenu,
 } from "@/constant/data";
 import { useStore } from "vuex";
-import {
-  computed,
-  onMounted,
-  watch,
-  ref,
-  inject,
-  onBeforeUnmount,
-  watchEffect,
-} from "vue";
+import { computed, onMounted, watch, ref, inject, watchEffect } from "vue";
 import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
@@ -295,10 +287,6 @@ import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleto
 
 onMounted(() => {
   getBiodata();
-});
-
-onBeforeUnmount(() => {
-  console.log("Shoulkd reset");
 });
 
 const store = useStore();
