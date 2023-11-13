@@ -23,6 +23,18 @@
           v-model.value="description"
           :error="descriptionError"
         />
+        <Textinput
+          label="Minimum age"
+          placeholder="Enter a minimum age"
+          v-model.value="startAge"
+          :error="startAgeError"
+        />
+        <Textinput
+          label="Maximum age"
+          placeholder="Enter a maximum age"
+          v-model.value="endAge"
+          :error="endAgeError"
+        />
       </div>
 
       <div class="text-right space-x-3 mt-8">
@@ -59,10 +71,24 @@ const formData = reactive({
   affinityGroupName: "",
   affinityGroupCode: "",
   description: "",
+  startAge: 0,
+  endAge: 0,
 });
 const schema = yup.object().shape({
   affinityGroupName: yup.string().required("Group is required"),
   affinityGroupCode: yup.string().required("Group code is required"),
+  startAge: yup
+    .number()
+    .required("Enter a min age")
+    .integer("Start age must be an integer"),
+  endAge: yup
+    .number()
+    .required("Enter a max age")
+    .integer("End age must be an integer")
+    .min(
+      yup.ref("startAge"),
+      "End age must be greater than or equal to start age"
+    ),
   description: yup.string(),
 });
 
@@ -77,6 +103,8 @@ const { value: affinityGroupCode, errorMessage: affinityGroupCodeError } =
   useField("affinityGroupCode");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
+const { value: startAge, errorMessage: startAgeError } = useField("startAge");
+const { value: endAge, errorMessage: endAgeError } = useField("endAge");
 
 const onSubmit = handleSubmit((values) => {
   dispatch("addAffinityGroup", values);

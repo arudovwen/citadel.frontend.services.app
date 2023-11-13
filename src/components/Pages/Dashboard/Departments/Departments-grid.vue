@@ -224,7 +224,7 @@ const query = inject("query");
 onMounted(() => {
   dispatch("getDepartments", query);
   dispatch("getAffiliationByMemberQuery", {
-    pageSize: 100000,
+    pageSize: 250000,
     pageNumber: 1,
     searchParameter: "",
     role: "hod",

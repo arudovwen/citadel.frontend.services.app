@@ -143,7 +143,7 @@ const onSubmit = handleSubmit((values) => {
 });
 
 const getZones = () => {
-  dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
+  dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
 };
 const toggleReqZone = (boolean) => {
   dispatch("toggleReqZone", boolean);

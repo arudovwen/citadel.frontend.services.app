@@ -300,8 +300,8 @@ export default {
 
     onMounted(() => {
       dispatch("getAllCenters", query);
-      dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
-      dispatch("getUsers", { pageSize: 100000, pageNumber: 1 });
+      dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
+      dispatch("getUsers", { pageSize: 250000, pageNumber: 1 });
       id.value = getCurrentInstance().data.id;
     });
 
@@ -318,7 +318,7 @@ export default {
 
     const initialValue = {
       pageNumber: 1,
-      pageSize: 10,
+      pageSize: 25,
       name: "",
       searchParameter: "",
       zoneId: "",

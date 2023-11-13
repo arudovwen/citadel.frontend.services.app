@@ -372,14 +372,14 @@ const prepareDetails = (values, type) => {
 };
 
 const getZones = () => {
-  store.dispatch("getZones", { pageNumber: 1, pageSize: 10000 });
+  store.dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
 };
 const getDepartments = () => {
-  store.dispatch("getDepartments", { pageNumber: 1, pageSize: 10000 });
+  store.dispatch("getDepartments", { pageNumber: 1, pageSize: 25000 });
 };
 
 const getAffinityGroups = () => {
-  store.dispatch("getAffinityGroups", { pageNumber: 1, pageSize: 10000 });
+  store.dispatch("getAffinityGroups", { pageNumber: 1, pageSize: 25000 });
 };
 const onSubmit = handleSubmit((values) => {
   // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));

@@ -294,7 +294,7 @@ export default {
     const modalStatus = ref(null);
     const query = reactive({
       pageNumber: 1,
-      pageSize: 10,
+      pageSize: 25,
       searchParameter: "",
       isFirstTimer: false,
     });

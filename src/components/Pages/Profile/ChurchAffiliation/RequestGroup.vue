@@ -130,7 +130,7 @@ const onSubmit = handleSubmit((values) => {
 });
 
 const getAffinityGroups = () => {
-  dispatch("getAffinityGroups", { pageNumber: 1, pageSize: 10000 });
+  dispatch("getAffinityGroups", { pageNumber: 1, pageSize: 25000 });
 };
 const toggleReqAffinityGroup = (boolean) => {
   dispatch("toggleReqAffinityGroup", boolean);

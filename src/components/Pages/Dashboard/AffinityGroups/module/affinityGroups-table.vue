@@ -375,27 +375,13 @@ export default {
     handleDelete() {
       this.$store.dispatch("deleteAffinityGroup", this.id);
     },
-    // handleActions(value) {
-    //   if (value === "active") {
-    //     return this.actions.filter((i) => i.name !== "approve");
-    //   }
-    //   if (value === "delist") {
-    //     return this.actions.filter((i) => i.name !== "delist");
-    //   }
-    //   if (value === "pendingactivation") {
-    //     return this.actions.filter(
-    //       (i) => i.name !== "delist" && i.name !== "approve"
-    //     );
-    //   }
-    //   return value;
-    // },
   },
   setup() {
     onMounted(() => {
       getAllAffinityGroups();
     });
     const { state, dispatch } = useStore();
-    const total = ref(10000);
+    const total = computed(() => state.affinityGroup.total);
     const deleteLoading = ref(false);
     const deleteAffinityGroupSuccess = computed(
       () => state.affinityGroup.deleteAffinityGroupSuccess
@@ -408,7 +394,7 @@ export default {
     const modalStatus = ref(null);
     const query = reactive({
       pageNumber: 1,
-      pageSize: 10,
+      pageSize: 25,
       searchParameter: "",
       sortOrder: "",
     });

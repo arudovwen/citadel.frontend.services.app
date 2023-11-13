@@ -6,7 +6,7 @@ const toast = useToast();
 export default {
   state: {
     addmodal: false,
-
+    total: 0,
     isLoading: null,
     // for edit
     modal: false,
@@ -83,11 +83,12 @@ export default {
       state.getAffinityGroupsSuccess = false;
       state.getAffinityGroupsError = null;
     },
-    getAffinityGroupsSuccess(state, data) {
+    getAffinityGroupsSuccess(state, { data, totalCount }) {
       state.getAffinityGroupsLoading = false;
       state.getAffinityGroupsSuccess = true;
       state.getAffinityGroupsError = null;
       state.affinityGroups = data;
+      state.total = totalCount;
     },
     getAffinityGroupsError(state, err) {
       state.getAffinityGroupsLoading = false;
@@ -201,7 +202,7 @@ export default {
         const response = await DataService.get(urls.GET_ALL_AFFINITY_GROUPS);
 
         if (response.status === 200) {
-          commit("getAffinityGroupsSuccess", response.data.data);
+          commit("getAffinityGroupsSuccess", response.data);
         }
       } catch (err) {
         commit("getAffinityGroupsError", err);

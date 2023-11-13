@@ -398,7 +398,7 @@ export default {
     const route = useRoute();
     const query = reactive({
       pageNumber: 1,
-      pageSize: 10,
+      pageSize: 25,
       sortOrder: "",
       searchParameter: "",
       userId: state.auth.userData.id,

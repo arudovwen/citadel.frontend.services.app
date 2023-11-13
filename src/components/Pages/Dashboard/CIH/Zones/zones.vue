@@ -81,7 +81,7 @@ onMounted(() => {
 });
 const query = reactive({
   pageNumber: 1,
-  pageSize: 10,
+  pageSize: 25,
   sortOrder: null,
   searchParameter: null,
 });

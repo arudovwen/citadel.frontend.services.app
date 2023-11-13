@@ -107,9 +107,7 @@ client.interceptors.response.use(
         if (
           response.data &&
           response.data.message &&
-          response.data.message.includes(
-            "Your email address has not been confirmed"
-          )
+          response.data.message.includes("Your profile has not been activated")
         ) {
           const email = JSON.parse(originalRequest.data).username;
           setTimeout(() => {

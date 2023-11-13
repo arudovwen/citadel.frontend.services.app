@@ -126,7 +126,7 @@ const onSubmit = handleSubmit((values) => {
 });
 
 const getDepartments = () => {
-  dispatch("getDepartments", { pageNumber: 1, pageSize: 10000 });
+  dispatch("getDepartments", { pageNumber: 1, pageSize: 25000 });
 };
 const toggleReqDepartment = (boolean) => {
   dispatch("toggleReqDepartment", boolean);
