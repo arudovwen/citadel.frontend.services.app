@@ -105,7 +105,13 @@
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Add member" btnClass="btn-dark" />
+        <Button
+          :isLoading="loading"
+          :disabled="loading"
+          type="submit"
+          text="Add member"
+          btnClass="btn-dark"
+        />
       </div>
     </Card>
   </form>
@@ -140,6 +146,7 @@ const statesOption = computed(() => {
 });
 const { state: vState, dispatch } = useStore();
 const success = computed(() => vState.profile.profileCreated);
+const loading = computed(() => vState.profile.creatingProfile);
 const formData = reactive({
   dateOfVisit: "",
   surName: "",

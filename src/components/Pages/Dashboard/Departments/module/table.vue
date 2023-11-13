@@ -134,7 +134,7 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in filteredActions" :key="i">
                     <div
-                      @click="item.doit(item.name)"
+                      @click="item.doit(item.name, props.row)"
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -300,9 +300,9 @@ export default {
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: (name) => {
+          doit: (name, { userId }) => {
             this.type = name;
-            this.$refs.modalChange.openModal();
+            this.$router.push("/profile/" + userId);
           },
         },
 
