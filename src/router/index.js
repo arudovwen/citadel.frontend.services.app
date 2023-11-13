@@ -209,7 +209,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator"],
+          roles: ["administrator", "inspectorate"],
         },
       },
       {
@@ -419,7 +419,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator"],
+          roles: ["administrator", "inspectorate"],
         },
       },
       {
@@ -437,7 +437,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator"],
+          roles: ["administrator", "hod"],
         },
       },
       {
@@ -455,7 +455,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator"],
+          roles: ["administrator", "hod", "inspectorate"],
         },
       },
       {
@@ -473,7 +473,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator"],
+          roles: ["administrator", "inspectorate"],
         },
       },
       {
@@ -509,7 +509,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator"],
+          roles: ["administrator", "hod"],
         },
       },
       {

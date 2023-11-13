@@ -29,7 +29,7 @@ export const menuItems = [
     title: "First Timers",
     icon: "heroicons-outline:user-add",
     link: "/first-timers",
-    roles: ["administrator"],
+    roles: ["administrator", "inspectorate"],
   },
 
   {
@@ -49,20 +49,20 @@ export const menuItems = [
     title: "Outreach",
     icon: "bx:donate-heart",
     link: "/outreach",
-    roles: ["administrator"],
+    roles: ["administrator", "inspectorate"],
   },
   {
     title: "Attendance",
     icon: "heroicons-outline:clipboard-check",
     link: "/attendance",
-    roles: ["administrator"],
+    roles: ["administrator", "inspectorate"],
   },
   // { title: "Goals", icon: "bx:football", link: "/goals" },
   {
     title: "Meetings",
     icon: "bx:merge",
     link: "/meetings",
-    roles: ["administrator"],
+    roles: ["administrator", "hod", "inspectorate"],
   },
   // {
   //   title: "Issue Management",
@@ -83,7 +83,7 @@ export const menuItems = [
     title: "Appointments",
     icon: "bx:calendar-plus",
     link: "/appointments",
-    roles: ["administrator"],
+    roles: ["administrator", "hod"],
   },
   {
     title: "Venues",
