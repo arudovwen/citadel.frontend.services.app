@@ -4,19 +4,6 @@
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div class="flex gap-x-3 md:mb-0 mb-3 text-sm">
-          <div class="flex border border-gray-200 rounded text-sm">
-            <router-link
-              :to="`/requests/${n}`"
-              v-for="n in filters"
-              :key="n"
-              :class="activeFilter === n ? 'bg-gray-100' : ''"
-              class="px-4 py-2 border-r border-gray-200 last:border-none min-w-[90px] text-center capitalize"
-            >
-              <button class="capitalize" @click="activeFilter = n">
-                {{ n }}
-              </button>
-            </router-link>
-          </div>
           <InputGroup
             v-model="query.searchParameter"
             placeholder="Search"
@@ -37,24 +24,6 @@
             placeholder="Select date"
             as-single
           />
-          <Button
-            icon="clarity:export-line"
-            text="Export"
-            btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-            iconClass="text-lg"
-          />
-          <!-- <Button
-            icon="ri:user-add-line"
-            text="Add Member"
-            btnClass=" btn-primary font-normal btn-sm "
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                $refs.modalChange.openModal();
-              }
-            "
-          /> -->
         </div>
       </div>
       <div class="-mx-6">
@@ -62,7 +31,7 @@
           :columns="columns"
           styleClass="vgt-table"
           :isLoading="loading"
-          :rows="members || []"
+          :rows="requests || []"
           :sort-options="{
             enabled: false,
           }"
@@ -169,12 +138,15 @@
   <Modal
     title="Confirm action"
     label="Small modal"
-    labelClass="btn-outline-dark"
+    :labelClass="
+      type === 'approve' ? 'btn-outline-success' : 'btn-outline-danger'
+    "
+    :themeClass="type === 'approve' ? 'bg-success-500' : 'bg-danger-500'"
     ref="modal"
     sizeClass="max-w-md"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to {{ type }} this department?
+      Are you sure you want to {{ type }} this request?
     </div>
     <div v-if="type.toLowerCase() === 'reject'">
       <textarea
@@ -182,6 +154,7 @@
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
         rows="4"
         placeholder="Provide reason"
+        v-model="comment"
       ></textarea>
     </div>
     <template v-slot:footer>
@@ -193,14 +166,49 @@
         />
         <Button
           text="Proceed"
+          :btnClass="
+            type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
+          "
+          @click="handleRequest"
+        />
+      </div>
+    </template>
+  </Modal>
+  <Modal
+    title="Request detail"
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-[32rem]"
+  >
+    <ViewRecord :detail="detail" />
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          text="Reject"
+          btnClass="btn-outline-secondary btn-sm "
+          @click="
+            () => {
+              type = 'reject';
+              $refs.modal.openModal();
+            }
+          "
+        />
+        <Button
+          text="Approve"
           btnClass="btn-dark btn-sm"
-          @click="$refs.modal.closeModal()"
+          @click="
+            () => {
+              type = 'approve';
+              $refs.modal.openModal();
+            }
+          "
         />
       </div>
     </template>
   </Modal>
 </template>
 <script>
+import ViewRecord from "./preview";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
@@ -215,14 +223,7 @@ import { useStore } from "vuex";
 import { debounce } from "lodash";
 import moment from "moment";
 import { useRoute } from "vue-router";
-import {
-  computed,
-  onMounted,
-  watch,
-  reactive,
-  ref,
-  getCurrentInstance,
-} from "vue";
+import { computed, onMounted, watch, reactive, ref } from "vue";
 
 export default {
   mixins: [window],
@@ -236,14 +237,16 @@ export default {
     MenuItem,
     Button,
     VueTailwindDatePicker,
+    ViewRecord,
   },
 
   data() {
     return {
       type: "",
       id: null,
-
+      detail: null,
       dateValue: null,
+      comment: "",
       pageRange: 5,
 
       formatter: {
@@ -252,38 +255,38 @@ export default {
       },
       actions: [
         {
-          name: "Approve",
-          icon: "ph:check",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        {
-          name: "Reject",
-          icon: "ph:x-light",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modal.openModal();
+          name: "view",
+          icon: "heroicons-outline:eye",
+          doit: (name, data) => {
+            this.detail = data;
+            this.$refs.modalChange.openModal();
           },
         },
         // {
-        //   name: "view",
-        //   icon: "heroicons-outline:eye",
+        //   name: "Approve",
+        //   icon: "ph:check",
         //   doit: (name) => {
         //     this.type = name;
-        //     this.$refs.modalChange.openModal();
+        //     this.$refs.modal.openModal();
+        //   },
+        // },
+        // {
+        //   name: "Reject",
+        //   icon: "ph:x-light",
+        //   doit: (name) => {
+        //     this.type = name;
+        //     this.$refs.modal.openModal();
         //   },
         // },
 
-        {
-          name: "delete",
-          icon: "heroicons-outline:trash",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
+        // {
+        //   name: "delete",
+        //   icon: "heroicons-outline:trash",
+        //   doit: (name) => {
+        //     this.type = name;
+        //     this.$refs.modal.openModal();
+        //   },
+        // },
       ],
       options: [
         {
@@ -305,32 +308,20 @@ export default {
       ],
       columns: [
         {
-          label: "Name",
-          field: "fullName",
+          label: "Request",
+          field: "actionDescription",
         },
 
-        {
-          label: "Gender",
-          field: "gender",
-        },
-
-        {
-          label: "Phone",
-          field: "mobile1",
-        },
-
-        {
-          label: "Email",
-          field: "email",
-        },
         // {
-        //   label: "Dob",
-        //   field: "dateOfBirth",
+        //   label: "Type",
+        //   field: "type",
         // },
-        // {
-        //   label: "Status",
-        //   field: "status",
-        // },
+
+        {
+          label: "Date",
+          field: "date",
+        },
+
         {
           label: "Action",
           field: "action",
@@ -339,6 +330,20 @@ export default {
     };
   },
   methods: {
+    handleRequest() {
+      this.$store.dispatch(
+        this.$store.state.auth.userData.userRole.toLowerCase() === "hod"
+          ? "approveCOD"
+          : "approveCOZ",
+        {
+          approveUserId: this.$store.state.auth.userData.id,
+          reqUserId: this.detail.userId,
+          actionId: this.detail.id,
+          Comments: this.comment,
+          status: this.type === "approve" ? true : false,
+        }
+      );
+    },
     generateAction(name, id) {
       this.id = id;
 
@@ -388,6 +393,7 @@ export default {
   },
 
   setup() {
+    const { state, dispatch } = useStore();
     const filters = ref(["zone", "center", "affinity-group", "department"]);
     const route = useRoute();
     const query = reactive({
@@ -395,47 +401,42 @@ export default {
       pageSize: 10,
       sortOrder: "",
       searchParameter: "",
+      userId: state.auth.userData.id,
     });
     const activeFilter = ref(route.params.name);
-    const { state, dispatch } = useStore();
-    dispatch("getAffiliationByMemberQuery", query);
+
     const id = ref(null);
     const modal = ref(null);
     const modalChange = ref(null);
     const modalStatus = ref(null);
 
     onMounted(() => {
-      dispatch("getAffiliationByMemberQuery", query);
-      dispatch("getRoles");
-      id.value = getCurrentInstance().data.id;
+      if (state.auth.userData.userRole.toLowerCase() === "hod") {
+        dispatch("getAllHodRequests", query);
+      }
+      if (state.auth.userData.userRole.toLowerCase() === "inspectorate") {
+        dispatch("getAllInspectorateRequests", query);
+      }
     });
-    function fetchRecords(page) {
-      dispatch("getAffiliationByMemberQuery", { ...query, pageNumber: page });
-    }
 
     function perPage({ currentPerPage }) {
       query.pageNumber = 1;
       query.pageSize = currentPerPage;
     }
     const search = ref("");
-    const loading = computed(() => state.member.loading);
-    const members = computed(() => {
-      if (state?.member?.data) {
-        return state?.member?.data?.map((item) => {
-          item.fullName = `${item.firstName} ${item.surName}`;
-          item.dateOfBirth = item?.dateOfBirth
-            ? moment(item?.dateOfBirth).format("ll")
-            : "-";
-          item.department = item?.department ? item?.department : "-";
+    const loading = computed(() => state.request.loading);
+    const requests = computed(() =>
+      state.request.data.map((i) => {
+        return {
+          ...i,
+          date: moment(i.actionDate).format("lll"),
+        };
+      })
+    );
 
-          return item;
-        });
-      }
-      return [];
-    });
     const total = computed(() => state.profile.total);
     const roles = computed(() => state.profile.roles);
-    const addsuccess = computed(() => state.profile.addsuccess);
+    const success = computed(() => state.request.approvesuccess);
     const deleteloading = computed(() => state.profile.deleteloading);
     const deletesuccess = computed(() => state.profile.deletesuccess);
 
@@ -446,16 +447,25 @@ export default {
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
-      dispatch("getAffiliationByMemberQuery", { ...query, name: searchValue });
+      dispatch("getAllHodRequests", { ...query, name: searchValue });
     }, debounceDelay);
-    watch(addsuccess, () => {
-      addsuccess.value && dispatch("getAffiliationByMemberQuery", query);
-      modalChange.value.closeModal();
+
+    watch(success, () => {
+      if (success.value) {
+        dispatch(
+          state.auth.userData.userRole.toLowerCase() === "hod"
+            ? "getAllHodRequests"
+            : "getAllInspectorateRequests",
+          query
+        );
+        modalChange.value.closeModal();
+        modal.value.closeModal();
+      }
     });
 
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
-        dispatch("getAffiliationByMemberQuery", query);
+        dispatch("getAllHodRequests", query);
         modalStatus.value.closeModal();
       }
     });
@@ -475,16 +485,15 @@ export default {
     watch(
       () => [query.pageNumber, query.pageSize],
       () => {
-        dispatch("getAffiliationByMemberQuery", query);
+        dispatch("getAllHodRequests", query);
       }
     );
     return {
       query,
       total,
-      fetchRecords,
       loading,
       deleteloading,
-      members,
+      requests,
       roles,
       search,
       handleDelete,
