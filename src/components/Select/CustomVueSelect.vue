@@ -19,8 +19,6 @@
       >
     </label>
 
-    <!-- <div>Loading...{{ menuLoading }}</div> -->
-    <!-- <span>{{ menuLoading }}</span> -->
     <div v-if="menuLoading">Loading...</div>
     <div v-else class="relative">
       <div v-if="!$slots.default">

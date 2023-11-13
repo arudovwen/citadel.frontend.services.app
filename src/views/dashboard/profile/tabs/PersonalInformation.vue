@@ -5,7 +5,7 @@
     <!-- {{ getBiodataError !== null }} -->
     <!-- <span>{{ createProfileLoading }}</span>
     <span>{{  }}</span> -->
-    <!-- <span>UserData: {{ profileData }}</span> -->
+    <!-- <span>UserData: {{ profileData.phoneNumber }}</span> -->
     <!-- <span>FormVal: {{ formValues }}</span> -->
     <!-- {{ values }}
     {{ values.country }}{{ values.state }} -->
@@ -174,14 +174,24 @@
         classInput="!h-[40px]"
       /> -->
 
-      <Select
+      <!-- <Select
         label="LGA"
-        :options="LGAMenu"
+        :options="lgaOption"
         v-model.value="lga"
         :modelValue="lga"
         :error="lgaError"
         classInput="!h-[40px]"
-      />
+      /> -->
+
+      <FormGroup label="LGA" :error="lgaError">
+        <VueSelect
+          class="w-full"
+          v-model.value="lga"
+          :options="lgaOption"
+          placeholder="Select your lga"
+          name="lga"
+        />
+      </FormGroup>
       <!-- 
       <Select
         label="Nationality"
@@ -254,10 +264,9 @@ import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import Countries from "@/util/countries.json";
 import VueSelect from "@/components/Select/VueSelect";
-
+import lgas from "@/util/lgas.json";
 import {
   titleMenu,
-  LGAMenu,
   genderMenu,
   employmentStatusMenu,
   // nationalityMenu,
@@ -270,6 +279,7 @@ import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
+
 onMounted(() => {
   getBiodata();
 });
@@ -312,7 +322,7 @@ const schema = yup.object({
   // .required("Title text is required")
   title: yup.string(),
   nearestBusStop: yup.string(),
-  lga: yup.string(),
+  lga: yup.object().nullable(),
   state: yup.object().nullable(),
   country: yup.object().nullable(),
   gender: yup.string(),
@@ -381,6 +391,12 @@ const nationalityOption = computed(() =>
     return { label: i.name, value: i.name };
   })
 );
+
+const lgaOption = computed(() =>
+  lgas.map((i) => {
+    return { label: i, value: i };
+  })
+);
 const stateOfOriginOption = computed(() => {
   return Countries.find(
     (i) => i.name === nationality?.value?.label
@@ -402,7 +418,7 @@ const prepareDetails = (values, type) => {
     email: values.email,
     address: values.address,
     nearestBusStop: values.nearestBusStop,
-    lga: values.lga,
+    lga: values.lga.value,
     state: values.state.value,
     country: values.country.value,
     gender: values.gender,
@@ -425,7 +441,7 @@ const prepareDetails = (values, type) => {
     email: values.email,
     address: values.address,
     nearestBusStop: values.nearestBusStop,
-    lga: values.lga,
+    lga: values.lga.value,
     state: values.state.value,
     country: values.country.value,
     gender: values.gender,
@@ -475,6 +491,10 @@ watch(biodataLoading, () => {
       stateOfOrigin: {
         value: biodata.value.stateOfOrigin,
         label: biodata.value.stateOfOrigin,
+      },
+      lga: {
+        value: biodata.value.lga,
+        label: biodata.value.lga,
       },
     });
     isShowing.value = true;

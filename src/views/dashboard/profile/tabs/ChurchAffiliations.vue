@@ -14,6 +14,7 @@
       <!-- {{ centersLoading }} -->
       <!-- {{ typeof Number(levelOfATS) }} -->
       <!-- {{ hasDepartment }} -->
+
       <div>
         <Select
           :disabled="isAdmin ? false : true"
@@ -214,6 +215,7 @@ onUnmounted(() => {
 });
 const id = inject("id");
 const isAdmin = inject("isAdmin");
+// const isInspectorate = inject("isInspectorate");
 const store = useStore();
 const toast = useToast();
 const getChurchAffiliationsData = () => {

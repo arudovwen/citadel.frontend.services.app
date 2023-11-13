@@ -313,6 +313,10 @@ const isAdmin = computed(
   () => state.auth.userData.userRole.toLowerCase() === "administrator"
 );
 
+const isInspectorate = computed(
+  () => state.auth.userData.userRole.toLowerCase() === "inspectorate"
+);
+
 const churchAffiliationsDataLoading = computed(
   () => state.profile.getChurchAffiliationsDataloading
 );
@@ -363,6 +367,7 @@ provide("spouseGender", spouseGender);
 provide("isUserProfile", isUserProfile);
 provide("showMarriedTab", showMarriedTab);
 provide("getUserAvatar", getUserAvatar);
+provide("isInspectorate", isInspectorate);
 </script>
 
 <style lang="scss" scoped></style>

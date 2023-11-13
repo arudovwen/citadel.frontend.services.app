@@ -100,31 +100,47 @@
         />
       </FormGroup>
 
-      <Select
+      <!-- <Select
         label="LGA"
         :options="LGAMenu"
         v-model.value="lga"
         :modelValue="lga"
         :error="lgaError"
         classInput="!h-[40px]"
-      />
+      /> -->
+      <FormGroup label="LGA" :error="lgaError">
+        <VueSelect
+          class="w-full"
+          v-model.value="lga"
+          :options="lgaOption"
+          placeholder="Select your lga"
+          name="lga"
+        />
+      </FormGroup>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-      <button type="submit" class="btn btn-primary block w-full text-center">
+      <Button
+        :isLoading="submitLoading"
+        :disabled="submitLoading"
+        type="submit"
+        class="btn btn-primary block w-full text-center"
+      >
         Save Changes
-      </button>
+      </Button>
       <div class="hidden sm:block"></div>
     </div>
   </form>
 </template>
 
 <script setup>
+import Button from "@/components/Button";
 import Select from "@/components/Select";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import { LGAMenu, industryMenu } from "@/constant/data";
+import { industryMenu } from "@/constant/data";
+import lgas from "@/util/lgas.json";
 import { useToast } from "vue-toastification";
 import { inject, onMounted, computed, watch } from "vue";
 import { useStore } from "vuex";
@@ -141,6 +157,9 @@ const store = useStore();
 const getEmployerData = () => {
   store.dispatch("getEmployerDetailById", id.value);
 };
+const submitLoading = computed(
+  () => store.state.profile.updateEmployerDataloading
+);
 const employerDataLoading = computed(
   () => store.state.profile.getEmployerDataloading
 );
@@ -159,6 +178,12 @@ const statesOption = computed(() => {
     }
   );
 });
+
+const lgaOption = computed(() =>
+  lgas.map((i) => {
+    return { label: i, value: i };
+  })
+);
 const toast = useToast();
 // Define a validation schema
 const schema = yup.object({
@@ -166,7 +191,7 @@ const schema = yup.object({
   employerAddress: yup.string(),
   // employerAddress2: yup.string(),
   positionHeld: yup.string(),
-  lga: yup.string(),
+  lga: yup.object().nullable(),
   state: yup.object().nullable(),
   country: yup.object().nullable(),
   sector: yup.string(),
@@ -203,7 +228,7 @@ const prepareDetails = (values, type) => {
     userId: id.value,
     employerName: values.employerName,
     employerAddress: values.employerAddress,
-    lga: values.lga,
+    lga: values.lga.value,
     state: values.state.value,
     positionHeld: values.positionHeld,
     sector: values.sector,
@@ -215,7 +240,7 @@ const prepareDetails = (values, type) => {
     userId: id.value,
     employerName: values.employerName,
     employerAddress: values.employerAddress,
-    lga: values.lga,
+    lga: values.lga.value,
     state: values.state.value,
     positionHeld: values.positionHeld,
     sector: values.sector,
@@ -245,6 +270,10 @@ watch(employerData, () => {
     state: {
       value: employerData.value.state,
       label: employerData.value.state,
+    },
+    lga: {
+      value: employerData.value.lga,
+      label: employerData.value.lga,
     },
   });
 });
