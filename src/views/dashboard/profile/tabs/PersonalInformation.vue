@@ -1,5 +1,9 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
+    <div
+      v-if="!canEditDetails"
+      class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
+    ></div>
     <!-- {{ biodata }}s -->
 
     <!-- {{ getBiodataError !== null }} -->
@@ -9,6 +13,7 @@
     <!-- <span>FormVal: {{ formValues }}</span> -->
     <!-- {{ values }}
     {{ values.country }}{{ values.state }} -->
+    <!-- {{ canEditDetails }} -->
     <ProfileInputSkeleton
       v-if="(!biodata && biodataLoading) || isShowing == false"
     />
@@ -290,6 +295,7 @@ const toast = useToast();
 const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
+const canEditDetails = inject("canEditDetails");
 
 const isShowing = ref(false);
 const showMarriedTab = inject("showMarriedTab");
