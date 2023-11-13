@@ -1,5 +1,8 @@
 <template>
-  <div class="md:flex md:space-y-0 space-y-5" :class="wrapperClass">
+  <div
+    class="md:flex md:space-y-0 space-y-5 relative z-[999]"
+    :class="wrapperClass"
+  >
     <div
       class="flex items-center space-x-4"
       v-if="enableSearch"

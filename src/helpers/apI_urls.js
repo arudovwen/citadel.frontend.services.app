@@ -69,6 +69,10 @@ export const urls = {
     "/ChurchAffiliation/RequestByMemberToJoinAffinityGroup",
   REQUEST_BY_MEMBER_TO_CHANGE_GROUP:
     "/ChurchAffiliation/RequestChangeOfAffinityGroup",
+  GET_HOD_REQUESTS: "/ChurchAffiliation/GetHodRequests",
+  GET_INSPECTORATE_REQUESTS: "/ChurchAffiliation/GetInspectorateRequests",
+  APPROVE_CHANGE_OF_ZONE: "/ChurchAffiliation/ApproveChangeOfCIHZone",
+  APPROVE_CHANGE_OF_DEPARTMENT: "/ChurchAffiliation/ApproveChangeOfDepartment",
 
   // Department
   CREATE_DEPARTMENT: "/Department/CreateDepartment",
