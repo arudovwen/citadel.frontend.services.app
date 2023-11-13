@@ -311,6 +311,10 @@ const isAdmin = computed(
 const isInspectorate = computed(
   () => state.auth.userData.userRole.toLowerCase() === "inspectorate"
 );
+
+const isHOD = computed(
+  () => state.auth.userData.userRole.toLowerCase() === "hod"
+);
 const canEditDetails = computed(() =>
   route.params.userId === state.auth.userData.id ||
   state.auth.userData.userRole.toLowerCase() === "inspectorate" ||
@@ -366,5 +370,6 @@ provide("showMarriedTab", showMarriedTab);
 provide("getUserAvatar", getUserAvatar);
 provide("isInspectorate", isInspectorate);
 provide("canEditDetails", canEditDetails);
+provide("isHOD", isHOD);
 </script>
 <style lang="scss" scoped></style>

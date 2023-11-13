@@ -146,7 +146,7 @@
               'toggleReqDepartment'
             )
           "
-          :canRequest="!isInspectorate && isUserProfile"
+          :canRequest="!isInspectorate && !isHOD && isUserProfile"
           :disabled="isInspectorate ? false : true"
           label="Department"
           classInput="!h-[40px]"
@@ -191,7 +191,6 @@ import { levelOfATSMenu, isCharterMemberMenu } from "@/constant/data";
 import RequestZone from "@/components/Pages/Profile/ChurchAffiliation/RequestZone.vue";
 import RequestGroup from "@/components/Pages/Profile/ChurchAffiliation/RequestGroup.vue";
 // import RequestDepartment from "@/components/Pages/Profile/ChurchAffiliation/RequestDepartment.vue";
-
 import { inject, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
@@ -215,6 +214,8 @@ onUnmounted(() => {
 });
 const id = inject("id");
 // const isAdmin = inject("isAdmin");
+const isHOD = inject("isHOD");
+
 const isUserProfile = inject("isUserProfile");
 
 const isInspectorate = inject("isInspectorate");
