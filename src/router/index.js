@@ -190,7 +190,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "hod", "dsa"],
+          roles: ["administrator", "hod", "dsa", "inspectorate"],
         },
       },
 

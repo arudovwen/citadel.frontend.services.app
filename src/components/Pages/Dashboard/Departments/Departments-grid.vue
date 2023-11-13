@@ -1,5 +1,5 @@
 <template>
-  <div className="bg-white p-6">
+  <div className="">
     <div
       v-if="departments.length"
       class="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mb-6"

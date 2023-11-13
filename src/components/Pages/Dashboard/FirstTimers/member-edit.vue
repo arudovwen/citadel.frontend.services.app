@@ -187,7 +187,7 @@ const formDataSchema = yup.object().shape({
     .required("Date of Visit is required"),
   surName: yup.string().required("Surname is required"),
   firstName: yup.string().required("firstName is required"),
-  middleName: yup.string().required("middleName is required"),
+  middleName: yup.string().nullable(),
   gender: yup.string().required("Gender is required"),
   dateOfBirth: yup
     .date()

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-6">
+  <div class="">
     <div v-if="getZonesLoading && zones?.length == 0" class="">
       <EmptyGrid />
     </div>
@@ -154,6 +154,8 @@ const zones = computed(() => state.zone.zones);
 const total = computed(() => state.zone.total);
 const getZonesLoading = computed(() => state.zone.getZonesLoading);
 const deleteZoneSuccess = computed(() => state.zone.deleteZoneSuccess);
+const addZoneSuccess = computed(() => state.zone.addZoneSuccess);
+const updateZoneSuccess = computed(() => state.zone.updateZoneSuccess);
 const toast = useToast();
 const modal = ref(null);
 const detail = ref(null);
@@ -218,10 +220,15 @@ function perPage({ currentPerPage }) {
 watch(deleteZoneSuccess, () => {
   if (deleteZoneSuccess.value) {
     toast.success("Successfully Deleted");
-    dispatch("getZones");
+    dispatch("getZones", query);
     modal.value.closeModal();
-  } else {
-    modal.value.closeModal();
+  }
+
+  // getAllZones();
+});
+watch([addZoneSuccess, updateZoneSuccess], () => {
+  if (addZoneSuccess.value || updateZoneSuccess.value) {
+    dispatch("getZones", query);
   }
 
   // getAllZones();

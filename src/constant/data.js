@@ -42,7 +42,7 @@ export const menuItems = [
     title: "Departments",
     icon: "mingcute:department-line",
     link: "/departments",
-    roles: ["administrator", "hod", "inspectorate", "dsa"],
+    roles: ["administrator", "hod", "dsa"],
   },
 
   {
@@ -55,7 +55,7 @@ export const menuItems = [
     title: "Attendance",
     icon: "heroicons-outline:clipboard-check",
     link: "/attendance",
-    roles: ["administrator", "inspectorate"],
+    roles: ["administrator"],
   },
   // { title: "Goals", icon: "bx:football", link: "/goals" },
   {
