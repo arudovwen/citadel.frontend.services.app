@@ -355,7 +355,7 @@ export default {
     const centers = computed(() =>
       state.center.centers.map((i) => {
         i.createdAt = moment(i.createdAt).format("ll");
-        i.location = i.location ? i.location : "-";
+        i.location = i.description ? i.description : "-";
         i.zone = zoneOptions?.value?.find(
           (b) => b?.zoneId === i?.zoneId
         )?.label;

@@ -33,13 +33,19 @@
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Update record" btnClass="btn-dark w-full" />
+        <Button
+          :isLoading="loading"
+          :disabled="loading"
+          type="submit"
+          text="Update record"
+          btnClass="btn-dark w-full"
+        />
       </div>
     </Card>
   </form>
 </template>
 <script setup>
-import { watch, computed, ref, inject } from "vue";
+import { watch, computed, inject } from "vue";
 import { useField, useForm } from "vee-validate";
 import VueSelect from "@/components/Select/VueSelect";
 import * as yup from "yup";
@@ -56,57 +62,49 @@ const closeModal = inject("closeModal");
 const zoneOptions = inject("zoneOptions");
 const initialQueryValue = inject("initialValue");
 const success = computed(() => state.center.updateCenterSuccess);
+const loading = computed(() => state.center.updateCenterLoading);
 const centerToUpdate = computed(() => state.center.centerToUpdate);
-const zone = ref({
-  id: "",
-  zoneName: "",
-});
-// const formData = reactive({
-//   centerName: "",
-//   zoneId: "",
-//   description: "",
-// });
+
 const schema = yup.object().shape({
   centerName: yup.string().required("Name is required"),
   zoneId: yup.string().required("Select a zone"),
   description: yup.string().required("Please provide a short description"),
 });
 
+// eslint-disable-next-line no-unused-vars
 const { handleSubmit, values, setValues } = useForm({
   validationSchema: schema,
-  initialValues: centerToUpdate.value,
+  initialValues: {
+    ...centerToUpdate.value,
+    zone: zoneOptions.value.find(
+      (i) => i.zoneId === centerToUpdate.value.zoneId
+    ),
+  },
 });
 
 const { value: centerName, errorMessage: centerNameError } =
   useField("centerName");
-const { errorMessage: zoneIdError } = useField("zoneId");
+const { value: zone, errorMessage: zoneIdError } = useField("zone");
 
 const { value: description, errorMessage: descriptionError } =
   useField("description");
+
 const onSubmit = handleSubmit((values) => {
   dispatch("updateCenter", {
     id: values.id,
     userId: "string",
-    zoneId: values.zoneId,
+    zoneId: values.zone.zoneId,
     centerName: values.centerName,
     description: values.description,
   });
 });
 
-watch(centerToUpdate, () => {
-  alert("Center");
-  // console.log("Setting values" + JSON.stringify(centerToUpdate.value));
-  setValues({
-    ...centerToUpdate.value,
-    zoneId: centerToUpdate.value.zoneId,
-  });
-});
-watch(zone, (newValue) => {
-  setValues({
-    ...values,
-    zoneId: newValue.zoneId,
-  });
-});
+// watch(centerToUpdate, () => {
+//   setValues({
+//     ...centerToUpdate.value,
+//     zoneId: centerToUpdate.value.zoneId,
+//   });
+// });
 
 watch(success, () => {
   if (success.value) {

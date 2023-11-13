@@ -42,7 +42,13 @@
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Add center" btnClass="btn-dark w-full" />
+        <Button
+          :isLoading="loading"
+          :disabled="loading"
+          type="submit"
+          text="Add center"
+          btnClass="btn-dark w-full"
+        />
       </div>
     </Card>
   </form>
@@ -64,6 +70,7 @@ import Textarea from "@/components/Textarea";
 import { ref } from "vue";
 const { state, dispatch } = useStore();
 const success = computed(() => state.center.addCenterSuccess);
+const loading = computed(() => state.center.addCenterLoading);
 const toast = useToast();
 const closeModal = inject("closeModal");
 const initialQueryValue = inject("initialValue");

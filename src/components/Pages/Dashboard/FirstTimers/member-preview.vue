@@ -1,31 +1,7 @@
 <template>
   <div>
-    <div
-      class="lg:flex justify-between flex-wrap items-center mb-8"
-      v-if="detail"
-    >
-      <h1 class="text-slate-900 font-semibold text-lg capitalize">
-        {{ detail?.firstName }} {{ detail?.middleName }} {{ detail?.surName }}
-      </h1>
-      <div class="flex lg:justify-end items-center flex-wrap">
-        <button
-          type="button"
-          @click="print"
-          class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-        >
-          <span class="text-lg"><Icon icon="heroicons:printer" /></span>
-          <span>Print</span>
-        </button>
-        <!-- <button
-          class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-        >
-          <span class="text-lg"><Icon icon="heroicons:arrow-down-tray" /></span>
-          <span>Download</span>
-        </button> -->
-      </div>
-    </div>
-    <Card bodyClass="p-6">
-      <div class="max-w-[980px] mx-auto my-6 rounded-md overflow-x-auto">
+    <Card noborder className="border-none shadow-none" bodyClass="">
+      <div class="mx-auto my-6 rounded-md overflow-x-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h6 class="text-xs font-semibold text-slate-400">First name</h6>
@@ -136,12 +112,8 @@
 import { defineProps } from "vue";
 import moment from "moment";
 import Card from "@/components/Card";
-import Icon from "@/components/Icon";
 
 defineProps(["detail"]);
-function print() {
-  window.print();
-}
 </script>
 <style lang="scss">
 .vgt-wrap__actions-footer {

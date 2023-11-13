@@ -246,11 +246,11 @@
         ? 'Add record'
         : type === 'edit'
         ? 'Edit Record'
-        : 'View record'
+        : `${detail?.firstName} ${detail?.surName}`
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
-    sizeClass="max-w-3xl"
+    :sizeClass="type === 'view' ? 'max-w-[32rem]' : 'max-w-3xl'"
   >
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" :detail="detail" />

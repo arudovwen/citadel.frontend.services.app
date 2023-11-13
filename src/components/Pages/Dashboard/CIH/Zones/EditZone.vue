@@ -25,7 +25,12 @@
         </div>
 
         <div class="text-right">
-          <Button text="Update zone" btnClass="btn-dark"></Button>
+          <Button
+            :isLoading="loading"
+            :disabled="loading"
+            text="Update zone"
+            btnClass="btn-dark"
+          ></Button>
         </div>
       </form>
     </Modal>
@@ -45,6 +50,7 @@ import { useToast } from "vue-toastification";
 const { state, dispatch } = useStore();
 const zone = computed(() => state.zone.zone);
 const success = computed(() => state.zone.updateZoneSuccess);
+const loading = computed(() => state.zone.updateZoneLoading);
 const toast = useToast();
 
 const schema = yup.object({
