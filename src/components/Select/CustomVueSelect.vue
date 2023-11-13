@@ -14,7 +14,7 @@
       <span
         class="ml-4 text-blue-400"
         @click="$store.dispatch(`${request.toggle}`, true)"
-        v-if="request && !isAdmin"
+        v-if="request && canRequest"
         >{{ request.name }}</span
       >
     </label>
@@ -86,7 +86,7 @@ export default {
     Icon,
   },
   props: {
-    isAdmin: {
+    canRequest: {
       type: Boolean,
       default: false,
     },

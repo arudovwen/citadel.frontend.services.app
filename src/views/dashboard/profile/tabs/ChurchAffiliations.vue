@@ -17,7 +17,7 @@
 
       <div>
         <Select
-          :disabled="isAdmin ? false : true"
+          :disabled="isInspectorate ? false : true"
           label="Level Of ATS"
           :options="levelOfATSMenu"
           v-model.value="levelOfATS"
@@ -29,7 +29,7 @@
 
       <div>
         <Select
-          :disabled="isAdmin ? false : true"
+          :disabled="isInspectorate ? false : true"
           label="Charter Member"
           :options="isCharterMemberMenu"
           v-model.value="charteredMember"
@@ -46,7 +46,7 @@
         "
       >
         <Textinput
-          :disabled="isAdmin ? false : true"
+          :disabled="isInspectorate ? false : true"
           label="Charter Member Number"
           type="number"
           placeholder="Type your charter number"
@@ -59,9 +59,9 @@
 
       <div>
         <CustomVueSelect
-          :isAdmin="isAdmin"
+          :canRequest="!isInspectorate && isUserProfile"
           :request="requestFnObj('Request to change zone', 'toggleReqZone')"
-          :disabled="isAdmin ? false : true"
+          :disabled="isInspectorate ? false : true"
           label="CIH Zone"
           class="min-w-[200px] w-full md:w-auto"
           v-model.value="zoneObj"
@@ -75,7 +75,7 @@
 
       <div>
         <CustomVueSelect
-          :disabled="centersLoading || !isAdmin"
+          :disabled="centersLoading || !isInspectorate"
           :menuLoading="centersLoading"
           label="Center Address"
           class="min-w-[200px] w-full md:w-auto"
@@ -90,7 +90,7 @@
 
       <div>
         <Textinput
-          :disabled="isAdmin ? false : true"
+          :disabled="isInspectorate ? false : true"
           label="Mountain of Influence"
           type="text"
           placeholder="Type your mountain of influence"
@@ -103,7 +103,7 @@
 
       <!-- <div>
         <Select
-          :disabled="isAdmin ? false : true"
+          :disabled="canRequest ? false : true"
           label="Age Range"
           :options="ageRangeMenu"
           v-model.value="ageRange"
@@ -123,7 +123,7 @@
               'toggleReqAffinityGroup'
             )
           "
-          :isAdmin="isAdmin"
+          :canRequest="!isInspectorate && isUserProfile"
           :disabled="true"
           label="Affinity Group"
           classInput="!h-[40px]"
@@ -146,8 +146,8 @@
               'toggleReqDepartment'
             )
           "
-          :isAdmin="isAdmin"
-          :disabled="isAdmin ? false : true"
+          :canRequest="!isInspectorate && isUserProfile"
+          :disabled="isInspectorate ? false : true"
           label="Department"
           classInput="!h-[40px]"
           v-model.value="departmentObj"
@@ -162,7 +162,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
       <button
-        :disabled="!isAdmin"
+        :disabled="!isInspectorate"
         type="submit"
         class="btn btn-primary block w-full text-center"
       >
@@ -214,8 +214,10 @@ onUnmounted(() => {
   // store.state.profile.churchAffiliationsData =
 });
 const id = inject("id");
-const isAdmin = inject("isAdmin");
-// const isInspectorate = inject("isInspectorate");
+// const isAdmin = inject("isAdmin");
+const isUserProfile = inject("isUserProfile");
+
+const isInspectorate = inject("isInspectorate");
 const store = useStore();
 const toast = useToast();
 const getChurchAffiliationsData = () => {
@@ -300,7 +302,10 @@ const success = computed(
 const schema = yup.object({
   levelOfATS: yup.string(),
   charteredMember: yup.bool(),
-  charteredMemberNumber: yup.number().nullable(),
+  charteredMemberNumber: yup
+    .number()
+    .transform((value) => (Number.isNaN(value) ? null : value))
+    .nullable(),
   cihZone: yup.string(),
   mountainOfInfluence: yup.string(),
   affinityGroup: yup.string(),
