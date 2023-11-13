@@ -145,7 +145,13 @@
                 </div>
               </div>
             </li>
-            <li class="flex space-x-3 rtl:space-x-reverse">
+            <li
+              class="flex space-x-3 rtl:space-x-reverse"
+              v-if="
+                state.auth.userData.userRole !== 'administrator' &&
+                state.auth.userData.userRole !== 'hod'
+              "
+            >
               <div
                 class="flex-none text-2xl text-slate-600 dark:text-slate-300"
               >
@@ -168,7 +174,12 @@
                     department
                   }}</span>
                   <span
-                    v-if="!churchAffiliationsDataLoading && !department"
+                    v-if="
+                      !churchAffiliationsDataLoading &&
+                      !department &&
+                      state.auth.userData.userRole !== 'administrator' &&
+                      state.auth.userData.userRole !== 'hod'
+                    "
                     @click="toggleReqDepartment(true)"
                     class="cursor-pointer"
                   >
