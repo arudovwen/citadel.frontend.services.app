@@ -6,13 +6,19 @@
     <div v-else>
       <div v-if="zones.length">
         <div class="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5 mb-2">
-          <Card bodyClass="p-6" v-for="(item, i) in zones" :key="i">
-            <!-- header -->
-            <header class="flex justify-between items-end">
-              <router-link
-                :to="`/cih/zones/view-centers/${item.id}`"
-                class="flex-1"
-              >
+          <Card bodyClass="" v-for="(item, i) in zones" :key="i">
+            <div
+              class="p-10 cursor-pointer"
+              @click.self="
+                () => {
+                  state.auth.userData.userRole.toLowerCase() === 'inspectorate'
+                    ? ''
+                    : router.push(`/cih/zones/view-centers/${item.id}`);
+                }
+              "
+            >
+              <!-- header -->
+              <header class="flex justify-between items-end">
                 <div class="flex space-x-4 items-center">
                   <div class="flex-none">
                     <div
@@ -27,49 +33,41 @@
                     </div>
                   </div>
                 </div>
-              </router-link>
-              <div
-                v-if="
-                  state.auth.userData.userRole.toLowerCase() ===
-                    'inspectorate' ||
-                  state.auth.userData.userRole.toLowerCase() === 'administrator'
-                "
-              >
-                <Dropdown classMenuItems=" w-[130px]">
-                  <span
-                    class="text-lg inline-flex flex-col items-center justify-center h-8 w-8 rounded-full bg-gray-500-f7 dark:bg-slate-900 dark:text-slate-400"
-                    ><Icon icon="heroicons-outline:dots-vertical"
-                  /></span>
-                  <template v-slot:menus>
-                    <MenuItem v-for="(menu, i) in actions" :key="i">
-                      <div
-                        @click="menu.doit(item)"
-                        :class="`
+
+                <div
+                  v-if="
+                    state.auth.userData.userRole.toLowerCase() ===
+                      'inspectorate' ||
+                    state.auth.userData.userRole.toLowerCase() ===
+                      'administrator'
+                  "
+                >
+                  <Dropdown classMenuItems=" w-[130px]">
+                    <span
+                      class="text-lg inline-flex flex-col items-center justify-center h-8 w-8 rounded-full bg-gray-500-f7 dark:bg-slate-900 dark:text-slate-400"
+                      ><Icon icon="heroicons-outline:dots-vertical"
+                    /></span>
+                    <template v-slot:menus>
+                      <MenuItem v-for="(menu, i) in filteredActions" :key="i">
+                        <div
+                          @click="menu.doit(item)"
+                          :class="`
                 
                   ${'hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white'}
                    w-full border-b border-b-gray-500 border-opacity-10   px-4 py-2 text-sm dark:text-slate-300  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center  capitalize `"
-                      >
-                        <span class="text-base"
-                          ><Icon :icon="menu.icon"
-                        /></span>
-                        <span>{{ menu.name }}</span>
-                      </div>
-                    </MenuItem>
-                  </template>
-                </Dropdown>
-              </div>
-            </header>
-            <router-link :to="`/cih/zones/view-centers/${item.id}`">
-              <!-- description -->
-              <!-- <div class="text-slate-600 dark:text-slate-400 text-sm pt-4 pb-4">
-          {{ item.des }}
-        </div> -->
+                        >
+                          <span class="text-base"
+                            ><Icon :icon="menu.icon"
+                          /></span>
+                          <span>{{ menu.name }}</span>
+                        </div>
+                      </MenuItem>
+                    </template>
+                  </Dropdown>
+                </div>
+              </header>
 
-              <!-- assign and time count -->
               <div class="flex justify-start mt-6">
-                <!-- assign -->
-
-                <!-- total date -->
                 <div class="text-left">
                   <span
                     class="inline-flex items-center space-x-1 bg-gray-500 bg-opacity-[0.16] text-gray-500 text-xs font-normal px-2 py-1 rounded-full"
@@ -79,7 +77,7 @@
                   </span>
                 </div>
               </div>
-            </router-link>
+            </div>
           </Card>
         </div>
         <div class="py-4">
@@ -184,6 +182,11 @@ const actions = ref([
     },
   },
 ]);
+const filteredActions = computed(() =>
+  state.auth.userData.userRole.toLowerCase() === "inspectorate"
+    ? actions.value.filter((i) => i.name !== "view")
+    : actions.value
+);
 const options = [
   {
     value: "5",
