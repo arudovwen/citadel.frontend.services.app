@@ -177,19 +177,12 @@
                     v-if="
                       !churchAffiliationsDataLoading &&
                       !department &&
-                      state.auth.userData.userRole !== 'administrator' &&
-                      state.auth.userData.userRole !== 'hod'
+                      state.auth.userData.userRole === 'member'
                     "
                     @click="toggleReqDepartment(true)"
                     class="cursor-pointer"
                   >
                     Click here to request to join department
-                  </span>
-                  <span
-                    @click="toggleReqDepartment(true)"
-                    class="cursor-pointer text-blue-400 hidden"
-                  >
-                    Request Department
                   </span>
                 </div>
               </div>
@@ -202,7 +195,7 @@
         <Card title="User Profile"> <Tab /></Card>
       </div>
     </div>
-    <RequestDepartment />
+
     <Modal
       title="Change Role"
       label="Small modal"
