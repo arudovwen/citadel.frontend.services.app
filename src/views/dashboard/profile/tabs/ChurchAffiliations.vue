@@ -113,7 +113,7 @@
         />
       </div> -->
 
-      <div>
+      <!-- <div>
         <CustomVueSelect
           :request="
             requestFnObj(
@@ -133,6 +133,19 @@
           :options="affinityGroupOptions"
           placeholder="Select affinity group"
           name="Affinity Group"
+        />
+      </div> -->
+
+      <div>
+        <Textinput
+          :disabled="true"
+          label="Affinity Group"
+          type="text"
+          placeholder="Affinity group"
+          name="Affinity Group"
+          v-model="affinityGroup"
+          :error="affinityGroupError"
+          classInput="h-[40px]"
         />
       </div>
 
@@ -161,13 +174,14 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-      <button
+      <Button
+        :isLoading="submitLoading"
         :disabled="!isInspectorate"
         type="submit"
         class="btn btn-primary block w-full text-center"
       >
         Save Changes
-      </button>
+      </Button>
       <div class="hidden sm:block"></div>
     </div>
     <RequestZone :affiliation="churchAffiliationsData" />
@@ -177,6 +191,8 @@
 </template>
 
 <script setup>
+import Button from "@/components/Button";
+
 import Select from "@/components/Select";
 import { computed, watch, ref, onUnmounted } from "vue";
 import Textinput from "@/components/Textinput";
@@ -200,7 +216,7 @@ onMounted(async () => {
     await getChurchAffiliationsData();
     await getZones();
     // await matchZone();
-    await getAffinityGroups();
+    // await getAffinityGroups();
     // await matchAffinityGroup();
     await getDepartments();
     // await matchDepartment();
@@ -224,6 +240,9 @@ const toast = useToast();
 const getChurchAffiliationsData = () => {
   store.dispatch("getChurchAffiliationsById", id.value);
 };
+const submitLoading = computed(
+  () => store.state.profile.updateChurchAffiliationDataloading
+);
 const centersLoading = computed(() => store.state.center.getcentersloading);
 const zoneObj = ref({
   label: "",
@@ -239,10 +258,10 @@ const departmentObj = ref({
   departmentId: "",
 });
 
-const affinityGroupObj = ref({
-  label: "",
-  affinityGroupId: "",
-});
+// const affinityGroupObj = ref({
+//   label: "",
+//   affinityGroupId: "",
+// });
 const zoneOptions = computed(() =>
   store.state?.zone?.zones.map((i) => {
     return {
@@ -269,14 +288,14 @@ const departmentOptions = computed(() =>
   })
 );
 
-const affinityGroupOptions = computed(() =>
-  store.state?.affinityGroup?.affinityGroups.map((i) => {
-    return {
-      label: i.affinityGroupName,
-      affinityGroupId: i.id,
-    };
-  })
-);
+// const affinityGroupOptions = computed(() =>
+//   store.state?.affinityGroup?.affinityGroups.map((i) => {
+//     return {
+//       label: i.affinityGroupName,
+//       affinityGroupId: i.id,
+//     };
+//   })
+// );
 
 const churchAffiliationsDataLoading = computed(
   () => store.state.profile.getChurchAffiliationsDataloading
@@ -290,11 +309,11 @@ const hasDepartment = computed(() => {
   return store.state.profile.churchAffiliationsData?.department ? true : false;
 });
 
-const hasAffinityGroup = computed(() => {
-  return store.state.profile.churchAffiliationsData?.affinityGroup
-    ? true
-    : false;
-});
+// const hasAffinityGroup = computed(() => {
+//   return store.state.profile.churchAffiliationsData?.affinityGroup
+//     ? true
+//     : false;
+// });
 
 const success = computed(
   () => store.state.profile.updateChurchAffiliationDataSuccess
@@ -332,7 +351,8 @@ const {
 const { errorMessage: cihZoneError } = useField("cihZone");
 const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
   useField("mountainOfInfluence");
-const { errorMessage: affinityGroupError } = useField("affinityGroup");
+const { value: affinityGroup, errorMessage: affinityGroupError } =
+  useField("affinityGroup");
 
 const { errorMessage: departmentError } = useField("department");
 
@@ -379,9 +399,9 @@ const getDepartments = () => {
   store.dispatch("getDepartments", { pageNumber: 1, pageSize: 25000 });
 };
 
-const getAffinityGroups = () => {
-  store.dispatch("getAffinityGroups", { pageNumber: 1, pageSize: 25000 });
-};
+// const getAffinityGroups = () => {
+//   store.dispatch("getAffinityGroups", { pageNumber: 1, pageSize: 25000 });
+// };
 const onSubmit = handleSubmit((values) => {
   // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
   const hasDataError = churchAffiliationsData.value == null;
@@ -415,12 +435,12 @@ const matchDepartment = () => {
   );
 };
 
-const matchAffinityGroup = () => {
-  affinityGroupObj.value = affinityGroupOptions.value.find(
-    (affinityGroup) =>
-      affinityGroup.label === churchAffiliationsData.value?.affinityGroup
-  );
-};
+// const matchAffinityGroup = () => {
+//   affinityGroupObj.value = affinityGroupOptions.value.find(
+//     (affinityGroup) =>
+//       affinityGroup.label === churchAffiliationsData.value?.affinityGroup
+//   );
+// };
 
 const requestFnObj = (name, toggle) => {
   return {
@@ -437,16 +457,16 @@ watch(centerOptions, () => {
 watch(departmentOptions, () => {
   matchDepartment();
 });
-watch(affinityGroupOptions, () => {
-  matchAffinityGroup();
-});
+// watch(affinityGroupOptions, () => {
+//   matchAffinityGroup();
+// });
 
 watch(churchAffiliationsData, (newValue) => {
   setValues(newValue);
   matchCenter();
   matchZone();
   matchDepartment();
-  matchAffinityGroup();
+  // matchAffinityGroup();
 });
 
 watch(zoneObj, (newValue) => {
@@ -463,12 +483,12 @@ watch(departmentObj, (newValue) => {
     department: newValue?.label,
   });
 });
-watch(affinityGroupObj, (newValue) => {
-  setValues({
-    ...values,
-    affinityGroup: newValue?.label,
-  });
-});
+// watch(affinityGroupObj, (newValue) => {
+//   setValues({
+//     ...values,
+//     affinityGroup: newValue?.label,
+//   });
+// });
 
 watch(centerObj, (newValue) => {
   setValues({
