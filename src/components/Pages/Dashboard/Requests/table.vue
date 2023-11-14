@@ -355,7 +355,7 @@ watch(success, () => {
     );
     modalChange.value.closeModal();
     modal.value.closeModal();
-    if (type.value === "approved") {
+    if (type.value === "approve") {
       toast.success("Approve Successfully");
     } else {
       toast.success("Request Rejected");
