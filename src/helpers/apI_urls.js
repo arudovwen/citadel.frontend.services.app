@@ -17,6 +17,7 @@ export const urls = {
   DELETE_AFFINITY_GROUP: "/AffinityGroup/DeleteAffinityGroup",
   GET_ALL_AFFINITY_GROUPS: "/AffinityGroup/GetAllAffinityGroups",
   GET_AFFINITY_GROUP_BY_ID: "/AffinityGroup/GetAffinityGroupById",
+  GET_AFFINITY_GROUP_BY_USERID: "/AffinityGroup/GetAffinityGroupByUserId",
 
   // Auth
   LOGIN: "/Auth/Login",
