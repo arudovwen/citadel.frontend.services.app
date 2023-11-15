@@ -120,6 +120,10 @@
                           item.name === 'delete',
                         'hover:bg-slate-900 hover:text-white':
                           item.name !== 'delete',
+                        'hover:bg-slate-900 hidden':
+                          state.auth.userData.userRole.toLowerCase() !==
+                            'administrator' &&
+                          item.name.toLowerCase() !== 'view',
                       }"
                       class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
                     >
@@ -131,6 +135,16 @@
                   </MenuItem>
                 </template>
               </Dropdown>
+
+              <!-- state.auth.userData.userRole.toLowerCase() === 'administrator' -->
+              <!-- <div
+                      :class="[
+                        state.auth.userData.userRole.toLowerCase() ===
+                          'administrator' && item.name.toLowerCase() !== 'view'
+                          ? ''
+                          : '',
+                      ]"
+                    > -->
             </span>
           </template>
           <template #pagination-bottom>

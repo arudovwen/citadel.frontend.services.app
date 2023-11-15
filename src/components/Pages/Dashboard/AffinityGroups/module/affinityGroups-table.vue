@@ -69,7 +69,12 @@
               <span class="lowercase">yrs</span>
             </span>
             <span v-if="props.column.field == 'action'">
-              <Dropdown classMenuItems=" w-[140px]">
+              <Dropdown
+                v-if="
+                  state.auth.userData.userRole.toLowerCase() === 'administrator'
+                "
+                classMenuItems=" w-[140px]"
+              >
                 <span class="text-xl"
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
@@ -100,6 +105,9 @@
                   </MenuItem>
                 </template>
               </Dropdown>
+              <span v-else class="cursor-not-allowed text-xl"
+                ><Icon icon="heroicons-outline:dots-vertical"
+              /></span>
             </span>
           </template>
           <template #pagination-bottom>
