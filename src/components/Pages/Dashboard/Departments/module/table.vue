@@ -182,7 +182,7 @@
     sizeClass="max-w-md"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to {{ type }} this department?
+      Are you sure you want to {{ type }} this member?
     </div>
     <div v-if="type.toLowerCase() === 'reject'">
       <textarea
@@ -281,22 +281,6 @@ export default {
         month: "MMM",
       },
       actions: [
-        {
-          name: "Approve",
-          icon: "ph:check",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        {
-          name: "Reject",
-          icon: "ph:x-light",
-          doit: (name) => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
         {
           name: "view",
           icon: "heroicons-outline:eye",
@@ -418,12 +402,9 @@ export default {
   },
   computed: {
     filteredActions() {
-      return this.activeFilter === "all"
-        ? this.actions.filter(
-            (i) =>
-              i.name.toLowerCase() !== "approve" &&
-              i.name.toLowerCase() !== "reject"
-          )
+      return this.$store.state.auth.userData.userRole !== "administrator" &&
+        this.$store.state.auth.userData.userRole !== "hod"
+        ? this.actions.filter((i) => i.name.toLowerCase() !== "delete")
         : this.actions;
     },
   },
