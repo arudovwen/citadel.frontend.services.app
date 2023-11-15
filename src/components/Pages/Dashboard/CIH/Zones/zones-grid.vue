@@ -36,10 +36,10 @@
 
                 <div
                   v-if="
+                    // state.auth.userData.userRole.toLowerCase() ===
+                    //   'inspectorate' ||
                     state.auth.userData.userRole.toLowerCase() ===
-                      'inspectorate' ||
-                    state.auth.userData.userRole.toLowerCase() ===
-                      'administrator'
+                    'administrator'
                   "
                 >
                   <Dropdown classMenuItems=" w-[130px]">

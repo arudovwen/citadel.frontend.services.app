@@ -28,7 +28,6 @@
         >
           <Button
             v-if="
-              state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
               state.auth.userData.userRole.toLowerCase() === 'administrator'
             "
             icon="mdi:house-group-add"
