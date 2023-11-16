@@ -364,5 +364,6 @@ provide("getUserAvatar", getUserAvatar);
 provide("isInspectorate", isInspectorate);
 provide("canEditDetails", canEditDetails);
 provide("isHOD", isHOD);
+provide("roles", roles);
 </script>
 <style lang="scss" scoped></style>

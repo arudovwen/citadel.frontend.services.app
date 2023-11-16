@@ -19,6 +19,11 @@ export default {
     createChildrenDataSuccess: false,
     createChildrenDataerror: null,
 
+    allCihRoles: [],
+    getAllCihRolesLoading: false,
+    getAllCihRolesSuccess: false,
+    getAllCihRolesError: false,
+
     uploadFileLoading: false,
     uploadFileSuccess: false,
     uploadFileError: null,
@@ -323,6 +328,25 @@ export default {
     },
 
     //get
+    getAllCihRolesBegin(state) {
+      state.getAllCihRolesLoading = true;
+      state.getAllCihRolesSuccess = false;
+      state.getAllCihRolesError = null;
+    },
+
+    getAllCihRolesSuccess(state, data) {
+      state.getAllCihRolesLoading = false;
+      state.getAllCihRolesSuccess = true;
+      state.allCihRoles = data;
+      state.getAllCihRolesError = null;
+    },
+
+    getAllCihRolesErr(state, err) {
+      state.getAllCihRolesLoading = false;
+      state.getAllCihRolesError = err;
+      state.getAllCihRolesSuccess = false;
+    },
+
     getAllBiodataBegin(state) {
       state.getAllBiodataloading = true;
       state.getAllBiodatasuccess = false;
@@ -507,6 +531,18 @@ export default {
     },
   },
   actions: {
+    async getAllCihRoles({ commit }) {
+      try {
+        commit("getAllCihRolesBegin");
+        const response = await DataService.get(`${urls.GET_CIH_ROLES}`);
+        if (response.status === 200) {
+          // console.log("CIHRoles: " + JSON.stringify(response.data));
+          commit("getAllCihRolesSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getAllCihRolesErr", err);
+      }
+    },
     async uploadFile({ commit }, data) {
       console.log("🚀 ~ file: index.js:511 ~ uploadFile ~ data:", data);
       try {
