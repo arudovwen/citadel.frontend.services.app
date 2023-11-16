@@ -14,6 +14,7 @@
       <!-- {{ centersLoading }} -->
       <!-- {{ typeof Number(levelOfATS) }} -->
       <!-- {{ hasDepartment }} -->
+      <!-- <span>CIHROLES: {{ cihRoles }}</span> -->
 
       <div>
         <Select
@@ -101,41 +102,6 @@
         />
       </div>
 
-      <!-- <div>
-        <Select
-          :disabled="canRequest ? false : true"
-          label="Age Range"
-          :options="ageRangeMenu"
-          v-model.value="ageRange"
-          :modelValue="ageRange"
-          :error="ageRangeError"
-          classInput="!h-[40px]"
-        />
-      </div> -->
-
-      <!-- <div>
-        <CustomVueSelect
-          :request="
-            requestFnObj(
-              hasAffinityGroup
-                ? 'Request to change group'
-                : 'Request to join group',
-              'toggleReqAffinityGroup'
-            )
-          "
-          :canRequest="!isInspectorate && isUserProfile"
-          :disabled="true"
-          label="Affinity Group"
-          classInput="!h-[40px]"
-          v-model.value="affinityGroupObj"
-          :modelValue="affinityGroupObj"
-          :error="affinityGroupError"
-          :options="affinityGroupOptions"
-          placeholder="Select affinity group"
-          name="Affinity Group"
-        />
-      </div> -->
-
       <div>
         <Textinput
           :disabled="true"
@@ -169,6 +135,18 @@
           :options="departmentOptions"
           placeholder="Select department"
           name="Department"
+        />
+      </div>
+
+      <div>
+        <Select
+          :disabled="isInspectorate ? false : true"
+          label="CIH Role"
+          :options="cihRoles"
+          v-model.value="cihRole"
+          :modelValue="cihRole"
+          :error="cihRoleError"
+          classInput="!h-[40px]"
         />
       </div>
     </div>
@@ -219,6 +197,7 @@ onMounted(async () => {
     // await getAffinityGroups();
     // await matchAffinityGroup();
     await getDepartments();
+    await getAllCihRoles();
     // await matchDepartment();
   } catch {
     console.log("Error");
@@ -228,14 +207,14 @@ onMounted(async () => {
 onUnmounted(() => {
   // store.state.profile.churchAffiliationsData =
 });
+const store = useStore();
 const id = inject("id");
 // const isAdmin = inject("isAdmin");
 const isHOD = inject("isHOD");
-
 const isUserProfile = inject("isUserProfile");
 
 const isInspectorate = inject("isInspectorate");
-const store = useStore();
+
 const toast = useToast();
 const getChurchAffiliationsData = () => {
   store.dispatch("getChurchAffiliationsById", id.value);
@@ -288,14 +267,14 @@ const departmentOptions = computed(() =>
   })
 );
 
-// const affinityGroupOptions = computed(() =>
-//   store.state?.affinityGroup?.affinityGroups.map((i) => {
-//     return {
-//       label: i.affinityGroupName,
-//       affinityGroupId: i.id,
-//     };
-//   })
-// );
+const cihRoles = computed(() =>
+  store?.state?.profile?.allCihRoles.map((i) => {
+    return {
+      label: i,
+      value: i,
+    };
+  })
+);
 
 const churchAffiliationsDataLoading = computed(
   () => store.state.profile.getChurchAffiliationsDataloading
@@ -327,6 +306,7 @@ const schema = yup.object({
     .transform((value) => (Number.isNaN(value) ? null : value))
     .nullable(),
   cihZone: yup.string(),
+  cihRole: yup.string(),
   mountainOfInfluence: yup.string(),
   affinityGroup: yup.string(),
   department: yup.string(),
@@ -353,6 +333,7 @@ const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
   useField("mountainOfInfluence");
 const { value: affinityGroup, errorMessage: affinityGroupError } =
   useField("affinityGroup");
+const { value: cihRole, errorMessage: cihRoleError } = useField("cihRole");
 
 const { errorMessage: departmentError } = useField("department");
 
@@ -369,6 +350,7 @@ const prepareDetails = (values, type) => {
         : false,
     charteredMemberNumber: String(values.charteredMemberNumber),
     cihZone: values.cihZone,
+    cihRole: values.cihRole,
     mountainOfInfluence: values.mountainOfInfluence,
     affinityGroup: values.affinityGroup,
     department: values.department,
@@ -383,6 +365,7 @@ const prepareDetails = (values, type) => {
         : false,
     charteredMemberNumber: String(values.charteredMemberNumber),
     cihZone: values.cihZone,
+    cihRole: values.cihRole,
     mountainOfInfluence: values.mountainOfInfluence,
     affinityGroup: values.affinityGroup,
     department: values.department,
@@ -399,11 +382,7 @@ const getDepartments = () => {
   store.dispatch("getDepartments", { pageNumber: 1, pageSize: 25000 });
 };
 
-// const getAffinityGroups = () => {
-//   store.dispatch("getAffinityGroups", { pageNumber: 1, pageSize: 25000 });
-// };
 const onSubmit = handleSubmit((values) => {
-  // console.log("PersonalDetails: " + JSON.stringify(prepareDetails(values)));
   const hasDataError = churchAffiliationsData.value == null;
   if (hasDataError) {
     store.dispatch("createChurchAffiliation", prepareDetails(values, "create"));
@@ -413,12 +392,14 @@ const onSubmit = handleSubmit((values) => {
   }
 });
 
+const getAllCihRoles = () => {
+  store.dispatch("getAllCihRoles");
+};
+
 const matchZone = () => {
   zoneObj.value = zoneOptions.value.find(
     (zone) => zone.label === churchAffiliationsData.value?.cihZone
   );
-
-  // console.log("zoneObj: " + JSON.stringify(zoneObj.value));
 };
 
 const matchCenter = () => {
