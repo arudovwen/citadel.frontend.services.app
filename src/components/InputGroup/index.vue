@@ -1,5 +1,9 @@
 <template>
-  <div :class="`${horizontal ? 'flex' : ''}  ${merged ? 'merged' : ''}`">
+  <div
+    :class="`${horizontal ? 'flex' : ''}  ${
+      merged ? 'merged' : 'w-full md:w-auto'
+    }`"
+  >
     <label
       v-if="label"
       :class="`${classLabel} ${

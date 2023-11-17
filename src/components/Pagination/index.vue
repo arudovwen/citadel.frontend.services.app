@@ -1,6 +1,6 @@
 <template>
   <div
-    class="md:flex md:space-y-0 space-y-5 relative z-[999]"
+    class="flex flex-col md:flex-row items-center md:space-y-0 space-y-5 relative z-[999]"
     :class="wrapperClass"
   >
     <div
@@ -36,7 +36,9 @@
         >
         </Select>
 
-        <span class="text-sm text-slate-500 inline-block ml-2">
+        <span
+          class="text-sm text-slate-500 inline-block ml-2 whitespace-nowrap"
+        >
           of {{ perPage }} entries</span
         >
       </div>

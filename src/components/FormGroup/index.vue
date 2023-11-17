@@ -1,6 +1,6 @@
 <template>
   <div
-    class="formGroup relative"
+    class="formGroup relative w-full md:w-auto"
     :class="`${error ? 'has-error' : ''}  ${horizontal ? 'flex' : ''}  ${
       validate ? 'is-valid' : ''
     } `"

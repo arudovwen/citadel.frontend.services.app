@@ -4,90 +4,75 @@
       v-if="departments.length"
       class="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mb-6"
     >
-      <Card bodyClass="p-6" v-for="(item, i) in departments" :key="i">
-        <!-- header -->
-        <header class="flex justify-between items-end mb-4">
-          <router-link
-            :to="`/departments/view/${item?.departmentName}/${item.id}`"
-            class="flex-1"
-          >
-            <div class="flex space-x-4 items-center">
-              <div class="flex-none">
-                <div
-                  class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal uppercase"
-                >
-                  {{
-                    item?.departmentName?.charAt(0) +
-                    item?.departmentName?.charAt(1)
-                  }}
-                </div>
-              </div>
-              <div class="font-medium text-base leading-6">
-                <div
-                  class="dark:text-slate-200 text-slate-900 max-w-[200px] truncate"
-                >
-                  {{ item?.departmentName }} Department
-                </div>
-              </div>
-            </div>
-          </router-link>
-          <div
-            v-if="
-              state.auth.userData.userRole.toLowerCase() === 'administrator'
-            "
-          >
-            <Dropdown classMenuItems=" w-[130px]">
-              <span
-                class="text-lg inline-flex flex-col items-center justify-center h-8 w-8 rounded-full bg-gray-500-f7 dark:bg-slate-900 dark:text-slate-400"
-                ><Icon icon="heroicons-outline:dots-vertical"
-              /></span>
-              <template v-slot:menus>
-                <MenuItem v-for="(menu, i) in actions" :key="i">
-                  <div
-                    @click="menu.doit(item)"
-                    :class="`
-                
-                  ${'hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white'}
-                   w-full border-b border-b-gray-500 border-opacity-10   px-4 py-2 text-sm dark:text-slate-300  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center  capitalize `"
-                  >
-                    <span class="text-base"><Icon :icon="menu.icon" /></span>
-                    <span>{{ menu.name }}</span>
-                  </div>
-                </MenuItem>
-              </template>
-            </Dropdown>
-          </div>
-        </header>
+      <Card bodyClass="" v-for="(item, i) in departments" :key="i">
         <router-link
           :to="`/departments/view/${item?.departmentName}/${item.id}`"
+          class="flex-1"
         >
-          <!-- description -->
-          <div class="text-slate-600 dark:text-slate-400 text-sm mb-2">
-            {{ item.description }}
-          </div>
-          <div
-            v-if="handleHod(item.userId)"
-            class="text-slate-600 dark:text-slate-400 text-xs font-medium"
-          >
-            <span>HOD</span>:
-            <span class="font-medium">{{ handleHod(item.userId) }}</span>
-          </div>
+          <div class="px-6 pt-6">
+            <header class="flex justify-between items-end mb-4">
+              <div class="flex space-x-4 items-center">
+                <div class="flex-none">
+                  <div
+                    class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal uppercase"
+                  >
+                    {{
+                      item?.departmentName?.charAt(0) +
+                      item?.departmentName?.charAt(1)
+                    }}
+                  </div>
+                </div>
+                <div class="font-medium text-base leading-6">
+                  <div
+                    class="dark:text-slate-200 text-slate-900 max-w-[200px] truncate"
+                  >
+                    {{ item?.departmentName }} Department
+                  </div>
+                </div>
+              </div>
+            </header>
 
-          <!-- assign and time count -->
-          <div class="flex justify-start mt-6">
-            <!-- assign -->
-
-            <!-- total date -->
-            <div class="text-right">
-              <span
-                class="inline-flex items-center space-x-1 bg-gray-500 bg-opacity-[0.16] text-gray-500 text-xs font-normal px-2 py-1 rounded-full"
-              >
-                <span> <Icon icon="heroicons-outline:user-group" /></span>
-                <span>20 members</span>
-              </span>
+            <!-- description -->
+            <div
+              class="text-slate-600 dark:text-slate-400 text-sm mb-2 truncate max-w-max"
+            >
+              {{ item.description }}
+            </div>
+            <div class="text-slate-600 dark:text-slate-400 text-xs font-medium">
+              <span>HOD</span>:
+              <span class="font-medium">{{ handleHod(item.userId) }}</span>
+            </div>
+            <div class="flex justify-start mt-5">
+              <div class="text-right">
+                <span
+                  class="inline-flex items-center space-x-1 bg-gray-400 bg-opacity-[0.16] text-gray-500 text-[11px] font-normal px-2 py-1 rounded-full"
+                >
+                  <span> <Icon icon="heroicons-outline:user-group" /></span>
+                  <span>20 members</span>
+                </span>
+              </div>
             </div>
           </div>
         </router-link>
+
+        <div
+          v-if="state.auth.userData.userRole.toLowerCase() === 'administrator'"
+          class="flex justify-end px-4 py-2 mt-6 border-t border-gray-200 gap-x-3"
+        >
+          <button
+            @click="actions[0].doit(item)"
+            class="text-xs active:scale-95 px-1 py-1 rounded-full"
+          >
+            Edit
+          </button>
+
+          <button
+            @click="actions[1].doit(item)"
+            class="text-xs active:scale-95 px-1 py-1 rounded-full"
+          >
+            Delete
+          </button>
+        </div>
       </Card>
     </div>
     <Empty v-if="!departments.length" />
@@ -144,20 +129,16 @@ import Pagination from "@/components/Pagination";
 import { useToast } from "vue-toastification";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
-import Dropdown from "@/components/Dropdown";
 import Icon from "@/components/Icon";
-import { MenuItem } from "@headlessui/vue";
 import Modal from "@/components/Modal/Modal";
 import Empty from "@/components/Empty";
 import { debounce } from "lodash";
 
 import { computed, ref, onMounted, inject, watch, provide } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
 
 const toast = useToast();
 const { state, dispatch } = useStore();
-const router = useRouter();
 const total = computed(() => state.department.total);
 const loading = computed(() => state.department.loading);
 const success = computed(() => state.department.addsuccess);
@@ -198,21 +179,14 @@ const options = [
 ];
 const actions = ref([
   {
-    name: "view",
-    icon: "heroicons:eye",
-    doit: ({ departmentName, id }) => {
-      router.push(`/departments/view/${departmentName}/${id}`);
-    },
-  },
-  {
-    name: "Edit",
+    name: "edit",
     icon: "heroicons-outline:pencil-alt",
     doit: (data) => {
       dispatch("updateDepartment", data);
     },
   },
   {
-    name: "Delete",
+    name: "delete",
     icon: "heroicons-outline:trash",
     doit: (data) => {
       detail.value = data;
@@ -263,7 +237,7 @@ function handleSuccess() {
 }
 
 function handleHod(id) {
-  if (!id) return;
+  if (!id) return "n/a";
   const result = membersOptions.value.find((i) => i.value === id);
   return result?.label;
 }

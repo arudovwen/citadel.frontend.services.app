@@ -8,8 +8,8 @@
         <div class="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5 mb-2">
           <Card bodyClass="" v-for="(item, i) in zones" :key="i">
             <div
-              class="p-6 cursor-pointer"
-              @click.self="
+              class="px-6 pt-6 cursor-pointer"
+              @click="
                 () =>
                   router.push(
                     `/cih/zones/view-centers/${item.id}?name=${item.zoneName}`
@@ -17,7 +17,7 @@
               "
             >
               <!-- header -->
-              <header class="flex justify-between items-end">
+              <header class="flex justify-between items-end mb-6">
                 <div class="flex space-x-4 items-center">
                   <div class="flex-none">
                     <div
@@ -32,50 +32,45 @@
                     </div>
                   </div>
                 </div>
-
-                <div
-                  v-if="
-                    state.auth.userData.userRole.toLowerCase() ===
-                      'inspectorate' ||
-                    state.auth.userData.userRole.toLowerCase() ===
-                      'administrator'
-                  "
-                >
-                  <Dropdown classMenuItems=" w-[130px]">
-                    <span
-                      class="text-lg inline-flex flex-col items-center justify-center h-8 w-8 rounded-full bg-gray-500-f7 dark:bg-slate-900 dark:text-slate-400"
-                      ><Icon icon="heroicons-outline:dots-vertical"
-                    /></span>
-                    <template v-slot:menus>
-                      <MenuItem v-for="(menu, i) in filteredActions" :key="i">
-                        <div
-                          @click="menu.doit(item)"
-                          :class="`
-                
-                  ${'hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white'}
-                   w-full border-b border-b-gray-500 border-opacity-10   px-4 py-2 text-sm dark:text-slate-300  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center  capitalize `"
-                        >
-                          <span class="text-base"
-                            ><Icon :icon="menu.icon"
-                          /></span>
-                          <span>{{ menu.name }}</span>
-                        </div>
-                      </MenuItem>
-                    </template>
-                  </Dropdown>
-                </div>
               </header>
-
-              <div class="flex justify-start mt-6">
+              <div
+                class="text-slate-600 dark:text-slate-400 text-xs font-medium mb-2"
+              >
+                <span>Coordinator</span>:
+                <span class="font-medium">{{
+                  handleCoordinator(item.userId)
+                }}</span>
+              </div>
+              <div class="flex justify-start">
                 <div class="text-left">
                   <span
-                    class="inline-flex items-center space-x-1 bg-gray-500 bg-opacity-[0.16] text-gray-500 text-xs font-normal px-2 py-1 rounded-full"
+                    class="inline-flex items-center space-x-1 bg-gray-400 bg-opacity-[0.16] text-gray-500 text-[11px] font-normal px-2 py-1 rounded-full"
                   >
                     <span> <Icon icon="heroicons-outline:user-group" /></span>
                     <span>3 centers</span>
                   </span>
                 </div>
               </div>
+            </div>
+            <div
+              v-if="
+                state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
+                state.auth.userData.userRole.toLowerCase() === 'administrator'
+              "
+              class="flex justify-end px-4 py-2 mt-6 border-t border-gray-200 gap-x-3"
+            >
+              <button
+                @click="actions[0].doit(item)"
+                class="text-xs active:scale-95 px-1 py-1 rounded-full"
+              >
+                Edit
+              </button>
+              <button
+                @click="actions[1].doit(item)"
+                class="text-xs active:scale-95 px-1 py-1 rounded-full"
+              >
+                Delete
+              </button>
             </div>
           </Card>
         </div>
@@ -132,9 +127,9 @@ import EmptyGrid from "@/components/Skeleton/Project-grid.vue";
 import Empty from "@/components/Empty";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
-import Dropdown from "@/components/Dropdown";
+// import Dropdown from "@/components/Dropdown";
 import Icon from "@/components/Icon";
-import { MenuItem } from "@headlessui/vue";
+// import { MenuItem } from "@headlessui/vue";
 import Modal from "@/components/Modal/Modal";
 import { computed, onMounted, ref, watch, inject } from "vue";
 import { useStore } from "vuex";
@@ -143,6 +138,11 @@ import { useToast } from "vue-toastification";
 
 onMounted(() => {
   getZones();
+  dispatch("getAffiliationByMemberQuery", {
+    pageSize: 250000,
+    pageNumber: 1,
+    searchParameter: "",
+  });
 });
 const { dispatch, state } = useStore();
 const router = useRouter();
@@ -153,27 +153,28 @@ const getZonesLoading = computed(() => state.zone.getZonesLoading);
 const deleteZoneSuccess = computed(() => state.zone.deleteZoneSuccess);
 const addZoneSuccess = computed(() => state.zone.addZoneSuccess);
 const updateZoneSuccess = computed(() => state.zone.updateZoneSuccess);
+const membersOptions = computed(() =>
+  state?.member?.data.map((i) => {
+    return {
+      label: `${i.firstName} ${i.surName}`,
+      value: i.userId,
+    };
+  })
+);
 const toast = useToast();
 const modal = ref(null);
 const detail = ref(null);
 const query = inject("query");
 const actions = ref([
   {
-    name: "view",
-    icon: "heroicons:eye",
-    doit: ({ id, zoneName }) => {
-      router.push(`/cih/zones/view-centers/${id}?name=${zoneName}`);
-    },
-  },
-  {
-    name: "Edit",
+    name: "edit",
     icon: "heroicons-outline:pencil-alt",
     doit: (data) => {
       dispatch("openEditModal", data);
     },
   },
   {
-    name: "Delete",
+    name: "delete",
     icon: "heroicons-outline:trash",
     doit: (data) => {
       detail.value = data;
@@ -181,11 +182,7 @@ const actions = ref([
     },
   },
 ]);
-const filteredActions = computed(() =>
-  state.auth.userData.userRole.toLowerCase() === "inspectorate"
-    ? actions.value.filter((i) => i.name !== "view")
-    : actions.value
-);
+
 const options = [
   {
     value: "5",
@@ -235,7 +232,11 @@ watch([addZoneSuccess, updateZoneSuccess], () => {
 
   // getAllZones();
 });
-
+function handleCoordinator(id) {
+  if (!id) return "n/a";
+  const result = membersOptions.value.find((i) => i.value === id);
+  return result?.label;
+}
 // eslint-disable-next-line no-unused-vars
 function handleDelete() {
   dispatch("removeZone", detail.value);
