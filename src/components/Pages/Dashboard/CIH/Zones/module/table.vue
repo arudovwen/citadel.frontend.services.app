@@ -118,9 +118,7 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="
-                        item.doit(item.name, props.row.id, props.row.centerName)
-                      "
+                      @click="item.doit(item.name, props.row)"
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -325,6 +323,7 @@ export default {
       })
     );
     const total = computed(() => state.center.total);
+    const updatesuccess = computed(() => state.center.updateCenterSuccess);
     const addsuccess = computed(() => state.center.addCenterSuccess);
     const deleteloading = computed(() => state.center.deleteCenterLoading);
     const deletesuccess = computed(() => state.center.deleteCenterSuccess);
@@ -355,6 +354,9 @@ export default {
     watch(addsuccess, () => {
       addsuccess.value && dispatch("getAllCenters", query);
       modalChange.value.closeModal();
+    });
+    watch(updatesuccess, () => {
+      updatesuccess.value && dispatch("getAllCenters", query);
     });
 
     watch(deletesuccess, () => {
@@ -455,16 +457,25 @@ export default {
         {
           name: "view members",
           icon: "heroicons-outline:eye",
-          doit: (name, id, centerName) => {
+          doit: (name, { id, centerName }) => {
             this.type = name;
             this.$router.push(`/cih/zones/center/${id}?name=${centerName}`);
+          },
+        },
+        {
+          name: "edit",
+          icon: "heroicons:pencil-square",
+          doit: (name, data) => {
+            this.type = name;
+            this.$refs.modalChange.openModal();
+            this.$store.dispatch("setCenterToUpdate", data);
           },
         },
 
         {
           name: "delete",
           icon: "heroicons-outline:trash",
-          doit: (name, id) => {
+          doit: (name, { id }) => {
             this.type = name;
             this.$refs.modal.openModal();
             this.$store.dispatch("setDeleteId", id);
@@ -543,52 +554,6 @@ export default {
         );
       }
       return value;
-    },
-    generateAction(name, id) {
-      this.id = id;
-
-      const actions = {
-        Approve: {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        Delist: {
-          name: "Delist",
-          icon: "ph:x-light",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        view: {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: () => {
-            this.$router.push("/centers-management/preview/" + id);
-          },
-        },
-        edit: {
-          name: "edit",
-          icon: "heroicons:pencil-square",
-          doit: () => {
-            this.$router.push("/centers-management/edit/" + id);
-          },
-        },
-        delete: {
-          name: "delete",
-          icon: "heroicons-outline:trash",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-      };
-
-      return actions[name] || null;
     },
   },
   computed: {

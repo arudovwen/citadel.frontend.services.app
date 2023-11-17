@@ -377,7 +377,7 @@ const routes = [
                   activeName: "reports",
                   groupParent: {
                     name: "Report Centers",
-                    url: "/reports/centers",
+                    url: "/cih/reports/centers",
                   },
                 },
               },
@@ -390,7 +390,7 @@ const routes = [
                   activeName: "reports",
                   groupParent: {
                     name: "Center Reports",
-                    url: "/reports/centers",
+                    url: "/cih/reports/centers/:zoneId",
                   },
                 },
               },
@@ -403,7 +403,7 @@ const routes = [
                   activeName: "reports",
                   groupParent: {
                     name: "Reports",
-                    url: "/reports/zones",
+                    url: "/cih/reports/zones",
                   },
                 },
               },
