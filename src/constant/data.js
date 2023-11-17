@@ -106,16 +106,29 @@ export const menuItems = [
     child: [
       {
         childtitle: "Zones",
+        for: "",
         childlink: "/cih/zones",
       },
 
       {
         childtitle: "Centers",
+        for: "",
         childlink: "/cih/centers",
       },
       {
+        childtitle: "Center",
+        for: "",
+        childlink: "/cih/center",
+      },
+      {
         childtitle: "Reports",
-        childlink: "/cih/reports",
+        for: "ordinary",
+        childlink: "/cih/reports/centers",
+      },
+      {
+        childtitle: "Reports",
+        for: "admin",
+        childlink: "/cih/reports/zones",
       },
       {
         childtitle: "Events",

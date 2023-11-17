@@ -1,7 +1,5 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <!-- {{ values }}{{ zoneId }} -->
-    {{ initialValue }}
     <Card>
       <div class="flex flex-col gap-y-6">
         <Textinput
@@ -11,30 +9,11 @@
           :error="centerNameError"
           placeholder="Enter a name"
         />
-        <!-- <Select
-          label="Zone"
-          class="min-w-[200px] w-full md:w-auto"
-          v-model.value="zone"
-          :options="zoneOptions"
-          placeholder="Select zone"
-          name="zone"
-          :error="zoneError"
-        /> -->
-
-        <VueSelect
-          label="Zone"
-          class="min-w-[200px] w-full md:w-auto"
-          v-model.value="zone"
-          :options="zoneOptions"
-          placeholder="Select zone"
-          name="zone"
-          :error="zoneIdError"
-        />
 
         <div class="assagin space-y-4">
           <Textarea
-            label="Description"
-            placeholder="Zone description"
+            label="Address"
+            placeholder="Enter center address"
             v-model="description"
             :error="descriptionError"
           />
@@ -42,7 +21,13 @@
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Add center" btnClass="btn-dark w-full" />
+        <Button
+          :isLoading="loading"
+          :disabled="loading"
+          type="submit"
+          text="Add center"
+          btnClass="btn-dark w-full"
+        />
       </div>
     </Card>
   </form>
@@ -50,9 +35,7 @@
 <script setup>
 import { reactive } from "vue";
 import { useField, useForm } from "vee-validate";
-// import Select from "@/components/Select";
-import VueSelect from "@/components/Select/VueSelect";
-
+import { useRoute } from "vue-router";
 import * as yup from "yup";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -61,40 +44,35 @@ import { useStore } from "vuex";
 import { computed, watch, inject } from "vue";
 import { useToast } from "vue-toastification";
 import Textarea from "@/components/Textarea";
-import { ref } from "vue";
+
 const { state, dispatch } = useStore();
+const loading = computed(() => state.center.addCenterLoading);
 const success = computed(() => state.center.addCenterSuccess);
 const toast = useToast();
 const closeModal = inject("closeModal");
-const initialValue = inject("initialValue");
-const zone = ref({
-  id: "",
-  zoneName: "",
-});
-// const zoneId = computed(() => zone.value.id);
+const route = useRoute();
+
 const formData = reactive({
   centerName: "",
-  zoneId: "",
+  zoneId: route.params.zoneId,
   description: "",
 });
 const schema = yup.object().shape({
   centerName: yup.string().required("Name is required"),
-  zoneId: yup.string().required("Select a zone"),
-  description: yup.string().required("Please provide a short description"),
+  description: yup.string().required("Please provide center address"),
 });
 
-const { handleSubmit, values, setValues } = useForm({
+const { handleSubmit } = useForm({
   validationSchema: schema,
   initialValues: formData,
 });
 
 const { value: centerName, errorMessage: centerNameError } =
   useField("centerName");
-const { errorMessage: zoneIdError } = useField("zoneId");
 
 const { value: description, errorMessage: descriptionError } =
   useField("description");
-const zoneOptions = inject("zoneOptions");
+
 const onSubmit = handleSubmit((values) => {
   console.log(values);
   // console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
@@ -103,21 +81,12 @@ const onSubmit = handleSubmit((values) => {
 
 watch(success, () => {
   if (success.value) {
-    toast.success("Successfully Created");
+    toast.success("Center Created");
     dispatch("resetSuccess");
-    dispatch("getAllCenters", initialValue);
     closeModal();
   } else {
     closeModal();
   }
-
-  // getAllZones();
-});
-watch(zone, (newValue) => {
-  setValues({
-    ...values,
-    zoneId: newValue.zoneId,
-  });
 });
 </script>
 <style lang=""></style>

@@ -22,6 +22,13 @@ function guardAuth(to, from, next) {
 }
 const routes = [
   {
+    path: "/roles",
+    name: "Roles",
+    component: () => import("@/views/roles/index.vue"),
+    meta: { auth: true },
+    beforeEnter: guardAuth,
+  },
+  {
     path: "/",
     name: "Login",
     component: () => import("@/views/auth/login/index.vue"),
@@ -223,6 +230,7 @@ const routes = [
             component: () => import("@/components/Pages/Dashboard/CIH/Zones"),
             meta: {
               activeName: "cih management",
+              roles: ["administrator", "inspectorate"],
             },
             children: [
               {
@@ -244,7 +252,7 @@ const routes = [
                     name: "CIH Zones",
                     url: "/cih/zones",
                   },
-                  roles: ["administrator", "inspectorate", "coordinator"],
+                  // roles: ["administrator", "inspectorate", "coordinator"],
                 },
               },
               {
@@ -261,7 +269,19 @@ const routes = [
                     name: "CIH Zones",
                     url: "/cih/zones",
                   },
-                  roles: ["administrator", "inspectorate", "coordinator"],
+                },
+              },
+              {
+                path: "center/:id",
+                name: "CIH Zone Center",
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Centers/center"),
+                meta: {
+                  activeName: "cih management",
+                  groupParent: {
+                    name: "CIH Zones",
+                    url: "/cih/zones",
+                  },
                 },
               },
             ],
@@ -273,6 +293,12 @@ const routes = [
             component: () => import("@/components/Pages/Dashboard/CIH/Centers"),
             meta: {
               activeName: "cih management",
+              roles: [
+                "administrator",
+                "inspectorate",
+                "cihcoordinator",
+                "cihpastor",
+              ],
             },
             children: [
               {
@@ -282,7 +308,12 @@ const routes = [
                   import("@/components/Pages/Dashboard/CIH/Centers/centers"),
                 meta: {
                   activeName: "cih management",
-                  roles: ["administrator", "inspectorate", "pastor"],
+                  roles: [
+                    "administrator",
+                    "inspectorate",
+                    "cihcoordinator",
+                    "cihpastor",
+                  ],
                 },
               },
               {
@@ -292,7 +323,6 @@ const routes = [
                   import("@/components/Pages/Dashboard/CIH/Centers/centers"),
                 meta: {
                   activeName: "cih management",
-                  roles: ["administrator", "inspectorate", "pastor"],
                 },
               },
               {
@@ -302,7 +332,7 @@ const routes = [
                   import("@/components/Pages/Dashboard/CIH/Centers/center"),
                 meta: {
                   activeName: "cih management",
-                  roles: ["administrator", "inspectorate", "pastor"],
+
                   groupParent: {
                     name: "CIH Centers",
                     url: "/cih/centers",
@@ -312,13 +342,72 @@ const routes = [
             ],
           },
           {
-            path: "reports",
-            name: "CIH Reports",
-            component: () => import("@/components/Pages/Dashboard/CIH/Reports"),
+            path: "center",
+            name: "Center",
+            component: () =>
+              import("@/components/Pages/Dashboard/CIH/Centers/center"),
             meta: {
               activeName: "cih management",
-              roles: ["administrator", "inspectorate", "report"],
+              groupParent: {
+                name: "Center",
+                url: "/cih/center",
+              },
             },
+          },
+          {
+            path: "reports",
+            name: "CIH Reports",
+            component: () => import("@/views/dashboard/cih/reports"),
+            meta: {
+              activeName: "cih management",
+              roles: [
+                "administrator",
+                "inspectorate",
+                "cihcoordinator",
+                "cihpastor",
+              ],
+            },
+            children: [
+              {
+                path: "centers",
+                name: "Report",
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Reports/centers"),
+                meta: {
+                  activeName: "reports",
+                  groupParent: {
+                    name: "Report Centers",
+                    url: "/reports/centers",
+                  },
+                },
+              },
+              {
+                path: "centers/:zoneId",
+                name: "Reports",
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Reports/centers"),
+                meta: {
+                  activeName: "reports",
+                  groupParent: {
+                    name: "Center Reports",
+                    url: "/reports/centers",
+                  },
+                },
+              },
+              {
+                path: "zones",
+                name: "Zones Report",
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Reports/zones"),
+                meta: {
+                  activeName: "reports",
+                  groupParent: {
+                    name: "Reports",
+                    url: "/reports/zones",
+                  },
+                },
+              },
+            ],
           },
           {
             path: "events",

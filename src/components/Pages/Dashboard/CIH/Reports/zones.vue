@@ -9,10 +9,10 @@
           <Card bodyClass="" v-for="(item, i) in zones" :key="i">
             <div
               class="p-6 cursor-pointer"
-              @click.self="
+              @click="
                 () =>
                   router.push(
-                    `/cih/zones/view-centers/${item.id}?name=${item.zoneName}`
+                    `/cih/reports/centers/${item.id}?name=${item.zoneName}`
                   )
               "
             >
@@ -31,38 +31,6 @@
                       {{ item.zoneName }}
                     </div>
                   </div>
-                </div>
-
-                <div
-                  v-if="
-                    state.auth.userData.userRole.toLowerCase() ===
-                      'inspectorate' ||
-                    state.auth.userData.userRole.toLowerCase() ===
-                      'administrator'
-                  "
-                >
-                  <Dropdown classMenuItems=" w-[130px]">
-                    <span
-                      class="text-lg inline-flex flex-col items-center justify-center h-8 w-8 rounded-full bg-gray-500-f7 dark:bg-slate-900 dark:text-slate-400"
-                      ><Icon icon="heroicons-outline:dots-vertical"
-                    /></span>
-                    <template v-slot:menus>
-                      <MenuItem v-for="(menu, i) in filteredActions" :key="i">
-                        <div
-                          @click="menu.doit(item)"
-                          :class="`
-                
-                  ${'hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white'}
-                   w-full border-b border-b-gray-500 border-opacity-10   px-4 py-2 text-sm dark:text-slate-300  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center  capitalize `"
-                        >
-                          <span class="text-base"
-                            ><Icon :icon="menu.icon"
-                          /></span>
-                          <span>{{ menu.name }}</span>
-                        </div>
-                      </MenuItem>
-                    </template>
-                  </Dropdown>
                 </div>
               </header>
 
@@ -98,45 +66,14 @@
       <Empty v-else />
     </div>
   </div>
-  <Modal
-    title="Delete Zone"
-    label="Small modal"
-    labelClass="btn-outline-danger"
-    ref="modal"
-    sizeClass="max-w-md"
-    themeClass="bg-danger-500"
-  >
-    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to delete this zone?
-    </div>
-
-    <template v-slot:footer>
-      <div class="flex gap-x-5">
-        <Button
-          text="Cancel"
-          btnClass="btn-outline-secondary btn-sm"
-          @click="$refs.modal.closeModal()"
-        />
-        <Button
-          text="Delete"
-          btnClass="btn-danger btn-sm"
-          @click="deleteZone"
-        />
-      </div>
-    </template>
-  </Modal>
 </template>
 <script setup>
 import Pagination from "@/components/Pagination";
 import EmptyGrid from "@/components/Skeleton/Project-grid.vue";
 import Empty from "@/components/Empty";
-import Button from "@/components/Button";
 import Card from "@/components/Card";
-import Dropdown from "@/components/Dropdown";
 import Icon from "@/components/Icon";
-import { MenuItem } from "@headlessui/vue";
-import Modal from "@/components/Modal/Modal";
-import { computed, onMounted, ref, watch, inject } from "vue";
+import { computed, onMounted, ref, watch, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
@@ -156,36 +93,13 @@ const updateZoneSuccess = computed(() => state.zone.updateZoneSuccess);
 const toast = useToast();
 const modal = ref(null);
 const detail = ref(null);
-const query = inject("query");
-const actions = ref([
-  {
-    name: "view",
-    icon: "heroicons:eye",
-    doit: ({ id, zoneName }) => {
-      router.push(`/cih/zones/view-centers/${id}?name=${zoneName}`);
-    },
-  },
-  {
-    name: "Edit",
-    icon: "heroicons-outline:pencil-alt",
-    doit: (data) => {
-      dispatch("openEditModal", data);
-    },
-  },
-  {
-    name: "Delete",
-    icon: "heroicons-outline:trash",
-    doit: (data) => {
-      detail.value = data;
-      modal.value.openModal();
-    },
-  },
-]);
-const filteredActions = computed(() =>
-  state.auth.userData.userRole.toLowerCase() === "inspectorate"
-    ? actions.value.filter((i) => i.name !== "view")
-    : actions.value
-);
+const query = reactive({
+  pageNumber: 1,
+  pageSize: 25,
+  sortOrder: null,
+  searchParameter: null,
+});
+
 const options = [
   {
     value: "5",
@@ -212,9 +126,6 @@ const getZones = () => {
   dispatch("getZones", query);
 };
 
-const deleteZone = () => {
-  dispatch("deleteZone", detail.value.id);
-};
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
   query.pageSize = currentPerPage;

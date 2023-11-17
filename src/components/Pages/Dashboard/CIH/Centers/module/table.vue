@@ -14,33 +14,31 @@
             classInput="min-w-[220px] !h-9"
           />
 
-          <VueSelect
+          <!-- <VueSelect
+            v-if="
+              state.auth.userData.userRole.toLowerCase() === 'administrator' ||
+              state.auth.userData.userRole.toLowerCase() === 'inspectorate'
+            "
             class="min-w-[200px] w-full md:w-auto !h-9"
             v-model.value="zoneObj"
             :options="zoneOptions"
             placeholder="Select zone"
             name="zone"
-          />
+          /> -->
         </div>
         <div
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
-          <Button
-            v-if="
-              state.auth.userData.userRole.toLowerCase() === 'administrator'
-            "
-            icon="mdi:house-group-add"
-            text="Add center"
-            btnClass=" btn-primary font-normal btn-sm "
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                $refs.modalChange.openModal();
-              }
-            "
-          />
+          <router-link
+            :to="`/cih/centers/center/${route.params.zoneId}?name=${route.query.name}`"
+          >
+            <Button
+              text="View all members in this zone"
+              btnClass=" btn-dark font-normal btn-sm "
+              iconClass="text-lg"
+            />
+          </router-link>
         </div>
       </div>
       <div class="-mx-6">
@@ -112,7 +110,7 @@
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in actions" :key="i">
+                  <MenuItem v-for="(item, i) in filteredActions" :key="i">
                     <div
                       @click="item.doit(item.name, props.row)"
                       :class="{
@@ -120,10 +118,6 @@
                           item.name === 'delete',
                         'hover:bg-slate-900 hover:text-white':
                           item.name !== 'delete',
-                        'hover:bg-slate-900 hidden':
-                          state.auth.userData.userRole.toLowerCase() !==
-                            'administrator' &&
-                          item.name.toLowerCase() !== 'view',
                       }"
                       class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
                     >
@@ -135,16 +129,6 @@
                   </MenuItem>
                 </template>
               </Dropdown>
-
-              <!-- state.auth.userData.userRole.toLowerCase() === 'administrator' -->
-              <!-- <div
-                      :class="[
-                        state.auth.userData.userRole.toLowerCase() ===
-                          'administrator' && item.name.toLowerCase() !== 'view'
-                          ? ''
-                          : '',
-                      ]"
-                    > -->
             </span>
           </template>
           <template #pagination-bottom>
@@ -257,9 +241,10 @@
   </Modal>
 </template>
 <script>
-import VueSelect from "@/components/Select/VueSelect";
+// import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
+import { useRoute } from "vue-router";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
@@ -291,7 +276,7 @@ export default {
   components: {
     AddRecord,
     EditRecord,
-    VueSelect,
+    // VueSelect,
     Pagination,
     InputGroup,
     Modal,
@@ -305,12 +290,7 @@ export default {
   },
 
   setup() {
-    // onMounted(() => {
-    //   dispatch("getAllCenters", query);
-    //   dispatch("getZones");
-    //   id.value = getCurrentInstance().data.id;
-    // });
-
+    const route = useRoute();
     onMounted(() => {
       dispatch("getAllCenters", query);
       dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
@@ -329,16 +309,13 @@ export default {
     });
     const zone = ref("");
 
-    const initialValue = {
+    // const zoneId = computed(() => zone.value.zoneId);
+    const query = reactive({
       pageNumber: 1,
       pageSize: 25,
       name: "",
       searchParameter: "",
       zoneId: "",
-    };
-    // const zoneId = computed(() => zone.value.zoneId);
-    const query = reactive({
-      ...initialValue,
     });
 
     const id = ref(null);
@@ -442,11 +419,10 @@ export default {
     );
     provide("closeModal", closeModal);
     provide("zoneOptions", zoneOptions);
-    provide("initialValue", initialValue);
     provide("query", query);
 
     return {
-      // zoneId,
+      route,
       state,
       zone,
       zoneObj,
@@ -491,52 +467,14 @@ export default {
           label: "Center 2",
         },
       ],
-      // provide: {
-      //   // Provide a method
-      //   closeModal: () => this.$refs.Modal.closeModal(),
-      // },
+
       actions: [
-        // {
-        //   name: "approve",
-        //   icon: "ph:check",
-        //   doit: (name) => {
-        //     this.type = name;
-        //     this.$refs.modalStatus.openModal();
-        //   },
-        // },
-        // {
-        //   name: "delist",
-        //   icon: "ph:x-light",
-        //   doit: (name) => {
-        //     this.type = name;
-        //     this.$refs.modalStatus.openModal();
-        //   },
-        // },
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: (name, { id }) => {
+          doit: (name, { id, centerName }) => {
             this.type = name;
-            this.$router.push(`/cih/centers/center/${id}`);
-          },
-        },
-        {
-          name: "edit",
-          icon: "heroicons:pencil-square",
-          doit: (name, data) => {
-            this.type = name;
-            this.$refs.modalChange.openModal();
-            this.$store.dispatch("setCenterToUpdate", data);
-          },
-        },
-
-        {
-          name: "delete",
-          icon: "heroicons-outline:trash",
-          doit: (name, { id }) => {
-            this.type = name;
-            this.$refs.modal.openModal();
-            this.$store.dispatch("setDeleteId", id);
+            this.$router.push(`/cih/centers/center/${id}?name=${centerName}`);
           },
         },
       ],
@@ -617,60 +555,15 @@ export default {
       }
       return value;
     },
-    generateAction(name, id) {
-      this.id = id;
-
-      const actions = {
-        Approve: {
-          name: "Approve",
-          icon: "ph:check",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        Delist: {
-          name: "Delist",
-          icon: "ph:x-light",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-        view: {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: () => {
-            this.$router.push("/centers-management/preview/" + id);
-          },
-        },
-        edit: {
-          name: "edit",
-          icon: "heroicons:pencil-square",
-          doit: () => {
-            this.$router.push("/centers-management/edit/" + id);
-          },
-        },
-        delete: {
-          name: "delete",
-          icon: "heroicons-outline:trash",
-          doit: () => {
-            this.type = name;
-            this.$refs.modal.openModal();
-          },
-        },
-      };
-
-      return actions[name] || null;
-    },
   },
   computed: {
     filteredActions() {
-      return this.activeFilter === "all"
+      return this.$store.state.auth.userData.userRole !== "administrator" &&
+        this.$store.state.auth.userData.userRole !== "inspectorate"
         ? this.actions.filter(
             (i) =>
-              i.name.toLowerCase() !== "approve" &&
-              i.name.toLowerCase() !== "delist"
+              i.name.toLowerCase() !== "edit" &&
+              i.name.toLowerCase() !== "delete"
           )
         : this.actions;
     },

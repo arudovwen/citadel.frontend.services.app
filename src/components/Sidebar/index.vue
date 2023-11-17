@@ -111,11 +111,55 @@ export default defineComponent({
     const shadowbase = ref(false);
     const simplebarInstance = ref(null);
     const menuLink = computed(() => {
-      const newItems = menuItems
+      // eslint-disable-next-line no-unused-vars
+      let newItems;
+      const filteredItems = menuItems
         .slice(1)
         .filter((i) =>
           i.roles.includes(state.auth.userData.userRole.toLowerCase())
         );
+      if (
+        state.auth.userData.userRole.toLowerCase() === "administrator" ||
+        state.auth.userData.userRole.toLowerCase() === "inspectorate"
+      ) {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.child.filter(
+              (j) =>
+                j.childtitle.toLowerCase() !== "centers" &&
+                j.childtitle.toLowerCase() !== "center" &&
+                j.for?.toLowerCase() !== "ordinary"
+            );
+          }
+          return i;
+        });
+      }
+      if (state.auth.userData.userRole.toLowerCase() === "cihcoordinator") {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.child.filter(
+              (j) =>
+                j.childtitle.toLowerCase() !== "zones" &&
+                j.childtitle.toLowerCase() !== "center" &&
+                j.for?.toLowerCase() !== "admin"
+            );
+          }
+          return i;
+        });
+      }
+      if (state.auth.userData.userRole.toLowerCase() === "cihpastor") {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.child.filter(
+              (j) =>
+                j.childtitle.toLowerCase() !== "zones" &&
+                j.childtitle.toLowerCase() !== "centers" &&
+                j.for?.toLowerCase() !== "admin"
+            );
+          }
+          return i;
+        });
+      }
       return [menuItems[0], ...newItems];
     });
     onMounted(() => {

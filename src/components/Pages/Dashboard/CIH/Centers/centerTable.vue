@@ -2,54 +2,15 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div
-          class="flex md:mb-0 mb-3 border border-gray-200 rounded-[6px] text-sm overflow-hidden"
-        ></div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
+        <div class="">
           <InputGroup
-            v-model="searchParameter"
+            v-model="query.searchParameter"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
             merged
             classInput="min-w-[220px] !h-9"
           />
-
-          <!-- <VueTailwindDatePicker
-            v-model="dateValue"
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="Select date"
-            as-single
-          /> -->
-
-          <!-- <Button
-            icon="ri:user-add-line"
-            text="Add Member"
-            btnClass=" btn-primary font-normal btn-sm "
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                $refs.modalChange.openModal();
-              }
-            "
-          /> -->
-          <!-- <Button
-            icon="heroicons-outline:plus-sm"
-            text="Assign role"
-            btnClass=" btn-dark font-normal btn-sm "
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'assign';
-                $refs.modalChange.openModal();
-              }
-            "
-          /> -->
         </div>
       </div>
       <div class="-mx-6">

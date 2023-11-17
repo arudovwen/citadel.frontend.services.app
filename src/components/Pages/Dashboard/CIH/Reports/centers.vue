@@ -17,7 +17,7 @@
             input-classes="form-control h-[36px]"
             placeholder="Select date range"
           />
-          <VueSelect
+          <!-- <VueSelect
             class="min-w-[250px] w-full md:w-auto"
             v-model="zone"
             :options="membersOptions"
@@ -30,13 +30,14 @@
             :options="membersOptions"
             placeholder="Select a center"
             name="center"
-          />
+          /> -->
         </div>
         <div
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
+            v-if="state.auth.userData.userRole.toLowerCase() === 'cih pastor'"
             icon="heroicons-outline:plus-sm"
             text="Add Report"
             btnClass=" btn-primary font-normal btn-sm "
@@ -221,6 +222,7 @@
   </Modal>
 </template>
 <script>
+import { useStore } from "vuex";
 import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
@@ -251,6 +253,7 @@ export default {
     Card,
     MenuItem,
     Button,
+    // eslint-disable-next-line vue/no-unused-components
     VueSelect,
     VueTailwindDatePicker,
   },
@@ -386,6 +389,13 @@ export default {
 
       return actions[name] || null;
     },
+  },
+  setup() {
+    const { state } = useStore();
+
+    return {
+      state,
+    };
   },
 };
 </script>

@@ -30,6 +30,15 @@
           <Icon icon="heroicons:chevron-right" />
         </span>
       </li>
+      <li class="text-slate-800" v-if="this.$route.query.name">
+        <button type="button" class="capitalize">
+          {{ this.$route.query.name }}
+        </button>
+
+        <span class="breadcrumbs-icon">
+          <Icon icon="heroicons:chevron-right" />
+        </span>
+      </li>
       <li class="capitalize text-slate-500 dark:text-slate-400">
         {{
           this.$route.params.name

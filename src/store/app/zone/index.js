@@ -174,7 +174,7 @@ export default {
       try {
         commit("getZonesBegin");
         const response = await DataService.get(
-          `${urls.GET_ALL_ZONES}??${new URLSearchParams(cleanObject(data))}`
+          `${urls.GET_ALL_ZONES}?${new URLSearchParams(cleanObject(data))}`
         );
 
         if (response.status === 200) {

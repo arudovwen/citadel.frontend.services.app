@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import Reports from "./table";
+import Reports from "./centers";
 export default {
   components: {
     Reports,

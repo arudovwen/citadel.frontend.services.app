@@ -13,20 +13,33 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
-          <!-- 
-          <VueSelect
-            class="min-w-[200px] w-full md:w-auto h-9"
-            v-model.value="zoneObj"
-            :options="zoneOptions"
-            placeholder="Select zone"
-            name="zone"
-          /> -->
+          <Select
+            label=""
+            :options="filters"
+            v-model="query.sortOrder"
+            placeholder="Sort by"
+            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
+          />
         </div>
         <div
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
-          <router-link :to="`/cih/zones/zone-members/${route.params.id}`">
+          <Button
+            icon="mdi:house-group-add"
+            text="Add center"
+            btnClass=" btn-primary font-normal btn-sm "
+            iconClass="text-lg"
+            @click="
+              () => {
+                type = 'add';
+                $refs.modalChange.openModal();
+              }
+            "
+          />
+          <router-link
+            :to="`/cih/zones/zone-members/${route.params.zoneId}?name=${route.query.name}`"
+          >
             <Button
               text="View all members in this zone"
               btnClass=" btn-dark font-normal btn-sm "
@@ -105,7 +118,9 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="item.doit(item.name, props.row.id)"
+                      @click="
+                        item.doit(item.name, props.row.id, props.row.centerName)
+                      "
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -159,46 +174,6 @@
       </div>
     </template>
   </Modal>
-  <Modal
-    title="Confirm action"
-    label="Small modal"
-    labelClass="btn-outline-dark"
-    ref="modalStatus"
-    sizeClass="max-w-md"
-    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
-  >
-    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to {{ type.toLowerCase() }} this center?
-    </div>
-    <div v-if="type.toLowerCase() === 'delist'">
-      <textarea
-        resize="none"
-        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
-        rows="4"
-        placeholder="Provide reason"
-        v-model="reason"
-      ></textarea>
-    </div>
-    <template v-slot:footer>
-      <div class="flex gap-x-5">
-        <Button
-          :disabled="deleteloading"
-          text="Cancel"
-          btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modalStatus.closeModal()"
-        />
-        <Button
-          :disabled="deleteloading"
-          :isLoading="deleteloading"
-          text="Proceed"
-          :btnClass="` btn-sm ${
-            type === 'approve' ? 'btn-success' : 'btn-danger'
-          }`"
-          @click="handleStatus"
-        />
-      </div>
-    </template>
-  </Modal>
 
   <Modal
     :title="
@@ -223,7 +198,7 @@ import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
-// import Pagination from "@/components/Pagination";
+import Select from "@/components/Select";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
@@ -251,8 +226,7 @@ export default {
   components: {
     AddRecord,
     EditRecord,
-    // VueSelect,
-    // Pagination,
+    Select,
     InputGroup,
     Modal,
     Dropdown,
@@ -265,12 +239,23 @@ export default {
   },
 
   setup() {
-    // onMounted(() => {
-    //   dispatch("getAllCenters", query);
-    //   dispatch("getZones");
-    //   id.value = getCurrentInstance().data.id;
-    // });
     const route = useRoute();
+    const filters = [
+      {
+        label: "Default",
+        value: "",
+      },
+
+      {
+        label: "Name",
+        value: "centerName",
+      },
+
+      {
+        label: "Location",
+        value: "description",
+      },
+    ];
     onMounted(() => {
       dispatch("getAllCenters", query);
       dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
@@ -302,6 +287,7 @@ export default {
       name: "",
       searchParameter: "",
       zoneId: route.params.zoneId,
+      sortOrder: "",
     };
     // const zoneId = computed(() => zone.value.zoneId);
     const query = reactive({
@@ -327,7 +313,7 @@ export default {
     const centers = computed(() =>
       state.center.centers.map((i) => {
         i.createdAt = moment(i.createdAt).format("ll");
-        i.location = i.location ? i.location : "-";
+        i.location = i.description ? i.description : "-";
         i.zone = zoneOptions?.value?.find(
           (b) => b?.zoneId === i?.zoneId
         )?.label;
@@ -339,9 +325,9 @@ export default {
       })
     );
     const total = computed(() => state.center.total);
-    const addsuccess = computed(() => state.center.addsuccess);
-    const deleteloading = computed(() => state.center.deleteloading);
-    const deletesuccess = computed(() => state.center.deletesuccess);
+    const addsuccess = computed(() => state.center.addCenterSuccess);
+    const deleteloading = computed(() => state.center.deleteCenterLoading);
+    const deletesuccess = computed(() => state.center.deleteCenterSuccess);
 
     provide("closeModal", closeModal);
     // eslint-disable-next-line no-unused-vars
@@ -385,7 +371,7 @@ export default {
       }
     );
     watch(
-      () => [query.pageNumber, query.pageSize],
+      () => [query.pageNumber, query.pageSize, query.sortOrder],
       () => {
         dispatch("getAllCenters", query);
       }
@@ -419,6 +405,7 @@ export default {
       perPage,
       deleteloading,
       handleDelete,
+      filters,
     };
   },
 
@@ -432,7 +419,6 @@ export default {
       type: "",
       id: null,
       reason: "",
-      filters: ["all", "pending"],
       activeFilter: "all",
       dateValue: null,
       formatter: {
@@ -469,9 +455,9 @@ export default {
         {
           name: "view members",
           icon: "heroicons-outline:eye",
-          doit: (name, id) => {
+          doit: (name, id, centerName) => {
             this.type = name;
-            this.$router.push(`/cih/centers/center/${id}`);
+            this.$router.push(`/cih/zones/center/${id}?name=${centerName}`);
           },
         },
 
