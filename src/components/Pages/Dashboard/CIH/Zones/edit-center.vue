@@ -74,6 +74,7 @@ const onSubmit = handleSubmit((values) => {
   console.log("🚀 ~ file: edit-center.vue:74 ~ onSubmit ~ values:", values);
   dispatch("updateCenter", {
     id: values.id,
+    zoneId: values.zoneId,
     centerName: values.centerName,
     description: values.description,
   });
