@@ -353,7 +353,7 @@ const prepareDetails = (values, type) => {
     cihRole: values.cihRole,
     mountainOfInfluence: values.mountainOfInfluence,
     affinityGroup: values.affinityGroup,
-    department: values.department,
+    department: values.department ? values.department : "",
     cihAddress: values.cihAddress,
   };
   const createObj = {
@@ -368,7 +368,7 @@ const prepareDetails = (values, type) => {
     cihRole: values.cihRole,
     mountainOfInfluence: values.mountainOfInfluence,
     affinityGroup: values.affinityGroup,
-    department: values.department,
+    department: values.department ? values.department : "",
     cihAddress: values.cihAddress,
   };
   const obj = type == "create" ? createObj : updateObj;
