@@ -137,6 +137,13 @@ export const menuItems = [
     ],
   },
   {
+    title: "Ministries",
+    icon: "heroicons-outline:building-library",
+    link: "/ministries",
+    roles: ["administrator"],
+  },
+
+  {
     title: "Requests",
     icon: "fluent-mdl2:message-friend-request",
     link: "/requests/zone",
