@@ -19,6 +19,7 @@ import apptodo from "./app/todo";
 import auth from "./app/auth";
 import profile from "./app/profile";
 import request from "./app/request";
+import report from "./app/report";
 import affinityGroup from "./app/affinityGroup";
 
 export default createStore({
@@ -115,5 +116,6 @@ export default createStore({
     affinityGroup,
     auth,
     request,
+    report,
   },
 });

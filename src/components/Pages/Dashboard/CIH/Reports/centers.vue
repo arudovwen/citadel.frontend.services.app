@@ -68,7 +68,26 @@
             enabled: true,
             externalQuery: searchParameter,
           }"
+          :select-options="{
+            enabled:
+              state.auth.userData.userRole.toLowerCase() === 'cihcooordinator',
+            selectionInfoClass: 'top-select',
+            selectionText:
+              'reports selected, Do you wish to send these reports?',
+            selectOnCheckboxOnly: true,
+            clearSelectionText: 'Clear selection',
+          }"
         >
+          <template #selected-row-actions>
+            <button
+              :disabled="loading"
+              :isLoading="loading"
+              @click="handleReports"
+              class="text-[#232322] font-medium"
+            >
+              Send reports
+            </button>
+          </template>
           <template v-slot:table-row="props">
             <span
               v-if="props.column.field == 'customer'"
@@ -152,7 +171,7 @@
           <template #pagination-bottom="props">
             <div class="py-4 px-3">
               <Pagination
-                :total="50"
+                :total="0"
                 :current="current"
                 :per-page="perpage"
                 :pageRange="pageRange"
@@ -223,6 +242,7 @@
 </template>
 <script>
 import { useStore } from "vuex";
+import { computed } from "vue";
 import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
@@ -392,9 +412,17 @@ export default {
   },
   setup() {
     const { state } = useStore();
+    const loading = computed(() => state.report.loading);
 
+    function handleReports() {
+      console.log(
+        "🚀 ~ file: centers.vue:415 ~ handleReports ~ handleReports:"
+      );
+    }
     return {
       state,
+      handleReports,
+      loading,
     };
   },
 };
