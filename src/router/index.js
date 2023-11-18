@@ -410,7 +410,7 @@ const routes = [
                   activeName: "reports",
                   groupParent: {
                     name: "Center Reports",
-                    url: "/cih/reports/centers/:zoneId",
+                    url: "/cih/reports",
                   },
                 },
               },
@@ -431,7 +431,7 @@ const routes = [
           },
           {
             path: "events",
-            name: "CIH Events",
+            name: "Events",
             component: () => import("@/components/Pages/Dashboard/CIH/Events"),
             meta: {
               activeName: "cih management",
@@ -567,24 +567,24 @@ const routes = [
           roles: ["administrator", "hod", "inspectorate"],
         },
       },
-      {
-        path: "/events",
-        name: "events",
-        component: () => import("@/views/dashboard/events/index.vue"),
-        children: [
-          {
-            path: "",
-            name: "events",
-            component: () => import("@/components/Pages/Dashboard/Events"),
-            meta: {
-              activeName: "events",
-            },
-          },
-        ],
-        meta: {
-          roles: ["administrator", "inspectorate"],
-        },
-      },
+      // {
+      //   path: "/events",
+      //   name: "events",
+      //   component: () => import("@/views/dashboard/events/index.vue"),
+      //   children: [
+      //     {
+      //       path: "",
+      //       name: "events",
+      //       component: () => import("@/components/Pages/Dashboard/Events"),
+      //       meta: {
+      //         activeName: "events",
+      //       },
+      //     },
+      //   ],
+      //   meta: {
+      //     roles: ["administrator", "inspectorate"],
+      //   },
+      // },
       {
         path: "/notifications",
         name: "notifications",

@@ -158,7 +158,7 @@
           <template #pagination-bottom="props">
             <div class="py-4 px-3">
               <Pagination
-                :total="50"
+                :total="0"
                 :current="current"
                 :per-page="perpage"
                 :pageRange="pageRange"

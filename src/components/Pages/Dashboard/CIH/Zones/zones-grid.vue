@@ -154,7 +154,7 @@ const deleteZoneSuccess = computed(() => state.zone.deleteZoneSuccess);
 const addZoneSuccess = computed(() => state.zone.addZoneSuccess);
 const updateZoneSuccess = computed(() => state.zone.updateZoneSuccess);
 const membersOptions = computed(() =>
-  state?.member?.data.map((i) => {
+  state?.member?.data?.map((i) => {
     return {
       label: `${i.firstName} ${i.surName}`,
       value: i.userId,
@@ -234,7 +234,7 @@ watch([addZoneSuccess, updateZoneSuccess], () => {
 });
 function handleCoordinator(id) {
   if (!id) return "n/a";
-  const result = membersOptions.value.find((i) => i.value === id);
+  const result = membersOptions?.value?.find((i) => i.value === id);
   return result?.label;
 }
 // eslint-disable-next-line no-unused-vars
