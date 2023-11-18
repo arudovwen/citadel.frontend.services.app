@@ -14,7 +14,7 @@
           <ProfileAvatar :avatar="avatar" />
           <div class="flex-1">
             <div
-              class="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]"
+              class="capitalize text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]"
             >
               {{ profileData?.fullName }}
             </div>
