@@ -11,8 +11,10 @@
     <span>{{  }}</span> -->
     <!-- <span>UserData: {{ profileData.phoneNumber }}</span> -->
     <!-- <span>FormVal: {{ formValues }}</span> -->
-    <!-- {{ values }}
-    {{ values.country }}{{ values.state }} -->
+    <!-- {{ values }} -->
+    <!-- <span
+      >Country: {{ values?.country?.value?.toLowerCase() == "nigeria" }}</span
+    > -->
     <!-- {{ canEditDetails }} -->
     <ProfileInputSkeleton
       v-if="(!biodata && biodataLoading) || isShowing == false"
@@ -161,34 +163,11 @@
         />
       </FormGroup>
 
-      <!-- <Select
-        label="Country"
-        :options="countriesOption"
-        v-model.value="country"
-        :modelValue="country"
-        :error="countryError"
-        classInput="!h-[40px]"
-      />
-
-      <Select
-        label="State"
-        :options="statesOption"
-        v-model.value="state"
-        :modelValue="state"
-        :error="stateError"
-        classInput="!h-[40px]"
-      /> -->
-
-      <!-- <Select
+      <FormGroup
+        v-if="values?.country?.value?.toLowerCase() == 'nigeria'"
         label="LGA"
-        :options="lgaOption"
-        v-model.value="lga"
-        :modelValue="lga"
         :error="lgaError"
-        classInput="!h-[40px]"
-      /> -->
-
-      <FormGroup label="LGA" :error="lgaError">
+      >
         <VueSelect
           class="w-full"
           v-model.value="lga"
