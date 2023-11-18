@@ -6,6 +6,8 @@ import ProfileIndex from "@/views/dashboard/profile/index.vue";
 import VenuesIndex from "@/views/dashboard/venues/index.vue";
 import AppointmentsIndex from "@/views/dashboard/appointments/index.vue";
 import AffinityGroupsIndex from "@/views/dashboard/affinityGroups/index.vue";
+import MinistriesIndex from "@/views/dashboard/ministries/index.vue";
+
 import "vue-toastification/dist/index.css";
 
 const toast = useToast();
@@ -157,6 +159,24 @@ const routes = [
               import("@/components/Pages/Dashboard/AffinityGroups"),
             meta: {
               activeName: "affinity-groups",
+            },
+          },
+        ],
+      },
+      {
+        path: "/ministries",
+        name: "ministries",
+        component: MinistriesIndex,
+        meta: {
+          roles: ["administrator"],
+        },
+        children: [
+          {
+            path: "",
+            name: "ministries",
+            component: () => import("@/components/Pages/Dashboard/Ministries"),
+            meta: {
+              activeName: "ministries",
             },
           },
         ],
