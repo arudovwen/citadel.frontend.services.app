@@ -1,5 +1,5 @@
 <template>
-  <Card>
+  <div>
     <form @submit.prevent="onSubmit" class="space-y-4 max-w-[700px]">
       <div class="grid grid-cols-1 gap-4">
         <Textinput
@@ -81,6 +81,14 @@
           :error="descriptionError"
           classInput="h-[40px]"
         />
+        <!-- <Select
+        label="Title"
+        :options="titleMenu"
+        v-model.value="title"
+        :modelValue="title"
+        :error="titleError"
+        classInput="!h-[40px]"
+      /> -->
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
@@ -90,13 +98,12 @@
         </button>
       </div>
     </form>
-  </Card>
+  </div>
 </template>
 
 <script setup>
 import Icon from "@/components/Icon";
 
-import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
 import Textarea from "@/components/Textarea";
 import { useField, useForm } from "vee-validate";
