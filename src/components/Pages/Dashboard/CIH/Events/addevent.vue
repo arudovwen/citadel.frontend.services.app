@@ -3,24 +3,27 @@
     <Card title="">
       <div class="grid gap-5">
         <div class="">
-          <Textinput
-            label="Requester Name"
-            v-model="name"
-            :error="nameError"
-            placeholder="Provide name for outreach"
-          />
+          <FormGroup label="Requester Name" name="type" :error="nameError">
+            <VueSelect
+              class="min-w-[200px] w-full md:w-auto"
+              v-model="name"
+              :options="membersOptions"
+              placeholder="Select requester"
+              name="name"
+            />
+          </FormGroup>
         </div>
-        <FormGroup label="Event type" name="date" :error="typeError">
+        <FormGroup label="Event type" name="type" :error="requestTypeError">
           <Select
             placeholder="Select type"
-            v-model="type"
+            v-model="requestType"
             :options="eventsOption"
           />
         </FormGroup>
 
         <FormGroup label="Event Date" name="date" :error="dateError">
           <flat-pickr
-            v-model="date"
+            v-model="dateOfRequestedEvent"
             class="form-control"
             id="d1"
             placeholder="yyyy, dd M"
@@ -29,55 +32,78 @@
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Submit" btnClass="btn-dark" />
+        <Button
+          :isLoading="loading"
+          :disabled="loading"
+          type="submit"
+          text="Submit"
+          btnClass="btn-dark"
+        />
       </div>
     </Card>
   </form>
 </template>
 <script setup>
-import { reactive } from "vue";
+import VueSelect from "@/components/Select/VueSelect";
+import { reactive, computed, watch } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
-import Textinput from "@/components/Textinput";
+// import Textinput from "@/components/Textinput";
 import Select from "@/components/Select";
+import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
+// eslint-disable-next-line no-unused-vars
+const { state, dispatch } = useStore();
+const success = computed(() => state.event.addsuccess);
+const loading = computed(() => state.event.loading);
 const eventsOption = [
   {
-    value: "Baby Christening",
+    value: "babyChristening",
     label: "Baby Christening",
   },
   {
-    value: "Baby Dedication",
+    value: "babyDedication",
     label: "Baby Dedication",
   },
   {
-    value: "House Warming",
+    value: "houseWarming",
     label: "House Warming",
   },
   {
-    value: "Special Thanksgiving",
+    value: "specialThanksgiving",
     label: "Special Thanksgiving",
   },
   {
-    value: "Burial Ceremony",
+    value: "burialCeremony",
     label: "Burial Ceremony",
   },
 ];
+const membersOptions = computed(() =>
+  state?.member?.data?.map((i) => {
+    return {
+      label: `${i.firstName} ${i.surName}`,
+      value: i.userId,
+    };
+  })
+);
 const formData = reactive({
-  date: "",
-  type: "",
+  dateOfRequestedEvent: "",
+  requestType: "",
 
   name: "",
 });
+
 const formDataSchema = Yup.object().shape({
-  date: Yup.date()
+  dateOfRequestedEvent: Yup.date()
     .typeError("Please enter a valid date")
     .required("Date is required"),
-  type: Yup.string().required("Type is required"),
-  name: Yup.string().required("Name is required"),
+  requestType: Yup.string().required("Type is required"),
+  name: Yup.object().typeError("Invalid value").required("Name is required"),
 });
 
 const { handleSubmit } = useForm({
@@ -87,12 +113,23 @@ const { handleSubmit } = useForm({
 
 const { value: name, errorMessage: nameError } = useField("name");
 
-const { value: date, errorMessage: dateError } = useField("date");
+const { value: dateOfRequestedEvent, errorMessage: dateError } = useField(
+  "dateOfRequestedEvent"
+);
 
-const { value: type, errorMessage: typeError } = useField("type");
+const { value: requestType, errorMessage: requestTypeError } =
+  useField("requestType");
 
 const onSubmit = handleSubmit((values) => {
-  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
+  dispatch("addEvent", {
+    requestType: values.requestType,
+    dateOfRequestedEvent: values.dateOfRequestedEvent,
+    userId: values.name.value,
+  });
+});
+
+watch(success, () => {
+  toast.success("Request sent");
 });
 </script>
 <style lang=""></style>

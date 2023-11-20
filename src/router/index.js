@@ -105,6 +105,7 @@ const routes = [
             "support",
             "coordinator",
           ],
+          subroles: ["cihpastor", "cihcoordinator"],
         },
       },
       {
@@ -123,6 +124,7 @@ const routes = [
             "headaffinity",
             "support",
           ],
+          subroles: ["cihpastor", "cihcoordinator"],
         },
       },
       {
@@ -131,6 +133,7 @@ const routes = [
         component: ProfileIndex,
         meta: {
           roles: ["administrator", "hod", "member", "inspectorate"],
+          subroles: ["cihpastor", "cihcoordinator"],
         },
       },
       {
@@ -140,6 +143,7 @@ const routes = [
         meta: {
           activeName: "members-management",
           roles: ["administrator", "hod", "inspectorate"],
+          subroles: [],
         },
       },
       {
@@ -149,6 +153,7 @@ const routes = [
         meta: {
           activeName: "users-management",
           roles: ["administrator"],
+          subroles: [],
         },
       },
       {
@@ -157,6 +162,7 @@ const routes = [
         component: AffinityGroupsIndex,
         meta: {
           roles: ["administrator", "headaffinity"],
+          subroles: [],
         },
         children: [
           {
@@ -176,6 +182,7 @@ const routes = [
         component: MinistriesIndex,
         meta: {
           roles: ["administrator"],
+          subroles: [],
         },
         children: [
           {
@@ -218,6 +225,7 @@ const routes = [
         ],
         meta: {
           roles: ["administrator", "hod", "dsa", "inspectorate"],
+          subroles: [],
         },
       },
 
@@ -237,6 +245,7 @@ const routes = [
         ],
         meta: {
           roles: ["administrator", "inspectorate"],
+          subroles: [],
         },
       },
       {
@@ -251,6 +260,7 @@ const routes = [
             meta: {
               activeName: "cih management",
               roles: ["administrator", "inspectorate"],
+              subroles: ["cihcoordinator"],
             },
             children: [
               {
@@ -313,12 +323,8 @@ const routes = [
             component: () => import("@/components/Pages/Dashboard/CIH/Centers"),
             meta: {
               activeName: "cih management",
-              roles: [
-                "administrator",
-                "inspectorate",
-                "cihcoordinator",
-                "cihpastor",
-              ],
+              roles: ["administrator", "inspectorate"],
+              subroles: ["cihcoordinator", "cihpastor"],
             },
             children: [
               {
@@ -328,12 +334,8 @@ const routes = [
                   import("@/components/Pages/Dashboard/CIH/Centers/centers"),
                 meta: {
                   activeName: "cih management",
-                  roles: [
-                    "administrator",
-                    "inspectorate",
-                    "cihcoordinator",
-                    "cihpastor",
-                  ],
+                  roles: ["administrator", "inspectorate"],
+                  subroles: ["cihcoordinator", "cihpastor"],
                 },
               },
               {
@@ -365,13 +367,14 @@ const routes = [
             path: "center",
             name: "Center",
             component: () =>
-              import("@/components/Pages/Dashboard/CIH/Centers/center"),
+              import("@/components/Pages/Dashboard/CIH/Center/center"),
             meta: {
               activeName: "cih management",
               groupParent: {
                 name: "Center",
                 url: "/cih/center",
               },
+              subroles: ["cihpastor", "cihcoordinator"],
             },
           },
           {
@@ -380,12 +383,8 @@ const routes = [
             component: () => import("@/views/dashboard/cih/reports"),
             meta: {
               activeName: "cih management",
-              roles: [
-                "administrator",
-                "inspectorate",
-                "cihcoordinator",
-                "cihpastor",
-              ],
+              roles: ["administrator", "inspectorate"],
+              subroles: ["cihcoordinator", "cihpastor"],
             },
             children: [
               {
@@ -436,6 +435,7 @@ const routes = [
             meta: {
               activeName: "cih management",
               roles: ["administrator", "inspectorate", "accreditor"],
+              subroles: ["cihcoordinator", "cihpastor"],
             },
           },
         ],
@@ -443,10 +443,11 @@ const routes = [
           roles: [
             "administrator",
             "inspectorate",
-            "pastor",
+            "member",
             "coordinator",
             "accreditor",
           ],
+          subroles: ["cihcoordinator", "cihpastor"],
         },
       },
       {
@@ -493,6 +494,7 @@ const routes = [
         ],
         meta: {
           roles: ["administrator", "hod", "inspectorate"],
+          subroles: [],
         },
       },
       {
@@ -511,6 +513,7 @@ const routes = [
         ],
         meta: {
           roles: ["administrator", "inspectorate", "hod"],
+          subroles: [],
         },
       },
       {
@@ -529,6 +532,7 @@ const routes = [
         ],
         meta: {
           roles: ["administrator", "inspectorate"],
+          subroles: [],
         },
       },
       {
@@ -547,6 +551,7 @@ const routes = [
         ],
         meta: {
           roles: ["administrator", "hod"],
+          subroles: [],
         },
       },
       {
@@ -565,6 +570,7 @@ const routes = [
         ],
         meta: {
           roles: ["administrator", "hod", "inspectorate"],
+          subroles: [],
         },
       },
       // {
@@ -601,6 +607,7 @@ const routes = [
           },
         ],
         roles: ["administrator", "hod"],
+        subroles: [],
       },
       {
         path: "/appointments",
@@ -619,6 +626,7 @@ const routes = [
         ],
         meta: {
           roles: ["administrator", "hod"],
+          subroles: [],
         },
       },
       {
@@ -637,6 +645,7 @@ const routes = [
         ],
         meta: {
           roles: ["administrator"],
+          subroles: [],
         },
       },
       // {
@@ -747,6 +756,9 @@ router.beforeEach((to, from, next) => {
     if (
       to?.meta?.roles?.includes(
         store?.state?.auth?.userData?.userRole?.toLowerCase()
+      ) ||
+      to?.meta?.subroles?.includes(
+        store?.state?.auth?.userData?.cihRole?.toLowerCase()
       )
     ) {
       next();

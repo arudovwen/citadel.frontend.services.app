@@ -252,19 +252,20 @@ export default {
   },
   setup() {
     const modal = ref(null);
+    // eslint-disable-next-line no-unused-vars
     const route = useRoute();
+    const toast = useToast();
+    const { state, dispatch } = useStore();
     const modalChange = ref(null);
     const modalStatus = ref(null);
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
       searchParameter: "",
-      CenterId: route.params.id,
+      CenterId: "",
     });
-    const toast = useToast();
-    const { state, dispatch } = useStore();
+
     onMounted(() => {
-      dispatch("getAffiliationByMemberQuery", query);
       dispatch("getRoles");
     });
     function fetchRecords(page) {
@@ -277,6 +278,7 @@ export default {
     }
     const search = ref("");
     const loading = computed(() => state.profile.loading);
+    const centers = computed(() => state.center.centers);
     const members = computed(() => {
       if (state?.member?.data) {
         return state?.member?.data.map((item) => {
@@ -309,6 +311,14 @@ export default {
         searchParameter: searchValue,
       });
     }, debounceDelay);
+    watch(centers, () => {
+      if (centers?.value?.length) {
+        dispatch("getAffiliationByMemberQuery", {
+          ...query,
+          CenterId: centers.value[0].id,
+        });
+      }
+    });
     watch(addsuccess, () => {
       addsuccess.value && dispatch("getAffiliationByMemberQuery", query);
       modalChange.value.closeModal();

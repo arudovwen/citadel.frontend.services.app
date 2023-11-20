@@ -184,6 +184,22 @@ export default {
         commit("getZonesError", err);
       }
     },
+    async getZonesTotal({ commit }, data) {
+      try {
+        commit("getZonesBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_ZONES_TOTAL}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+
+        if (response.status === 200) {
+          commit("getZonesSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getZonesError", err);
+      }
+    },
     async updateZone({ commit }, data) {
       try {
         commit("updateZoneBegin");

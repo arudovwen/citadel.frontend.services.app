@@ -37,6 +37,8 @@ export default {
     accessToken: localStorage.getItem("accessToken") || null,
     avatar: localStorage.getItem("avatar") || null,
     userData: JSON.parse(localStorage.getItem("userData")) || null,
+    userAffiliation:
+      JSON.parse(localStorage.getItem("userAffiliation")) || null,
 
     // for edit
   },
@@ -205,8 +207,19 @@ export default {
         if (response.status === 200) {
           const accessToken = response.data.data.token;
           const userData = response.data.data.user;
+          const userAffiliation = response.data.data.churchAffiliation;
           localStorage.setItem("accessToken", accessToken);
-          localStorage.setItem("userData", JSON.stringify(userData));
+          localStorage.setItem(
+            "userAffiliation",
+            JSON.stringify(userAffiliation)
+          );
+          localStorage.setItem(
+            "userData",
+            JSON.stringify({
+              ...userData,
+              cihRole: userAffiliation?.cihRole?.toLowerCase(),
+            })
+          );
           commit("loginSuccess", accessToken);
         }
       } catch (err) {

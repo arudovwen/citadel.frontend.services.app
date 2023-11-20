@@ -2,21 +2,7 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex gap-x-3">
-          <div
-            v-if="state.auth.userData.userRole.toLowerCase() === 'hod'"
-            class="flex md:mb-0 mb-3 border border-gray-200 rounded text-sm"
-          >
-            <button
-              class="px-4 py-2 border-r border-gray-200 last:border-none capitalize min-w-[90px] text-center"
-              :class="activeFilter === n ? 'bg-gray-100' : ''"
-              @click="activeFilter = n"
-              v-for="n in filters"
-              :key="n"
-            >
-              {{ n }}
-            </button>
-          </div>
+        <div class="flex gap-x-4 rounded text-sm">
           <InputGroup
             v-model="query.searchParameter"
             placeholder="Search"
@@ -25,37 +11,20 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
-        </div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
-          <VueTailwindDatePicker
-            v-model="dateValue"
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="Select date"
-            as-single
+          <Select
+            label=""
+            :options="filters"
+            v-model="query.sortOrder"
+            placeholder="Sort by"
+            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
           />
-          <Button
-            icon="clarity:export-line"
-            text="Export"
-            btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-            iconClass="text-lg"
-          />
-          <!-- <Button
-            icon="ri:user-add-line"
-            text="Add Member"
-            btnClass=" btn-primary font-normal btn-sm "
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                $refs.modalChange.openModal();
-              }
-            "
-          /> -->
         </div>
+        <Button
+          icon="clarity:export-line"
+          text="Export"
+          btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+          iconClass="text-lg"
+        />
       </div>
       <div class="-mx-6">
         <vue-good-table
@@ -229,12 +198,12 @@
   </Modal>
 </template>
 <script>
-import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
+import Select from "@/components/Select";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
@@ -262,14 +231,15 @@ export default {
     EditRecord,
     ViewRecord,
     Pagination,
+    // eslint-disable-next-line vue/no-unused-components
     InputGroup,
+    Select,
     Modal,
     Dropdown,
     Icon,
     Card,
     MenuItem,
     Button,
-    VueTailwindDatePicker,
   },
 
   data() {
@@ -426,13 +396,18 @@ export default {
     const modal = ref(null);
     const modalChange = ref(null);
     const modalStatus = ref(null);
-    const filters = computed(() => {
-      if (state.auth.userData.userRole.toLowerCase() === "hod") {
-        return ["all", "pending"];
-      } else {
-        return ["all"];
-      }
-    });
+    const filters = [
+      {
+        label: "Default",
+        value: "",
+      },
+
+      {
+        label: "Name",
+        value: "firstName",
+      },
+    ];
+    // none, firstName, userId, surname, department, center, zone, role
     onMounted(() => {
       dispatch("getAffiliationByMemberQuery", query);
       dispatch("getRoles");
@@ -496,7 +471,7 @@ export default {
       }
     );
     watch(
-      () => [query.pageNumber, query.pageSize],
+      () => [query.pageNumber, query.pageSize, query.sortOrder],
       () => {
         dispatch("getAffiliationByMemberQuery", query);
       }

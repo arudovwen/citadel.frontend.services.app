@@ -37,7 +37,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
-            v-if="state.auth.userData.userRole.toLowerCase() === 'cihpastor'"
+            v-if="state.auth.userData.cihRole.toLowerCase() === 'cihpastor'"
             icon="heroicons-outline:plus-sm"
             text="Add Report"
             btnClass=" btn-primary font-normal btn-sm "

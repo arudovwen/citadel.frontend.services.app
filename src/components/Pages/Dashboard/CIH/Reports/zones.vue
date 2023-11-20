@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div v-if="getZonesLoading && zones?.length == 0" class="">
+    <div v-if="getZonesTotalLoading && zones?.length == 0" class="">
       <EmptyGrid />
     </div>
     <div v-else>
@@ -40,7 +40,7 @@
                     class="inline-flex items-center space-x-1 bg-gray-500 bg-opacity-[0.16] text-gray-500 text-xs font-normal px-2 py-1 rounded-full"
                   >
                     <span> <Icon icon="heroicons-outline:user-group" /></span>
-                    <span>3 centers</span>
+                    <span>{{ item.totalCenters }} centers</span>
                   </span>
                 </div>
               </div>
@@ -79,14 +79,14 @@ import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
 onMounted(() => {
-  getZones();
+  getZonesTotal();
 });
 const { dispatch, state } = useStore();
 const router = useRouter();
 
 const zones = computed(() => state.zone.zones);
 const total = computed(() => state.zone.total);
-const getZonesLoading = computed(() => state.zone.getZonesLoading);
+const getZonesTotalLoading = computed(() => state.zone.getZonesTotalLoading);
 const deleteZoneSuccess = computed(() => state.zone.deleteZoneSuccess);
 const addZoneSuccess = computed(() => state.zone.addZoneSuccess);
 const updateZoneSuccess = computed(() => state.zone.updateZoneSuccess);
@@ -98,6 +98,10 @@ const query = reactive({
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
+  userId:
+    state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
+      ? state.auth?.userData?.id
+      : "",
 });
 
 const options = [
@@ -122,8 +126,8 @@ const options = [
     label: "100",
   },
 ];
-const getZones = () => {
-  dispatch("getZones", query);
+const getZonesTotal = () => {
+  dispatch("getZonesTotal", query);
 };
 
 function perPage({ currentPerPage }) {
@@ -133,7 +137,7 @@ function perPage({ currentPerPage }) {
 watch(deleteZoneSuccess, () => {
   if (deleteZoneSuccess.value) {
     toast.success("Successfully Deleted");
-    dispatch("getZones", query);
+    dispatch("getZonesTotal", query);
     modal.value.closeModal();
   }
 
@@ -141,7 +145,7 @@ watch(deleteZoneSuccess, () => {
 });
 watch([addZoneSuccess, updateZoneSuccess], () => {
   if (addZoneSuccess.value || updateZoneSuccess.value) {
-    dispatch("getZones", query);
+    dispatch("getZonesTotal", query);
   }
 
   // getAllZones();
@@ -152,7 +156,7 @@ function handleDelete() {
   dispatch("removeZone", detail.value);
 }
 watch(query, () => {
-  dispatch("getZones", query);
+  dispatch("getZonesTotal", query);
 });
 </script>
 <style lang="scss" scoped>

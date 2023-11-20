@@ -115,9 +115,12 @@ export default defineComponent({
       let newItems;
       const filteredItems = menuItems
         .slice(1)
-        .filter((i) =>
-          i.roles.includes(state.auth.userData.userRole.toLowerCase())
+        .filter(
+          (i) =>
+            i.roles.includes(state.auth.userData.userRole?.toLowerCase()) ||
+            i.subroles.includes(state.auth.userData?.cihRole?.toLowerCase())
         );
+      newItems = filteredItems;
       if (
         state.auth.userData.userRole.toLowerCase() === "administrator" ||
         state.auth.userData.userRole.toLowerCase() === "inspectorate"
@@ -133,21 +136,23 @@ export default defineComponent({
           }
           return i;
         });
-      }
-      if (state.auth.userData.userRole.toLowerCase() === "cihcoordinator") {
+        return [menuItems[0], ...newItems];
+      } else if (
+        state.auth.userData?.cihRole?.toLowerCase() === "cihcoordinator"
+      ) {
         newItems = filteredItems.map((i) => {
           if (i.title.toLowerCase() === "cih management") {
             i.child = i.child.filter(
               (j) =>
-                j.childtitle.toLowerCase() !== "zones" &&
+                j.childtitle.toLowerCase() !== "centers" &&
                 j.childtitle.toLowerCase() !== "center" &&
-                j.for?.toLowerCase() !== "admin"
+                j.for?.toLowerCase() !== "ordinary"
             );
           }
           return i;
         });
-      }
-      if (state.auth.userData.userRole.toLowerCase() === "cihpastor") {
+        return [menuItems[0], ...newItems];
+      } else if (state.auth.userData?.cihRole?.toLowerCase() === "cihpastor") {
         newItems = filteredItems.map((i) => {
           if (i.title.toLowerCase() === "cih management") {
             i.child = i.child.filter(
@@ -159,6 +164,7 @@ export default defineComponent({
           }
           return i;
         });
+        return [menuItems[0], ...newItems];
       }
       return [menuItems[0], ...newItems];
     });
