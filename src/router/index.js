@@ -9,7 +9,7 @@ import AffinityGroupsIndex from "@/views/dashboard/affinityGroups/index.vue";
 import MinistriesIndex from "@/views/dashboard/ministries/index.vue";
 import UnitsIndex from "@/views/dashboard/units/index.vue";
 import SpecialUnitsIndex from "@/views/dashboard/special-units/index.vue";
-
+import MountainOfInfluenceIndex from "@/views/dashboard/mountain-of-influence/index.vue";
 import "vue-toastification/dist/index.css";
 
 const toast = useToast();
@@ -232,6 +232,29 @@ const routes = [
               import("@/components/Pages/Dashboard/SpecialUnits"),
             meta: {
               activeName: "special-unit",
+            },
+          },
+        ],
+      },
+
+      {
+        path: "/mountain-of-influence",
+        name: "mountain of influence",
+        component: MountainOfInfluenceIndex,
+        meta: {
+          roles: ["administrator"],
+          subroles: [],
+        },
+        children: [
+          {
+            path: "",
+            name: "mountain of influence",
+            component: () =>
+              import(
+                "@/components/Pages/Dashboard/MountainOfInfluence/moi.vue"
+              ),
+            meta: {
+              activeName: "mountain-of-influence",
             },
           },
         ],
