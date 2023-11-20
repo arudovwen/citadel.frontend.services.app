@@ -647,8 +647,10 @@ const routes = [
             },
           },
         ],
-        roles: ["administrator", "hod"],
-        subroles: [],
+        meta: {
+          roles: ["administrator", "hod"],
+          subroles: [],
+        },
       },
       {
         path: "/appointments",
