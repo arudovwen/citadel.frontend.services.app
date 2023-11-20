@@ -1,14 +1,3 @@
 <template>
-  <div>
-    <Units />
-  </div>
+  <router-view></router-view>
 </template>
-<script>
-import Units from "./module/unit-table";
-export default {
-  components: {
-    Units,
-  },
-};
-</script>
-<style lang=""></style>

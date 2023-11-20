@@ -210,7 +210,7 @@ const routes = [
           {
             path: "",
             name: "units",
-            component: () => import("@/components/Pages/Dashboard/Units"),
+            component: () => import("@/components/Pages/Dashboard/Units/units"),
             meta: {
               activeName: "units",
             },
@@ -230,7 +230,7 @@ const routes = [
             path: "",
             name: "special units",
             component: () =>
-              import("@/components/Pages/Dashboard/SpecialUnits"),
+              import("@/components/Pages/Dashboard/SpecialUnits/special-units"),
             meta: {
               activeName: "special-unit",
             },

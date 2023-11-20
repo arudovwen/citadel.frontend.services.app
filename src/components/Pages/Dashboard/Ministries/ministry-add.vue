@@ -28,7 +28,7 @@
           <Button
             :isLoading="loading"
             :disabled="loading"
-            text="Add Ministry"
+            text="Save"
             btnClass="btn-dark"
           ></Button>
         </div>

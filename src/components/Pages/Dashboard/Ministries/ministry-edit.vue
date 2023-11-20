@@ -28,7 +28,7 @@
           <Button
             :isLoading="loading"
             :disabled="loading"
-            text="Update mountain of influence"
+            text="Save Changes"
             btnClass="btn-dark"
           ></Button>
         </div>

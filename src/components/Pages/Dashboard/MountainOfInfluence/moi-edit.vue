@@ -6,7 +6,7 @@
       title="Edit Mountain Of Influence"
       centered
     >
-      <form @submit.prevent="updateZone" class="space-y-4">
+      <form @submit.prevent="updateMOI" class="space-y-4">
         <Textinput
           label="Name"
           type="text"
@@ -68,8 +68,9 @@ const { value: description, errorMessage: descriptionError } =
 
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
-const updateZone = handleSubmit((values) => {
-  dispatch("updateZone", values);
+const updateMOI = handleSubmit((values) => {
+  console.log(values);
+  // dispatch("updateMOI", values);
 });
 
 const closeModal = () => {

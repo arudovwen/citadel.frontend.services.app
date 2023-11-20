@@ -87,7 +87,7 @@
     </div>
   </div>
   <Modal
-    title="Delete Zone"
+    title="Delete Mountain of Influence"
     label="Small modal"
     labelClass="btn-outline-danger"
     ref="modal"
@@ -95,7 +95,7 @@
     themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to delete this zone?
+      Are you sure you want to delete this mountain of influence?
     </div>
 
     <template v-slot:footer>
@@ -105,11 +105,7 @@
           btnClass="btn-outline-secondary btn-sm"
           @click="$refs.modal.closeModal()"
         />
-        <Button
-          text="Delete"
-          btnClass="btn-danger btn-sm"
-          @click="deleteZone"
-        />
+        <Button text="Delete" btnClass="btn-danger btn-sm" @click="deleteMOI" />
       </div>
     </template>
   </Modal>
@@ -202,8 +198,8 @@ const getZonesTotal = () => {
   dispatch("getZonesTotal", query);
 };
 
-const deleteZone = () => {
-  dispatch("deleteZone", detail.value.id);
+const deleteMOI = () => {
+  // dispatch("deleteZone", detail.value.id);
 };
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;

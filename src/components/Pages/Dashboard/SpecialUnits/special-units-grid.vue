@@ -87,7 +87,7 @@
     </div>
   </div>
   <Modal
-    title="Delete Ministry"
+    title="Delete Special Unit"
     label="Small modal"
     labelClass="btn-outline-danger"
     ref="modal"
@@ -95,7 +95,7 @@
     themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to delete this ministry?
+      Are you sure you want to delete this special unit?
     </div>
 
     <template v-slot:footer>
@@ -108,7 +108,7 @@
         <Button
           text="Delete"
           btnClass="btn-danger btn-sm"
-          @click="deleteMinistry"
+          @click="deleteSpecialUnit"
         />
       </div>
     </template>
@@ -202,7 +202,7 @@ const getZonesTotal = () => {
   dispatch("getZonesTotal", query);
 };
 
-const deleteMinistry = () => {
+const deleteSpecialUnit = () => {
   // dispatch("deleteZone", detail.value.id);
 };
 function perPage({ currentPerPage }) {

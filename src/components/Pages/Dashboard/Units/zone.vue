@@ -1,13 +1,13 @@
 <template>
   <div>
-    <Users />
+    <Zone />
   </div>
 </template>
 <script>
-import Users from "./module/users-table";
+import Zone from "./module/table";
 export default {
   components: {
-    Users,
+    Zone,
   },
 };
 </script>

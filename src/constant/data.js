@@ -244,6 +244,18 @@ export const ProfileMenu = [
   },
 ];
 export const notifications = [];
+export const ministries = [
+  {
+    id: 11,
+    name: "Global Ministry",
+    description: "Dcn Min",
+  },
+  {
+    id: 11,
+    name: "Global Group PFCC",
+    description: "Dcn Min 2",
+  },
+];
 export const message = [
   {
     title: "Wade Warren",

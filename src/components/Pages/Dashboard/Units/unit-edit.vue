@@ -1,115 +1,95 @@
 <template>
-  <form @submit.prevent="onSubmit">
-    <Card noborder className="border-none shadow-none" bodyClass="p-2" title="">
-      <div class="flex flex-col gap-y-5">
+  <div>
+    <Modal
+      :activeModal="state.zone.editModal"
+      @close="closeModal"
+      title="Edit Unit"
+      centered
+    >
+      <form @submit.prevent="updateUnit" class="space-y-4">
         <Textinput
-          label="First Name"
+          label="Name"
           type="text"
-          v-model="firstname"
-          :error="firstnameError"
-          placeholder="Provide a first name"
+          placeholder="Unit name"
+          name="unitName"
+          v-model.trim="unitName"
+          :error="unitNameError"
         />
-        <Textinput
-          label="Middle name"
-          type="text"
-          v-model="middlename"
-          :error="middlenameError"
-          placeholder="Provide a middle name"
-        />
-        <Textinput
-          label="Surname"
-          type="text"
-          v-model="surname"
-          :error="surnameError"
-          placeholder="Provide a surnanme"
-        />
-        <div class="">
-          <Textinput
-            label="Email"
-            type="email"
-            v-model="emailAddress"
-            :error="emailAddressError"
-            placeholder="Provide an email address"
+        <div class="assagin space-y-4">
+          <Textarea
+            label="Description"
+            placeholder="description"
+            v-model="description"
+            :error="descriptionError"
           />
         </div>
-        <Select
-          label="Role"
-          :options="roleOptions"
-          v-model="role"
-          :error="roleError"
-        />
 
-        <Textinput
-          label="Phone"
-          type="text"
-          v-model="phoneNumber"
-          :error="phoneNumberError"
-          placeholder="Provide a phone number"
-        />
-      </div>
-
-      <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Update record" btnClass="btn-dark" />
-      </div>
-    </Card>
-  </form>
+        <div class="text-right">
+          <Button
+            :isLoading="loading"
+            :disabled="loading"
+            text="Save changes"
+            btnClass="btn-dark"
+          ></Button>
+        </div>
+      </form>
+    </Modal>
+  </div>
 </template>
 <script setup>
-import { reactive } from "vue";
-import { useField, useForm } from "vee-validate";
-import * as yup from "yup";
 import Button from "@/components/Button";
-import Card from "@/components/Card";
+import Modal from "@/components/Modal";
+import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
-import Select from "@/components/Select";
+import { useField, useForm } from "vee-validate";
+import { useStore } from "vuex";
+import * as yup from "yup";
+import { computed, watch } from "vue";
+import { useToast } from "vue-toastification";
 
-const formData = reactive({
-  surname: "",
-  firstname: "",
-  middlename: "",
-  role: "",
-  phoneNumber: "",
-  emailAddress: "",
-});
-const formDataSchema = yup.object().shape({
-  surname: yup.string().required("Surname is required"),
-  firstname: yup.string().required("Firstname is required"),
-  middlename: yup.string(),
-  role: yup.string().required("Please select a role"),
-  phoneNumber: yup
-    .string()
-    .max(11, "Phone number must be 11 digits or less")
-    .required("Phone number is required"),
-  emailAddress: yup
-    .string()
-    .email("Invalid email format")
-    .required("Email Address is required"),
-});
-const roleOptions = [
-  { value: "admin", label: "Administrator" },
-  { value: "hod", label: "HOD" },
-];
+const { state, dispatch } = useStore();
+const zone = computed(() => state.zone.zone);
+const success = computed(() => state.zone.updateZoneSuccess);
+const loading = computed(() => state.zone.updateZoneLoading);
+const toast = useToast();
 
-const { handleSubmit } = useForm({
-  validationSchema: formDataSchema,
-  initialValues: formData,
+const schema = yup.object({
+  unitName: yup.string().required("Name is required"),
+  description: yup.string().required("Description is required"),
+});
+const { handleSubmit, setValues } = useForm({
+  validationSchema: schema,
+  initialValues: zone.value,
+});
+const { value: unitName, errorMessage: unitNameError } = useField("unitName");
+const { value: description, errorMessage: descriptionError } =
+  useField("description");
+
+// const { value: category, errorMessage: errorCategory } = useField("category");
+
+const updateUnit = handleSubmit((values) => {
+  console.log(values);
+  // dispatch("updateUnit", values);
 });
 
-const { value: emailAddress, errorMessage: emailAddressError } =
-  useField("emailAddress");
+const closeModal = () => {
+  dispatch("closeEditModal");
+};
 
-const { value: surname, errorMessage: surnameError } = useField("surname");
-const { value: firstname, errorMessage: firstnameError } =
-  useField("firstname");
-const { value: middlename, errorMessage: middlenameError } =
-  useField("middlename");
-const { value: role, errorMessage: roleError } = useField("role");
+watch(zone, () => {
+  setValues(zone.value);
+});
 
-const { value: phoneNumber, errorMessage: phoneNumberError } =
-  useField("phoneNumber");
+watch(success, () => {
+  if (success.value) {
+    toast.success("Successfully Updated");
+    dispatch("getZones");
+    closeModal();
+  } else {
+    closeModal();
+  }
 
-const onSubmit = handleSubmit((values) => {
-  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
+  // getAllZones();
 });
 </script>
 <style lang=""></style>

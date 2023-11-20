@@ -6,7 +6,7 @@
       title="Create Mountain of Influence"
       centered
     >
-      <form @submit.prevent="addZone" class="space-y-4">
+      <form @submit.prevent="addMOI" class="space-y-4">
         <Textinput
           label="Name"
           type="text"
@@ -66,8 +66,9 @@ const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 
-const addZone = handleSubmit((values) => {
-  dispatch("addZone", values);
+const addMOI = handleSubmit((values) => {
+  console.log(values);
+  // dispatch("addZone", values);
 });
 
 const closeModal = () => {
