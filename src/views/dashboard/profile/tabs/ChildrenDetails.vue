@@ -115,6 +115,7 @@
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Button
+              v-if="canEditDetails"
               :disabled="submitLoading"
               :isLoading="submitLoading"
               type="submit"

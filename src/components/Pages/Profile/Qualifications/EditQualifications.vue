@@ -31,6 +31,7 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Button
+            v-if="canEditDetails"
             :disabled="submitLoading"
             :isLoading="submitLoading"
             type="submit"
@@ -62,7 +63,7 @@ let { dispatch, state } = useStore();
 const toast = useToast();
 const details = computed(() => state.profile.qualificationDetails);
 const id = inject("id");
-
+const canEditDetails = inject("canEditDetails");
 const success = computed(() => state.profile.updateQualificationDataSuccess);
 const submitLoading = computed(
   () => state.profile.updateQualificationDataloading

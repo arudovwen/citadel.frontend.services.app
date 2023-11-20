@@ -228,6 +228,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
       <!-- {{ submitLoading }} -->
       <Button
+        v-if="canEditDetails"
         :disabled="createProfileLoading || submitLoading"
         :isLoading="submitLoading"
         type="submit"

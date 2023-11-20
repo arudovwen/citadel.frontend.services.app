@@ -57,34 +57,6 @@
         classInput="h-[40px]"
       />
 
-      <!-- <Textinput
-        label="Mobile 2"
-        type="text"
-        placeholder="Type your mobile 2"
-        name="mobile2"
-        v-model="mobile2"
-        :error="mobile2Error"
-        classInput="h-[40px]"
-      /> -->
-
-      <!-- <Select
-        label="Title"
-        :options="titleMenu"
-        v-model.value="title"
-        :modelValue="title"
-        :error="titleError"
-        classInput="!h-[40px]"
-      /> -->
-      <!-- 
-      <Select
-        label="Gender"
-        :options="genderMenu"
-        v-model.value="gender"
-        :modelValue="gender"
-        :error="genderError"
-        classInput="!h-[40px]"
-      /> -->
-
       <FormGroup label="DOB" name="d1">
         <flat-pickr
           v-model="dateOfBirth"
@@ -106,6 +78,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
       <Button
+        v-if="canEditDetails"
         :disabled="submitLoading"
         :isLoading="submitLoading"
         type="submit"

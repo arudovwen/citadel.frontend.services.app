@@ -1,5 +1,19 @@
 <template>
   <div>
+    <div
+      class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:justify-between md:items-center mb-6 md:mb-4 w-full md:w-auto"
+    >
+      <div></div>
+      <Button
+        v-if="authUser"
+        icon="heroicons-outline:plus"
+        text="Send Notification"
+        btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
+        iconClass="text-lg"
+        @click="openNotification"
+        :isLoading="false"
+      />
+    </div>
     <Card bodyClass="px-6 ">
       <Menu as="div" class="-mx-6">
         <div
@@ -69,25 +83,112 @@
         </MenuItem>
       </Menu>
     </Card>
+
+    <Modal
+      :activeModal="isCreateOpen"
+      @close="toggleCreateModal"
+      title="Send Notification"
+      centered
+    >
+      <form @submit.prevent="onSubmit" class="space-y-4">
+        <div class="grid grid-cols-1 gap-5">
+          <FormGroup label="Date" name="d1">
+            <flat-pickr
+              v-model="date"
+              class="form-control"
+              id="d1"
+              placeholder="yyyy, dd M"
+              :error="dateError"
+            />
+          </FormGroup>
+          <Textinput
+            label="Title"
+            type="text"
+            placeholder="Title"
+            name="title"
+            v-model.trim="title"
+            :error="titleError"
+          />
+          <div class="assagin space-y-4">
+            <Textarea
+              label="Description"
+              placeholder=" description"
+              v-model="description"
+              :error="descriptionError"
+            />
+          </div>
+
+          <Fileinput @change="onFileSelected" multiple name="multipule" />
+          <!-- <span>files: {{ files }}</span> -->
+          <div class="text-right">
+            <Button
+              :isLoading="loading"
+              :disabled="loading"
+              text="Add ministry"
+              btnClass="btn-dark"
+            ></Button>
+          </div>
+        </div>
+      </form>
+    </Modal>
   </div>
 </template>
 
-<script>
+<script setup>
+import Fileinput from "@/components/Fileinput";
+import Modal from "@/components/Modal";
+import FormGroup from "@/components/FormGroup";
+import * as yup from "yup";
+import { useField, useForm } from "vee-validate";
+import Textarea from "@/components/Textarea";
+import Textinput from "@/components/Textinput";
 import { MenuItem, Menu } from "@headlessui/vue";
 import { notifications } from "@/constant/data";
 import Card from "@/components/Card";
+import Button from "@/components/Button";
+import { useStore } from "vuex";
+import { computed, ref } from "vue";
 
-export default {
-  components: {
-    MenuItem,
-    Menu,
-    Card,
-  },
-  data() {
-    return {
-      notifications,
-    };
-  },
+const { state } = useStore();
+const isCreateOpen = ref(false);
+const loading = ref(false);
+const files = ref(null);
+const authUser = computed(() => {
+  return (
+    state.auth.userData.userRole.toLowerCase() === "inspectorate" ||
+    state.auth.userData.userRole.toLowerCase() === "administrator"
+  );
+});
+const onFileSelected = async (e) => {
+  files.value = e.target.files;
+};
+const schema = yup.object({
+  title: yup.string().required("Name is required"),
+  description: yup.string().required("Description is required"),
+  date: yup.string(),
+});
+
+const { handleSubmit } = useForm({
+  validationSchema: schema,
+});
+
+const { value: title, errorMessage: titleError } = useField("title");
+const { value: description, errorMessage: descriptionError } =
+  useField("description");
+const { value: date, errorMessage: dateError } = useField("date");
+
+const onSubmit = handleSubmit((values) => {
+  console.log(JSON.stringify({ ...values, files: files.value }));
+  toggleCreateModal();
+  // dispatch("addZone", values);
+});
+
+const toggleCreateModal = () => {
+  isCreateOpen.value = !isCreateOpen.value;
+};
+const openNotification = () => {
+  toggleCreateModal();
+  console.log("Create notification");
 };
 </script>
 <style lang=""></style>
