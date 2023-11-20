@@ -7,6 +7,8 @@ import VenuesIndex from "@/views/dashboard/venues/index.vue";
 import AppointmentsIndex from "@/views/dashboard/appointments/index.vue";
 import AffinityGroupsIndex from "@/views/dashboard/affinityGroups/index.vue";
 import MinistriesIndex from "@/views/dashboard/ministries/index.vue";
+import UnitsIndex from "@/views/dashboard/units/index.vue";
+import SpecialUnitsIndex from "@/views/dashboard/special-units/index.vue";
 
 import "vue-toastification/dist/index.css";
 
@@ -191,6 +193,45 @@ const routes = [
             component: () => import("@/components/Pages/Dashboard/Ministries"),
             meta: {
               activeName: "ministries",
+            },
+          },
+        ],
+      },
+      {
+        path: "/units",
+        name: "units",
+        component: UnitsIndex,
+        meta: {
+          roles: ["administrator"],
+          subroles: [],
+        },
+        children: [
+          {
+            path: "",
+            name: "units",
+            component: () => import("@/components/Pages/Dashboard/Units"),
+            meta: {
+              activeName: "units",
+            },
+          },
+        ],
+      },
+      {
+        path: "/special-unit",
+        name: "special unitz",
+        component: SpecialUnitsIndex,
+        meta: {
+          roles: ["administrator"],
+          subroles: [],
+        },
+        children: [
+          {
+            path: "",
+            name: "special units",
+            component: () =>
+              import("@/components/Pages/Dashboard/SpecialUnits"),
+            meta: {
+              activeName: "special-unit",
             },
           },
         ],

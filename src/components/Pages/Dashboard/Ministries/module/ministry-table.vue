@@ -155,10 +155,10 @@
   <Modal
     :title="
       type === 'add'
-        ? 'Member Creation'
+        ? 'Ministry Creation'
         : type === 'edit'
-        ? 'Edit member'
-        : 'View member'
+        ? 'Edit Ministry'
+        : 'View Ministry'
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
@@ -181,10 +181,10 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { membersTable } from "@/constant/basic-tablle-data";
-import AddRecord from "../member-add.vue";
-import EditRecord from "../member-edit.vue";
-import ViewRecord from "../member-preview.vue";
-import moment from "moment";
+import AddRecord from "../ministry-add.vue";
+import EditRecord from "../ministry-edit.vue";
+import ViewRecord from "../ministry-preview.vue";
+// import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
 import { computed, onMounted, watch, reactive, ref } from "vue";
@@ -358,17 +358,17 @@ export default {
     const search = ref("");
     const loading = computed(() => state.profile.getAllBiodataloading);
     const members = computed(() => {
-      if (state?.profile?.allbiodata) {
-        return state?.profile?.allbiodata.map((item) => {
-          item.fullName = `${item.firstName}  ${item.surName}`;
-          item.dateOfBirth = item?.dateOfBirth
-            ? moment(item?.dateOfBirth).format("ll")
-            : "-";
-          item.department = item?.department ? item?.department : "-";
+      // if (state?.profile?.allbiodata) {
+      //   return state?.profile?.allbiodata.map((item) => {
+      //     item.fullName = `${item.firstName}  ${item.surName}`;
+      //     item.dateOfBirth = item?.dateOfBirth
+      //       ? moment(item?.dateOfBirth).format("ll")
+      //       : "-";
+      //     item.department = item?.department ? item?.department : "-";
 
-          return item;
-        });
-      }
+      //     return item;
+      //   });
+      // }
       return [];
     });
     const total = computed(() => state.profile.total);

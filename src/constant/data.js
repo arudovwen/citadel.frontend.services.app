@@ -148,6 +148,21 @@ export const menuItems = [
     roles: ["administrator"],
     subroles: [],
   },
+  {
+    title: "Units",
+    icon: "heroicons-outline:rectangle-group",
+    link: "/units",
+    roles: ["administrator"],
+    subroles: [],
+  },
+
+  {
+    title: "Special Units",
+    icon: "heroicons-outline:squares-2x2",
+    link: "/special-unit",
+    roles: ["administrator"],
+    subroles: [],
+  },
 
   {
     title: "Requests",

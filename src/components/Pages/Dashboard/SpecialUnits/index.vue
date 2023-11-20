@@ -1,13 +1,13 @@
 <template>
   <div>
-    <Ministries />
+    <SpecialUnits />
   </div>
 </template>
 <script>
-import Ministries from "./module/ministry-table";
+import SpecialUnits from "./module/special-unit-table";
 export default {
   components: {
-    Ministries,
+    SpecialUnits,
   },
 };
 </script>

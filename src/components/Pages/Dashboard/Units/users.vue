@@ -1,13 +1,13 @@
 <template>
   <div>
-    <Ministries />
+    <Users />
   </div>
 </template>
 <script>
-import Ministries from "./module/ministry-table";
+import Users from "./module/users-table";
 export default {
   components: {
-    Ministries,
+    Users,
   },
 };
 </script>
