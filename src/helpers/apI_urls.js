@@ -41,6 +41,7 @@ export const urls = {
   UPDATE_CENTER: "/Center/UpdateCenter",
   DELETE_CENTER: "/Center/DeleteCenter",
   GET_ALL_CENTERS: "/Center/GetAllCenter",
+  GET_ALL_CENTERS_TOTAL: "/Center/GetCentersByTotal",
   GET_CENTER_BY_ID: "/Center/GetCenterById",
 
   // ChildrenDetail
@@ -80,6 +81,7 @@ export const urls = {
   UPDATE_DEPARTMENT: "/Department/UpdateDepartment",
   GET_DEPARTMENT_BY_ID: "/Department/GetDepartmentById",
   GET_ALL_DEPARTMENT: "/Department/GetAllDepartment",
+  GET_ALL_DEPARTMENT_TOTAL: "/Department/GetAllDepartmentByTotal",
   DELETE_DEPARTMENT: "/Department/DeleteDepartment",
 
   // Employer
@@ -125,5 +127,10 @@ export const urls = {
   UPDATE_ZONE: "/CIHZone/UpdateCIHZone",
   DELETE_ZONE: "/CIHZone/DeleteCIHZone",
   GET_ALL_ZONES: "/CIHZone/GetAllCIHZone",
+  GET_ALL_ZONES_TOTAL: "/CIHZone/GetZonesByTotal",
   GET_ZONE_BY_ID: "/CIHZone/GetCIHZoneById",
+
+  //Events
+  REQUEST_EVENT: "/ChurchAffiliation/RequestForEvent",
+  GET_REQUEST_EVENT: "/ChurchAffiliation/GetRequestReport",
 };

@@ -193,6 +193,23 @@ export default {
         commit("getCentersError", err);
       }
     },
+    async getAllCentersTotal({ commit }, data) {
+      try {
+        commit("getCentersBegin");
+
+        const response = await DataService.get(
+          `${urls.GET_ALL_CENTERS_TOTAL}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+
+        if (response.status === 200) {
+          commit("getCentersSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getCentersError", err);
+      }
+    },
     //edit center
     async updateCenter({ commit }, data) {
       try {

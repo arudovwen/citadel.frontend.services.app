@@ -17,6 +17,7 @@ export const menuItems = [
       "headaffinity",
       "support",
     ],
+    subroles: ["cihpastor", "cihcoordinator"],
   },
 
   {
@@ -24,12 +25,14 @@ export const menuItems = [
     icon: "heroicons-outline:user-group",
     link: "/members-management",
     roles: ["administrator", "inspectorate"],
+    subroles: [],
   },
   {
     title: "First Timers",
     icon: "heroicons-outline:user-add",
     link: "/first-timers",
     roles: ["administrator", "inspectorate"],
+    subroles: [],
   },
 
   {
@@ -37,12 +40,14 @@ export const menuItems = [
     icon: "ic:sharp-join-inner",
     link: "/affinity-groups",
     roles: ["administrator", "headaffinity"],
+    subroles: [],
   },
   {
     title: "Departments",
     icon: "mingcute:department-line",
     link: "/departments",
     roles: ["administrator", "hod", "dsa"],
+    subroles: [],
   },
 
   {
@@ -50,12 +55,14 @@ export const menuItems = [
     icon: "bx:donate-heart",
     link: "/outreach",
     roles: ["administrator", "inspectorate"],
+    subroles: [],
   },
   {
     title: "Attendance",
     icon: "heroicons-outline:clipboard-check",
     link: "/attendance",
     roles: ["administrator"],
+    subroles: [],
   },
   // { title: "Goals", icon: "bx:football", link: "/goals" },
   {
@@ -63,6 +70,7 @@ export const menuItems = [
     icon: "bx:merge",
     link: "/meetings",
     roles: ["administrator", "hod", "inspectorate"],
+    subroles: [],
   },
   // {
   //   title: "Issue Management",
@@ -84,24 +92,21 @@ export const menuItems = [
     icon: "bx:calendar-plus",
     link: "/appointments",
     roles: ["administrator", "hod"],
+    subroles: [],
   },
   {
     title: "Venues",
     icon: "bx:buildings",
     link: "/venue-management",
     roles: ["administrator"],
+    subroles: [],
   },
 
   {
     title: "CIH management",
     icon: "mdi:home-group",
-    roles: [
-      "administrator",
-      "inspectorate",
-      "pastor",
-      "coordinator",
-      "accreditor",
-    ],
+    roles: ["administrator", "inspectorate", "coordinator", "accreditor"],
+    subroles: ["cihpastor", "cihcoordinator"],
     isOpen: true,
     child: [
       {
@@ -141,6 +146,7 @@ export const menuItems = [
     icon: "heroicons-outline:building-library",
     link: "/ministries",
     roles: ["administrator"],
+    subroles: [],
   },
 
   {
@@ -148,12 +154,14 @@ export const menuItems = [
     icon: "fluent-mdl2:message-friend-request",
     link: "/requests/zone",
     roles: ["administrator", "inspectorate", "hod"],
+    subroles: [],
   },
   {
     title: "Users management",
     icon: "la:users-cog",
     link: "/users-management",
     roles: ["administrator"],
+    subroles: [],
   },
   // {
   //   title: "Chat Management",

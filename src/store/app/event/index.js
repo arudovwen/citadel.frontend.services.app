@@ -1,4 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
+import { DataService } from "@/config/dataService/dataService";
+import { urls } from "@/helpers/apI_urls";
+import { cleanObject } from "@/util/cleanObject";
+
 import { useToast } from "vue-toastification";
 const toast = useToast();
 export default {
@@ -15,79 +18,28 @@ export default {
     editId: null,
     editdesc: null,
 
-    events: [
-      {
-        id: uuidv4(),
-        assignto: [
-          {
-            image: require("@/assets/images/avatar/av-1.svg"),
-            title: "Mahedi Amin",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Sovo Haldar",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Rakibul Islam",
-          },
-        ],
-        name: "Welfare",
-        des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-        startDate: "2022-10-03",
-        endDate: "2022-10-06",
-        progress: 75,
-        category: [
-          {
-            value: "team",
-            label: "team",
-          },
-          {
-            value: "low",
-            label: "low",
-          },
-        ],
-      },
-      {
-        id: uuidv4(),
-        assignto: [
-          {
-            image: require("@/assets/images/avatar/av-1.svg"),
-            title: "Mahedi Amin",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Sovo Haldar",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Rakibul Islam",
-          },
-        ],
-        name: "Sanitation ",
-        des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-        startDate: "2022-10-03",
-        endDate: "2022-10-10",
-        progress: 50,
+    events: [],
+    loading: false,
+    addsuccess: false,
+    error: null,
+  },
 
-        category: [
-          {
-            value: "team",
-            label: "team",
-          },
-          {
-            value: "low",
-            label: "low",
-          },
-        ],
-      },
-    ],
-  },
-  getters: {
-    events: (state) => state.events,
-  },
   mutations: {
-    //
+    addBegin(state) {
+      state.loading = true;
+      state.error = null;
+      state.addsuccess = false;
+    },
+    addSuccess(state) {
+      state.loading = false;
+      state.addsuccess = true;
+      state.error = null;
+    },
+    addErr(state, err) {
+      state.loading = false;
+      state.error = err;
+      state.addsuccess = false;
+    },
     addEvent(state, data) {
       state.isLoading = true;
 
@@ -146,9 +98,33 @@ export default {
     },
   },
   actions: {
-    addEvent({ commit }, data) {
-      commit("addEvent", data);
+    async getEvents({ commit }, data) {
+      try {
+        commit("fetchBegin");
+        const response = await DataService.get(
+          `${urls.GET_REQUEST_EVENT}?${new URLSearchParams(cleanObject(data))}`
+        );
+        if (response.status === 200) {
+          commit("fetchSuccess", response.data);
+        }
+      } catch (err) {
+        commit("fetchErr", err);
+      }
     },
+    async addEvent({ commit }, data) {
+      try {
+        commit("addBegin");
+        const response = await DataService.put(
+          `${urls.REQUEST_EVENT}?${new URLSearchParams(data)}`
+        );
+        if (response.status === 200) {
+          commit("addSuccess");
+        }
+      } catch (err) {
+        commit("addErr", err);
+      }
+    },
+
     // removeEvent
     removeEvent({ commit }, data) {
       commit("removeEvent", data);

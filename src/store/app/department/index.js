@@ -144,6 +144,22 @@ export default {
         commit("fetchErr", err);
       }
     },
+    async getDepartmentsTotal({ commit }, data) {
+      try {
+        commit("fetchBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_DEPARTMENT_TOTAL}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("fetchSuccess", response.data);
+        }
+      } catch (err) {
+        commit("fetchErr", err);
+      }
+    },
+
     async getDepartmentById({ commit }, id) {
       try {
         commit("getBegin");

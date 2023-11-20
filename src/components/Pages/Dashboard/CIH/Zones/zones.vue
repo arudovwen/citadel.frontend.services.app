@@ -87,6 +87,10 @@ const query = reactive({
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
+  userId:
+    state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
+      ? state.auth?.userData?.id
+      : "",
 });
 const zones = computed(() => store.getters.zones);
 

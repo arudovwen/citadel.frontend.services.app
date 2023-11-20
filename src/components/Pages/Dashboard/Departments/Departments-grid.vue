@@ -9,7 +9,14 @@
           :to="`/departments/view/${item?.departmentName}/${item.id}`"
           class="flex-1"
         >
-          <div class="px-6 pt-6">
+          <div
+            class="px-6 pt-6"
+            :class="
+              state.auth.userData.userRole.toLowerCase() === 'administrator'
+                ? ''
+                : 'pb-6'
+            "
+          >
             <header class="flex justify-between items-end mb-4">
               <div class="flex space-x-4 items-center">
                 <div class="flex-none">
@@ -48,7 +55,7 @@
                   class="inline-flex items-center space-x-1 bg-gray-400 bg-opacity-[0.16] text-gray-500 text-[11px] font-normal px-2 py-1 rounded-full"
                 >
                   <span> <Icon icon="heroicons-outline:user-group" /></span>
-                  <span>20 members</span>
+                  <span>{{ item.totalMembers }} members</span>
                 </span>
               </div>
             </div>
@@ -196,12 +203,12 @@ const actions = ref([
 ]);
 const query = inject("query");
 onMounted(() => {
-  dispatch("getDepartments", query);
+  dispatch("getDepartmentsTotal", query);
   dispatch("getAffiliationByMemberQuery", {
     pageSize: 250000,
     pageNumber: 1,
     searchParameter: "",
-    role: "hod",
+    role: "",
   });
 });
 // eslint-disable-next-line no-unused-vars
@@ -212,7 +219,7 @@ function handleDelete() {
 // Define a debounce delay (e.g., 500 milliseconds)
 const debounceDelay = 800;
 const debouncedSearch = debounce(() => {
-  dispatch("getDepartments", query);
+  dispatch("getDepartmentsTotal", query);
 }, debounceDelay);
 
 watch(
@@ -224,7 +231,7 @@ watch(
 watch(
   () => [query.pageNumber, query.sortOrder, query.pageSize],
   () => {
-    dispatch("getDepartments", query);
+    dispatch("getDepartmentsTotal", query);
   }
 );
 function perPage({ currentPerPage }) {
@@ -232,7 +239,7 @@ function perPage({ currentPerPage }) {
   query.pageSize = currentPerPage;
 }
 function handleSuccess() {
-  dispatch("getDepartments", query);
+  dispatch("getDepartmentsTotal", query);
   modal.value.closeModal();
 }
 
@@ -246,7 +253,7 @@ watch(success, handleSuccess);
 
 watch(deletesuccess, () => {
   if (deletesuccess.value) {
-    dispatch("getDepartments", query);
+    dispatch("getDepartmentsTotal", query);
     modal.value.closeModal();
     toast.success("Department removed");
   }

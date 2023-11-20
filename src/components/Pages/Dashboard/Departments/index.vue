@@ -92,6 +92,10 @@ const query = reactive({
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
+  userId:
+    state.auth.userData.userRole.toLowerCase() === "hod"
+      ? state.auth.userData.id
+      : "",
 });
 const projects = computed(() => store.getters.projects);
 

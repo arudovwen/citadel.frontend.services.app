@@ -228,6 +228,8 @@
   </Modal>
 </template>
 <script>
+import { onMounted, reactive, watch, computed, ref } from "vue";
+import { useStore } from "vuex";
 import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
@@ -298,10 +300,6 @@ export default {
           value: "Burial Ceremony",
           label: "Burial Ceremony",
         },
-      ],
-      membersOptions: [
-        { value: "admin", label: "John Snow" },
-        { value: "hod", label: "Tony Starke" },
       ],
 
       formatter: {
@@ -410,6 +408,37 @@ export default {
 
       return actions[name] || null;
     },
+  },
+  setup() {
+    const modalChange = ref(null);
+    const { dispatch, state } = useStore();
+    const success = computed(() => state.event.addsuccess);
+    const query = reactive({
+      pageNumber: 1,
+      pageSize: 25,
+      searchParameter: "",
+      requestType: "",
+      dateOfRequestedEvent: "",
+    });
+    onMounted(() => {
+      dispatch("getEvents", query);
+    });
+    const membersOptions = computed(() =>
+      state?.member?.data?.map((i) => {
+        return {
+          label: `${i.firstName} ${i.surName}`,
+          value: i.userId,
+        };
+      })
+    );
+    watch(success, () => {
+      if (success.value) {
+        modalChange.value.closeModal();
+      }
+    });
+    return {
+      membersOptions,
+    };
   },
 };
 </script>

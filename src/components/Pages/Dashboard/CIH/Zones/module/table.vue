@@ -255,7 +255,7 @@ export default {
       },
     ];
     onMounted(() => {
-      dispatch("getAllCenters", query);
+      dispatch("getAllCentersTotal", query);
       dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
       dispatch("getUsers", { pageSize: 250000, pageNumber: 1 });
       id.value = getCurrentInstance().data.id;
@@ -339,7 +339,7 @@ export default {
         console.log("SuccessfullyDeleted");
         closeDeleteModal();
         toast.success("Successfully Deleted");
-        dispatch("getAllCenters", query);
+        dispatch("getAllCentersTotal", query);
       }
     });
     function perPage({ currentPerPage }) {
@@ -349,19 +349,19 @@ export default {
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
-      dispatch("getAllCenters", { ...query, name: searchValue });
+      dispatch("getAllCentersTotal", { ...query, name: searchValue });
     }, debounceDelay);
     watch(addsuccess, () => {
-      addsuccess.value && dispatch("getAllCenters", query);
+      addsuccess.value && dispatch("getAllCentersTotal", query);
       modalChange.value.closeModal();
     });
     watch(updatesuccess, () => {
-      updatesuccess.value && dispatch("getAllCenters", query);
+      updatesuccess.value && dispatch("getAllCentersTotal", query);
     });
 
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
-        dispatch("getAllCenters", query);
+        dispatch("getAllCentersTotal", query);
         modal.value.closeModal();
       }
     });
@@ -375,7 +375,7 @@ export default {
     watch(
       () => [query.pageNumber, query.pageSize, query.sortOrder],
       () => {
-        dispatch("getAllCenters", query);
+        dispatch("getAllCentersTotal", query);
       }
     );
     watch(zoneObj, (newValue) => {
@@ -384,7 +384,7 @@ export default {
     watch(
       () => query.zoneId,
       () => {
-        dispatch("getAllCenters", query);
+        dispatch("getAllCentersTotal", query);
       }
     );
     provide("closeModal", closeModal);
@@ -516,7 +516,7 @@ export default {
         },
         {
           label: "Total members",
-          field: "total",
+          field: "totalmembers",
         },
 
         {

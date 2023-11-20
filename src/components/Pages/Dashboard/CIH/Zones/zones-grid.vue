@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div v-if="getZonesLoading && zones?.length == 0" class="">
+    <div v-if="getZonesTotalLoading && zones?.length == 0" class="">
       <EmptyGrid />
     </div>
     <div v-else>
@@ -37,9 +37,7 @@
                 class="text-slate-600 dark:text-slate-400 text-xs font-medium mb-2"
               >
                 <span>Coordinator</span>:
-                <span class="font-medium">{{
-                  handleCoordinator(item.userId)
-                }}</span>
+                <span class="font-medium">{{ item.coordinator || "n/a" }}</span>
               </div>
               <div class="flex justify-start">
                 <div class="text-left">
@@ -47,7 +45,7 @@
                     class="inline-flex items-center space-x-1 bg-gray-400 bg-opacity-[0.16] text-gray-500 text-[11px] font-normal px-2 py-1 rounded-full"
                   >
                     <span> <Icon icon="heroicons-outline:user-group" /></span>
-                    <span>3 centers</span>
+                    <span>{{ item?.totalCenters }} centers</span>
                   </span>
                 </div>
               </div>
@@ -137,7 +135,7 @@ import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
 onMounted(() => {
-  getZones();
+  getZonesTotal();
   dispatch("getAffiliationByMemberQuery", {
     pageSize: 250000,
     pageNumber: 1,
@@ -149,7 +147,7 @@ const router = useRouter();
 
 const zones = computed(() => state.zone.zones);
 const total = computed(() => state.zone.total);
-const getZonesLoading = computed(() => state.zone.getZonesLoading);
+const getZonesTotalLoading = computed(() => state.zone.getZonesTotalLoading);
 const deleteZoneSuccess = computed(() => state.zone.deleteZoneSuccess);
 const addZoneSuccess = computed(() => state.zone.addZoneSuccess);
 const updateZoneSuccess = computed(() => state.zone.updateZoneSuccess);
@@ -205,8 +203,8 @@ const options = [
     label: "100",
   },
 ];
-const getZones = () => {
-  dispatch("getZones", query);
+const getZonesTotal = () => {
+  dispatch("getZonesTotal", query);
 };
 
 const deleteZone = () => {
@@ -219,7 +217,7 @@ function perPage({ currentPerPage }) {
 watch(deleteZoneSuccess, () => {
   if (deleteZoneSuccess.value) {
     toast.success("Successfully Deleted");
-    dispatch("getZones", query);
+    dispatch("getZonesTotal", query);
     modal.value.closeModal();
   }
 
@@ -227,11 +225,12 @@ watch(deleteZoneSuccess, () => {
 });
 watch([addZoneSuccess, updateZoneSuccess], () => {
   if (addZoneSuccess.value || updateZoneSuccess.value) {
-    dispatch("getZones", query);
+    dispatch("getZonesTotal", query);
   }
 
   // getAllZones();
 });
+// eslint-disable-next-line no-unused-vars
 function handleCoordinator(id) {
   if (!id) return "n/a";
   const result = membersOptions?.value?.find((i) => i.value === id);
@@ -242,7 +241,7 @@ function handleDelete() {
   dispatch("removeZone", detail.value);
 }
 watch(query, () => {
-  dispatch("getZones", query);
+  dispatch("getZonesTotal", query);
 });
 </script>
 <style lang="scss" scoped>
