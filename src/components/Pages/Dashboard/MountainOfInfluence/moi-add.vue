@@ -3,22 +3,22 @@
     <Modal
       :activeModal="state.zone.addmodal"
       @close="closeModal"
-      title="Create Zone"
+      title="Create Mountain of Influence"
       centered
     >
       <form @submit.prevent="addZone" class="space-y-4">
         <Textinput
           label="Name"
           type="text"
-          placeholder="Zone Name"
-          name="zoneName"
-          v-model.trim="zoneName"
-          :error="zoneNameError"
+          placeholder="Mointain of Influence name"
+          name="mountainOfInfluence"
+          v-model.trim="mountainOfInfluence"
+          :error="mountainOfInfluenceError"
         />
         <div class="assagin space-y-4">
           <Textarea
             label="Description"
-            placeholder="Zone description"
+            placeholder="description"
             v-model="description"
             :error="descriptionError"
           />
@@ -28,7 +28,7 @@
           <Button
             :isLoading="loading"
             :disabled="loading"
-            text="Add zone"
+            text="Add mountain of influence"
             btnClass="btn-dark"
           ></Button>
         </div>
@@ -53,7 +53,7 @@ const success = computed(() => state.zone.addZoneSuccess);
 const loading = computed(() => state.zone.addZoneLoading);
 const toast = useToast();
 const schema = yup.object({
-  zoneName: yup.string().required("Name is required"),
+  mountainOfInfluence: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
 });
 
@@ -61,7 +61,8 @@ const { handleSubmit } = useForm({
   validationSchema: schema,
 });
 
-const { value: zoneName, errorMessage: zoneNameError } = useField("zoneName");
+const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
+  useField("mountainOfInfluence");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 

@@ -190,7 +190,8 @@ const routes = [
           {
             path: "",
             name: "ministries",
-            component: () => import("@/components/Pages/Dashboard/Ministries"),
+            component: () =>
+              import("@/components/Pages/Dashboard/Ministries/ministries"),
             meta: {
               activeName: "ministries",
             },

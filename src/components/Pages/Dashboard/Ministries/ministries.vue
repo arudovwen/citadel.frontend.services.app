@@ -29,7 +29,7 @@
           state.auth.userData.userRole.toLowerCase() === 'administrator'
         "
         icon="heroicons-outline:plus"
-        text="Add Mointain of Influence"
+        text="Add Ministry"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
         iconClass="text-lg"
         @click="openZone"
@@ -40,8 +40,8 @@
 
     <Grid v-if="fillter === 'grid' && !isSkeletion" />
 
-    <ZoneAddmodal />
-    <UpdateModal />
+    <AddModal />
+    <EditModal />
   </div>
 </template>
 
@@ -51,9 +51,9 @@ import GridSkletion from "@/components/Skeleton/grid";
 import Select from "@/components/Select";
 import InputGroup from "@/components/InputGroup";
 import { computed, ref, watch, onMounted, reactive, provide } from "vue";
-import ZoneAddmodal from "./moi-add";
-import UpdateModal from "./moi-edit";
-import Grid from "./moi-grid";
+import AddModal from "./ministry-add";
+import EditModal from "./ministry-edit";
+import Grid from "./ministry-grid";
 import { useStore } from "vuex";
 
 const store = useStore();

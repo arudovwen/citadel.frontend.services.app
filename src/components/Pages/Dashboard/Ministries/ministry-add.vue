@@ -1,11 +1,16 @@
 <template>
-  <form @submit.prevent="onSubmit">
-    <Card noborder className="border-none shadow-none" bodyClass="p-2" title="">
-      <div class="grid grid-cols-1 gap-5">
+  <div>
+    <Modal
+      :activeModal="state.zone.addmodal"
+      @close="closeModal"
+      title="Create Ministry"
+      centered
+    >
+      <form @submit.prevent="addMinistry" class="space-y-4">
         <Textinput
           label="Name"
           type="text"
-          placeholder="Ministry Name"
+          placeholder="Ministry name"
           name="ministryName"
           v-model.trim="ministryName"
           :error="ministryNameError"
@@ -13,7 +18,7 @@
         <div class="assagin space-y-4">
           <Textarea
             label="Description"
-            placeholder="Ministry description"
+            placeholder="description"
             v-model="description"
             :error="descriptionError"
           />
@@ -23,17 +28,17 @@
           <Button
             :isLoading="loading"
             :disabled="loading"
-            text="Add ministry"
+            text="Add Ministry"
             btnClass="btn-dark"
           ></Button>
         </div>
-      </div>
-    </Card>
-  </form>
+      </form>
+    </Modal>
+  </div>
 </template>
 <script setup>
 import Button from "@/components/Button";
-import Card from "@/components/Card";
+import Modal from "@/components/Modal";
 import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
@@ -43,7 +48,7 @@ import { useToast } from "vue-toastification";
 
 import { computed, watch } from "vue";
 
-const { state } = useStore();
+const { state, dispatch } = useStore();
 const success = computed(() => state.zone.addZoneSuccess);
 const loading = computed(() => state.zone.addZoneLoading);
 const toast = useToast();
@@ -61,18 +66,19 @@ const { value: ministryName, errorMessage: ministryNameError } =
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 
-const onSubmit = handleSubmit((values) => {
+const addMinistry = handleSubmit((values) => {
   console.log(values);
-  // dispatch("addZone", values);
+  // dispatch("addMinistry", values);
 });
 
 const closeModal = () => {
-  // dispatch("closeModal");
+  dispatch("closeModal");
 };
 
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
+    dispatch("getZones");
   }
 
   closeModal();

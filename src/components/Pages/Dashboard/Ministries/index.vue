@@ -1,14 +1,3 @@
 <template>
-  <div>
-    <Ministries />
-  </div>
+  <router-view></router-view>
 </template>
-<script>
-import Ministries from "./module/ministry-table";
-export default {
-  components: {
-    Ministries,
-  },
-};
-</script>
-<style lang=""></style>
