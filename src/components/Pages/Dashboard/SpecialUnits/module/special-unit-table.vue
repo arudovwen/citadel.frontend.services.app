@@ -40,7 +40,7 @@
           </export-excel>
           <Button
             icon="ri:user-add-line"
-            text="Add ministry"
+            text="Add special unit"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
             @click="
@@ -181,9 +181,9 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { membersTable } from "@/constant/basic-tablle-data";
-import AddRecord from "../member-add.vue";
-import EditRecord from "../member-edit.vue";
-import ViewRecord from "../member-preview.vue";
+import AddRecord from "../special-unit-add.vue";
+import EditRecord from "../special-unit-edit.vue";
+import ViewRecord from "../special-unit-preview.vue";
 import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
