@@ -150,7 +150,7 @@ export const menuItems = [
   },
   {
     title: "Units",
-    icon: "heroicons-outline:building-library",
+    icon: "heroicons-outline:rectangle-group",
     link: "/units",
     roles: ["administrator"],
     subroles: [],
@@ -158,7 +158,7 @@ export const menuItems = [
 
   {
     title: "Special Units",
-    icon: "heroicons-outline:building-library",
+    icon: "heroicons-outline:squares-2x2",
     link: "/special-unit",
     roles: ["administrator"],
     subroles: [],

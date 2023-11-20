@@ -155,10 +155,10 @@
   <Modal
     :title="
       type === 'add'
-        ? 'Member Creation'
+        ? 'Unit Creation'
         : type === 'edit'
-        ? 'Edit member'
-        : 'View member'
+        ? 'Edit Unit'
+        : 'View Unit'
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
@@ -184,7 +184,7 @@ import { membersTable } from "@/constant/basic-tablle-data";
 import AddRecord from "../unit-add.vue";
 import EditRecord from "../unit-edit.vue";
 import ViewRecord from "../unit-preview.vue";
-import moment from "moment";
+// import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
 import { computed, onMounted, watch, reactive, ref } from "vue";
@@ -358,17 +358,17 @@ export default {
     const search = ref("");
     const loading = computed(() => state.profile.getAllBiodataloading);
     const members = computed(() => {
-      if (state?.profile?.allbiodata) {
-        return state?.profile?.allbiodata.map((item) => {
-          item.fullName = `${item.firstName}  ${item.surName}`;
-          item.dateOfBirth = item?.dateOfBirth
-            ? moment(item?.dateOfBirth).format("ll")
-            : "-";
-          item.department = item?.department ? item?.department : "-";
+      // if (state?.profile?.allbiodata) {
+      //   return state?.profile?.allbiodata.map((item) => {
+      //     item.fullName = `${item.firstName}  ${item.surName}`;
+      //     item.dateOfBirth = item?.dateOfBirth
+      //       ? moment(item?.dateOfBirth).format("ll")
+      //       : "-";
+      //     item.department = item?.department ? item?.department : "-";
 
-          return item;
-        });
-      }
+      //     return item;
+      //   });
+      // }
       return [];
     });
     const total = computed(() => state.profile.total);
