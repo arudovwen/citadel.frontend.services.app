@@ -1,14 +1,3 @@
 <template>
-  <div>
-    <SpecialUnits />
-  </div>
+  <router-view></router-view>
 </template>
-<script>
-import SpecialUnits from "./module/special-unit-table";
-export default {
-  components: {
-    SpecialUnits,
-  },
-};
-</script>
-<style lang=""></style>

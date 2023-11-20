@@ -163,6 +163,13 @@ export const menuItems = [
     roles: ["administrator"],
     subroles: [],
   },
+  {
+    title: "Mountain Of Influence",
+    icon: "heroicons-outline:globe-europe-africa",
+    link: "/mountain-of-influence",
+    roles: ["administrator"],
+    subroles: [],
+  },
 
   {
     title: "Requests",
@@ -237,6 +244,18 @@ export const ProfileMenu = [
   },
 ];
 export const notifications = [];
+export const ministries = [
+  {
+    id: 11,
+    name: "Global Ministry",
+    description: "Dcn Min",
+  },
+  {
+    id: 11,
+    name: "Global Group PFCC",
+    description: "Dcn Min 2",
+  },
+];
 export const message = [
   {
     title: "Wade Warren",
