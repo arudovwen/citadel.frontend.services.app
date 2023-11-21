@@ -31,14 +31,14 @@
             <VueSelect
               class="min-w-[250px] w-full md:w-auto"
               v-model="zone"
-              :options="membersOptions"
+              :options="zoneOptions"
               placeholder="Filter zone"
               name="zone"
             />
             <!-- <VueSelect
             class="min-w-[200px] w-full md:w-auto"
             v-model="center"
-            :options="membersOptions"
+            :options="zoneOptions"
             placeholder="Filter center"
             name="center"
           /> -->
@@ -409,13 +409,14 @@ export default {
     });
     onMounted(() => {
       dispatch("getAffiliationByMemberQuery", memberQuery);
+      dispatch("getZones", memberQuery);
       dispatch("getEvents", query);
     });
-    const membersOptions = computed(() =>
-      state?.member?.data?.map((i) => {
+    const zoneOptions = computed(() =>
+      state?.zone?.zones?.map((i) => {
         return {
-          label: `${i.firstName} ${i.surName}`,
-          value: i.userId,
+          label: i.zoneName,
+          value: i.id,
         };
       })
     );
@@ -450,7 +451,7 @@ export default {
       }
     );
     return {
-      membersOptions,
+      zoneOptions,
       modalChange,
       state,
       filteredColumns,
