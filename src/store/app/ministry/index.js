@@ -134,9 +134,9 @@ export default {
       state.editModal = true;
     },
     //open edit Ministry
-    openEditModal(state, data) {
+    openMinistryEditModal(state, data) {
       state.editModal = true;
-      state.Ministry = data;
+      state.ministry = data;
     },
 
     // toggleAddMinistry
@@ -147,8 +147,8 @@ export default {
     closeModal(state) {
       state.addModal = false;
     },
-    // closeEditModal
-    closeEditModal(state) {
+    // closeMinistryEditModal
+    closeMinistryEditModal(state) {
       state.editModal = false;
     },
   },
@@ -183,7 +183,7 @@ export default {
       try {
         commit("getMinistriesBegin");
         const response = await DataService.get(
-          `${urls.GET_ALL_MinistryS_TOTAL}?${new URLSearchParams(
+          `${urls.GET_ALL_MINISTRIES_TOTAL}?${new URLSearchParams(
             cleanObject(data)
           )}`
         );
@@ -198,7 +198,7 @@ export default {
     async updateMinistry({ commit }, data) {
       try {
         commit("updateMinistryBegin");
-        const response = await DataService.put(urls.UPDATE_Ministry, data);
+        const response = await DataService.put(urls.UPDATE_MINISTRY, data);
 
         if (response.status === 200) {
           commit("updateMinistrySuccess", response.data.data);
@@ -229,8 +229,8 @@ export default {
     // updateMinistry
 
     //open edit modal
-    openEditModal({ commit }, data) {
-      commit("openEditModal", data);
+    openMinistryEditModal({ commit }, data) {
+      commit("openMinistryEditModal", data);
     },
     // eopen Ministry
     toggleAddMinistry({ commit }) {
@@ -241,9 +241,9 @@ export default {
     closeModal({ commit }) {
       commit("closeModal");
     },
-    // closeEditModal
-    closeEditModal({ commit }) {
-      commit("closeEditModal");
+    // closeMinistryEditModal
+    closeMinistryEditModal({ commit }) {
+      commit("closeMinistryEditModal");
     },
   },
 };

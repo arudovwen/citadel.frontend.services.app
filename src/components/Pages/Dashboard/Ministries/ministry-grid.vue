@@ -34,10 +34,12 @@
               <div
                 class="text-slate-600 dark:text-slate-400 text-xs font-medium mb-2"
               >
-                <span>Coordinator</span>:
-                <span class="font-medium">{{ item.coordinator || "n/a" }}</span>
+                <span>Description</span>:
+                <span class="font-medium capitalize">{{
+                  item.description || "none"
+                }}</span>
               </div>
-              <div class="flex justify-start">
+              <!-- <div class="flex justify-start">
                 <div class="text-left">
                   <span
                     class="inline-flex items-center space-x-1 bg-gray-400 bg-opacity-[0.16] text-gray-500 text-[11px] font-normal px-2 py-1 rounded-full"
@@ -46,13 +48,10 @@
                     <span>{{ item?.totalCenters }} centers</span>
                   </span>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div
-              v-if="
-                state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
-                state.auth.userData.userRole.toLowerCase() === 'administrator'
-              "
+              v-if="canEdit"
               class="flex justify-end px-4 py-2 mt-6 border-t border-gray-200 gap-x-3"
             >
               <button
@@ -124,7 +123,7 @@ import Empty from "@/components/Empty";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 // import Dropdown from "@/components/Dropdown";
-import Icon from "@/components/Icon";
+// import Icon from "@/components/Icon";
 // import { MenuItem } from "@headlessui/vue";
 import Modal from "@/components/Modal/Modal";
 import { computed, onMounted, ref, watch, inject } from "vue";
@@ -142,7 +141,9 @@ onMounted(() => {
 });
 const { dispatch, state } = useStore();
 const router = useRouter();
-
+const canEdit = computed(
+  () => state.auth.userData.userRole.toLowerCase() === "administrator"
+);
 const ministries = computed(() => state.ministry.ministries);
 const total = computed(() => state.ministry.total);
 const getMinistriesLoading = computed(
@@ -172,7 +173,7 @@ const actions = ref([
     name: "edit",
     icon: "heroicons-outline:pencil-alt",
     doit: (data) => {
-      dispatch("openEditModal", data);
+      dispatch("openMinistryEditModal", data);
     },
   },
   {
