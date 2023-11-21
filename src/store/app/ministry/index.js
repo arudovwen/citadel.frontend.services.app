@@ -212,7 +212,7 @@ export default {
       try {
         commit("deleteMinistryBegin");
         const response = await DataService.delete(
-          `${urls.DELETE_Ministry}?id=${id}`
+          `${urls.DELETE_MINISTRY}?id=${id}`
         );
 
         if (response.status === 200) {

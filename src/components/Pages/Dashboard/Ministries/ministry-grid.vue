@@ -213,7 +213,7 @@ const getMinistries = () => {
 };
 
 const deleteMinistry = () => {
-  // dispatch("deleteMinistry", detail.value.id);
+  dispatch("deleteMinistry", detail.value.id);
 };
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
