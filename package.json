@@ -10,6 +10,8 @@
   "dependencies": {
     "@amcharts/amcharts5": "^5.1.3",
     "@amcharts/amcharts5-geodata": "^5.0.2",
+    "@ckeditor/ckeditor5-build-classic": "^40.1.0",
+    "@ckeditor/ckeditor5-vue": "^5.1.0",
     "@fullcalendar/core": "^5.11.3",
     "@fullcalendar/daygrid": "^5.11.2",
     "@fullcalendar/interaction": "^5.11.2",

@@ -115,7 +115,8 @@ export default {
       try {
         commit("addBegin");
         const response = await DataService.put(
-          `${urls.REQUEST_EVENT}?${new URLSearchParams(data)}`
+          `${urls.REQUEST_EVENT}?${new URLSearchParams(data.requestType)}`,
+          data
         );
         if (response.status === 200) {
           commit("addSuccess");

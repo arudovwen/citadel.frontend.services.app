@@ -45,7 +45,7 @@
         >
           <Button
             icon="heroicons-outline:plus-sm"
-            text="Add Event"
+            text="Request Event"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
             @click="
@@ -155,16 +155,15 @@
               </Dropdown>
             </span>
           </template>
-          <template #pagination-bottom="props">
+          <template #pagination-bottom>
             <div class="py-4 px-3">
               <Pagination
                 :total="0"
-                :current="current"
-                :per-page="perpage"
-                :pageRange="pageRange"
-                @page-changed="current = $event"
-                :pageChanged="props.pageChanged"
-                :perPageChanged="props.perPageChanged"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="5"
+                :perPageChanged="perPage"
+                @page-changed="query.pageNumber = $event"
                 enableSearch
                 enableSelect
                 :options="options"
@@ -213,7 +212,7 @@
   <Modal
     :title="
       type === 'add'
-        ? 'Add event'
+        ? 'Request event'
         : type === 'edit'
         ? 'Edit Event'
         : 'View event'
@@ -420,7 +419,12 @@ export default {
       requestType: "",
       dateOfRequestedEvent: "",
     });
+    const memberQuery = reactive({
+      pageNumber: 1,
+      pageSize: 2500000,
+    });
     onMounted(() => {
+      dispatch("getAffiliationByMemberQuery", memberQuery);
       dispatch("getEvents", query);
     });
     const membersOptions = computed(() =>
@@ -436,8 +440,14 @@ export default {
         modalChange.value.closeModal();
       }
     });
+    function perPage({ currentPerPage }) {
+      query.pageNumber = 1;
+      query.pageSize = currentPerPage;
+    }
     return {
       membersOptions,
+      modalChange,
+      perPage,
     };
   },
 };

@@ -23,6 +23,7 @@ import VCalendar from "v-calendar";
 import "v-calendar/dist/style.css";
 import VOtpInput from "vue3-otp-input";
 import excel from "vue-excel-export";
+import CKEditor from "@ckeditor/ckeditor5-vue";
 
 if (localStorage.users === undefined) {
   let users = [
@@ -86,5 +87,6 @@ createApp(App)
   .use(VueGoodTablePlugin)
   .use(VueApexCharts)
   .use(VCalendar)
+  .use(CKEditor)
   .component("v-otp-input", VOtpInput)
   .mount("#app");

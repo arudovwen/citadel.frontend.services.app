@@ -26,7 +26,7 @@
             v-model="dateOfRequestedEvent"
             class="form-control"
             id="d1"
-            placeholder="Select date of event"
+            placeholder="yyyy, dd M"
           />
         </FormGroup>
       </div>
@@ -55,7 +55,6 @@ import FormGroup from "@/components/FormGroup";
 import Select from "@/components/Select";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-import moment from "moment";
 
 const toast = useToast();
 // eslint-disable-next-line no-unused-vars
@@ -95,6 +94,7 @@ const membersOptions = computed(() =>
 const formData = reactive({
   dateOfRequestedEvent: "",
   requestType: "",
+
   name: "",
 });
 
@@ -123,9 +123,7 @@ const { value: requestType, errorMessage: requestTypeError } =
 const onSubmit = handleSubmit((values) => {
   dispatch("addEvent", {
     requestType: values.requestType,
-    dateOfRequestedEvent: moment(values.dateOfRequestedEvent).format(
-      "YYYY-MM-DDTHH:mm:ss.SSSZ"
-    ),
+    dateOfRequestedEvent: values.dateOfRequestedEvent,
     userId: values.name.value,
   });
 });

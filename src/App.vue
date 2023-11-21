@@ -2,4 +2,9 @@
   <router-view />
 </template>
 
-<style></style>
+<style>
+.ck-editor__editable_inline:not(.ck-comment__input *) {
+  height: 200px;
+  overflow-y: auto;
+}
+</style>

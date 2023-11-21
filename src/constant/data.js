@@ -77,11 +77,13 @@ export const menuItems = [
   //   icon: "heroicons-outline:user",
   //   link: "issue-management",
   // },
-  // {
-  //   title: "Events",
-  //   icon: "bx:server",
-  //   link: "/events",
-  // },
+  {
+    title: "Events",
+    icon: "bx:server",
+    link: "/events",
+    roles: ["administrator", "member", "inspectorate"],
+    subroles: [],
+  },
   // {
   //   title: "Notifications",
   //   icon: "heroicons-outline:speakerphone",
@@ -135,10 +137,10 @@ export const menuItems = [
         for: "admin",
         childlink: "/cih/reports/zones",
       },
-      {
-        childtitle: "Events",
-        childlink: "/cih/events",
-      },
+      // {
+      //   childtitle: "Events",
+      //   childlink: "/cih/events",
+      // },
     ],
   },
   {

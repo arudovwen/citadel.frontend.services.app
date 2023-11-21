@@ -109,7 +109,7 @@
                       :class="`
                 
                   ${
-                    item.name === 'delete'
+                    item.name === 'delist'
                       ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
                       : 'hover:bg-slate-900 hover:text-white'
                   }
@@ -157,12 +157,12 @@
     labelClass="btn-outline-dark"
     ref="modalStatus"
     sizeClass="max-w-md"
-    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
+    :themeClass="`${type === 'enlist' ? 'bg-green-500' : 'bg-danger-500'}`"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to {{ type.toLowerCase() }} this member?
     </div>
-    <div v-if="type.toLowerCase() === 'delete'">
+    <div v-if="type.toLowerCase() === 'delist'">
       <textarea
         resize="none"
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
@@ -184,7 +184,7 @@
           :isLoading="deleteloading"
           text="Proceed"
           :btnClass="` btn-sm ${
-            type === 'approve' ? 'btn-success' : 'btn-danger'
+            type === 'enlist' ? 'btn-success' : 'btn-danger'
           }`"
           @click="handleStatus"
         />
@@ -201,7 +201,7 @@
     themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to delete this member?
+      Are you sure you want to delist this member?
     </div>
 
     <template v-slot:footer>
@@ -213,7 +213,7 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          text="Delete"
+          text="Delist"
           :isLoading="deleteloading"
           :disabled="deleteloading"
           btnClass="btn-danger btn-sm"
@@ -261,7 +261,7 @@ import {
   getCurrentInstance,
 } from "vue";
 import window from "@/mixins/window";
-// import store from "@/store";
+import { useToast } from "vue-toastification";
 
 export default {
   mixins: [window],
@@ -304,14 +304,12 @@ export default {
         {
           name: "edit",
         },
-        // {
-        //   name: "delete",
-        // },
+
         {
-          name: "approve",
+          name: "enlist",
         },
         {
-          name: "delete",
+          name: "delist",
         },
       ],
       options: [
@@ -379,26 +377,13 @@ export default {
     };
   },
   methods: {
+    handleDelete() {
+      this.$store.dispatch("disableUser", this.id);
+    },
     generateAction(name, id) {
       this.id = id;
 
       const actions = {
-        // approve: {
-        //   name: "Approve",
-        //   icon: "ph:check",
-        //   doit: () => {
-        //     this.type = name;
-        //     this.$refs.modalStatus.openModal();
-        //   },
-        // },
-        // delete: {
-        //   name: "delete",
-        //   icon: "ph:x-light",
-        //   doit: () => {
-        //     this.type = name;
-        //     this.$refs.modalStatus.openModal();
-        //   },
-        // },
         view: {
           name: "view",
           icon: "heroicons-outline:eye",
@@ -415,12 +400,20 @@ export default {
             this.$router.push("/profile/" + id);
           },
         },
-        delete: {
-          name: "delete",
+        delist: {
+          name: "delist",
           icon: "heroicons-outline:trash",
           doit: () => {
             this.type = name;
-            this.$refs.modal.openModal();
+            this.$refs.modalStatus.openModal();
+          },
+        },
+        enlist: {
+          name: "enlist",
+          icon: "heroicons-outline:trash",
+          doit: () => {
+            this.type = name;
+            this.$refs.modalStatus.openModal();
           },
         },
       };
@@ -428,7 +421,7 @@ export default {
       return actions[name] || null;
     },
     handleStatus() {
-      if (this.type === "approve") {
+      if (this.type === "enlist") {
         this.$store.dispatch("enableUser", this.id);
       } else {
         this.$store.dispatch("disableUser", this.id);
@@ -436,14 +429,14 @@ export default {
     },
     handleActions(value) {
       if (value === "active") {
-        return this.actions.filter((i) => i.name !== "approve");
+        return this.actions.filter((i) => i.name !== "enlist");
       }
-      if (value === "delete") {
-        return this.actions.filter((i) => i.name !== "delete");
+      if (value === "deactivated") {
+        return this.actions.filter((i) => i.name !== "delist");
       }
       if (value === "pendingactivation") {
         return this.actions.filter(
-          (i) => i.name !== "delete" && i.name !== "approve"
+          (i) => i.name !== "delist" && i.name !== "approve"
         );
       }
       return value;
@@ -451,6 +444,7 @@ export default {
   },
   setup() {
     const id = ref(null);
+    const toast = useToast();
     const modal = ref(null);
     const modalChange = ref(null);
     const modalStatus = ref(null);
@@ -493,10 +487,6 @@ export default {
     const deleteloading = computed(() => state.member.deleteloading);
     const deletesuccess = computed(() => state.member.deletesuccess);
 
-    function handleDelete() {
-      dispatch("disableUser", id.value);
-    }
-
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
@@ -511,6 +501,7 @@ export default {
 
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
+        toast.success("Member delisted");
         dispatch("getUsers", query);
         modalStatus.value.closeModal();
       }
@@ -534,7 +525,6 @@ export default {
       members,
       roles,
       search,
-      handleDelete,
       modal,
       modalChange,
       modalStatus,

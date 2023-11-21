@@ -469,16 +469,16 @@ const routes = [
               },
             ],
           },
-          {
-            path: "events",
-            name: "Events",
-            component: () => import("@/components/Pages/Dashboard/CIH/Events"),
-            meta: {
-              activeName: "cih management",
-              roles: ["administrator", "inspectorate", "accreditor"],
-              subroles: ["cihcoordinator", "cihpastor"],
-            },
-          },
+          // {
+          //   path: "events",
+          //   name: "Events",
+          //   component: () => import("@/components/Pages/Dashboard/CIH/Events"),
+          //   meta: {
+          //     activeName: "cih management",
+          //     roles: ["administrator", "inspectorate", "accreditor"],
+          //     subroles: ["cihcoordinator", "cihpastor"],
+          //   },
+          // },
         ],
         meta: {
           roles: [
@@ -614,24 +614,24 @@ const routes = [
           subroles: [],
         },
       },
-      // {
-      //   path: "/events",
-      //   name: "events",
-      //   component: () => import("@/views/dashboard/events/index.vue"),
-      //   children: [
-      //     {
-      //       path: "",
-      //       name: "events",
-      //       component: () => import("@/components/Pages/Dashboard/Events"),
-      //       meta: {
-      //         activeName: "events",
-      //       },
-      //     },
-      //   ],
-      //   meta: {
-      //     roles: ["administrator", "inspectorate"],
-      //   },
-      // },
+      {
+        path: "/events",
+        name: "events",
+        component: () => import("@/views/dashboard/events/index.vue"),
+        children: [
+          {
+            path: "",
+            name: "events",
+            component: () => import("@/components/Pages/Dashboard/Events"),
+            meta: {
+              activeName: "events",
+            },
+          },
+        ],
+        meta: {
+          roles: ["administrator", "inspectorate", "member"],
+        },
+      },
       {
         path: "/notifications",
         name: "notifications",

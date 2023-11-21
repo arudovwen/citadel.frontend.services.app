@@ -2,9 +2,12 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex gap-x-4">
+        <div
+          class="flex gap-x-4 items-center"
+          v-if="state.auth.userData.userRole.toLowerCase() !== 'member'"
+        >
           <InputGroup
-            v-model="query.searchParameter"
+            v-model="searchParameter"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
@@ -15,52 +18,38 @@
             v-model="dateValue"
             :formatter="formatter"
             input-classes="form-control h-[36px]"
-            placeholder="Select date range"
+            placeholder="Filter date range"
+          />
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto"
+            v-model="filterType"
+            :options="eventsOption"
+            placeholder="Filter type"
+            name="filterType"
+          />
+          <VueSelect
+            class="min-w-[250px] w-full md:w-auto"
+            v-model="zone"
+            :options="membersOptions"
+            placeholder="Filter zone"
+            name="zone"
+          />
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto"
+            v-model="center"
+            :options="membersOptions"
+            placeholder="Filter center"
+            name="center"
           />
         </div>
         <div
+          v-if="state.auth.userData.userRole.toLowerCase() === 'member'"
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
-          <div
-            class="flex border border-gray-200 rounded"
-            v-if="
-              state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
-              state.auth.userData.userRole.toLowerCase() === 'administrator'
-            "
-          >
-            <Button
-              text="Activity reports"
-              @click="active = 'activity'"
-              :btnClass="`border-r h-9 py-2 rounded-[0px] flex items-center ${
-                active === 'activity' ? 'bg-gray-100' : ''
-              }`"
-            />
-            <Button
-              text="Inspection reports"
-              @click="active = 'inspection'"
-              :btnClass="`h-9 py-2 flex items-center ${
-                active === 'inspection' ? 'bg-gray-100' : ''
-              }`"
-            />
-          </div>
           <Button
-            v-if="active === 'inspection'"
             icon="heroicons-outline:plus-sm"
-            text="Add Report"
-            btnClass=" btn-primary font-normal btn-sm "
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                $refs.modalChange.openModal();
-              }
-            "
-          />
-          <Button
-            v-if="state.auth.userData?.cihRole?.toLowerCase() === 'cihpastor'"
-            icon="heroicons-outline:plus-sm"
-            text="Add Report"
+            text="Add Event"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
             @click="
@@ -74,9 +63,7 @@
       </div>
       <div class="-mx-6">
         <vue-good-table
-          :columns="
-            active === 'inspection' ? inspectionColumns : activityColumns
-          "
+          :columns="filteredColumns"
           mode="remote"
           styleClass=" vgt-table  centered "
           :rows="advancedTable"
@@ -91,26 +78,7 @@
             enabled: true,
             externalQuery: searchParameter,
           }"
-          :select-options="{
-            enabled:
-              state.auth.userData.userRole.toLowerCase() === 'cihcooordinator',
-            selectionInfoClass: 'top-select',
-            selectionText:
-              'reports selected, Do you wish to send these reports?',
-            selectOnCheckboxOnly: true,
-            clearSelectionText: 'Clear selection',
-          }"
         >
-          <template #selected-row-actions>
-            <button
-              :disabled="loading"
-              :isLoading="loading"
-              @click="handleReports"
-              class="text-[#232322] font-medium"
-            >
-              Send reports
-            </button>
-          </template>
           <template v-slot:table-row="props">
             <span
               v-if="props.column.field == 'customer'"
@@ -191,15 +159,16 @@
               </Dropdown>
             </span>
           </template>
-          <template #pagination-bottom>
+          <template #pagination-bottom="props">
             <div class="py-4 px-3">
               <Pagination
                 :total="0"
-                :current="query.pageNumber"
-                :per-page="query.pageSize"
-                :pageRange="5"
-                :perPageChanged="perPage"
-                @page-changed="query.pageNumber = $event"
+                :current="current"
+                :per-page="perpage"
+                :pageRange="pageRange"
+                @page-changed="current = $event"
+                :pageChanged="props.pageChanged"
+                :perPageChanged="props.perPageChanged"
                 enableSearch
                 enableSelect
                 :options="options"
@@ -212,28 +181,59 @@
       </div>
     </Card>
   </div>
-
+  <Modal
+    title="Confirm action"
+    label="Small modal"
+    labelClass="btn-outline-dark"
+    ref="modal"
+    sizeClass="max-w-md"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure about this action?
+    </div>
+    <div v-if="type.toLowerCase() === 'delist'">
+      <textarea
+        resize="none"
+        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
+        rows="4"
+        placeholder="Provide reason"
+      ></textarea>
+    </div>
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm "
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Proceed"
+          btnClass="btn-dark btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+      </div>
+    </template>
+  </Modal>
   <Modal
     :title="
       type === 'add'
-        ? `Create ${active} report`
+        ? 'Add event'
         : type === 'edit'
-        ? 'Edit Report'
-        : 'View report'
+        ? 'Edit Event'
+        : 'View event'
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
-    sizeClass="max-w-3xl"
+    sizeClass="max-w-lg"
   >
-    <AddReport v-if="type === 'add' && active === 'activity'" />
-    <AddInspectionReport v-if="type === 'add' && active === 'inspection'" />
-    <EditReport v-if="type === 'edit report'" />
-    <ViewReport v-if="type === 'view report'" />
+    <AddEvent v-if="type === 'add'" />
+    <EditEvent v-if="type === 'edit'" />
+    <ViewEvent v-if="type === 'view'" />
   </Modal>
 </template>
 <script>
+import { onMounted, reactive, watch, computed, ref } from "vue";
 import { useStore } from "vuex";
-import { computed, ref, reactive } from "vue";
 import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
@@ -245,19 +245,17 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
-import AddReport from "./addreport.vue";
-import AddInspectionReport from "./addinspectionreport.vue";
-import EditReport from "./editreport.vue";
-import ViewReport from "./preview.vue";
+import AddEvent from "./addevent.vue";
+import EditEvent from "./editevent.vue";
+import ViewEvent from "./preview.vue";
 
 import window from "@/mixins/window";
 export default {
   mixins: [window],
   components: {
-    AddReport,
-    AddInspectionReport,
-    EditReport,
-    ViewReport,
+    AddEvent,
+    EditEvent,
+    ViewEvent,
     Pagination,
     InputGroup,
     Modal,
@@ -266,7 +264,6 @@ export default {
     Card,
     MenuItem,
     Button,
-    // eslint-disable-next-line vue/no-unused-components
     VueSelect,
     VueTailwindDatePicker,
   },
@@ -278,6 +275,7 @@ export default {
       perpage: 10,
       pageRange: 5,
       searchParameter: "",
+      filterType: "",
       type: "",
       id: null,
       filters: ["all", "pending"],
@@ -285,9 +283,27 @@ export default {
       dateValue: [],
       center: "",
       zone: "",
-      membersOptions: [
-        { value: "admin", label: "John Snow" },
-        { value: "hod", label: "Tony Starke" },
+      eventsOption: [
+        {
+          value: "Baby Christening",
+          label: "Baby Christening",
+        },
+        {
+          value: "Baby Dedication",
+          label: "Baby Dedication",
+        },
+        {
+          value: "House Warming",
+          label: "House Warming",
+        },
+        {
+          value: "Special Thanksgiving",
+          label: "Special Thanksgiving",
+        },
+        {
+          value: "Burial Ceremony",
+          label: "Burial Ceremony",
+        },
       ],
 
       formatter: {
@@ -296,10 +312,13 @@ export default {
       },
       actions: [
         {
-          name: "view report",
+          name: "Approve",
         },
         {
-          name: "edit report",
+          name: "Decline",
+        },
+        {
+          name: "view",
         },
 
         {
@@ -322,67 +341,6 @@ export default {
         {
           value: "100",
           label: "100",
-        },
-      ],
-      activityColumns: [
-        {
-          label: "Date",
-          field: "date",
-        },
-        {
-          label: "Zone",
-          field: "zone",
-        },
-        {
-          label: "Center",
-          field: "center",
-        },
-        {
-          label: "Activity Name",
-          field: "name",
-        },
-        {
-          label: "Activity Type",
-          field: "type",
-        },
-
-        {
-          label: "Venue",
-          field: "venue",
-        },
-
-        {
-          label: "Attendees",
-          field: "attendees",
-        },
-
-        {
-          label: "State of flock",
-          field: "state_of_flock",
-        },
-
-        {
-          label: "Action",
-          field: "action",
-        },
-      ],
-      inspectionColumns: [
-        {
-          label: "Date of Inspection",
-          field: "date",
-        },
-        {
-          label: "Inspecting Officer",
-          field: "zone",
-        },
-        {
-          label: "Center",
-          field: "center",
-        },
-
-        {
-          label: "Action",
-          field: "action",
         },
       ],
     };
@@ -420,31 +378,83 @@ export default {
     },
   },
   setup() {
+    const modalChange = ref(null);
+    const { dispatch, state } = useStore();
+    const success = computed(() => state.event.addsuccess);
+    const columns = [
+      {
+        label: "Zone",
+        field: "zone",
+      },
+      {
+        label: "Center",
+        field: "center",
+      },
+      {
+        label: "Request Date",
+        field: "date",
+      },
+      {
+        label: "Requester Name",
+        field: "name",
+      },
+      {
+        label: "Event Type",
+        field: "type",
+      },
+
+      {
+        label: "Event date",
+        field: "eventDate",
+      },
+      {
+        label: "Status",
+        field: "status",
+      },
+
+      {
+        label: "Action",
+        field: "action",
+      },
+    ];
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
       searchParameter: "",
+      requestType: "",
+      dateOfRequestedEvent: "",
     });
-    const { state } = useStore();
-    const loading = computed(() => state.report.loading);
-    const active = ref("activity");
-
-    function handleReports() {
-      console.log(
-        "🚀 ~ file: centers.vue:415 ~ handleReports ~ handleReports:"
-      );
-    }
-    function perPage({ currentPerPage }) {
-      query.pageNumber = 1;
-      query.pageSize = currentPerPage;
-    }
+    const memberQuery = reactive({
+      pageNumber: 1,
+      pageSize: 2500000,
+    });
+    onMounted(() => {
+      dispatch("getAffiliationByMemberQuery", memberQuery);
+      dispatch("getEvents", query);
+    });
+    const membersOptions = computed(() =>
+      state?.member?.data?.map((i) => {
+        return {
+          label: `${i.firstName} ${i.surName}`,
+          value: i.userId,
+        };
+      })
+    );
+    const filteredColumns = computed(() => {
+      return state.auth.userData.userRole.toLowerCase() === "member"
+        ? columns.filter((i) => i.field !== "action")
+        : columns;
+    });
+    watch(success, () => {
+      if (success.value) {
+        modalChange.value.closeModal();
+      }
+    });
     return {
+      membersOptions,
+      modalChange,
       state,
-      handleReports,
-      loading,
-      active,
-      query,
-      perPage,
+      filteredColumns,
     };
   },
 };

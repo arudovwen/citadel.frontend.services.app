@@ -121,14 +121,18 @@
             </div>
           </div>
         </div>
-        <Textarea
-          label="Summary"
-          type="text"
-          :rows="4"
-          v-model="summary"
+        <FormGroup
+          label="Provide a summary"
+          name="summary"
           :error="summaryError"
-          placeholder="Provide a summary"
-        />
+        >
+          <ckeditor
+            :editor="editor"
+            v-model="summary"
+            :config="editorConfig"
+            class="h-[400px]"
+          ></ckeditor>
+        </FormGroup>
       </div>
 
       <div class="text-right space-x-3 mt-8">
@@ -138,6 +142,7 @@
   </form>
 </template>
 <script setup>
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { reactive } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
@@ -145,8 +150,31 @@ import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
-import Textarea from "@/components/Textarea";
 
+const editor = ClassicEditor;
+const editorConfig = {
+  toolbar: {
+    items: [
+      "undo",
+      "redo",
+      "|",
+      "heading",
+      "|",
+      "bold",
+      "italic",
+      "|",
+      "link",
+
+      "insertTable",
+
+      "|",
+      "bulletedList",
+      "numberedList",
+      "outdent",
+      "indent",
+    ],
+  },
+};
 const formData = reactive({
   date: "",
   type: "",
