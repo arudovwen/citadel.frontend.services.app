@@ -108,6 +108,8 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
+          :isLoading="deleteMinistryLoading"
+          :disabled="deleteMinistryLoading"
           text="Delete"
           btnClass="btn-danger btn-sm"
           @click="deleteMinistry"
@@ -151,6 +153,9 @@ const getMinistriesLoading = computed(
 );
 const deleteMinistrySuccess = computed(
   () => state.ministry.deleteMinistrySuccess
+);
+const deleteMinistryLoading = computed(
+  () => state.ministry.deleteMinistryLoading
 );
 const addMinistrySuccess = computed(() => state.ministry.addMinistrySuccess);
 const updateMinistrySuccess = computed(
