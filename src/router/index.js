@@ -9,7 +9,7 @@ import AffinityGroupsIndex from "@/views/dashboard/affinityGroups/index.vue";
 import MinistriesIndex from "@/views/dashboard/ministries/index.vue";
 import UnitsIndex from "@/views/dashboard/units/index.vue";
 import SpecialUnitsIndex from "@/views/dashboard/special-units/index.vue";
-
+import MountainOfInfluenceIndex from "@/views/dashboard/mountain-of-influence/index.vue";
 import "vue-toastification/dist/index.css";
 
 const toast = useToast();
@@ -190,7 +190,8 @@ const routes = [
           {
             path: "",
             name: "ministries",
-            component: () => import("@/components/Pages/Dashboard/Ministries"),
+            component: () =>
+              import("@/components/Pages/Dashboard/Ministries/ministries"),
             meta: {
               activeName: "ministries",
             },
@@ -209,7 +210,7 @@ const routes = [
           {
             path: "",
             name: "units",
-            component: () => import("@/components/Pages/Dashboard/Units"),
+            component: () => import("@/components/Pages/Dashboard/Units/units"),
             meta: {
               activeName: "units",
             },
@@ -229,9 +230,32 @@ const routes = [
             path: "",
             name: "special units",
             component: () =>
-              import("@/components/Pages/Dashboard/SpecialUnits"),
+              import("@/components/Pages/Dashboard/SpecialUnits/special-units"),
             meta: {
               activeName: "special-unit",
+            },
+          },
+        ],
+      },
+
+      {
+        path: "/mountain-of-influence",
+        name: "mountain of influence",
+        component: MountainOfInfluenceIndex,
+        meta: {
+          roles: ["administrator"],
+          subroles: [],
+        },
+        children: [
+          {
+            path: "",
+            name: "mountain of influence",
+            component: () =>
+              import(
+                "@/components/Pages/Dashboard/MountainOfInfluence/moi.vue"
+              ),
+            meta: {
+              activeName: "mountain-of-influence",
             },
           },
         ],
@@ -647,8 +671,10 @@ const routes = [
             },
           },
         ],
-        roles: ["administrator", "hod"],
-        subroles: [],
+        meta: {
+          roles: ["administrator", "hod"],
+          subroles: [],
+        },
       },
       {
         path: "/appointments",

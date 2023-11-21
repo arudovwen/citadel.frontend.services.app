@@ -32,6 +32,7 @@
         </div>
         <div class="ltr:text-right rtl:text-left">
           <Button
+            v-if="canEditDetails"
             :disabled="submitLoading"
             :isLoading="submitLoading"
             text="Add Qualification"

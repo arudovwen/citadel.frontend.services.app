@@ -2,53 +2,14 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex rounded-[6px] text-sm overflow-hidden gap-x-4">
+        <div class="">
           <InputGroup
-            v-model="search"
+            v-model="query.searchParameter"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
             merged
             classInput="min-w-[220px] !h-9"
-          />
-          <Select
-            label=""
-            :options="roleFilters"
-            v-model="query.sortOrder"
-            placeholder="Sort by"
-            classInput="bg-white !h-9 min-w-[150px] !min-h-auto"
-          />
-          <!-- <VueTailwindDatePicker
-            v-model="dateValue"
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="Select date"
-            as-single
-          /> -->
-        </div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
-          <export-excel :data="members" worksheet="members" name="members.xls">
-            <Button
-              icon="clarity:export-line"
-              text="Export"
-              btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-              iconClass="text-lg"
-            />
-          </export-excel>
-          <Button
-            icon="ri:user-add-line"
-            text="Add special unit"
-            btnClass=" btn-primary font-normal btn-sm "
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                $refs.modalChange.openModal();
-              }
-            "
           />
         </div>
       </div>
@@ -121,59 +82,44 @@
       </div>
     </Card>
   </div>
-
   <Modal
-    title="Delete Member"
+    title="Confirm action"
     label="Small modal"
-    labelClass="btn-outline-danger"
+    labelClass="btn-outline-dark"
     ref="modal"
     sizeClass="max-w-md"
-    themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to delete this member?
+      Are you sure about this action?
     </div>
-
+    <div v-if="type.toLowerCase() === 'delist'">
+      <textarea
+        resize="none"
+        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
+        rows="4"
+        placeholder="Provide reason"
+      ></textarea>
+    </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
-          :disabled="deleteloading"
           text="Cancel"
-          btnClass="btn-outline-secondary btn-sm"
+          btnClass="btn-outline-secondary btn-sm "
           @click="$refs.modal.closeModal()"
         />
         <Button
-          text="Delete"
-          :disabled="deleteloading"
-          :isLoading="deleteloading"
-          btnClass="btn-danger btn-sm"
-          @click="handleDelete(id)"
+          text="Proceed"
+          btnClass="btn-dark btn-sm"
+          @click="$refs.modal.closeModal()"
         />
       </div>
     </template>
   </Modal>
-  <Modal
-    :title="
-      type === 'add'
-        ? 'Special Unit Creation'
-        : type === 'edit'
-        ? 'Edit Special Unit'
-        : 'View Special Unit'
-    "
-    labelClass="btn-outline-dark"
-    ref="modalChange"
-    sizeClass="max-w-xl"
-  >
-    <AddRecord v-if="type === 'add'" />
-    <EditRecord v-if="type === 'edit'" />
-    <ViewRecord v-if="type === 'view'" />
-  </Modal>
 </template>
 <script>
-import Select from "@/components/Select";
-import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
+import { useRoute } from "vue-router";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
@@ -181,24 +127,17 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { membersTable } from "@/constant/basic-tablle-data";
-import AddRecord from "../special-unit-add.vue";
-import EditRecord from "../special-unit-edit.vue";
-import ViewRecord from "../special-unit-preview.vue";
-// import moment from "moment";
+import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 import window from "@/mixins/window";
 import { useToast } from "vue-toastification";
-import { roleFilters } from "@/constant/data";
 // import store from "@/store";
 
 export default {
   mixins: [window],
   components: {
-    AddRecord,
-    EditRecord,
-    ViewRecord,
     Pagination,
     InputGroup,
     Modal,
@@ -206,10 +145,7 @@ export default {
     Icon,
     Card,
     MenuItem,
-    Select,
     Button,
-    // eslint-disable-next-line vue/no-unused-components
-    VueTailwindDatePicker,
   },
 
   data() {
@@ -235,22 +171,6 @@ export default {
           icon: "heroicons-outline:eye",
           doit: ({ userId }) => {
             this.$router.push("/profile/" + userId);
-          },
-        },
-
-        {
-          name: "edit",
-          icon: "heroicons:pencil-square",
-          doit: ({ userId }) => {
-            this.$router.push("/profile/" + userId);
-          },
-        },
-        {
-          name: "delete",
-          icon: "heroicons-outline:trash",
-          doit: ({ id }) => {
-            this.id = id;
-            this.$refs.modal.openModal();
           },
         },
       ],
@@ -332,23 +252,23 @@ export default {
   },
   setup() {
     const modal = ref(null);
+    const route = useRoute();
     const modalChange = ref(null);
     const modalStatus = ref(null);
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
       searchParameter: "",
-      isFirstTimer: false,
-      sortOrder: "",
+      ZoneId: route.params.id,
     });
     const toast = useToast();
     const { state, dispatch } = useStore();
     onMounted(() => {
-      dispatch("getAllBiodata", query);
+      dispatch("getAffiliationByMemberQuery", query);
       dispatch("getRoles");
     });
     function fetchRecords(page) {
-      dispatch("getAllBiodata", { ...query, pageNumber: page });
+      dispatch("getAffiliationByMemberQuery", { ...query, pageNumber: page });
     }
 
     function perPage({ currentPerPage }) {
@@ -356,19 +276,19 @@ export default {
       query.pageSize = currentPerPage;
     }
     const search = ref("");
-    const loading = computed(() => state.profile.getAllBiodataloading);
+    const loading = computed(() => state.profile.loading);
     const members = computed(() => {
-      // if (state?.profile?.allbiodata) {
-      //   return state?.profile?.allbiodata.map((item) => {
-      //     item.fullName = `${item.firstName}  ${item.surName}`;
-      //     item.dateOfBirth = item?.dateOfBirth
-      //       ? moment(item?.dateOfBirth).format("ll")
-      //       : "-";
-      //     item.department = item?.department ? item?.department : "-";
+      if (state?.member?.data) {
+        return state?.member?.data.map((item) => {
+          item.fullName = `${item.firstName} ${item.surName}`;
+          item.dateOfBirth = item?.dateOfBirth
+            ? moment(item?.dateOfBirth).format("ll")
+            : "-";
+          item.department = item?.department ? item?.department : "-";
 
-      //     return item;
-      //   });
-      // }
+          return item;
+        });
+      }
       return [];
     });
     const total = computed(() => state.profile.total);
@@ -384,17 +304,20 @@ export default {
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
-      dispatch("getAllBiodata", { ...query, searchParameter: searchValue });
+      dispatch("getAffiliationByMemberQuery", {
+        ...query,
+        searchParameter: searchValue,
+      });
     }, debounceDelay);
     watch(addsuccess, () => {
-      addsuccess.value && dispatch("getAllBiodata", query);
+      addsuccess.value && dispatch("getAffiliationByMemberQuery", query);
       modalChange.value.closeModal();
     });
 
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
-        dispatch("getAllBiodata", query);
-        toast.success("Member deleted");
+        dispatch("getAffiliationByMemberQuery", query);
+        toast.success("Mmeber deleted");
         modal.value.closeModal();
       }
     });
@@ -403,9 +326,9 @@ export default {
       debouncedSearch(search.value);
     });
     watch(
-      () => [query.pageNumber, query.pageSize, query.sortOrder],
+      () => [query.pageNumber, query.pageSize],
       () => {
-        dispatch("getAllBiodata", query);
+        dispatch("getAffiliationByMemberQuery", query);
       }
     );
     return {
@@ -423,7 +346,6 @@ export default {
       modalStatus,
       perPage,
       state,
-      roleFilters,
     };
   },
 };

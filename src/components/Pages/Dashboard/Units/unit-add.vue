@@ -1,11 +1,16 @@
 <template>
-  <form @submit.prevent="onSubmit">
-    <Card noborder className="border-none shadow-none" bodyClass="p-2" title="">
-      <div class="grid grid-cols-1 gap-5">
+  <div>
+    <Modal
+      :activeModal="state.zone.addmodal"
+      @close="closeModal"
+      title="Create Unit"
+      centered
+    >
+      <form @submit.prevent="addUnit" class="space-y-4">
         <Textinput
           label="Name"
           type="text"
-          placeholder="Unit Name"
+          placeholder="Unit name"
           name="unitName"
           v-model.trim="unitName"
           :error="unitNameError"
@@ -13,7 +18,7 @@
         <div class="assagin space-y-4">
           <Textarea
             label="Description"
-            placeholder="Ministry description"
+            placeholder="description"
             v-model="description"
             :error="descriptionError"
           />
@@ -23,17 +28,17 @@
           <Button
             :isLoading="loading"
             :disabled="loading"
-            text="Add unit"
+            text="Save"
             btnClass="btn-dark"
           ></Button>
         </div>
-      </div>
-    </Card>
-  </form>
+      </form>
+    </Modal>
+  </div>
 </template>
 <script setup>
 import Button from "@/components/Button";
-import Card from "@/components/Card";
+import Modal from "@/components/Modal";
 import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
@@ -43,7 +48,7 @@ import { useToast } from "vue-toastification";
 
 import { computed, watch } from "vue";
 
-const { state } = useStore();
+const { state, dispatch } = useStore();
 const success = computed(() => state.zone.addZoneSuccess);
 const loading = computed(() => state.zone.addZoneLoading);
 const toast = useToast();
@@ -60,18 +65,19 @@ const { value: unitName, errorMessage: unitNameError } = useField("unitName");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 
-const onSubmit = handleSubmit((values) => {
+const addUnit = handleSubmit((values) => {
   console.log(values);
-  // dispatch("addZone", values);
+  // dispatch("addUnit", values);
 });
 
 const closeModal = () => {
-  // dispatch("closeModal");
+  dispatch("closeModal");
 };
 
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
+    dispatch("getZones");
   }
 
   closeModal();

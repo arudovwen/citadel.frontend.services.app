@@ -1,19 +1,19 @@
 <template>
   <div>
     <Modal
-      :activeModal="state.zone.editModal"
+      :activeModal="state.zone.addmodal"
       @close="closeModal"
-      title="Edit Unit"
+      title="Create Mountain of Influence"
       centered
     >
-      <form @submit.prevent="updateUnit" class="space-y-4">
+      <form @submit.prevent="addMOI" class="space-y-4">
         <Textinput
           label="Name"
           type="text"
-          placeholder="Unit name"
-          name="unitName"
-          v-model.trim="unitName"
-          :error="unitNameError"
+          placeholder="Mointain of Influence name"
+          name="mountainOfInfluence"
+          v-model.trim="mountainOfInfluence"
+          :error="mountainOfInfluenceError"
         />
         <div class="assagin space-y-4">
           <Textarea
@@ -28,7 +28,7 @@
           <Button
             :isLoading="loading"
             :disabled="loading"
-            text="Save changes"
+            text="Add mountain of influence"
             btnClass="btn-dark"
           ></Button>
         </div>
@@ -44,50 +44,44 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { useStore } from "vuex";
 import * as yup from "yup";
-import { computed, watch } from "vue";
 import { useToast } from "vue-toastification";
 
-const { state, dispatch } = useStore();
-const zone = computed(() => state.zone.zone);
-const success = computed(() => state.zone.updateZoneSuccess);
-const loading = computed(() => state.zone.updateZoneLoading);
-const toast = useToast();
+import { computed, watch } from "vue";
 
+const { state, dispatch } = useStore();
+const success = computed(() => state.zone.addZoneSuccess);
+const loading = computed(() => state.zone.addZoneLoading);
+const toast = useToast();
 const schema = yup.object({
-  unitName: yup.string().required("Name is required"),
+  mountainOfInfluence: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
 });
-const { handleSubmit, setValues } = useForm({
+
+const { handleSubmit } = useForm({
   validationSchema: schema,
-  initialValues: zone.value,
 });
-const { value: unitName, errorMessage: unitNameError } = useField("unitName");
+
+const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
+  useField("mountainOfInfluence");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 
-// const { value: category, errorMessage: errorCategory } = useField("category");
-
-const updateUnit = handleSubmit((values) => {
+const addMOI = handleSubmit((values) => {
   console.log(values);
-  // dispatch("updateUnit", values);
+  // dispatch("addZone", values);
 });
 
 const closeModal = () => {
-  dispatch("closeEditModal");
+  dispatch("closeModal");
 };
-
-watch(zone, () => {
-  setValues(zone.value);
-});
 
 watch(success, () => {
   if (success.value) {
-    toast.success("Successfully Updated");
+    toast.success("Successfully Created");
     dispatch("getZones");
-    closeModal();
-  } else {
-    closeModal();
   }
+
+  closeModal();
 
   // getAllZones();
 });

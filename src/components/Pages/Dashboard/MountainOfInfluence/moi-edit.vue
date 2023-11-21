@@ -3,17 +3,17 @@
     <Modal
       :activeModal="state.zone.editModal"
       @close="closeModal"
-      title="Edit Unit"
+      title="Edit Mountain Of Influence"
       centered
     >
-      <form @submit.prevent="updateUnit" class="space-y-4">
+      <form @submit.prevent="updateMOI" class="space-y-4">
         <Textinput
           label="Name"
           type="text"
-          placeholder="Unit name"
-          name="unitName"
-          v-model.trim="unitName"
-          :error="unitNameError"
+          placeholder="Mointain of Influence name"
+          name="mountainOfInfluence"
+          v-model.trim="mountainOfInfluence"
+          :error="mountainOfInfluenceError"
         />
         <div class="assagin space-y-4">
           <Textarea
@@ -28,7 +28,7 @@
           <Button
             :isLoading="loading"
             :disabled="loading"
-            text="Save changes"
+            text="Update mountain of influence"
             btnClass="btn-dark"
           ></Button>
         </div>
@@ -54,22 +54,23 @@ const loading = computed(() => state.zone.updateZoneLoading);
 const toast = useToast();
 
 const schema = yup.object({
-  unitName: yup.string().required("Name is required"),
+  mountainOfInfluence: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
 });
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
   initialValues: zone.value,
 });
-const { value: unitName, errorMessage: unitNameError } = useField("unitName");
+const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
+  useField("mountainOfInfluence");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
-const updateUnit = handleSubmit((values) => {
+const updateMOI = handleSubmit((values) => {
   console.log(values);
-  // dispatch("updateUnit", values);
+  // dispatch("updateMOI", values);
 });
 
 const closeModal = () => {
