@@ -410,7 +410,7 @@ export default {
         },
         enlist: {
           name: "enlist",
-          icon: "heroicons-outline:trash",
+          icon: "heroicons-outline:plus",
           doit: () => {
             this.type = name;
             this.$refs.modalStatus.openModal();

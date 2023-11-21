@@ -2,45 +2,47 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div
-          class="flex gap-x-4 items-center"
-          v-if="state.auth.userData.userRole.toLowerCase() !== 'member'"
-        >
-          <InputGroup
-            v-model="searchParameter"
-            placeholder="Search"
-            type="text"
-            prependIcon="heroicons-outline:search"
-            merged
-            classInput="min-w-[220px] !h-9"
-          />
-          <VueTailwindDatePicker
-            v-model="dateValue"
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="Filter date range"
-          />
-          <VueSelect
-            class="min-w-[200px] w-full md:w-auto"
-            v-model="filterType"
-            :options="eventsOption"
-            placeholder="Filter type"
-            name="filterType"
-          />
-          <VueSelect
-            class="min-w-[250px] w-full md:w-auto"
-            v-model="zone"
-            :options="membersOptions"
-            placeholder="Filter zone"
-            name="zone"
-          />
-          <VueSelect
+        <div>
+          <div
+            class="flex gap-x-4 items-center"
+            v-if="state.auth.userData.userRole.toLowerCase() !== 'member'"
+          >
+            <InputGroup
+              v-model="query.searchParameter"
+              placeholder="Search"
+              type="text"
+              prependIcon="heroicons-outline:search"
+              merged
+              classInput="min-w-[220px] !h-9"
+            />
+            <VueTailwindDatePicker
+              v-model="dateValue"
+              :formatter="formatter"
+              input-classes="form-control h-[36px]"
+              placeholder="Filter date range"
+            />
+            <VueSelect
+              class="min-w-[200px] w-full md:w-auto"
+              v-model="query.events"
+              :options="eventsOption"
+              placeholder="Filter type"
+              name="filterType"
+            />
+            <VueSelect
+              class="min-w-[250px] w-full md:w-auto"
+              v-model="zone"
+              :options="membersOptions"
+              placeholder="Filter zone"
+              name="zone"
+            />
+            <!-- <VueSelect
             class="min-w-[200px] w-full md:w-auto"
             v-model="center"
             :options="membersOptions"
             placeholder="Filter center"
             name="center"
-          />
+          /> -->
+          </div>
         </div>
         <div
           v-if="state.auth.userData.userRole.toLowerCase() === 'member'"
@@ -49,7 +51,7 @@
         >
           <Button
             icon="heroicons-outline:plus-sm"
-            text="Add Event"
+            text="Request Event"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
             @click="
@@ -66,7 +68,7 @@
           :columns="filteredColumns"
           mode="remote"
           styleClass=" vgt-table  centered "
-          :rows="advancedTable"
+          :rows="events || []"
           :sort-options="{
             enabled: false,
           }"
@@ -74,34 +76,8 @@
             enabled: true,
             perPage: perpage,
           }"
-          :search-options="{
-            enabled: true,
-            externalQuery: searchParameter,
-          }"
         >
           <template v-slot:table-row="props">
-            <span
-              v-if="props.column.field == 'customer'"
-              class="flex items-center"
-            >
-              <span class="w-7 h-7 rounded-full mr-3 flex-none">
-                <img
-                  :src="
-                    require('@/assets/images/all-img/' +
-                      props.row.customer.image)
-                  "
-                  :alt="props.row.customer.name"
-                  class="object-cover w-full h-full rounded-full"
-                />
-              </span>
-              <span
-                class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium"
-                >{{ props.row.customer.name }}</span
-              >
-            </span>
-            <span v-if="props.column.field == 'order'" class="font-medium">
-              {{ "#" + props.row.order }}
-            </span>
             <span
               v-if="props.column.field == 'date'"
               class="text-slate-500 dark:text-slate-400"
@@ -162,7 +138,7 @@
           <template #pagination-bottom="props">
             <div class="py-4 px-3">
               <Pagination
-                :total="0"
+                :total="total"
                 :current="current"
                 :per-page="perpage"
                 :pageRange="pageRange"
@@ -217,7 +193,7 @@
   <Modal
     :title="
       type === 'add'
-        ? 'Add event'
+        ? 'Request event'
         : type === 'edit'
         ? 'Edit Event'
         : 'View event'
@@ -248,8 +224,9 @@ import { advancedTable } from "@/constant/basic-tablle-data";
 import AddEvent from "./addevent.vue";
 import EditEvent from "./editevent.vue";
 import ViewEvent from "./preview.vue";
-
+import { debounce } from "lodash";
 import window from "@/mixins/window";
+
 export default {
   mixins: [window],
   components: {
@@ -381,6 +358,8 @@ export default {
     const modalChange = ref(null);
     const { dispatch, state } = useStore();
     const success = computed(() => state.event.addsuccess);
+    const total = computed(() => state.event.total);
+    const events = computed(() => state.event.events);
     const columns = [
       {
         label: "Zone",
@@ -392,15 +371,15 @@ export default {
       },
       {
         label: "Request Date",
-        field: "date",
+        field: "createdAt",
       },
       {
         label: "Requester Name",
-        field: "name",
+        field: "requesterName",
       },
       {
         label: "Event Type",
-        field: "type",
+        field: "eventType",
       },
 
       {
@@ -421,8 +400,8 @@ export default {
       pageNumber: 1,
       pageSize: 25,
       searchParameter: "",
-      requestType: "",
-      dateOfRequestedEvent: "",
+      events: "",
+      UserId: state.auth.userData.id,
     });
     const memberQuery = reactive({
       pageNumber: 1,
@@ -442,19 +421,42 @@ export default {
     );
     const filteredColumns = computed(() => {
       return state.auth.userData.userRole.toLowerCase() === "member"
-        ? columns.filter((i) => i.field !== "action")
+        ? columns.filter((i) => i.field !== "requesterName")
         : columns;
     });
     watch(success, () => {
       if (success.value) {
+        dispatch("getEvents", query);
         modalChange.value.closeModal();
       }
     });
+
+    // Define a debounce delay (e.g., 500 milliseconds)
+    const debounceDelay = 800;
+    const debouncedSearch = debounce(() => {
+      dispatch("getEvents", query);
+    }, debounceDelay);
+
+    watch(
+      () => query.searchParameter,
+      () => {
+        debouncedSearch();
+      }
+    );
+    watch(
+      () => [query.pageNumber, query.event, query.pageSize],
+      () => {
+        dispatch("getEvents", query);
+      }
+    );
     return {
       membersOptions,
       modalChange,
       state,
       filteredColumns,
+      total,
+      events,
+      query,
     };
   },
 };

@@ -2,8 +2,6 @@ import { DataService } from "@/config/dataService/dataService";
 import { urls } from "@/helpers/apI_urls";
 import { cleanObject } from "@/util/cleanObject";
 
-import { useToast } from "vue-toastification";
-const toast = useToast();
 export default {
   state: {
     addmodal: false,
@@ -18,13 +16,32 @@ export default {
     editId: null,
     editdesc: null,
 
+    total: 0,
     events: [],
     loading: false,
     addsuccess: false,
     error: null,
+    updateloading: false,
+    updatesuccess: false,
   },
 
   mutations: {
+    fetchBegin(state) {
+      state.loading = true;
+      state.error = null;
+      state.fetchsuccess = false;
+    },
+    fetchSuccess(state, { data, totalCount }) {
+      state.loading = false;
+      state.success = true;
+      state.events = data;
+      state.total = totalCount;
+    },
+    fetchErr(state, err) {
+      state.loading = false;
+      state.error = err;
+      state.success = false;
+    },
     addBegin(state) {
       state.loading = true;
       state.error = null;
@@ -40,50 +57,22 @@ export default {
       state.error = err;
       state.addsuccess = false;
     },
-    addEvent(state, data) {
-      state.isLoading = true;
+    updateBegin(state) {
+      state.updateloading = true;
+      state.error = null;
+      state.updatesuccess = false;
+    },
+    updateSuccess(state) {
+      state.updateloading = false;
+      state.updatesuccess = true;
+      state.error = null;
+    },
+    updateErr(state, err) {
+      state.updateloading = false;
+      state.error = err;
+      state.updatesuccess = false;
+    },
 
-      setTimeout(() => {
-        state.events.unshift(data);
-        state.isLoading = false;
-        toast.success -
-          500("Event added", {
-            timeout: 2000,
-          });
-      }, 1500);
-      state.addmodal = false;
-    },
-    // removeEvent
-    removeEvent(state, data) {
-      state.events = state.events.filter((item) => item.id !== data.id);
-      toast.error("Event Removed", {
-        timeout: 2000,
-      });
-    },
-    // updateEvent
-    updateEvent(state, data) {
-      state.events.findIndex((item) => {
-        if (item.id === data.id) {
-          // store data
-          state.editId = data.id;
-          state.editName = data.name;
-          state.editassignto = data.assignto;
-          state.editStartDate = data.startDate;
-          state.editEndDate = data.endDate;
-          state.editcta = data.category;
-          state.editdesc = data.des;
-          state.editModal = !state.editModal;
-          // set data to data
-          item.name = data.name;
-          item.des = data.des;
-          item.startDate = data.startDate;
-          item.endDate = data.endDate;
-          item.assignto = data.assignto;
-          item.progress = data.progress;
-          item.category = data.category;
-        }
-      });
-    },
     // openEvent
     openEvent(state) {
       state.addmodal = true;
@@ -102,10 +91,10 @@ export default {
       try {
         commit("fetchBegin");
         const response = await DataService.get(
-          `${urls.GET_REQUEST_EVENT}?${new URLSearchParams(cleanObject(data))}`
+          `${urls.GET_EVENTS}?${new URLSearchParams(cleanObject(data))}`
         );
         if (response.status === 200) {
-          commit("fetchSuccess", response.data);
+          commit("fetchSuccess", response.data.data);
         }
       } catch (err) {
         commit("fetchErr", err);
@@ -123,6 +112,20 @@ export default {
         }
       } catch (err) {
         commit("addErr", err);
+      }
+    },
+    async updateEventStatus({ commit }, data) {
+      try {
+        commit("updateBegin");
+        const response = await DataService.put(
+          `${urls.CHANGE_EVENT_STATUS}?${new URLSearchParams(data)}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("updateSuccess");
+        }
+      } catch (err) {
+        commit("updateErr", err);
       }
     },
 

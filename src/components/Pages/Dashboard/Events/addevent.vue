@@ -2,7 +2,7 @@
   <form @submit.prevent="onSubmit">
     <Card title="">
       <div class="grid gap-5">
-        <div class="">
+        <!-- <div class="">
           <FormGroup label="Requester Name" name="type" :error="nameError">
             <VueSelect
               class="min-w-[200px] w-full md:w-auto"
@@ -12,7 +12,7 @@
               name="name"
             />
           </FormGroup>
-        </div>
+        </div> -->
         <FormGroup label="Event type" name="type" :error="requestTypeError">
           <Select
             placeholder="Select type"
@@ -44,7 +44,7 @@
   </form>
 </template>
 <script setup>
-import VueSelect from "@/components/Select/VueSelect";
+// import VueSelect from "@/components/Select/VueSelect";
 import { reactive, computed, watch } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
@@ -84,18 +84,18 @@ const eventsOption = [
     label: "Burial Ceremony",
   },
 ];
-const membersOptions = computed(() =>
-  state?.member?.data?.map((i) => {
-    return {
-      label: `${i.firstName} ${i.surName}`,
-      value: i.userId,
-    };
-  })
-);
+// const membersOptions = computed(() =>
+//   state?.member?.data?.map((i) => {
+//     return {
+//       label: `${i.firstName} ${i.surName}`,
+//       value: i.userId,
+//     };
+//   })
+// );
 const formData = reactive({
   dateOfRequestedEvent: "",
   requestType: "",
-  name: "",
+  name: state.auth.userData.id,
 });
 
 const formDataSchema = Yup.object().shape({
@@ -103,7 +103,7 @@ const formDataSchema = Yup.object().shape({
     .typeError("Please enter a valid date")
     .required("Date is required"),
   requestType: Yup.string().required("Type is required"),
-  name: Yup.object().typeError("Invalid value").required("Name is required"),
+  // name: Yup.object().typeError("Invalid value").required("Name is required"),
 });
 
 const { handleSubmit } = useForm({
@@ -111,7 +111,7 @@ const { handleSubmit } = useForm({
   initialValues: formData,
 });
 
-const { value: name, errorMessage: nameError } = useField("name");
+// const { value: name, errorMessage: nameError } = useField("name");
 
 const { value: dateOfRequestedEvent, errorMessage: dateError } = useField(
   "dateOfRequestedEvent"
@@ -126,12 +126,12 @@ const onSubmit = handleSubmit((values) => {
     dateOfRequestedEvent: moment(values.dateOfRequestedEvent).format(
       "YYYY-MM-DDTHH:mm:ss.SSSZ"
     ),
-    userId: values.name.value,
+    userId: state.auth.userData.id,
   });
 });
 
 watch(success, () => {
-  toast.success("Request sent");
+  success.value && toast.success("Request sent");
 });
 </script>
 <style lang=""></style>
