@@ -8,7 +8,7 @@
       >
         <InputGroup
           v-model="query.searchParameter"
-          placeholder="Search zone"
+          placeholder="Search ministry"
           type="search"
           prependIcon="heroicons-outline:search"
           classInput="w-full md:w-auto min-w-[320px] !h-9"
@@ -19,7 +19,7 @@
           :options="filters"
           v-model="query.sortOrder"
           placeholder="Sort by"
-          classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px] w-full md:w-auto"
+          classInput="hidden bg-white !h-9 min-w-[150px]  !min-h-[36px] w-full md:w-auto"
         />
       </div>
 
@@ -32,11 +32,11 @@
         text="Add Ministry"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
         iconClass="text-lg"
-        @click="openZone"
+        @click="toggleAddMinistry"
         :isLoading="store.state.zone.isLoading"
       />
     </div>
-    <GridSkletion :count="zones.length" v-if="isSkeletion" />
+    <GridSkletion :count="ministries.length" v-if="isSkeletion" />
 
     <Grid v-if="fillter === 'grid' && !isSkeletion" />
 
@@ -58,7 +58,7 @@ import { useStore } from "vuex";
 
 const store = useStore();
 const { state } = useStore();
-
+const userId = computed(() => state.auth.userData.id);
 const filters = [
   {
     label: "Name",
@@ -70,8 +70,8 @@ const filters = [
   },
 ];
 let fillter = ref("grid");
-const openZone = () => {
-  store.dispatch("openZone");
+const toggleAddMinistry = () => {
+  store.dispatch("toggleAddMinistry");
 };
 
 const width = ref(0);
@@ -87,12 +87,12 @@ const query = reactive({
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
-  userId:
-    state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
-      ? state.auth?.userData?.id
-      : "",
+  // userId:
+  //   state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
+  //     ? state.auth?.userData?.id
+  //     : "",
 });
-const zones = computed(() => store.getters.zones);
+const ministries = computed(() => state.ministry.ministries);
 
 const isSkeletion = ref(true);
 const isSkeletion2 = ref(null);
@@ -125,5 +125,6 @@ watch(fillter, () => {
   }
 });
 provide("query", query);
+provide("userId", userId);
 </script>
 <style lang=""></style>
