@@ -1,12 +1,12 @@
 <template>
   <div class="">
-    <div v-if="getZonesTotalLoading && zones?.length == 0" class="">
+    <div v-if="getMinistriesLoading && ministries?.length == 0" class="">
       <EmptyGrid />
     </div>
     <div v-else>
-      <div v-if="zones.length">
+      <div v-if="ministries.length">
         <div class="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5 mb-2">
-          <Card bodyClass="" v-for="(item, i) in zones" :key="i">
+          <Card bodyClass="" v-for="(item, i) in ministries" :key="i">
             <div
               class="px-6 pt-6 cursor-pointer"
               @click="() => router.push(`#`)"
@@ -18,12 +18,15 @@
                     <div
                       class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal uppercase"
                     >
-                      {{ item.zoneName.charAt(0) + item.zoneName.charAt(1) }}
+                      {{
+                        item.ministryName.charAt(0) +
+                        item.ministryName.charAt(1)
+                      }}
                     </div>
                   </div>
                   <div class="font-medium text-lg leading-6">
                     <div class="dark:text-slate-200 text-slate-900">
-                      {{ item.zoneName }}
+                      {{ item.ministryName }}
                     </div>
                   </div>
                 </div>
@@ -130,7 +133,7 @@ import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
 onMounted(() => {
-  getZonesTotal();
+  getMinistries();
   dispatch("getAffiliationByMemberQuery", {
     pageSize: 250000,
     pageNumber: 1,
@@ -140,20 +143,26 @@ onMounted(() => {
 const { dispatch, state } = useStore();
 const router = useRouter();
 
-const zones = computed(() => state.zone.zones);
-const total = computed(() => state.zone.total);
-const getZonesTotalLoading = computed(() => state.zone.getZonesTotalLoading);
-const deleteZoneSuccess = computed(() => state.zone.deleteZoneSuccess);
-const addZoneSuccess = computed(() => state.zone.addZoneSuccess);
-const updateZoneSuccess = computed(() => state.zone.updateZoneSuccess);
-const membersOptions = computed(() =>
-  state?.member?.data?.map((i) => {
-    return {
-      label: `${i.firstName} ${i.surName}`,
-      value: i.userId,
-    };
-  })
+const ministries = computed(() => state.ministry.ministries);
+const total = computed(() => state.ministry.total);
+const getMinistriesLoading = computed(
+  () => state.ministry.getMinistriesLoading
 );
+const deleteMinistrySuccess = computed(
+  () => state.ministry.deleteMinistrySuccess
+);
+const addMinistrySuccess = computed(() => state.ministry.addMinistrySuccess);
+const updateMinistrySuccess = computed(
+  () => state.ministry.updateMinistrySuccess
+);
+// const membersOptions = computed(() =>
+//   state?.member?.data?.map((i) => {
+//     return {
+//       label: `${i.firstName} ${i.surName}`,
+//       value: i.userId,
+//     };
+//   })
+// );
 const toast = useToast();
 const modal = ref(null);
 const detail = ref(null);
@@ -198,45 +207,45 @@ const options = [
     label: "100",
   },
 ];
-const getZonesTotal = () => {
-  dispatch("getZonesTotal", query);
+const getMinistries = () => {
+  dispatch("getMinistries", query);
 };
 
 const deleteMinistry = () => {
-  // dispatch("deleteZone", detail.value.id);
+  // dispatch("deleteMinistry", detail.value.id);
 };
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
   query.pageSize = currentPerPage;
 }
-watch(deleteZoneSuccess, () => {
-  if (deleteZoneSuccess.value) {
+watch(deleteMinistrySuccess, () => {
+  if (deleteMinistrySuccess.value) {
     toast.success("Successfully Deleted");
-    dispatch("getZonesTotal", query);
+    dispatch("getMinistries", query);
     modal.value.closeModal();
   }
 
-  // getAllZones();
+  // getAllministries();
 });
-watch([addZoneSuccess, updateZoneSuccess], () => {
-  if (addZoneSuccess.value || updateZoneSuccess.value) {
-    dispatch("getZonesTotal", query);
+watch([addMinistrySuccess, updateMinistrySuccess], () => {
+  if (addMinistrySuccess.value || updateMinistrySuccess.value) {
+    dispatch("getMinistries", query);
   }
 
-  // getAllZones();
+  // getAllministries();
 });
 // eslint-disable-next-line no-unused-vars
-function handleCoordinator(id) {
-  if (!id) return "n/a";
-  const result = membersOptions?.value?.find((i) => i.value === id);
-  return result?.label;
-}
+// function handleCoordinator(id) {
+//   if (!id) return "n/a";
+//   const result = membersOptions?.value?.find((i) => i.value === id);
+//   return result?.label;
+// }
 // eslint-disable-next-line no-unused-vars
 function handleDelete() {
-  dispatch("removeZone", detail.value);
+  dispatch("removeministry", detail.value);
 }
 watch(query, () => {
-  dispatch("getZonesTotal", query);
+  dispatch("getMinistries", query);
 });
 </script>
 <style lang="scss" scoped>

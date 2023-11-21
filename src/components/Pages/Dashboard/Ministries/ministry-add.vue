@@ -1,7 +1,7 @@
 <template>
   <div>
     <Modal
-      :activeModal="state.zone.addmodal"
+      :activeModal="state.ministry.addModal"
       @close="closeModal"
       title="Create Ministry"
       centered
@@ -46,11 +46,12 @@ import { useStore } from "vuex";
 import * as yup from "yup";
 import { useToast } from "vue-toastification";
 
-import { computed, watch } from "vue";
+import { computed, watch, inject } from "vue";
 
 const { state, dispatch } = useStore();
-const success = computed(() => state.zone.addZoneSuccess);
-const loading = computed(() => state.zone.addZoneLoading);
+const userId = inject("userId");
+const success = computed(() => state.ministry.addMinistrySuccess);
+const loading = computed(() => state.ministry.addMinistryLoading);
 const toast = useToast();
 const schema = yup.object({
   ministryName: yup.string().required("Name is required"),
@@ -67,18 +68,19 @@ const { value: description, errorMessage: descriptionError } =
   useField("description");
 
 const addMinistry = handleSubmit((values) => {
-  console.log(values);
-  // dispatch("addMinistry", values);
+  const data = { userId: userId.value, ...values };
+  console.log(data);
+  dispatch("addMinistry", data);
 });
 
 const closeModal = () => {
-  dispatch("closeModal");
+  dispatch("toggleAddMinistry");
 };
 
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
-    dispatch("getZones");
+    dispatch("getMinistries");
   }
 
   closeModal();
