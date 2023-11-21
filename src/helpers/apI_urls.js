@@ -95,6 +95,14 @@ export const urls = {
   // Files
   UPLOAD_FILE: "/Files/uploadfile",
 
+  //Ministries
+  CREATE_MINISTRY: "/Ministry/CreateMinistry",
+  UPDATE_MINISTRY: "/Ministry/UpdateMinistry",
+  GET_MINISTRY_BY_ID: "/Ministry/GetMinistryById",
+  GET_MINISTRY_BY_USER_ID: "/Ministry/GetMinistryByUserId",
+  GET_ALL_MINISTRIES: "/Ministry/GetAllMinistry",
+  DELETE_MINISTRY: "/Ministry/DeleteMinistry",
+
   // Qualification
   CREATE_QUALIFICATION: "/Qualification/CreateQualification",
   UPDATE_QUALIFICATION: "/Qualification/UpdateQualification",

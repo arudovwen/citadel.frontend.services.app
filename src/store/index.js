@@ -20,6 +20,10 @@ import auth from "./app/auth";
 import profile from "./app/profile";
 import request from "./app/request";
 import report from "./app/report";
+import ministry from "./app/ministry";
+import unit from "./app/unit";
+import specialUnit from "./app/special-unit";
+import moi from "./app/moi";
 import affinityGroup from "./app/affinityGroup";
 
 export default createStore({
@@ -117,5 +121,9 @@ export default createStore({
     auth,
     request,
     report,
+    ministry,
+    unit,
+    specialUnit,
+    moi,
   },
 });
