@@ -18,7 +18,7 @@
             <VueTailwindDatePicker
               v-model="query.dateValue"
               :formatter="formatter"
-              input-classes="form-control h-[36px]"
+              input-classes="form-control h-[36px] min-w-[250px]"
               placeholder="Filter date range"
             />
             <VueSelect
@@ -100,6 +100,16 @@
             >
               {{ moment(props.row.eventDate).format("ll") }}
             </span>
+            <span
+              v-if="props.column.field == 'requesterName'"
+              class="text-slate-500 dark:text-slate-400"
+            >
+              <router-link
+                class="hover:underline"
+                :to="`/profile/${props.row.userId}`"
+                >{{ props.row.requesterName }}</router-link
+              >
+            </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
                 class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
@@ -128,7 +138,10 @@
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in actions" :key="i">
+                  <MenuItem
+                    v-for="(item, i) in handleAction(props.row.status)"
+                    :key="i"
+                  >
                     <div
                       @click="
                         () => {
@@ -198,20 +211,20 @@
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
         rows="4"
         placeholder="Provide reason"
-        v-model="reason"
+        v-model="comment"
       ></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
-          :disabled="deleteloading"
+          :disabled="updateloading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm "
           @click="$refs.modalStatus.closeModal()"
         />
         <Button
-          :disabled="deleteloading"
-          :isLoading="deleteloading"
+          :disabled="updateloading"
+          :isLoading="updateloading"
           text="Proceed"
           :btnClass="` btn-sm ${
             type === 'approve' ? 'btn-success' : 'btn-danger'
@@ -286,6 +299,7 @@ import AddEvent from "./addevent.vue";
 import EditEvent from "./editevent.vue";
 import ViewEvent from "./preview.vue";
 import { debounce } from "lodash";
+import { useToast } from "vue-toastification";
 // eslint-disable-next-line no-unused-vars
 import moment from "moment";
 import window from "@/mixins/window";
@@ -365,6 +379,15 @@ export default {
     };
   },
   methods: {
+    handleAction(status) {
+      if (status === true) {
+        return this.actions.filter(
+          (i) => i.name === "view" || i.name === "delete"
+        );
+      }
+      return this.actions;
+    },
+
     handleDelete() {},
     handleStatus() {
       const data = {
@@ -374,16 +397,10 @@ export default {
         Comments: this.comment,
         status: this.type === "approve" ? true : false,
       };
-      console.log(
-        "🚀 ~ file: table.vue:377 ~ handleStatus ~ data.this.detail:",
-        this.detail
-      );
+
       console.log("🚀 ~ file: table.vue:377 ~ handleStatus ~ data:", data);
-      // if (this.type === "approve") {
-      //   this.$store.dispatch("enableUser", this.id);
-      // } else {
-      //   this.$store.dispatch("disableUser", this.id);
-      // }
+
+      this.$store.dispatch("updateEventStatus", data);
     },
     generateAction(name, id) {
       this.id = id;
@@ -427,22 +444,27 @@ export default {
     },
   },
   setup() {
+    const modalStatus = ref(null);
     const modalChange = ref(null);
+    const toast = useToast();
     const { dispatch, state } = useStore();
     const success = computed(() => state.event.addsuccess);
     const loading = computed(() => state.event.loading);
+    const updateloading = computed(() => state.event.updateloading);
+    const updatesuccess = computed(() => state.event.updatesuccess);
+
     const total = computed(() => state.event.total);
     const events = computed(() => state.event.events);
     const deleteloading = computed(() => state.event.deleteloading);
     const columns = [
-      {
-        label: "Zone",
-        field: "zone",
-      },
-      {
-        label: "Center",
-        field: "center",
-      },
+      // {
+      //   label: "Zone",
+      //   field: "zone",
+      // },
+      // {
+      //   label: "Center",
+      //   field: "center",
+      // },
       {
         label: "Request Date",
         field: "createdAt",
@@ -544,10 +566,17 @@ export default {
       }
     });
 
+    watch(updatesuccess, () => {
+      if (updatesuccess.value) {
+        getData();
+        modalStatus.value.closeModal();
+        toast.success("Request updated");
+      }
+    });
+
     watch(
       () => query.dateValue,
       () => {
-        console.log("🚀 ~ file: table.vue:548 ~ watch ~ query:", query);
         query.EndDate = moment(query.dateValue[1]).format(
           "YYYY-MM-DDTHH:mm:ss.SSSZ"
         );
@@ -569,7 +598,13 @@ export default {
       }
     );
     watch(
-      () => [query.pageNumber, query.event, query.pageSize],
+      () => [
+        query.pageNumber,
+        query.event,
+        query.pageSize,
+        query.FromDate,
+        query.EndDate,
+      ],
       () => {
         getData();
       }
@@ -586,11 +621,13 @@ export default {
       total,
       events,
       query,
+      updateloading,
       moment,
       perPage,
       eventsOption,
       loading,
       deleteloading,
+      modalStatus,
     };
   },
 };
