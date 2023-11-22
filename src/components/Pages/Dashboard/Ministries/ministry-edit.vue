@@ -69,7 +69,7 @@ const { value: description, errorMessage: descriptionError } =
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
 const updateMinistry = handleSubmit((values) => {
-  console.log(values);
+  // console.log(values);
   dispatch("updateMinistry", values);
 });
 

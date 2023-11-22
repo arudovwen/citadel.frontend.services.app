@@ -1,12 +1,12 @@
 <template>
   <div class="">
-    <div v-if="getZonesTotalLoading && zones?.length == 0" class="">
+    <div v-if="getMOIsLoading && mois?.length == 0" class="">
       <EmptyGrid />
     </div>
     <div v-else>
-      <div v-if="zones.length">
+      <div v-if="mois.length">
         <div class="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5 mb-2">
-          <Card bodyClass="" v-for="(item, i) in zones" :key="i">
+          <Card bodyClass="" v-for="(item, i) in mois" :key="i">
             <div
               class="px-6 pt-6 cursor-pointer"
               @click="() => router.push(`#`)"
@@ -18,12 +18,15 @@
                     <div
                       class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal uppercase"
                     >
-                      {{ item.zoneName.charAt(0) + item.zoneName.charAt(1) }}
+                      {{
+                        item.mountainOfInfluenceName.charAt(0) +
+                        item.mountainOfInfluenceName.charAt(1)
+                      }}
                     </div>
                   </div>
                   <div class="font-medium text-lg leading-6">
                     <div class="dark:text-slate-200 text-slate-900">
-                      {{ item.zoneName }}
+                      {{ item.mountainOfInfluenceName }}
                     </div>
                   </div>
                 </div>
@@ -31,18 +34,10 @@
               <div
                 class="text-slate-600 dark:text-slate-400 text-xs font-medium mb-2"
               >
-                <span>Coordinator</span>:
-                <span class="font-medium">{{ item.coordinator || "n/a" }}</span>
-              </div>
-              <div class="flex justify-start">
-                <div class="text-left">
-                  <span
-                    class="inline-flex items-center space-x-1 bg-gray-400 bg-opacity-[0.16] text-gray-500 text-[11px] font-normal px-2 py-1 rounded-full"
-                  >
-                    <span> <Icon icon="heroicons-outline:user-group" /></span>
-                    <span>{{ item?.totalCenters }} centers</span>
-                  </span>
-                </div>
+                <span>Description</span>:
+                <span class="font-medium capitalize">{{
+                  item.description || "none"
+                }}</span>
               </div>
             </div>
             <div
@@ -117,7 +112,7 @@ import Empty from "@/components/Empty";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 // import Dropdown from "@/components/Dropdown";
-import Icon from "@/components/Icon";
+// import Icon from "@/components/Icon";
 // import { MenuItem } from "@headlessui/vue";
 import Modal from "@/components/Modal/Modal";
 import { computed, onMounted, ref, watch, inject } from "vue";
@@ -126,30 +121,30 @@ import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
 onMounted(() => {
-  getZonesTotal();
-  dispatch("getAffiliationByMemberQuery", {
-    pageSize: 250000,
-    pageNumber: 1,
-    searchParameter: "",
-  });
+  getMOIs();
+  // dispatch("getAffiliationByMemberQuery", {
+  //   pageSize: 250000,
+  //   pageNumber: 1,
+  //   searchParameter: "",
+  // });
 });
 const { dispatch, state } = useStore();
 const router = useRouter();
 
-const zones = computed(() => state.zone.zones);
-const total = computed(() => state.zone.total);
-const getZonesTotalLoading = computed(() => state.zone.getZonesTotalLoading);
-const deleteZoneSuccess = computed(() => state.zone.deleteZoneSuccess);
-const addZoneSuccess = computed(() => state.zone.addZoneSuccess);
-const updateZoneSuccess = computed(() => state.zone.updateZoneSuccess);
-const membersOptions = computed(() =>
-  state?.member?.data?.map((i) => {
-    return {
-      label: `${i.firstName} ${i.surName}`,
-      value: i.userId,
-    };
-  })
-);
+const mois = computed(() => state.moi.mois);
+const total = computed(() => state.moi.total);
+const getMOIsLoading = computed(() => state.moi.getMOIsLoading);
+const deleteMOISuccess = computed(() => state.moi.deleteMOISuccess);
+const addMOISuccess = computed(() => state.moi.addMOISuccess);
+const updateMOISuccess = computed(() => state.moi.updateMOISuccess);
+// const membersOptions = computed(() =>
+//   state?.member?.data?.map((i) => {
+//     return {
+//       label: `${i.firstName} ${i.surName}`,
+//       value: i.userId,
+//     };
+//   })
+// );
 const toast = useToast();
 const modal = ref(null);
 const detail = ref(null);
@@ -159,7 +154,7 @@ const actions = ref([
     name: "edit",
     icon: "heroicons-outline:pencil-alt",
     doit: (data) => {
-      dispatch("openEditModal", data);
+      dispatch("openMOIEditModal", data);
     },
   },
   {
@@ -194,8 +189,8 @@ const options = [
     label: "100",
   },
 ];
-const getZonesTotal = () => {
-  dispatch("getZonesTotal", query);
+const getMOIs = () => {
+  dispatch("getMOIs", query);
 };
 
 const deleteMOI = () => {
@@ -205,34 +200,34 @@ function perPage({ currentPerPage }) {
   query.pageNumber = 1;
   query.pageSize = currentPerPage;
 }
-watch(deleteZoneSuccess, () => {
-  if (deleteZoneSuccess.value) {
+watch(deleteMOISuccess, () => {
+  if (deleteMOISuccess.value) {
     toast.success("Successfully Deleted");
-    dispatch("getZonesTotal", query);
+    dispatch("getMOIs", query);
     modal.value.closeModal();
   }
 
-  // getAllZones();
+  // getAllMOIs();
 });
-watch([addZoneSuccess, updateZoneSuccess], () => {
-  if (addZoneSuccess.value || updateZoneSuccess.value) {
-    dispatch("getZonesTotal", query);
+watch([addMOISuccess, updateMOISuccess], () => {
+  if (addMOISuccess.value || updateMOISuccess.value) {
+    dispatch("getMOIs", query);
   }
 
   // getAllZones();
 });
 // eslint-disable-next-line no-unused-vars
-function handleCoordinator(id) {
-  if (!id) return "n/a";
-  const result = membersOptions?.value?.find((i) => i.value === id);
-  return result?.label;
-}
+// function handleCoordinator(id) {
+//   if (!id) return "n/a";
+//   const result = membersOptions?.value?.find((i) => i.value === id);
+//   return result?.label;
+// }
 // eslint-disable-next-line no-unused-vars
 function handleDelete() {
   dispatch("removeZone", detail.value);
 }
 watch(query, () => {
-  dispatch("getZonesTotal", query);
+  dispatch("getMOIs", query);
 });
 </script>
 <style lang="scss" scoped>

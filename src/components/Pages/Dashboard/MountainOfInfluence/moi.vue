@@ -8,7 +8,7 @@
       >
         <InputGroup
           v-model="query.searchParameter"
-          placeholder="Search zone"
+          placeholder="Search mountains of influence"
           type="search"
           prependIcon="heroicons-outline:search"
           classInput="w-full md:w-auto min-w-[320px] !h-9"
