@@ -87,7 +87,7 @@
     themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to delete this unit?
+      Are you sure you want to delete this special unit?
     </div>
 
     <template v-slot:footer>
