@@ -1,19 +1,19 @@
 <template>
   <div>
     <Modal
-      :activeModal="state.zone.editModal"
+      :activeModal="state.unit.editModal"
       @close="closeModal"
       title="Edit Special Unit"
       centered
     >
-      <form @submit.prevent="updateSpecialUnit" class="space-y-4">
+      <form @submit.prevent="updateUnit" class="space-y-4">
         <Textinput
           label="Name"
           type="text"
           placeholder="Special unit name"
-          name="specialUnitName"
-          v-model.trim="specialUnitName"
-          :error="specialUnitNameError"
+          name="unitName"
+          v-model.trim="unitName"
+          :error="unitNameError"
         />
         <div class="assagin space-y-4">
           <Textarea
@@ -44,53 +44,57 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { useStore } from "vuex";
 import * as yup from "yup";
-import { computed, watch } from "vue";
+import { computed, watch, inject, ref } from "vue";
 import { useToast } from "vue-toastification";
 
 const { state, dispatch } = useStore();
-const zone = computed(() => state.zone.zone);
-const success = computed(() => state.zone.updateZoneSuccess);
-const loading = computed(() => state.zone.updateZoneLoading);
+const unit = computed(() => state.unit.unit);
+const success = computed(() => state.unit.updateUnitSuccess);
+const loading = computed(() => state.unit.updateUnitLoading);
 const toast = useToast();
-
+const userId = inject("userId");
+const isSpecialUnit = ref(true);
 const schema = yup.object({
-  specialUnitName: yup.string().required("Name is required"),
+  unitName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
 });
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: zone.value,
+  initialValues: unit.value,
 });
-const { value: specialUnitName, errorMessage: specialUnitNameError } =
-  useField("specialUnitName");
+const { value: unitName, errorMessage: unitNameError } = useField("unitName");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
-const updateSpecialUnit = handleSubmit((values) => {
-  console.log(values);
-  // dispatch("updateSpecialUnit", values);
+const updateUnit = handleSubmit((values) => {
+  // console.log(values);
+  // console.log({ ...values, userId: userId.value });
+  const data = {
+    ...values,
+    userId: userId.value,
+    isSpecialUnit: isSpecialUnit.value,
+  };
+  dispatch("updateUnit", data);
 });
 
 const closeModal = () => {
-  dispatch("closeEditModal");
+  dispatch("closeUnitEditModal");
 };
 
-watch(zone, () => {
-  setValues(zone.value);
+watch(unit, () => {
+  setValues(unit.value);
 });
 
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Updated");
-    dispatch("getZones");
+    dispatch("getUnits");
     closeModal();
   } else {
     closeModal();
   }
-
-  // getAllZones();
 });
 </script>
 <style lang=""></style>

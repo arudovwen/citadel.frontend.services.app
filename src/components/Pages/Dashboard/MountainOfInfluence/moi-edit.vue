@@ -44,7 +44,7 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { useStore } from "vuex";
 import * as yup from "yup";
-import { computed, watch } from "vue";
+import { computed, watch, inject } from "vue";
 import { useToast } from "vue-toastification";
 
 const { state, dispatch } = useStore();
@@ -52,6 +52,7 @@ const moi = computed(() => state.moi.moi);
 const success = computed(() => state.moi.updateMOISuccess);
 const loading = computed(() => state.moi.updateMOILoading);
 const toast = useToast();
+const userId = inject("userId");
 
 const schema = yup.object({
   mountainOfInfluenceName: yup.string().required("Name is required"),
@@ -71,8 +72,9 @@ const { value: description, errorMessage: descriptionError } =
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
 const updateMOI = handleSubmit((values) => {
-  // console.log(values);
-  dispatch("updateMOI", values);
+  const data = { ...values, userId: userId.value };
+
+  dispatch("updateMOI", data);
 });
 
 const closeModal = () => {
