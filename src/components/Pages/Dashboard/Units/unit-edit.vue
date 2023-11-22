@@ -1,7 +1,7 @@
 <template>
   <div>
     <Modal
-      :activeModal="state.zone.editModal"
+      :activeModal="state.unit.editModal"
       @close="closeModal"
       title="Edit Unit"
       centered
@@ -48,9 +48,9 @@ import { computed, watch } from "vue";
 import { useToast } from "vue-toastification";
 
 const { state, dispatch } = useStore();
-const zone = computed(() => state.zone.zone);
-const success = computed(() => state.zone.updateZoneSuccess);
-const loading = computed(() => state.zone.updateZoneLoading);
+const unit = computed(() => state.unit.unit);
+const success = computed(() => state.unit.updateUnitSuccess);
+const loading = computed(() => state.unit.updateUnitLoading);
 const toast = useToast();
 
 const schema = yup.object({
@@ -59,7 +59,7 @@ const schema = yup.object({
 });
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: zone.value,
+  initialValues: unit.value,
 });
 const { value: unitName, errorMessage: unitNameError } = useField("unitName");
 const { value: description, errorMessage: descriptionError } =
@@ -69,27 +69,25 @@ const { value: description, errorMessage: descriptionError } =
 
 const updateUnit = handleSubmit((values) => {
   console.log(values);
-  // dispatch("updateUnit", values);
+  dispatch("updateUnit", values);
 });
 
 const closeModal = () => {
-  dispatch("closeEditModal");
+  dispatch("closeUnitEditModal");
 };
 
-watch(zone, () => {
-  setValues(zone.value);
+watch(unit, () => {
+  setValues(unit.value);
 });
 
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Updated");
-    dispatch("getZones");
+    dispatch("getUnits");
     closeModal();
   } else {
     closeModal();
   }
-
-  // getAllZones();
 });
 </script>
 <style lang=""></style>

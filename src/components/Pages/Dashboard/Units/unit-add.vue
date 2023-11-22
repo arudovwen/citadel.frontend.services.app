@@ -1,7 +1,7 @@
 <template>
   <div>
     <Modal
-      :activeModal="state.zone.addmodal"
+      :activeModal="state.unit.addModal"
       @close="closeModal"
       title="Create Unit"
       centered
@@ -46,18 +46,20 @@ import { useStore } from "vuex";
 import * as yup from "yup";
 import { useToast } from "vue-toastification";
 
-import { computed, watch } from "vue";
+import { computed, watch, inject, ref } from "vue";
 
 const { state, dispatch } = useStore();
-const success = computed(() => state.zone.addZoneSuccess);
-const loading = computed(() => state.zone.addZoneLoading);
+const userId = inject("userId");
+const isSpecialUnit = ref(false);
+const success = computed(() => state.unit.addUnitSuccess);
+const loading = computed(() => state.unit.addUnitLoading);
 const toast = useToast();
 const schema = yup.object({
   unitName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, resetForm } = useForm({
   validationSchema: schema,
 });
 
@@ -66,23 +68,28 @@ const { value: description, errorMessage: descriptionError } =
   useField("description");
 
 const addUnit = handleSubmit((values) => {
-  console.log(values);
-  // dispatch("addUnit", values);
+  const data = {
+    userId: userId.value,
+    ...values,
+    isSpecialUnit: isSpecialUnit.value,
+  };
+
+  // console.log(data);
+  dispatch("addUnit", data);
 });
 
 const closeModal = () => {
-  dispatch("closeModal");
+  dispatch("closeAddUnitModal");
+  resetForm();
 };
 
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
-    dispatch("getZones");
+    dispatch("getUnits");
   }
 
   closeModal();
-
-  // getAllZones();
 });
 </script>
 <style lang=""></style>
