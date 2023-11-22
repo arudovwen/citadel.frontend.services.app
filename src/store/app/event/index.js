@@ -23,6 +23,8 @@ export default {
     error: null,
     updateloading: false,
     updatesuccess: false,
+    deleteloading: false,
+    deletesuccess: false,
   },
 
   mutations: {
@@ -100,11 +102,27 @@ export default {
         commit("fetchErr", err);
       }
     },
+    async getAllEvents({ commit }, data) {
+      try {
+        commit("fetchBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_EVENTS}?${new URLSearchParams(cleanObject(data))}`
+        );
+        if (response.status === 200) {
+          commit("fetchSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("fetchErr", err);
+      }
+    },
+
     async addEvent({ commit }, data) {
       try {
         commit("addBegin");
         const response = await DataService.put(
-          `${urls.REQUEST_EVENT}?${new URLSearchParams(data.requestType)}`,
+          `${urls.REQUEST_EVENT}?${new URLSearchParams({
+            requestType: data.requestType,
+          })}`,
           data
         );
         if (response.status === 200) {
