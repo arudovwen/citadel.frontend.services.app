@@ -44,7 +44,7 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { useStore } from "vuex";
 import * as yup from "yup";
-import { computed, watch } from "vue";
+import { computed, watch, inject } from "vue";
 import { useToast } from "vue-toastification";
 
 const { state, dispatch } = useStore();
@@ -52,6 +52,7 @@ const ministry = computed(() => state.ministry.ministry);
 const success = computed(() => state.ministry.updateMinistrySuccess);
 const loading = computed(() => state.ministry.updateMinistryLoading);
 const toast = useToast();
+const userId = inject("userId");
 
 const schema = yup.object({
   ministryName: yup.string().required("Name is required"),
@@ -69,8 +70,8 @@ const { value: description, errorMessage: descriptionError } =
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
 const updateMinistry = handleSubmit((values) => {
-  // console.log(values);
-  dispatch("updateMinistry", values);
+  const data = { ...values, userId: userId.value };
+  dispatch("updateMinistry", data);
 });
 
 const closeModal = () => {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Modal
-      :activeModal="state.zone.editModal"
+      :activeModal="state.unit.editModal"
       @close="closeModal"
       title="Edit Unit"
       centered
@@ -44,22 +44,23 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { useStore } from "vuex";
 import * as yup from "yup";
-import { computed, watch } from "vue";
+import { computed, watch, inject, ref } from "vue";
 import { useToast } from "vue-toastification";
 
 const { state, dispatch } = useStore();
-const zone = computed(() => state.zone.zone);
-const success = computed(() => state.zone.updateZoneSuccess);
-const loading = computed(() => state.zone.updateZoneLoading);
+const unit = computed(() => state.unit.unit);
+const success = computed(() => state.unit.updateUnitSuccess);
+const loading = computed(() => state.unit.updateUnitLoading);
 const toast = useToast();
-
+const userId = inject("userId");
+const isSpecialUnit = ref(false);
 const schema = yup.object({
   unitName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
 });
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: zone.value,
+  initialValues: unit.value,
 });
 const { value: unitName, errorMessage: unitNameError } = useField("unitName");
 const { value: description, errorMessage: descriptionError } =
@@ -68,28 +69,32 @@ const { value: description, errorMessage: descriptionError } =
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
 const updateUnit = handleSubmit((values) => {
-  console.log(values);
-  // dispatch("updateUnit", values);
+  // console.log(values);
+  // console.log({ ...values, userId: userId.value });
+  const data = {
+    ...values,
+    userId: userId.value,
+    isSpecialUnit: isSpecialUnit.value,
+  };
+  dispatch("updateUnit", data);
 });
 
 const closeModal = () => {
-  dispatch("closeEditModal");
+  dispatch("closeUnitEditModal");
 };
 
-watch(zone, () => {
-  setValues(zone.value);
+watch(unit, () => {
+  setValues(unit.value);
 });
 
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Updated");
-    dispatch("getZones");
+    dispatch("getUnits");
     closeModal();
   } else {
     closeModal();
   }
-
-  // getAllZones();
 });
 </script>
 <style lang=""></style>

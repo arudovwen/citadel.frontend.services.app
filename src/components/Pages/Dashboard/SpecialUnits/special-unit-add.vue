@@ -1,19 +1,19 @@
 <template>
   <div>
     <Modal
-      :activeModal="state.zone.addmodal"
+      :activeModal="state.unit.addModal"
       @close="closeModal"
       title="Create Special Unit"
       centered
     >
-      <form @submit.prevent="addSpecialUnit" class="space-y-4">
+      <form @submit.prevent="addUnit" class="space-y-4">
         <Textinput
           label="Name"
           type="text"
-          placeholder="Special Unit name"
-          name="specialUnitName"
-          v-model.trim="specialUnitName"
-          :error="specialUnitNameError"
+          placeholder="Special unit name"
+          name="unitName"
+          v-model.trim="unitName"
+          :error="unitNameError"
         />
         <div class="assagin space-y-4">
           <Textarea
@@ -46,44 +46,50 @@ import { useStore } from "vuex";
 import * as yup from "yup";
 import { useToast } from "vue-toastification";
 
-import { computed, watch } from "vue";
+import { computed, watch, inject, ref } from "vue";
 
 const { state, dispatch } = useStore();
-const success = computed(() => state.zone.addZoneSuccess);
-const loading = computed(() => state.zone.addZoneLoading);
+const userId = inject("userId");
+const isSpecialUnit = ref(true);
+const success = computed(() => state.unit.addUnitSuccess);
+const loading = computed(() => state.unit.addUnitLoading);
 const toast = useToast();
 const schema = yup.object({
-  specialUnitName: yup.string().required("Name is required"),
+  unitName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, resetForm } = useForm({
   validationSchema: schema,
 });
 
-const { value: specialUnitName, errorMessage: specialUnitNameError } =
-  useField("specialUnitName");
+const { value: unitName, errorMessage: unitNameError } = useField("unitName");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 
-const addSpecialUnit = handleSubmit((values) => {
-  console.log(values);
-  // dispatch("addSpecialUnit", values);
+const addUnit = handleSubmit((values) => {
+  const data = {
+    userId: userId.value,
+    ...values,
+    isSpecialUnit: isSpecialUnit.value,
+  };
+
+  // console.log(data);
+  dispatch("addUnit", data);
 });
 
 const closeModal = () => {
-  dispatch("closeModal");
+  dispatch("closeAddUnitModal");
+  resetForm();
 };
 
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
-    dispatch("getZones");
+    dispatch("getUnits");
   }
 
   closeModal();
-
-  // getAllZones();
 });
 </script>
 <style lang=""></style>
