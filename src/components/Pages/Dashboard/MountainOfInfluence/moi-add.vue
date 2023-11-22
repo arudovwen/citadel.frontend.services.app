@@ -1,7 +1,7 @@
 <template>
   <div>
     <Modal
-      :activeModal="state.zone.addmodal"
+      :activeModal="state.moi.addModal"
       @close="closeModal"
       title="Create Mountain of Influence"
       centered
@@ -11,9 +11,9 @@
           label="Name"
           type="text"
           placeholder="Mointain of Influence name"
-          name="mountainOfInfluence"
-          v-model.trim="mountainOfInfluence"
-          :error="mountainOfInfluenceError"
+          name="mountainOfInfluenceName"
+          v-model.trim="mountainOfInfluenceName"
+          :error="mountainOfInfluenceNameError"
         />
         <div class="assagin space-y-4">
           <Textarea
@@ -46,44 +46,47 @@ import { useStore } from "vuex";
 import * as yup from "yup";
 import { useToast } from "vue-toastification";
 
-import { computed, watch } from "vue";
+import { computed, watch, inject } from "vue";
 
 const { state, dispatch } = useStore();
-const success = computed(() => state.zone.addZoneSuccess);
-const loading = computed(() => state.zone.addZoneLoading);
+const userId = inject("userId");
+const success = computed(() => state.moi.addMOISuccess);
+const loading = computed(() => state.moi.addMOILoading);
 const toast = useToast();
 const schema = yup.object({
-  mountainOfInfluence: yup.string().required("Name is required"),
+  mountainOfInfluenceName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, resetForm } = useForm({
   validationSchema: schema,
 });
 
-const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
-  useField("mountainOfInfluence");
+const {
+  value: mountainOfInfluenceName,
+  errorMessage: mountainOfInfluenceNameError,
+} = useField("mountainOfInfluenceName");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 
 const addMOI = handleSubmit((values) => {
-  console.log(values);
-  // dispatch("addZone", values);
+  const data = { userId: userId.value, ...values };
+  // console.log(data);
+  dispatch("addMOI", data);
 });
 
 const closeModal = () => {
-  dispatch("closeModal");
+  dispatch("closeAddMOIModal");
+  resetForm();
 };
 
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
-    dispatch("getZones");
+    dispatch("getMOIs");
   }
 
   closeModal();
-
-  // getAllZones();
 });
 </script>
 <style lang=""></style>
