@@ -1,9 +1,9 @@
 // import { v4 as uuidv4 } from "uuid";
-import { useToast } from "vue-toastification";
+// import { useToast } from "vue-toastification";
 import { DataService } from "@/config/dataService/dataService";
 import { urls } from "@/helpers/apI_urls";
 import { cleanObject } from "@/util/cleanObject";
-const toast = useToast();
+// const toast = useToast();
 export default {
   state: {
     isLoading: null,
@@ -102,37 +102,37 @@ export default {
     //
 
     // removeMinistry
-    removeMinistry(state, data) {
-      state.Ministrys = state.Ministrys.filter((item) => item.id !== data.id);
-      toast.error("Ministry Removed", {
-        timeout: 2000,
-      });
-    },
-    // updateMinistry
-    updateMinistry(state, data) {
-      state.Ministrys.findIndex((item) => {
-        if (item.id === data.id) {
-          // store data
-          state.editId = data.id;
-          state.editName = data.name;
-          state.editassignto = data.assignto;
-          state.editStartDate = data.startDate;
-          state.editEndDate = data.endDate;
-          state.editcta = data.category;
-          state.editdesc = data.des;
+    // removeMinistry(state, data) {
+    //   state.ministries = state.ministries.filter((item) => item.id !== data.id);
+    //   toast.error("Ministry Removed", {
+    //     timeout: 2000,
+    //   });
+    // },
+    // // updateMinistry
+    // updateMinistry(state, data) {
+    //   state.ministries.findIndex((item) => {
+    //     if (item.id === data.id) {
+    //       // store data
+    //       state.editId = data.id;
+    //       state.editName = data.name;
+    //       state.editassignto = data.assignto;
+    //       state.editStartDate = data.startDate;
+    //       state.editEndDate = data.endDate;
+    //       state.editcta = data.category;
+    //       state.editdesc = data.des;
 
-          // set data to data
-          item.name = data.name;
-          item.des = data.des;
-          item.startDate = data.startDate;
-          item.endDate = data.endDate;
-          item.assignto = data.assignto;
-          item.progress = data.progress;
-          item.category = data.category;
-        }
-      });
-      state.editModal = true;
-    },
+    //       // set data to data
+    //       item.name = data.name;
+    //       item.des = data.des;
+    //       item.startDate = data.startDate;
+    //       item.endDate = data.endDate;
+    //       item.assignto = data.assignto;
+    //       item.progress = data.progress;
+    //       item.category = data.category;
+    //     }
+    //   });
+    //   state.editModal = true;
+    // },
     //open edit Ministry
     openMinistryEditModal(state, data) {
       state.editModal = true;

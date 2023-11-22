@@ -103,6 +103,14 @@ export const urls = {
   GET_ALL_MINISTRIES: "/Ministry/GetAllMinistry",
   DELETE_MINISTRY: "/Ministry/DeleteMinistry",
 
+  //MOI
+  CREATE_MOI: "/MountainOfInfluence/CreateMountainOfInfluence",
+  UPDATE_MOI: "/MountainOfInfluence/UpdateMountainOfInfluence",
+  GET_MOI_BY_ID: "/MountainOfInfluence/GetMountainOfInfluenceById",
+  GET_MOI_BY_USER_ID: "/MountainOfInfluence/GetMountainOfInfluenceByUserId",
+  GET_ALL_MOIS: "/MountainOfInfluence/GetAllMountainOfInfluence",
+  DELETE_MOI: "/MountainOfInfluence/DeleteMountainOfInfluence",
+
   // Qualification
   CREATE_QUALIFICATION: "/Qualification/CreateQualification",
   UPDATE_QUALIFICATION: "/Qualification/UpdateQualification",

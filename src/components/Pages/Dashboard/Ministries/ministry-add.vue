@@ -69,7 +69,7 @@ const { value: description, errorMessage: descriptionError } =
 
 const addMinistry = handleSubmit((values) => {
   const data = { userId: userId.value, ...values };
-  console.log(data);
+  // console.log(data);
   dispatch("addMinistry", data);
 });
 
