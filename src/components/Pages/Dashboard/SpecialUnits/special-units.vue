@@ -85,6 +85,7 @@ const query = reactive({
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
+  isSpecialUnit: true,
   // userId:
   //   state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
   //     ? state.auth?.userData?.id
