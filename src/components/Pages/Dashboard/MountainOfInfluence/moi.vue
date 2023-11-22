@@ -8,7 +8,7 @@
       >
         <InputGroup
           v-model="query.searchParameter"
-          placeholder="Search zone"
+          placeholder="Search mountains of influence"
           type="search"
           prependIcon="heroicons-outline:search"
           classInput="w-full md:w-auto min-w-[320px] !h-9"
@@ -19,7 +19,7 @@
           :options="filters"
           v-model="query.sortOrder"
           placeholder="Sort by"
-          classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px] w-full md:w-auto"
+          classInput="hidden bg-white !h-9 min-w-[150px]  !min-h-[36px] w-full md:w-auto"
         />
       </div>
 
@@ -32,15 +32,15 @@
         text="Add Mointain of Influence"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
         iconClass="text-lg"
-        @click="openZone"
+        @click="toggleAddMOI"
         :isLoading="store.state.zone.isLoading"
       />
     </div>
-    <GridSkletion :count="zones.length" v-if="isSkeletion" />
+    <GridSkletion :count="mois.length" v-if="isSkeletion" />
 
     <Grid v-if="fillter === 'grid' && !isSkeletion" />
 
-    <ZoneAddmodal />
+    <Addmodal />
     <UpdateModal />
   </div>
 </template>
@@ -51,13 +51,14 @@ import GridSkletion from "@/components/Skeleton/grid";
 import Select from "@/components/Select";
 import InputGroup from "@/components/InputGroup";
 import { computed, ref, watch, onMounted, reactive, provide } from "vue";
-import ZoneAddmodal from "./moi-add";
+import Addmodal from "./moi-add";
 import UpdateModal from "./moi-edit";
 import Grid from "./moi-grid";
 import { useStore } from "vuex";
 
 const store = useStore();
 const { state } = useStore();
+const userId = computed(() => state.auth.userData.id);
 
 const filters = [
   {
@@ -70,8 +71,8 @@ const filters = [
   },
 ];
 let fillter = ref("grid");
-const openZone = () => {
-  store.dispatch("openZone");
+const toggleAddMOI = () => {
+  store.dispatch("toggleAddMOI");
 };
 
 const width = ref(0);
@@ -87,12 +88,12 @@ const query = reactive({
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
-  userId:
-    state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
-      ? state.auth?.userData?.id
-      : "",
+  // userId:
+  //   state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
+  //     ? state.auth?.userData?.id
+  //     : "",
 });
-const zones = computed(() => store.getters.zones);
+const mois = computed(() => state.moi.mois);
 
 const isSkeletion = ref(true);
 const isSkeletion2 = ref(null);
@@ -125,5 +126,6 @@ watch(fillter, () => {
   }
 });
 provide("query", query);
+provide("userId", userId);
 </script>
 <style lang=""></style>

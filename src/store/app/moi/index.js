@@ -1,250 +1,212 @@
 // // import { v4 as uuidv4 } from "uuid";
 // import { useToast } from "vue-toastification";
-// import { DataService } from "@/config/dataService/dataService";
-// import { urls } from "@/helpers/apI_urls";
-// import { cleanObject } from "@/util/cleanObject";
+import { DataService } from "@/config/dataService/dataService";
+import { urls } from "@/helpers/apI_urls";
+import { cleanObject } from "@/util/cleanObject";
 // const toast = useToast();
-// export default {
-//   state: {
-//     isLoading: null,
-//     //create
-//     addModal: false,
-//     addMinistryLoading: false,
-//     addMinistrySuccess: false,
-//     addMinistryError: null,
+export default {
+  state: {
+    isLoading: null,
+    //create
+    addModal: false,
+    addMOILoading: false,
+    addMOISuccess: false,
+    addMOIError: null,
 
-//     //edit
-//     editModal: false,
-//     updateMinistryLoading: false,
-//     updateMinistrySuccess: false,
-//     updateMinistryError: null,
-//     //read
-//     getMinistriesLoading: false,
-//     getMinistriesSuccess: false,
-//     getMinistriesError: null,
-//     //delete
-//     deleteMinistryLoading: false,
-//     deleteMinistrySuccess: false,
-//     deleteMinistryError: null,
-//     ministry: null,
+    //edit
+    editModal: false,
+    updateMOILoading: false,
+    updateMOISuccess: false,
+    updateMOIError: null,
+    //read
+    getMOILoading: false,
+    getMOISuccess: false,
+    getMOIError: null,
+    //delete
+    deleteMOILoading: false,
+    deleteMOISuccess: false,
+    deleteMOIError: null,
+    moi: null,
 
-//     ministries: [],
-//     total: 0,
-//   },
-//   getters: {
-//     ministries: (state) => state.ministries,
-//   },
-//   mutations: {
-//     addMinistryBegin(state) {
-//       state.addMinistryLoading = true;
-//       state.addMinistrySuccess = false;
-//       state.addMinistryError = null;
-//     },
+    mois: [],
+    total: 0,
+  },
+  getters: {},
+  mutations: {
+    addMOIBegin(state) {
+      state.addMOILoading = true;
+      state.addMOISuccess = false;
+      state.addMOIError = null;
+    },
 
-//     addMinistrySuccess(state) {
-//       state.addMinistryLoading = false;
-//       state.addMinistrySuccess = true;
-//     },
+    addMOISuccess(state) {
+      state.addMOILoading = false;
+      state.addMOISuccess = true;
+    },
 
-//     addMinistryError(state, err) {
-//       state.addMinistryLoading = false;
-//       state.addMinistrySuccess = false;
-//       state.addMinistryError = err;
-//     },
+    addMOIError(state, err) {
+      state.addMOILoading = false;
+      state.addMOISuccess = false;
+      state.addMOIError = err;
+    },
 
-//     getMinistrysBegin(state) {
-//       state.getMinistriesLoading = true;
-//       state.getMinistriesSuccess = false;
-//       state.getMinistriesError = null;
-//     },
-//     getMinistriesSuccess(state, { data, totalCount }) {
-//       state.getMinistriesLoading = false;
-//       state.getMinistriesSuccess = true;
-//       state.getMinistriesError = null;
-//       state.ministries = data;
-//       state.total = totalCount;
-//     },
-//     getMinistriesError(state, err) {
-//       state.getMinistriesLoading = false;
-//       state.getMinistriesSuccess = false;
-//       state.getMinistriesError = err;
-//     },
+    getMOIsBegin(state) {
+      state.getMOIsLoading = true;
+      state.getMOIsSuccess = false;
+      state.getMOIsError = null;
+    },
+    getMOIsSuccess(state, { data, totalCount }) {
+      state.getMOIsLoading = false;
+      state.getMOIsSuccess = true;
+      state.getMOIsError = null;
+      state.mois = data;
+      state.total = totalCount;
+    },
+    getMOIsError(state, err) {
+      state.getMOIsLoading = false;
+      state.getMOIsSuccess = false;
+      state.getMOIsError = err;
+    },
 
-//     updateMinistryBegin(state) {
-//       state.updateMinistryLoading = true;
-//       state.updateMinistrySuccess = false;
-//       state.updateMinistryError = null;
-//     },
-//     updateMinistrySuccess(state) {
-//       state.updateMinistryLoading = false;
-//       state.updateMinistrySuccess = true;
-//       state.updateMinistryError = null;
-//     },
-//     updateMinistryError(state, err) {
-//       state.updateMinistryLoading = false;
-//       state.updateMinistrySuccess = false;
-//       state.updateMinistryError = err;
-//     },
-//     deleteMinistryBegin(state) {
-//       state.deleteMinistryLoading = true;
-//       state.deleteMinistrySuccess = false;
-//       state.deleteMinistryError = null;
-//     },
-//     deleteMinistrySuccess(state) {
-//       state.deleteMinistryLoading = false;
-//       state.deleteMinistrySuccess = true;
-//       state.deleteMinistryError = null;
-//     },
-//     deleteMinistryError(state, err) {
-//       state.deleteMinistryLoading = false;
-//       state.deleteMinistrySuccess = false;
-//       state.deleteMinistryError = err;
-//     },
+    updateMOIBegin(state) {
+      state.updateMOILoading = true;
+      state.updateMOISuccess = false;
+      state.updateMOIError = null;
+    },
+    updateMOISuccess(state) {
+      state.updateMOILoading = false;
+      state.updateMOISuccess = true;
+      state.updateMOIError = null;
+    },
+    updateMOIError(state, err) {
+      state.updateMOILoading = false;
+      state.updateMOISuccess = false;
+      state.updateMOIError = err;
+    },
+    deleteMOIBegin(state) {
+      state.deleteMOILoading = true;
+      state.deleteMOISuccess = false;
+      state.deleteMOIError = null;
+    },
+    deleteMOISuccess(state) {
+      state.deleteMOILoading = false;
+      state.deleteMOISuccess = true;
+      state.deleteMOIError = null;
+    },
+    deleteMOIError(state, err) {
+      state.deleteMOILoading = false;
+      state.deleteMOISuccess = false;
+      state.deleteMOIError = err;
+    },
 
-//     //
+    //open edit MOI
+    openMOIEditModal(state, data) {
+      state.editModal = true;
+      state.moi = data;
+    },
 
-//     // removeMinistry
-//     removeMinistry(state, data) {
-//       state.Ministrys = state.Ministrys.filter((item) => item.id !== data.id);
-//       toast.error("Ministry Removed", {
-//         timeout: 2000,
-//       });
-//     },
-//     // updateMinistry
-//     updateMinistry(state, data) {
-//       state.Ministrys.findIndex((item) => {
-//         if (item.id === data.id) {
-//           // store data
-//           state.editId = data.id;
-//           state.editName = data.name;
-//           state.editassignto = data.assignto;
-//           state.editStartDate = data.startDate;
-//           state.editEndDate = data.endDate;
-//           state.editcta = data.category;
-//           state.editdesc = data.des;
+    // toggleAddMOI
+    toggleAddMOI(state) {
+      state.addModal = !state.addModal;
+    },
+    // closeAddMOIModal
+    closeAddMOIModal(state) {
+      state.addModal = false;
+    },
+    // closeMOIEditModal
+    closeMOIEditModal(state) {
+      state.editModal = false;
+    },
+  },
+  actions: {
+    async addMOI({ commit }, data) {
+      try {
+        commit("addMOIBegin");
+        const response = await DataService.post(urls.CREATE_MOI, data);
 
-//           // set data to data
-//           item.name = data.name;
-//           item.des = data.des;
-//           item.startDate = data.startDate;
-//           item.endDate = data.endDate;
-//           item.assignto = data.assignto;
-//           item.progress = data.progress;
-//           item.category = data.category;
-//         }
-//       });
-//       state.editModal = true;
-//     },
-//     //open edit Ministry
-//     openEditModal(state, data) {
-//       state.editModal = true;
-//       state.Ministry = data;
-//     },
+        if (response.status === 200) {
+          commit("addMOISuccess");
+        }
+      } catch (err) {
+        commit("addMOIError", err);
+      }
+    },
+    async getMOIs({ commit }, data) {
+      try {
+        commit("getMOIsBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_MOIS}?${new URLSearchParams(cleanObject(data))}`
+        );
 
-//     // toggleAddMinistry
-//     toggleAddMinistry(state) {
-//       state.addModal = !state.addModal;
-//     },
-//     // closeModal
-//     closeModal(state) {
-//       state.addModal = false;
-//     },
-//     // closeEditModal
-//     closeEditModal(state) {
-//       state.editModal = false;
-//     },
-//   },
-//   actions: {
-//     async addMinistry({ commit }, data) {
-//       try {
-//         commit("addMinistryBegin");
-//         const response = await DataService.post(urls.CREATE_MINISTRY, data);
+        if (response.status === 200) {
+          commit("getMOIsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getMOIsError", err);
+      }
+    },
+    // async getMOIsTotal({ commit }, data) {
+    //   try {
+    //     commit("getMOIsBegin");
+    //     const response = await DataService.get(
+    //       `${urls.GET_ALL_MOIs_TOTAL}?${new URLSearchParams(cleanObject(data))}`
+    //     );
 
-//         if (response.status === 200) {
-//           commit("addMinistrySuccess");
-//         }
-//       } catch (err) {
-//         commit("addMinistryError", err);
-//       }
-//     },
-//     async getMinistrys({ commit }, data) {
-//       try {
-//         commit("getMinistrysBegin");
-//         const response = await DataService.get(
-//           `${urls.GET_ALL_MinistryS}?${new URLSearchParams(cleanObject(data))}`
-//         );
+    //     if (response.status === 200) {
+    //       commit("getMOIsSuccess", response.data);
+    //     }
+    //   } catch (err) {
+    //     commit("getMOIsError", err);
+    //   }
+    // },
+    async updateMOI({ commit }, data) {
+      try {
+        commit("updateMOIBegin");
+        const response = await DataService.put(urls.UPDATE_MOI, data);
 
-//         if (response.status === 200) {
-//           commit("getMinistriesSuccess", response.data);
-//         }
-//       } catch (err) {
-//         commit("getMinistriesError", err);
-//       }
-//     },
-//     async getMinistrysTotal({ commit }, data) {
-//       try {
-//         commit("getMinistrysBegin");
-//         const response = await DataService.get(
-//           `${urls.GET_ALL_MinistryS_TOTAL}?${new URLSearchParams(
-//             cleanObject(data)
-//           )}`
-//         );
+        if (response.status === 200) {
+          commit("updateMOISuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("updateMOIError", err);
+      }
+    },
 
-//         if (response.status === 200) {
-//           commit("getMinistriesSuccess", response.data);
-//         }
-//       } catch (err) {
-//         commit("getMinistriesError", err);
-//       }
-//     },
-//     async updateMinistry({ commit }, data) {
-//       try {
-//         commit("updateMinistryBegin");
-//         const response = await DataService.put(urls.UPDATE_Ministry, data);
+    async deleteMOI({ commit }, id) {
+      try {
+        commit("deleteMOIBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_MOI}?id=${id}`
+        );
 
-//         if (response.status === 200) {
-//           commit("updateMinistrySuccess", response.data.data);
-//         }
-//       } catch (err) {
-//         commit("updateMinistryError", err);
-//       }
-//     },
+        if (response.status === 200) {
+          commit("deleteMOISuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("deleteMOIError", err);
+      }
+    },
+    // removeMOI
+    removeMOI({ commit }, data) {
+      commit("removeMOI", data);
+    },
+    // updateMOI
 
-//     async deleteMinistry({ commit }, id) {
-//       try {
-//         commit("deleteMinistryBegin");
-//         const response = await DataService.delete(
-//           `${urls.DELETE_Ministry}?id=${id}`
-//         );
+    //open edit modal
+    openMOIEditModal({ commit }, data) {
+      commit("openMOIEditModal", data);
+    },
+    // eopen MOI
+    toggleAddMOI({ commit }) {
+      commit("toggleAddMOI");
+    },
 
-//         if (response.status === 200) {
-//           commit("deleteMinistrySuccess", response.data.data);
-//         }
-//       } catch (err) {
-//         commit("deleteMinistryError", err);
-//       }
-//     },
-//     // removeMinistry
-//     removeMinistry({ commit }, data) {
-//       commit("removeMinistry", data);
-//     },
-//     // updateMinistry
-
-//     //open edit modal
-//     openEditModal({ commit }, data) {
-//       commit("openEditModal", data);
-//     },
-//     // eopen Ministry
-//     toggleAddMinistry({ commit }) {
-//       commit("toggleAddMinistry");
-//     },
-
-//     closeModal({ commit }) {
-//       commit("closeModal");
-//     },
-//     // closeEditModal
-//     closeEditModal({ commit }) {
-//       commit("closeEditModal");
-//     },
-//   },
-// };
+    closeAddMOIModal({ commit }) {
+      commit("closeAddMOIModal");
+    },
+    // closeMOIEditModal
+    closeMOIEditModal({ commit }) {
+      commit("closeMOIEditModal");
+    },
+  },
+};

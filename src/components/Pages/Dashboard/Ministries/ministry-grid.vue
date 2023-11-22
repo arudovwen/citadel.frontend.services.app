@@ -25,7 +25,7 @@
                     </div>
                   </div>
                   <div class="font-medium text-lg leading-6">
-                    <div class="dark:text-slate-200 text-slate-900">
+                    <div class="capitalize dark:text-slate-200 text-slate-900">
                       {{ item.ministryName }}
                     </div>
                   </div>

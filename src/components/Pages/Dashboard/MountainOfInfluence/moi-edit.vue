@@ -1,7 +1,7 @@
 <template>
   <div>
     <Modal
-      :activeModal="state.zone.editModal"
+      :activeModal="state.moi.editModal"
       @close="closeModal"
       title="Edit Mountain Of Influence"
       centered
@@ -11,9 +11,9 @@
           label="Name"
           type="text"
           placeholder="Mointain of Influence name"
-          name="mountainOfInfluence"
-          v-model.trim="mountainOfInfluence"
-          :error="mountainOfInfluenceError"
+          name="mountainOfInfluenceName"
+          v-model.trim="mountainOfInfluenceName"
+          :error="mountainOfInfluenceNameError"
         />
         <div class="assagin space-y-4">
           <Textarea
@@ -48,43 +48,45 @@ import { computed, watch } from "vue";
 import { useToast } from "vue-toastification";
 
 const { state, dispatch } = useStore();
-const zone = computed(() => state.zone.zone);
-const success = computed(() => state.zone.updateZoneSuccess);
-const loading = computed(() => state.zone.updateZoneLoading);
+const moi = computed(() => state.moi.moi);
+const success = computed(() => state.moi.updateMOISuccess);
+const loading = computed(() => state.moi.updateMOILoading);
 const toast = useToast();
 
 const schema = yup.object({
-  mountainOfInfluence: yup.string().required("Name is required"),
+  mountainOfInfluenceName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
 });
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
-  initialValues: zone.value,
+  initialValues: moi.value,
 });
-const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
-  useField("mountainOfInfluence");
+const {
+  value: mountainOfInfluenceName,
+  errorMessage: mountainOfInfluenceNameError,
+} = useField("mountainOfInfluenceName");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
 const updateMOI = handleSubmit((values) => {
-  console.log(values);
-  // dispatch("updateMOI", values);
+  // console.log(values);
+  dispatch("updateMOI", values);
 });
 
 const closeModal = () => {
-  dispatch("closeEditModal");
+  dispatch("closeMOIEditModal");
 };
 
-watch(zone, () => {
-  setValues(zone.value);
+watch(moi, () => {
+  setValues(moi.value);
 });
 
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Updated");
-    dispatch("getZones");
+    dispatch("getMOIs");
     closeModal();
   } else {
     closeModal();
