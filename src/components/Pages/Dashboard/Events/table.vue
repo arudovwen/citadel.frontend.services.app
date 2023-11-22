@@ -16,7 +16,7 @@
               classInput="min-w-[220px] !h-9"
             />
             <VueTailwindDatePicker
-              v-model="dateValue"
+              v-model="query.dateValue"
               :formatter="formatter"
               input-classes="form-control h-[36px]"
               placeholder="Filter date range"
@@ -131,7 +131,12 @@
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
                       @click="
-                        generateAction(item.name, props.row.id).doit(item.name)
+                        () => {
+                          generateAction(item.name, props.row.id).doit(
+                            item.name,
+                            props.row
+                          );
+                        }
                       "
                       :class="`
                 
@@ -369,11 +374,16 @@ export default {
         Comments: this.comment,
         status: this.type === "approve" ? true : false,
       };
-      if (this.type === "approve") {
-        this.$store.dispatch("enableUser", this.id);
-      } else {
-        this.$store.dispatch("disableUser", this.id);
-      }
+      console.log(
+        "🚀 ~ file: table.vue:377 ~ handleStatus ~ data.this.detail:",
+        this.detail
+      );
+      console.log("🚀 ~ file: table.vue:377 ~ handleStatus ~ data:", data);
+      // if (this.type === "approve") {
+      //   this.$store.dispatch("enableUser", this.id);
+      // } else {
+      //   this.$store.dispatch("disableUser", this.id);
+      // }
     },
     generateAction(name, id) {
       this.id = id;
@@ -389,17 +399,18 @@ export default {
         approve: {
           name: "approve",
           icon: "heroicons:pencil-square",
-          doit: (data) => {
+          doit: (data, detail) => {
             this.type = data;
-
+            this.detail = detail;
             this.$refs.modalStatus.openModal();
           },
         },
         decline: {
           name: "decline",
           icon: "heroicons:pencil-square",
-          doit: (data) => {
+          doit: (data, detail) => {
             this.type = data;
+            this.detail = detail;
             this.$refs.modalStatus.openModal();
           },
         },
@@ -484,6 +495,8 @@ export default {
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
+      FromDate: "",
+      EndDate: "",
       searchParameter: "",
       events: "",
       UserId:
@@ -531,6 +544,18 @@ export default {
       }
     });
 
+    watch(
+      () => query.dateValue,
+      () => {
+        console.log("🚀 ~ file: table.vue:548 ~ watch ~ query:", query);
+        query.EndDate = moment(query.dateValue[1]).format(
+          "YYYY-MM-DDTHH:mm:ss.SSSZ"
+        );
+        query.FromDate = moment(query.dateValue[0]).format(
+          "YYYY-MM-DDTHH:mm:ss.SSSZ"
+        );
+      }
+    );
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce(() => {
