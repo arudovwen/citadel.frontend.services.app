@@ -31,18 +31,10 @@
               <div
                 class="text-slate-600 dark:text-slate-400 text-xs font-medium mb-2"
               >
-                <span>Coordinator</span>:
-                <span class="font-medium">{{ item.coordinator || "n/a" }}</span>
-              </div>
-              <div class="flex justify-start">
-                <div class="text-left">
-                  <span
-                    class="inline-flex items-center space-x-1 bg-gray-400 bg-opacity-[0.16] text-gray-500 text-[11px] font-normal px-2 py-1 rounded-full"
-                  >
-                    <span> <Icon icon="heroicons-outline:user-group" /></span>
-                    <span>{{ item?.totalCenters }} centers</span>
-                  </span>
-                </div>
+                <span>Description</span>:
+                <span class="font-medium capitalize">{{
+                  item.description || "none"
+                }}</span>
               </div>
             </div>
             <div
@@ -106,6 +98,8 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
+          :isLoading="deleteUnitLoading"
+          :disabled="deleteUnitLoading"
           text="Delete"
           btnClass="btn-danger btn-sm"
           @click="deleteUnit"
@@ -121,7 +115,7 @@ import Empty from "@/components/Empty";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 // import Dropdown from "@/components/Dropdown";
-import Icon from "@/components/Icon";
+// import Icon from "@/components/Icon";
 // import { MenuItem } from "@headlessui/vue";
 import Modal from "@/components/Modal/Modal";
 import { computed, onMounted, ref, watch, inject } from "vue";
@@ -144,6 +138,8 @@ const units = computed(() => state.unit.units);
 const total = computed(() => state.unit.total);
 const getUnitsLoading = computed(() => state.unit.getUnitsLoading);
 const deleteUnitSuccess = computed(() => state.unit.deleteUnitSuccess);
+const deleteUnitLoading = computed(() => state.unit.deleteUnitLoading);
+
 const addUnitSuccess = computed(() => state.unit.addUnitSuccess);
 const updateUnitSuccess = computed(() => state.unit.updateUnitSuccess);
 
@@ -196,7 +192,7 @@ const getUnits = () => {
 };
 
 const deleteUnit = () => {
-  // dispatch("deleteunit", detail.value.id);
+  dispatch("deleteUnit", detail.value.id);
 };
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
