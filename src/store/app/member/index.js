@@ -345,7 +345,7 @@ export default {
     async enableUser({ commit }, data) {
       try {
         commit("deleteBegin");
-        const response = await DataService.put(
+        const response = await DataService.delete(
           `${urls.ENABLE_USER}?UserId=${data}`
         );
         if (response.status === 200) {

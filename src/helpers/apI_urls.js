@@ -148,5 +148,6 @@ export const urls = {
 
   //Events
   REQUEST_EVENT: "/ChurchAffiliation/RequestForEvent",
-  GET_REQUEST_EVENT: "/ChurchAffiliation/GetRequestReport",
+  GET_EVENTS: "/Events/GetUserEvents",
+  CHANGE_EVENT_STATUS: "/Events/ApproveOrRejectEvent",
 };
