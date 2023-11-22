@@ -123,6 +123,7 @@ const { value: requestType, errorMessage: requestTypeError } =
 const onSubmit = handleSubmit((values) => {
   dispatch("addEvent", {
     requestType: values.requestType,
+    eventType: values.requestType,
     dateOfRequestedEvent: moment(values.dateOfRequestedEvent).format(
       "YYYY-MM-DDTHH:mm:ss.SSSZ"
     ),

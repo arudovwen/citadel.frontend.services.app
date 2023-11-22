@@ -67,6 +67,7 @@
         <vue-good-table
           :columns="filteredColumns"
           mode="remote"
+          :isLoading="loading"
           styleClass=" vgt-table  centered "
           :rows="events || []"
           :sort-options="{
@@ -79,29 +80,46 @@
         >
           <template v-slot:table-row="props">
             <span
-              v-if="props.column.field == 'date'"
+              v-if="props.column.field == 'eventType'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ props.row.date }}
+              {{
+                eventsOption.find((i) => i.value === props.row.eventType)
+                  ?.label || "-"
+              }}
+            </span>
+            <span
+              v-if="props.column.field == 'createdAt'"
+              class="text-slate-500 dark:text-slate-400"
+            >
+              {{ moment(props.row.createdAt).format("ll") }}
+            </span>
+            <span
+              v-if="props.column.field == 'eventDate'"
+              class="text-slate-500 dark:text-slate-400"
+            >
+              {{ moment(props.row.eventDate).format("ll") }}
             </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
                 class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
                 :class="`${
-                  props.row.status === 'active'
+                  props.row.status === true
                     ? 'text-success-500 bg-success-500'
                     : ''
                 } 
-            ${
-              props.row.status === 'inactive'
-                ? 'text-warning-500 bg-warning-500'
-                : ''
-            }
-            ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
+            ${props.row.status === false ? 'text-red-500 bg-red-500' : ''}
+            ${props.row.status === null ? 'text-blue-500 bg-blue-500' : ''}
             
              `"
               >
-                {{ props.row.status }}
+                {{
+                  props.row.status === null
+                    ? "Pending"
+                    : props.row.status === false
+                    ? "declined"
+                    : "Approved"
+                }}
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
@@ -112,7 +130,9 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="generateAction(item.name, props.row.id).doit"
+                      @click="
+                        generateAction(item.name, props.row.id).doit(item.name)
+                      "
                       :class="`
                 
                   ${
@@ -135,16 +155,15 @@
               </Dropdown>
             </span>
           </template>
-          <template #pagination-bottom="props">
+          <template #pagination-bottom>
             <div class="py-4 px-3">
               <Pagination
                 :total="total"
-                :current="current"
-                :per-page="perpage"
-                :pageRange="pageRange"
-                @page-changed="current = $event"
-                :pageChanged="props.pageChanged"
-                :perPageChanged="props.perPageChanged"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="5"
+                :perPageChanged="perPage"
+                @page-changed="query.pageNumber = $event"
                 enableSearch
                 enableSelect
                 :options="options"
@@ -161,31 +180,68 @@
     title="Confirm action"
     label="Small modal"
     labelClass="btn-outline-dark"
-    ref="modal"
+    ref="modalStatus"
     sizeClass="max-w-md"
+    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure about this action?
+      Are you sure you want to {{ type.toLowerCase() }} this request?
     </div>
-    <div v-if="type.toLowerCase() === 'delist'">
+    <div v-if="type.toLowerCase() === 'decline'">
       <textarea
         resize="none"
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
         rows="4"
         placeholder="Provide reason"
+        v-model="reason"
       ></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
+          :disabled="deleteloading"
           text="Cancel"
           btnClass="btn-outline-secondary btn-sm "
+          @click="$refs.modalStatus.closeModal()"
+        />
+        <Button
+          :disabled="deleteloading"
+          :isLoading="deleteloading"
+          text="Proceed"
+          :btnClass="` btn-sm ${
+            type === 'approve' ? 'btn-success' : 'btn-danger'
+          }`"
+          @click="handleStatus"
+        />
+      </div>
+    </template>
+  </Modal>
+  <Modal
+    title="Delete request"
+    label="Small modal"
+    labelClass="btn-outline-danger"
+    ref="modal"
+    sizeClass="max-w-md"
+    themeClass="bg-danger-500"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure you want to delete this request?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          :disabled="deleteloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
           @click="$refs.modal.closeModal()"
         />
         <Button
-          text="Proceed"
-          btnClass="btn-dark btn-sm"
-          @click="$refs.modal.closeModal()"
+          text="Delist"
+          :isLoading="deleteloading"
+          :disabled="deleteloading"
+          btnClass="btn-danger btn-sm"
+          @click="handleDelete"
         />
       </div>
     </template>
@@ -225,6 +281,8 @@ import AddEvent from "./addevent.vue";
 import EditEvent from "./editevent.vue";
 import ViewEvent from "./preview.vue";
 import { debounce } from "lodash";
+// eslint-disable-next-line no-unused-vars
+import moment from "moment";
 import window from "@/mixins/window";
 
 export default {
@@ -248,7 +306,8 @@ export default {
   data() {
     return {
       advancedTable,
-      current: 1,
+      comment: "",
+      detail: null,
       perpage: 10,
       pageRange: 5,
       searchParameter: "",
@@ -260,28 +319,6 @@ export default {
       dateValue: [],
       center: "",
       zone: "",
-      eventsOption: [
-        {
-          value: "Baby Christening",
-          label: "Baby Christening",
-        },
-        {
-          value: "Baby Dedication",
-          label: "Baby Dedication",
-        },
-        {
-          value: "House Warming",
-          label: "House Warming",
-        },
-        {
-          value: "Special Thanksgiving",
-          label: "Special Thanksgiving",
-        },
-        {
-          value: "Burial Ceremony",
-          label: "Burial Ceremony",
-        },
-      ],
 
       formatter: {
         date: "DD MMM YYYY",
@@ -289,10 +326,10 @@ export default {
       },
       actions: [
         {
-          name: "Approve",
+          name: "approve",
         },
         {
-          name: "Decline",
+          name: "decline",
         },
         {
           name: "view",
@@ -323,6 +360,21 @@ export default {
     };
   },
   methods: {
+    handleDelete() {},
+    handleStatus() {
+      const data = {
+        approveUserId: this.$store.state.auth.userData.id,
+        reqUserId: this.detail.userId,
+        actionId: this.detail.id,
+        Comments: this.comment,
+        status: this.type === "approve" ? true : false,
+      };
+      if (this.type === "approve") {
+        this.$store.dispatch("enableUser", this.id);
+      } else {
+        this.$store.dispatch("disableUser", this.id);
+      }
+    },
     generateAction(name, id) {
       this.id = id;
 
@@ -334,18 +386,27 @@ export default {
             this.$refs.modalChange.openModal();
           },
         },
-        edit: {
-          name: "edit",
+        approve: {
+          name: "approve",
           icon: "heroicons:pencil-square",
-          doit: () => {
-            this.$refs.modalChange.openModal();
+          doit: (data) => {
+            this.type = data;
+
+            this.$refs.modalStatus.openModal();
+          },
+        },
+        decline: {
+          name: "decline",
+          icon: "heroicons:pencil-square",
+          doit: (data) => {
+            this.type = data;
+            this.$refs.modalStatus.openModal();
           },
         },
         delete: {
           name: "delete",
           icon: "heroicons-outline:trash",
           doit: () => {
-            this.type = name;
             this.$refs.modal.openModal();
           },
         },
@@ -358,8 +419,10 @@ export default {
     const modalChange = ref(null);
     const { dispatch, state } = useStore();
     const success = computed(() => state.event.addsuccess);
+    const loading = computed(() => state.event.loading);
     const total = computed(() => state.event.total);
     const events = computed(() => state.event.events);
+    const deleteloading = computed(() => state.event.deleteloading);
     const columns = [
       {
         label: "Zone",
@@ -396,21 +459,52 @@ export default {
         field: "action",
       },
     ];
+    const eventsOption = [
+      {
+        value: "babyChristening",
+        label: "Baby Christening",
+      },
+      {
+        value: "babyDedication",
+        label: "Baby Dedication",
+      },
+      {
+        value: "houseWarming",
+        label: "House Warming",
+      },
+      {
+        value: "specialThanksgiving",
+        label: "Special Thanksgiving",
+      },
+      {
+        value: "burialCeremony",
+        label: "Burial Ceremony",
+      },
+    ];
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
       searchParameter: "",
       events: "",
-      UserId: state.auth.userData.id,
+      UserId:
+        state.auth.userData.userRole === "member" ? state.auth.userData.id : "",
     });
     const memberQuery = reactive({
       pageNumber: 1,
       pageSize: 2500000,
     });
+    function getData() {
+      dispatch(
+        state.auth.userData.userRole === "member"
+          ? "getEvents"
+          : "getAllEvents",
+        query
+      );
+    }
     onMounted(() => {
       dispatch("getAffiliationByMemberQuery", memberQuery);
       dispatch("getZones", memberQuery);
-      dispatch("getEvents", query);
+      getData();
     });
     const zoneOptions = computed(() =>
       state?.zone?.zones?.map((i) => {
@@ -422,12 +516,17 @@ export default {
     );
     const filteredColumns = computed(() => {
       return state.auth.userData.userRole.toLowerCase() === "member"
-        ? columns.filter((i) => i.field !== "requesterName")
+        ? columns.filter(
+            (i) =>
+              i.field !== "requesterName" &&
+              i.field !== "zone" &&
+              i.field !== "center"
+          )
         : columns;
     });
     watch(success, () => {
       if (success.value) {
-        dispatch("getEvents", query);
+        getData();
         modalChange.value.closeModal();
       }
     });
@@ -435,7 +534,7 @@ export default {
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce(() => {
-      dispatch("getEvents", query);
+      getData();
     }, debounceDelay);
 
     watch(
@@ -447,9 +546,13 @@ export default {
     watch(
       () => [query.pageNumber, query.event, query.pageSize],
       () => {
-        dispatch("getEvents", query);
+        getData();
       }
     );
+    function perPage({ currentPerPage }) {
+      query.pageNumber = 1;
+      query.pageSize = currentPerPage;
+    }
     return {
       zoneOptions,
       modalChange,
@@ -458,6 +561,11 @@ export default {
       total,
       events,
       query,
+      moment,
+      perPage,
+      eventsOption,
+      loading,
+      deleteloading,
     };
   },
 };
