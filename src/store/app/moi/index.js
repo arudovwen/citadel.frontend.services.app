@@ -109,8 +109,8 @@ export default {
     toggleAddMOI(state) {
       state.addModal = !state.addModal;
     },
-    // closeModal
-    closeModal(state) {
+    // closeAddMOIModal
+    closeAddMOIModal(state) {
       state.addModal = false;
     },
     // closeMOIEditModal
@@ -199,11 +199,10 @@ export default {
     // eopen MOI
     toggleAddMOI({ commit }) {
       commit("toggleAddMOI");
-      console.log("toggled");
     },
 
-    closeModal({ commit }) {
-      commit("closeModal");
+    closeAddMOIModal({ commit }) {
+      commit("closeAddMOIModal");
     },
     // closeMOIEditModal
     closeMOIEditModal({ commit }) {

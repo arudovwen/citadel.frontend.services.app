@@ -25,7 +25,7 @@
                     </div>
                   </div>
                   <div class="font-medium text-lg leading-6">
-                    <div class="dark:text-slate-200 text-slate-900">
+                    <div class="capitalize dark:text-slate-200 text-slate-900">
                       {{ item.mountainOfInfluenceName }}
                     </div>
                   </div>
@@ -100,7 +100,13 @@
           btnClass="btn-outline-secondary btn-sm"
           @click="$refs.modal.closeModal()"
         />
-        <Button text="Delete" btnClass="btn-danger btn-sm" @click="deleteMOI" />
+        <Button
+          :isLoading="deleteMOILoading"
+          :disabled="deleteMOILoading"
+          text="Delete"
+          btnClass="btn-danger btn-sm"
+          @click="deleteMOI"
+        />
       </div>
     </template>
   </Modal>
@@ -135,6 +141,7 @@ const mois = computed(() => state.moi.mois);
 const total = computed(() => state.moi.total);
 const getMOIsLoading = computed(() => state.moi.getMOIsLoading);
 const deleteMOISuccess = computed(() => state.moi.deleteMOISuccess);
+const deleteMOILoading = computed(() => state.moi.deleteMOILoading);
 const addMOISuccess = computed(() => state.moi.addMOISuccess);
 const updateMOISuccess = computed(() => state.moi.updateMOISuccess);
 // const membersOptions = computed(() =>
@@ -194,7 +201,7 @@ const getMOIs = () => {
 };
 
 const deleteMOI = () => {
-  // dispatch("deleteZone", detail.value.id);
+  dispatch("deleteMOI", detail.value.id);
 };
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;

@@ -58,7 +58,7 @@ const schema = yup.object({
   description: yup.string().required("Description is required"),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, resetForm } = useForm({
   validationSchema: schema,
 });
 
@@ -74,7 +74,8 @@ const addMinistry = handleSubmit((values) => {
 });
 
 const closeModal = () => {
-  dispatch("toggleAddMinistry");
+  dispatch("closeAddMinistryModal");
+  resetForm();
 };
 
 watch(success, () => {
@@ -84,8 +85,6 @@ watch(success, () => {
   }
 
   closeModal();
-
-  // getAllZones();
 });
 </script>
 <style lang=""></style>

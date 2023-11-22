@@ -143,8 +143,8 @@ export default {
     toggleAddMinistry(state) {
       state.addModal = !state.addModal;
     },
-    // closeModal
-    closeModal(state) {
+    // closeAddMinistryModal
+    closeAddMinistryModal(state) {
       state.addModal = false;
     },
     // closeMinistryEditModal
@@ -238,8 +238,8 @@ export default {
       console.log("toggled");
     },
 
-    closeModal({ commit }) {
-      commit("closeModal");
+    closeAddMinistryModal({ commit }) {
+      commit("closeAddMinistryModal");
     },
     // closeMinistryEditModal
     closeMinistryEditModal({ commit }) {
