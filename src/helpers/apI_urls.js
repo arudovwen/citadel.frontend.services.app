@@ -127,6 +127,14 @@ export const urls = {
   GET_ALL_SPOUSE_DETAIL: "/SpouseDetail/GetAllSpouseDetail",
   DELETE_SPOUSE_DETAIL: "/SpouseDetail/DeleteSpouseDetail",
 
+  //Unit
+  CREATE_UNIT: "/Unit/CreateUnit",
+  UPDATE_UNIT: "/Unit/UpdateUnit",
+  GET_UNIT_BY_ID: "/Unit/GetUnitById",
+  GET_UNIT_BY_USER_ID: "/Unit/GetUnitByUserId",
+  GET_ALL_UNITS: "/Unit/GetAllUnit",
+  DELETE_UNIT: "/Unit/DeleteUnit",
+
   // UserManagement
   GET_USER_PROFILE: "/UserManagement/GetUserProfile",
   GET_USER_BY_ID: "/UserManagement/GetUserbyId",

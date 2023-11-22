@@ -1,250 +1,212 @@
 // // import { v4 as uuidv4 } from "uuid";
 // import { useToast } from "vue-toastification";
-// import { DataService } from "@/config/dataService/dataService";
-// import { urls } from "@/helpers/apI_urls";
-// import { cleanObject } from "@/util/cleanObject";
+import { DataService } from "@/config/dataService/dataService";
+import { urls } from "@/helpers/apI_urls";
+import { cleanObject } from "@/util/cleanObject";
 // const toast = useToast();
-// export default {
-//   state: {
-//     isLoading: null,
-//     //create
-//     addModal: false,
-//     addMinistryLoading: false,
-//     addMinistrySuccess: false,
-//     addMinistryError: null,
+export default {
+  state: {
+    isLoading: null,
+    //create
+    addModal: false,
+    addUnitLoading: false,
+    addUnitSuccess: false,
+    addUnitError: null,
 
-//     //edit
-//     editModal: false,
-//     updateMinistryLoading: false,
-//     updateMinistrySuccess: false,
-//     updateMinistryError: null,
-//     //read
-//     getMinistriesLoading: false,
-//     getMinistriesSuccess: false,
-//     getMinistriesError: null,
-//     //delete
-//     deleteMinistryLoading: false,
-//     deleteMinistrySuccess: false,
-//     deleteMinistryError: null,
-//     ministry: null,
+    //edit
+    editModal: false,
+    updateUnitLoading: false,
+    updateUnitSuccess: false,
+    updateUnitError: null,
+    //read
+    getUnitLoading: false,
+    getUnitSuccess: false,
+    getUnitError: null,
+    //delete
+    deleteUnitLoading: false,
+    deleteUnitSuccess: false,
+    deleteUnitError: null,
+    unit: null,
 
-//     ministries: [],
-//     total: 0,
-//   },
-//   getters: {
-//     ministries: (state) => state.ministries,
-//   },
-//   mutations: {
-//     addMinistryBegin(state) {
-//       state.addMinistryLoading = true;
-//       state.addMinistrySuccess = false;
-//       state.addMinistryError = null;
-//     },
+    units: [],
+    total: 0,
+  },
+  getters: {},
+  mutations: {
+    addUnitBegin(state) {
+      state.addUnitLoading = true;
+      state.addUnitSuccess = false;
+      state.addUnitError = null;
+    },
 
-//     addMinistrySuccess(state) {
-//       state.addMinistryLoading = false;
-//       state.addMinistrySuccess = true;
-//     },
+    addUnitSuccess(state) {
+      state.addUnitLoading = false;
+      state.addUnitSuccess = true;
+    },
 
-//     addMinistryError(state, err) {
-//       state.addMinistryLoading = false;
-//       state.addMinistrySuccess = false;
-//       state.addMinistryError = err;
-//     },
+    addUnitError(state, err) {
+      state.addUnitLoading = false;
+      state.addUnitSuccess = false;
+      state.addUnitError = err;
+    },
 
-//     getMinistrysBegin(state) {
-//       state.getMinistriesLoading = true;
-//       state.getMinistriesSuccess = false;
-//       state.getMinistriesError = null;
-//     },
-//     getMinistriesSuccess(state, { data, totalCount }) {
-//       state.getMinistriesLoading = false;
-//       state.getMinistriesSuccess = true;
-//       state.getMinistriesError = null;
-//       state.ministries = data;
-//       state.total = totalCount;
-//     },
-//     getMinistriesError(state, err) {
-//       state.getMinistriesLoading = false;
-//       state.getMinistriesSuccess = false;
-//       state.getMinistriesError = err;
-//     },
+    getUnitsBegin(state) {
+      state.getUnitsLoading = true;
+      state.getUnitsSuccess = false;
+      state.getUnitsError = null;
+    },
+    getUnitsSuccess(state, { data, totalCount }) {
+      state.getUnitsLoading = false;
+      state.getUnitsSuccess = true;
+      state.getUnitsError = null;
+      state.units = data;
+      state.total = totalCount;
+    },
+    getUnitsError(state, err) {
+      state.getUnitsLoading = false;
+      state.getUnitsSuccess = false;
+      state.getUnitsError = err;
+    },
 
-//     updateMinistryBegin(state) {
-//       state.updateMinistryLoading = true;
-//       state.updateMinistrySuccess = false;
-//       state.updateMinistryError = null;
-//     },
-//     updateMinistrySuccess(state) {
-//       state.updateMinistryLoading = false;
-//       state.updateMinistrySuccess = true;
-//       state.updateMinistryError = null;
-//     },
-//     updateMinistryError(state, err) {
-//       state.updateMinistryLoading = false;
-//       state.updateMinistrySuccess = false;
-//       state.updateMinistryError = err;
-//     },
-//     deleteMinistryBegin(state) {
-//       state.deleteMinistryLoading = true;
-//       state.deleteMinistrySuccess = false;
-//       state.deleteMinistryError = null;
-//     },
-//     deleteMinistrySuccess(state) {
-//       state.deleteMinistryLoading = false;
-//       state.deleteMinistrySuccess = true;
-//       state.deleteMinistryError = null;
-//     },
-//     deleteMinistryError(state, err) {
-//       state.deleteMinistryLoading = false;
-//       state.deleteMinistrySuccess = false;
-//       state.deleteMinistryError = err;
-//     },
+    updateUnitBegin(state) {
+      state.updateUnitLoading = true;
+      state.updateUnitSuccess = false;
+      state.updateUnitError = null;
+    },
+    updateUnitSuccess(state) {
+      state.updateUnitLoading = false;
+      state.updateUnitSuccess = true;
+      state.updateUnitError = null;
+    },
+    updateUnitError(state, err) {
+      state.updateUnitLoading = false;
+      state.updateUnitSuccess = false;
+      state.updateUnitError = err;
+    },
+    deleteUnitBegin(state) {
+      state.deleteUnitLoading = true;
+      state.deleteUnitSuccess = false;
+      state.deleteUnitError = null;
+    },
+    deleteUnitSuccess(state) {
+      state.deleteUnitLoading = false;
+      state.deleteUnitSuccess = true;
+      state.deleteUnitError = null;
+    },
+    deleteUnitError(state, err) {
+      state.deleteUnitLoading = false;
+      state.deleteUnitSuccess = false;
+      state.deleteUnitError = err;
+    },
 
-//     //
+    //open edit Unit
+    openUnitEditModal(state, data) {
+      state.editModal = true;
+      state.unit = data;
+    },
 
-//     // removeMinistry
-//     removeMinistry(state, data) {
-//       state.Ministrys = state.Ministrys.filter((item) => item.id !== data.id);
-//       toast.error("Ministry Removed", {
-//         timeout: 2000,
-//       });
-//     },
-//     // updateMinistry
-//     updateMinistry(state, data) {
-//       state.Ministrys.findIndex((item) => {
-//         if (item.id === data.id) {
-//           // store data
-//           state.editId = data.id;
-//           state.editName = data.name;
-//           state.editassignto = data.assignto;
-//           state.editStartDate = data.startDate;
-//           state.editEndDate = data.endDate;
-//           state.editcta = data.category;
-//           state.editdesc = data.des;
+    // toggleAddUnit
+    toggleAddUnit(state) {
+      state.addModal = !state.addModal;
+    },
+    // closeAddUnitModal
+    closeAddUnitModal(state) {
+      state.addModal = false;
+    },
+    // closeUnitEditModal
+    closeUnitEditModal(state) {
+      state.editModal = false;
+    },
+  },
+  actions: {
+    async addUnit({ commit }, data) {
+      try {
+        commit("addUnitBegin");
+        const response = await DataService.post(urls.CREATE_UNIT, data);
 
-//           // set data to data
-//           item.name = data.name;
-//           item.des = data.des;
-//           item.startDate = data.startDate;
-//           item.endDate = data.endDate;
-//           item.assignto = data.assignto;
-//           item.progress = data.progress;
-//           item.category = data.category;
-//         }
-//       });
-//       state.editModal = true;
-//     },
-//     //open edit Ministry
-//     openEditModal(state, data) {
-//       state.editModal = true;
-//       state.Ministry = data;
-//     },
+        if (response.status === 200) {
+          commit("addUnitSuccess");
+        }
+      } catch (err) {
+        commit("addUnitError", err);
+      }
+    },
+    async getUnits({ commit }, data) {
+      try {
+        commit("getUnitsBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_UNITS}?${new URLSearchParams(cleanObject(data))}`
+        );
 
-//     // toggleAddMinistry
-//     toggleAddMinistry(state) {
-//       state.addModal = !state.addModal;
-//     },
-//     // closeModal
-//     closeModal(state) {
-//       state.addModal = false;
-//     },
-//     // closeEditModal
-//     closeEditModal(state) {
-//       state.editModal = false;
-//     },
-//   },
-//   actions: {
-//     async addMinistry({ commit }, data) {
-//       try {
-//         commit("addMinistryBegin");
-//         const response = await DataService.post(urls.CREATE_MINISTRY, data);
+        if (response.status === 200) {
+          commit("getUnitsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getUnitsError", err);
+      }
+    },
+    // async getUnitsTotal({ commit }, data) {
+    //   try {
+    //     commit("getUnitsBegin");
+    //     const response = await DataService.get(
+    //       `${urls.GET_ALL_Units_TOTAL}?${new URLSearchParams(cleanObject(data))}`
+    //     );
 
-//         if (response.status === 200) {
-//           commit("addMinistrySuccess");
-//         }
-//       } catch (err) {
-//         commit("addMinistryError", err);
-//       }
-//     },
-//     async getMinistrys({ commit }, data) {
-//       try {
-//         commit("getMinistrysBegin");
-//         const response = await DataService.get(
-//           `${urls.GET_ALL_MinistryS}?${new URLSearchParams(cleanObject(data))}`
-//         );
+    //     if (response.status === 200) {
+    //       commit("getUnitsSuccess", response.data);
+    //     }
+    //   } catch (err) {
+    //     commit("getUnitsError", err);
+    //   }
+    // },
+    async updateUnit({ commit }, data) {
+      try {
+        commit("updateUnitBegin");
+        const response = await DataService.put(urls.UPDATE_UNIT, data);
 
-//         if (response.status === 200) {
-//           commit("getMinistriesSuccess", response.data);
-//         }
-//       } catch (err) {
-//         commit("getMinistriesError", err);
-//       }
-//     },
-//     async getMinistrysTotal({ commit }, data) {
-//       try {
-//         commit("getMinistrysBegin");
-//         const response = await DataService.get(
-//           `${urls.GET_ALL_MinistryS_TOTAL}?${new URLSearchParams(
-//             cleanObject(data)
-//           )}`
-//         );
+        if (response.status === 200) {
+          commit("updateUnitSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("updateUnitError", err);
+      }
+    },
 
-//         if (response.status === 200) {
-//           commit("getMinistriesSuccess", response.data);
-//         }
-//       } catch (err) {
-//         commit("getMinistriesError", err);
-//       }
-//     },
-//     async updateMinistry({ commit }, data) {
-//       try {
-//         commit("updateMinistryBegin");
-//         const response = await DataService.put(urls.UPDATE_Ministry, data);
+    async deleteUnit({ commit }, id) {
+      try {
+        commit("deleteUnitBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_UNIT}?id=${id}`
+        );
 
-//         if (response.status === 200) {
-//           commit("updateMinistrySuccess", response.data.data);
-//         }
-//       } catch (err) {
-//         commit("updateMinistryError", err);
-//       }
-//     },
+        if (response.status === 200) {
+          commit("deleteUnitSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("deleteUnitError", err);
+      }
+    },
+    // removeUnit
+    removeUnit({ commit }, data) {
+      commit("removeUnit", data);
+    },
+    // updateUnit
 
-//     async deleteMinistry({ commit }, id) {
-//       try {
-//         commit("deleteMinistryBegin");
-//         const response = await DataService.delete(
-//           `${urls.DELETE_Ministry}?id=${id}`
-//         );
+    //open edit modal
+    openUnitEditModal({ commit }, data) {
+      commit("openUnitEditModal", data);
+    },
+    // eopen Unit
+    toggleAddUnit({ commit }) {
+      commit("toggleAddUnit");
+    },
 
-//         if (response.status === 200) {
-//           commit("deleteMinistrySuccess", response.data.data);
-//         }
-//       } catch (err) {
-//         commit("deleteMinistryError", err);
-//       }
-//     },
-//     // removeMinistry
-//     removeMinistry({ commit }, data) {
-//       commit("removeMinistry", data);
-//     },
-//     // updateMinistry
-
-//     //open edit modal
-//     openEditModal({ commit }, data) {
-//       commit("openEditModal", data);
-//     },
-//     // eopen Ministry
-//     toggleAddMinistry({ commit }) {
-//       commit("toggleAddMinistry");
-//     },
-
-//     closeModal({ commit }) {
-//       commit("closeModal");
-//     },
-//     // closeEditModal
-//     closeEditModal({ commit }) {
-//       commit("closeEditModal");
-//     },
-//   },
-// };
+    closeAddUnitModal({ commit }) {
+      commit("closeAddUnitModal");
+    },
+    // closeUnitEditModal
+    closeUnitEditModal({ commit }) {
+      commit("closeUnitEditModal");
+    },
+  },
+};

@@ -8,7 +8,7 @@
       >
         <InputGroup
           v-model="query.searchParameter"
-          placeholder="Search zone"
+          placeholder="Search units"
           type="search"
           prependIcon="heroicons-outline:search"
           classInput="w-full md:w-auto min-w-[320px] !h-9"
@@ -19,7 +19,7 @@
           :options="filters"
           v-model="query.sortOrder"
           placeholder="Sort by"
-          classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px] w-full md:w-auto"
+          classInput="hidden bg-white !h-9 min-w-[150px]  !min-h-[36px] w-full md:w-auto"
         />
       </div>
 
@@ -32,7 +32,7 @@
         text="Add Unit"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
         iconClass="text-lg"
-        @click="openZone"
+        @click="toggleAddUnit"
         :isLoading="store.state.zone.isLoading"
       />
     </div>
@@ -58,6 +58,7 @@ import { useStore } from "vuex";
 
 const store = useStore();
 const { state } = useStore();
+const userId = computed(() => state.auth.userData.id);
 
 const filters = [
   {
@@ -70,8 +71,8 @@ const filters = [
   },
 ];
 let fillter = ref("grid");
-const openZone = () => {
-  store.dispatch("openZone");
+const toggleAddUnit = () => {
+  store.dispatch("toggleAddUnit");
 };
 
 const width = ref(0);
@@ -125,5 +126,6 @@ watch(fillter, () => {
   }
 });
 provide("query", query);
+provide("userId", userId);
 </script>
 <style lang=""></style>

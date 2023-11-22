@@ -144,6 +144,15 @@ import { debounce } from "lodash";
 import { computed, ref, onMounted, inject, watch, provide } from "vue";
 import { useStore } from "vuex";
 
+onMounted(() => {
+  dispatch("getDepartmentsTotal", query);
+  dispatch("getAffiliationByMemberQuery", {
+    pageSize: 250000,
+    pageNumber: 1,
+    searchParameter: "",
+    role: "",
+  });
+});
 const toast = useToast();
 const { state, dispatch } = useStore();
 const total = computed(() => state.department.total);
@@ -202,15 +211,7 @@ const actions = ref([
   },
 ]);
 const query = inject("query");
-onMounted(() => {
-  dispatch("getDepartmentsTotal", query);
-  dispatch("getAffiliationByMemberQuery", {
-    pageSize: 250000,
-    pageNumber: 1,
-    searchParameter: "",
-    role: "",
-  });
-});
+
 // eslint-disable-next-line no-unused-vars
 function handleDelete() {
   dispatch("removeDepartment", detail.value.id);
