@@ -44,7 +44,7 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { useStore } from "vuex";
 import * as yup from "yup";
-import { computed, watch } from "vue";
+import { computed, watch, inject, ref } from "vue";
 import { useToast } from "vue-toastification";
 
 const { state, dispatch } = useStore();
@@ -52,7 +52,8 @@ const unit = computed(() => state.unit.unit);
 const success = computed(() => state.unit.updateUnitSuccess);
 const loading = computed(() => state.unit.updateUnitLoading);
 const toast = useToast();
-
+const userId = inject("userId");
+const isSpecialUnit = ref(false);
 const schema = yup.object({
   unitName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
@@ -68,8 +69,14 @@ const { value: description, errorMessage: descriptionError } =
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
 const updateUnit = handleSubmit((values) => {
-  console.log(values);
-  dispatch("updateUnit", values);
+  // console.log(values);
+  // console.log({ ...values, userId: userId.value });
+  const data = {
+    ...values,
+    userId: userId.value,
+    isSpecialUnit: isSpecialUnit.value,
+  };
+  dispatch("updateUnit", data);
 });
 
 const closeModal = () => {
