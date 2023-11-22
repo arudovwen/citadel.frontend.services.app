@@ -24,10 +24,7 @@
       </div>
 
       <Button
-        v-if="
-          state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
-          state.auth.userData.userRole.toLowerCase() === 'administrator'
-        "
+        v-if="state.auth.userData.userRole.toLowerCase() === 'administrator'"
         icon="heroicons-outline:plus"
         text="Add Unit"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
@@ -36,7 +33,7 @@
         :isLoading="store.state.zone.isLoading"
       />
     </div>
-    <GridSkletion :count="zones.length" v-if="isSkeletion" />
+    <GridSkletion :count="units.length" v-if="isSkeletion" />
 
     <Grid v-if="fillter === 'grid' && !isSkeletion" />
 
@@ -88,12 +85,12 @@ const query = reactive({
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
-  userId:
-    state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
-      ? state.auth?.userData?.id
-      : "",
+  // userId:
+  //   state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
+  //     ? state.auth?.userData?.id
+  //     : "",
 });
-const zones = computed(() => store.getters.zones);
+const units = computed(() => state.unit.units);
 
 const isSkeletion = ref(true);
 const isSkeletion2 = ref(null);

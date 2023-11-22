@@ -1,12 +1,12 @@
 <template>
   <div class="">
-    <div v-if="getZonesTotalLoading && zones?.length == 0" class="">
+    <div v-if="getUnitsLoading && units?.length == 0" class="">
       <EmptyGrid />
     </div>
     <div v-else>
-      <div v-if="zones.length">
+      <div v-if="units.length">
         <div class="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5 mb-2">
-          <Card bodyClass="" v-for="(item, i) in zones" :key="i">
+          <Card bodyClass="" v-for="(item, i) in units" :key="i">
             <div
               class="px-6 pt-6 cursor-pointer"
               @click="() => router.push(`#`)"
@@ -18,12 +18,12 @@
                     <div
                       class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal uppercase"
                     >
-                      {{ item.zoneName.charAt(0) + item.zoneName.charAt(1) }}
+                      {{ item.unitName.charAt(0) + item.unitName.charAt(1) }}
                     </div>
                   </div>
                   <div class="font-medium text-lg leading-6">
                     <div class="dark:text-slate-200 text-slate-900">
-                      {{ item.zoneName }}
+                      {{ item.unitName }}
                     </div>
                   </div>
                 </div>
@@ -130,30 +130,23 @@ import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
 onMounted(() => {
-  getZonesTotal();
-  dispatch("getAffiliationByMemberQuery", {
-    pageSize: 250000,
-    pageNumber: 1,
-    searchParameter: "",
-  });
+  getUnits();
+  // dispatch("getAffiliationByMemberQuery", {
+  //   pageSize: 250000,
+  //   pageNumber: 1,
+  //   searchParameter: "",
+  // });
 });
 const { dispatch, state } = useStore();
 const router = useRouter();
 
-const zones = computed(() => state.zone.zones);
-const total = computed(() => state.zone.total);
-const getZonesTotalLoading = computed(() => state.zone.getZonesTotalLoading);
-const deleteZoneSuccess = computed(() => state.zone.deleteZoneSuccess);
-const addZoneSuccess = computed(() => state.zone.addZoneSuccess);
-const updateZoneSuccess = computed(() => state.zone.updateZoneSuccess);
-const membersOptions = computed(() =>
-  state?.member?.data?.map((i) => {
-    return {
-      label: `${i.firstName} ${i.surName}`,
-      value: i.userId,
-    };
-  })
-);
+const units = computed(() => state.unit.units);
+const total = computed(() => state.unit.total);
+const getUnitsLoading = computed(() => state.unit.getUnitsLoading);
+const deleteUnitSuccess = computed(() => state.unit.deleteUnitSuccess);
+const addUnitSuccess = computed(() => state.unit.addUnitSuccess);
+const updateUnitSuccess = computed(() => state.unit.updateUnitSuccess);
+
 const toast = useToast();
 const modal = ref(null);
 const detail = ref(null);
@@ -163,7 +156,7 @@ const actions = ref([
     name: "edit",
     icon: "heroicons-outline:pencil-alt",
     doit: (data) => {
-      dispatch("openEditModal", data);
+      dispatch("openUnitEditModal", data);
     },
   },
   {
@@ -198,45 +191,39 @@ const options = [
     label: "100",
   },
 ];
-const getZonesTotal = () => {
-  dispatch("getZonesTotal", query);
+const getUnits = () => {
+  dispatch("getUnits", query);
 };
 
 const deleteUnit = () => {
-  // dispatch("deleteZone", detail.value.id);
+  // dispatch("deleteunit", detail.value.id);
 };
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
   query.pageSize = currentPerPage;
 }
-watch(deleteZoneSuccess, () => {
-  if (deleteZoneSuccess.value) {
+watch(deleteUnitSuccess, () => {
+  if (deleteUnitSuccess.value) {
     toast.success("Successfully Deleted");
-    dispatch("getZonesTotal", query);
+    dispatch("getUnits", query);
     modal.value.closeModal();
   }
 
-  // getAllZones();
+  // getAllUnits();
 });
-watch([addZoneSuccess, updateZoneSuccess], () => {
-  if (addZoneSuccess.value || updateZoneSuccess.value) {
-    dispatch("getZonesTotal", query);
+watch([addUnitSuccess, updateUnitSuccess], () => {
+  if (addUnitSuccess.value || updateUnitSuccess.value) {
+    dispatch("getUnits", query);
   }
 
-  // getAllZones();
+  // getAllunits();
 });
 // eslint-disable-next-line no-unused-vars
-function handleCoordinator(id) {
-  if (!id) return "n/a";
-  const result = membersOptions?.value?.find((i) => i.value === id);
-  return result?.label;
-}
+
 // eslint-disable-next-line no-unused-vars
-function handleDelete() {
-  dispatch("removeZone", detail.value);
-}
+
 watch(query, () => {
-  dispatch("getZonesTotal", query);
+  dispatch("getUnits", query);
 });
 </script>
 <style lang="scss" scoped>
