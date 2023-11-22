@@ -26,7 +26,7 @@
       <Button
         v-if="state.auth.userData.userRole.toLowerCase() === 'administrator'"
         icon="heroicons-outline:plus"
-        text="Add Mointain of Influence"
+        text="Add Mountain of Influence"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
         iconClass="text-lg"
         @click="toggleAddMOI"

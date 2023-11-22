@@ -10,7 +10,7 @@
         <Textinput
           label="Name"
           type="text"
-          placeholder="Mointain of Influence name"
+          placeholder="Mountain of Influence name"
           name="mountainOfInfluenceName"
           v-model.trim="mountainOfInfluenceName"
           :error="mountainOfInfluenceNameError"
