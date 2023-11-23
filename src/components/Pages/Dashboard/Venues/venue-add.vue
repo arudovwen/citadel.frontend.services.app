@@ -91,7 +91,7 @@
       /> -->
         <div class="flex gap-4 items-center">
           <SwitchGroup as="div" class="flex items-center gap-4">
-            <SwitchLabel as="span" class="ml-3 text-sm">
+            <SwitchLabel as="span" class="text-sm">
               <span class="input-label">Is Online</span>
             </SwitchLabel>
 
@@ -156,6 +156,7 @@ const isOnline = ref(false);
 const success = computed(() => state.venue.addVenueSuccess);
 const loading = computed(() => state.venue.addVenueLoading);
 const userId = inject("userId");
+const query = inject("query");
 // Define a validation schema
 const schema = yup.object({
   venueName: yup.string().required("Name is required"),
@@ -219,7 +220,7 @@ const closeModal = () => {
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
-    dispatch("getVenues");
+    dispatch("getVenues", query);
   }
 
   closeModal();
