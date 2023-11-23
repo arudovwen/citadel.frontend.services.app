@@ -30,12 +30,13 @@
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Venue"
-            btnClass=" btn-primary font-normal btn-sm "
+            btnClass="
+          btn-primary font-normal btn-sm "
             iconClass="text-lg"
             @click="
               () => {
                 type = 'add';
-                $refs.modalChange.openModal();
+                $store.dispatch('openVenueModal');
               }
             "
           />
@@ -199,7 +200,9 @@
       </div>
     </template>
   </Modal>
-  <Modal
+  <ModalCrud
+    :activeModal="$store.state.venue.addModal"
+    centered
     :title="
       type === 'add'
         ? 'Add Venue'
@@ -207,14 +210,14 @@
         ? 'Edit Venue'
         : 'View Venue'
     "
+    @close="$store.dispatch('closeVenueModal')"
     labelClass="btn-outline-dark"
-    ref="modalChange"
     sizeClass="max-w-3xl"
   >
     <AddVenue v-if="type === 'add'" />
     <EditVenue v-if="type === 'edit'" />
     <ViewVenue v-if="type === 'view'" />
-  </Modal>
+  </ModalCrud>
 </template>
 <script>
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
@@ -227,14 +230,17 @@ import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
 import { venueTable } from "@/constant/basic-tablle-data";
 import window from "@/mixins/window";
+import ModalCrud from "@/components/Modal";
 import Modal from "@/components/Modal/Modal";
 import AddVenue from "../venue-add.vue";
 import EditVenue from "../venue-edit.vue";
 import ViewVenue from "../venue-preview.vue";
-
+import { useStore } from "vuex";
+import { provide, computed } from "vue";
 export default {
   mixins: [window],
   components: {
+    ModalCrud,
     AddVenue,
     EditVenue,
     ViewVenue,
@@ -247,6 +253,15 @@ export default {
     MenuItem,
     Button,
     VueTailwindDatePicker,
+  },
+  setup() {
+    const { state } = useStore();
+
+    const userId = computed(() => state.auth.userData.id);
+
+    provide("userId", userId);
+
+    return {};
   },
 
   data() {
@@ -270,7 +285,7 @@ export default {
           icon: "heroicons-outline:eye",
           doit: (name) => {
             this.type = name;
-            this.$refs.modalChange.openModal();
+            this.$store.dispatch("openVenueModal");
           },
         },
         {

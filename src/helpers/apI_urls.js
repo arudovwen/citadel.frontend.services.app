@@ -144,6 +144,14 @@ export const urls = {
   SIGN_UP_USER: "/UserManagement/SignUpUser",
   GET_USER_AVATAR: "/UserManagement/GetUserAvatar",
 
+  //Venues
+  CREATE_VENUE: "/Venue/CreateVenue",
+  UPDATE_VENUE: "/Venue/UpdateVenue",
+  GET_VENUE_BY_ID: "/Venue/GetVenueById",
+  GET_VENUE_BY_USER_ID: "/Venue/GetVenueByUserId",
+  GET_ALL_VENUES: "/Venue/GetAllVenue",
+  DELETE_VENUE: "/Venue/DeleteVenue",
+
   REQUEST_OTP: "/auth/requestotp",
 
   //Zones

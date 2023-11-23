@@ -1,173 +1,199 @@
-import { v4 as uuidv4 } from "uuid";
-import { useToast } from "vue-toastification";
-const toast = useToast();
+// // import { v4 as uuidv4 } from "uuid";
+// import { useToast } from "vue-toastification";
+import { DataService } from "@/config/dataService/dataService";
+import { urls } from "@/helpers/apI_urls";
+import { cleanObject } from "@/util/cleanObject";
+// const toast = useToast();
 export default {
   state: {
-    addmodal: false,
     isLoading: null,
-    // for edit
+    //create
+    addModal: false,
+    addVenueLoading: false,
+    addVenueSuccess: false,
+    addVenueError: null,
+
+    //edit
     editModal: false,
-    editName: "",
-    editassignto: null,
-    editStartDate: null,
-    editEndDate: null,
-    editcta: null,
-    editId: null,
-    editdesc: null,
+    updateVenueLoading: false,
+    updateVenueSuccess: false,
+    updateVenueError: null,
+    //read
+    getVenueLoading: false,
+    getVenueSuccess: false,
+    getVenueError: null,
+    //delete
+    deleteVenueLoading: false,
+    deleteVenueSuccess: false,
+    deleteVenueError: null,
+    venue: null,
 
-    venues: [
-      {
-        id: uuidv4(),
-        assignto: [
-          {
-            image: require("@/assets/images/avatar/av-1.svg"),
-            title: "Mahedi Amin",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Sovo Haldar",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Rakibul Islam",
-          },
-        ],
-        name: "Welfare",
-        des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-        startDate: "2022-10-03",
-        endDate: "2022-10-06",
-        progress: 75,
-        category: [
-          {
-            value: "team",
-            label: "team",
-          },
-          {
-            value: "low",
-            label: "low",
-          },
-        ],
-      },
-      {
-        id: uuidv4(),
-        assignto: [
-          {
-            image: require("@/assets/images/avatar/av-1.svg"),
-            title: "Mahedi Amin",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Sovo Haldar",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Rakibul Islam",
-          },
-        ],
-        name: "Sanitation ",
-        des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-        startDate: "2022-10-03",
-        endDate: "2022-10-10",
-        progress: 50,
-
-        category: [
-          {
-            value: "team",
-            label: "team",
-          },
-          {
-            value: "low",
-            label: "low",
-          },
-        ],
-      },
-    ],
+    venues: [],
+    total: 0,
   },
-  getters: {
-    venues: (state) => state.venues,
-  },
+  getters: {},
   mutations: {
-    //
-    addVenue(state, data) {
-      state.isLoading = true;
+    addVenueBegin(state) {
+      state.addVenueLoading = true;
+      state.addVenueSuccess = false;
+      state.addVenueError = null;
+    },
 
-      setTimeout(() => {
-        state.venues.unshift(data);
-        state.isLoading = false;
-        toast.success -
-          500("Venue added", {
-            timeout: 2000,
-          });
-      }, 1500);
-      state.addmodal = false;
+    addVenueSuccess(state) {
+      state.addVenueLoading = false;
+      state.addVenueSuccess = true;
     },
-    // removeVenue
-    removeVenue(state, data) {
-      state.venues = state.venues.filter((item) => item.id !== data.id);
-      toast.error("Venue Removed", {
-        timeout: 2000,
-      });
+
+    addVenueError(state, err) {
+      state.addVenueLoading = false;
+      state.addVenueSuccess = false;
+      state.addVenueError = err;
     },
-    // updateVenue
-    updateVenue(state, data) {
-      state.venues.findIndex((item) => {
-        if (item.id === data.id) {
-          // store data
-          state.editId = data.id;
-          state.editName = data.name;
-          state.editassignto = data.assignto;
-          state.editStartDate = data.startDate;
-          state.editEndDate = data.endDate;
-          state.editcta = data.category;
-          state.editdesc = data.des;
-          state.editModal = !state.editModal;
-          // set data to data
-          item.name = data.name;
-          item.des = data.des;
-          item.startDate = data.startDate;
-          item.endDate = data.endDate;
-          item.assignto = data.assignto;
-          item.progress = data.progress;
-          item.category = data.category;
-        }
-      });
+
+    getVenuesBegin(state) {
+      state.getVenuesLoading = true;
+      state.getVenuesSuccess = false;
+      state.getVenuesError = null;
     },
-    // openVenue
-    openVenue(state) {
-      state.addmodal = true;
+    getVenuesSuccess(state, { data, totalCount }) {
+      state.getVenuesLoading = false;
+      state.getVenuesSuccess = true;
+      state.getVenuesError = null;
+      state.venues = data;
+      state.total = totalCount;
     },
-    // closeModal
-    closeModal(state) {
-      state.addmodal = false;
+    getVenuesError(state, err) {
+      state.getVenuesLoading = false;
+      state.getVenuesSuccess = false;
+      state.getVenuesError = err;
     },
-    // closeEditModal
-    closeEditModal(state) {
+
+    updateVenueBegin(state) {
+      state.updateVenueLoading = true;
+      state.updateVenueSuccess = false;
+      state.updateVenueError = null;
+    },
+    updateVenueSuccess(state) {
+      state.updateVenueLoading = false;
+      state.updateVenueSuccess = true;
+      state.updateVenueError = null;
+    },
+    updateVenueError(state, err) {
+      state.updateVenueLoading = false;
+      state.updateVenueSuccess = false;
+      state.updateVenueError = err;
+    },
+    deleteVenueBegin(state) {
+      state.deleteVenueLoading = true;
+      state.deleteVenueSuccess = false;
+      state.deleteVenueError = null;
+    },
+    deleteVenueSuccess(state) {
+      state.deleteVenueLoading = false;
+      state.deleteVenueSuccess = true;
+      state.deleteVenueError = null;
+    },
+    deleteVenueError(state, err) {
+      state.deleteVenueLoading = false;
+      state.deleteVenueSuccess = false;
+      state.deleteVenueError = err;
+    },
+
+    //open edit Venue
+    openVenueEditModal(state, data) {
+      state.editModal = true;
+      state.venue = data;
+    },
+
+    // openVenueModal
+    openVenueModal(state) {
+      state.addModal = true;
+    },
+    // closeVenueModal
+    closeVenueModal(state) {
+      state.addModal = false;
+    },
+    // closeVenueEditModal
+    closeVenueEditModal(state) {
       state.editModal = false;
     },
   },
   actions: {
-    addVenue({ commit }, data) {
-      commit("addVenue", data);
+    async addVenue({ commit }, data) {
+      try {
+        commit("addVenueBegin");
+        const response = await DataService.post(urls.CREATE_VENUE, data);
+
+        if (response.status === 200) {
+          commit("addVenueSuccess");
+        }
+      } catch (err) {
+        commit("addVenueError", err);
+      }
+    },
+    async getVenues({ commit }, data) {
+      try {
+        commit("getVenuesBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_VENUES}?${new URLSearchParams(cleanObject(data))}`
+        );
+
+        if (response.status === 200) {
+          commit("getVenuesSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getVenuesError", err);
+      }
+    },
+
+    async updateVenue({ commit }, data) {
+      try {
+        commit("updateVenueBegin");
+        const response = await DataService.put(urls.UPDATE_VENUE, data);
+
+        if (response.status === 200) {
+          commit("updateVenueSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("updateVenueError", err);
+      }
+    },
+
+    async deleteVenue({ commit }, id) {
+      try {
+        commit("deleteVenueBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_VENUE}?id=${id}`
+        );
+
+        if (response.status === 200) {
+          commit("deleteVenueSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("deleteVenueError", err);
+      }
     },
     // removeVenue
     removeVenue({ commit }, data) {
       commit("removeVenue", data);
     },
     // updateVenue
-    updateVenue({ commit }, data) {
-      commit("updateVenue", data);
+
+    //open edit modal
+    openVenueEditModal({ commit }, data) {
+      commit("openVenueEditModal", data);
     },
-    // eopen venue
-    openVenue({ commit }) {
-      commit("openVenue");
+    // eopen Venue
+    openVenueModal({ commit }) {
+      commit("openVenueModal");
     },
 
-    closeModal({ commit }) {
-      commit("closeModal");
+    closeVenueModal({ commit }) {
+      commit("closeVenueModal");
     },
-    // closeEditModal
-    closeEditModal({ commit }) {
-      commit("closeEditModal");
+    // closeVenueEditModal
+    closeVenueEditModal({ commit }) {
+      commit("closeVenueEditModal");
     },
   },
 };
