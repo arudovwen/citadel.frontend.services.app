@@ -19,9 +19,9 @@ export default {
     updateVenueSuccess: false,
     updateVenueError: null,
     //read
-    getVenueLoading: false,
-    getVenueSuccess: false,
-    getVenueError: null,
+    getVenuesLoading: false,
+    getVenuesSuccess: false,
+    getVenuesError: null,
     //delete
     deleteVenueLoading: false,
     deleteVenueSuccess: false,

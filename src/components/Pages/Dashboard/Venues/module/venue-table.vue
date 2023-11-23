@@ -46,6 +46,7 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
+          :isLoading="loading"
           mode="remote"
           styleClass=" vgt-table  centered "
           :rows="venues || []"
@@ -202,7 +203,6 @@ import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
-import { venueTable } from "@/constant/basic-tablle-data";
 import window from "@/mixins/window";
 import ModalCrud from "@/components/Modal";
 import Modal from "@/components/Modal/Modal";
@@ -235,6 +235,7 @@ export default {
     });
     const { state, dispatch } = useStore();
     const userId = computed(() => state.auth.userData.id);
+    const loading = computed(() => state.venue.getVenueLoading);
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
@@ -274,12 +275,12 @@ export default {
     return {
       venues,
       query,
+      loading,
     };
   },
 
   data() {
     return {
-      venueTable,
       current: 1,
       perpage: 10,
       pageRange: 5,
