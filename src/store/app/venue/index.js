@@ -153,6 +153,9 @@ export default {
         const response = await DataService.put(urls.UPDATE_VENUE, data);
 
         if (response.status === 200) {
+          console.log(
+            "Succesful update venue: " + JSON.stringify(response.data.data)
+          );
           commit("updateVenueSuccess", response.data.data);
         }
       } catch (err) {

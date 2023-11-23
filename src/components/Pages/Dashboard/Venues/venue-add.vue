@@ -81,14 +81,7 @@
           :error="descriptionError"
           classInput="h-[40px]"
         />
-        <!-- <Select
-        label="Title"
-        :options="titleMenu"
-        v-model.value="title"
-        :modelValue="title"
-        :error="titleError"
-        classInput="!h-[40px]"
-      /> -->
+
         <div class="flex gap-4 items-center">
           <SwitchGroup as="div" class="flex items-center gap-4">
             <SwitchLabel as="span" class="text-sm">
@@ -162,8 +155,8 @@ const schema = yup.object({
   venueName: yup.string().required("Name is required"),
   location: yup.string().required("Location is required"),
   capacity: yup.number(),
-  // accessories: yup.string(),
   description: yup.string(),
+  // accessories: yup.string(),
 });
 
 // const listOfAccessories = ref([]);
@@ -182,9 +175,8 @@ const formValues = {
   venueName: "",
   location: "",
   capacity: 0,
-  // accessories: "dashcode@gmail.com",
-
   description: "",
+  // accessories: "dashcode@gmail.com",
 };
 
 const { handleSubmit, resetForm } = useForm({
