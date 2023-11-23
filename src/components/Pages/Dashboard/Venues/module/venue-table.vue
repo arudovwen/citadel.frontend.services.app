@@ -15,13 +15,13 @@
             classInput="min-w-[220px] !h-9"
           />
 
-          <VueTailwindDatePicker
+          <!-- <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
             input-classes="form-control h-[36px]"
             placeholder="Select date"
             as-single
-          />
+          /> -->
         </div>
         <div
           class="md:flex md:space-x-3 items-center flex-none"
@@ -48,7 +48,7 @@
           :columns="columns"
           :isLoading="loading"
           mode="remote"
-          styleClass=" vgt-table  centered "
+          styleClass="vgt-table"
           :rows="venues || []"
           :sort-options="{
             enabled: false,
@@ -61,8 +61,56 @@
           <template v-slot:table-row="props">
             <span v-if="props.column.field == 'name'" class="flex items-center">
               <span
-                class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium"
+                :class="
+                  props.row.isOnline === true
+                    ? 'text-slate-600'
+                    : 'text-slate-300'
+                "
+                class="text-sm dark:text-slate-300 capitalize font-medium"
                 >{{ props.row.venueName }}</span
+              >
+            </span>
+            <span
+              v-if="props.column.field == 'capacity'"
+              class="flex items-center"
+            >
+              <span
+                :class="
+                  props.row.isOnline === true
+                    ? 'text-slate-600'
+                    : 'text-slate-300'
+                "
+                class="text-sm dark:text-slate-300 capitalize font-medium"
+                >{{ props.row.capacity }}</span
+              >
+            </span>
+
+            <span
+              v-if="props.column.field == 'description'"
+              class="flex items-center"
+            >
+              <span
+                :class="
+                  props.row.isOnline === true
+                    ? 'text-slate-600'
+                    : 'text-slate-300'
+                "
+                class="text-sm dark:text-slate-300 capitalize font-medium"
+                >{{ props.row.description }}</span
+              >
+            </span>
+            <span
+              v-if="props.column.field == 'location'"
+              class="flex items-center"
+            >
+              <span
+                :class="
+                  props.row.isOnline === true
+                    ? 'text-slate-600'
+                    : 'text-slate-300'
+                "
+                class="text-sm dark:text-slate-300 capitalize font-medium"
+                >{{ props.row.location }}</span
               >
             </span>
 
@@ -126,16 +174,15 @@
               </Dropdown>
             </span>
           </template>
-          <template #pagination-bottom="props">
+          <template #pagination-bottom>
             <div class="py-4 px-3">
               <Pagination
-                :total="50"
-                :current="current"
-                :per-page="perpage"
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
                 :pageRange="pageRange"
-                @page-changed="current = $event"
-                :pageChanged="props.pageChanged"
-                :perPageChanged="props.perPageChanged"
+                @page-changed="query.pageNumber = $event"
+                :perPageChanged="perPage"
                 enableSearch
                 enableSelect
                 :options="options"
@@ -197,7 +244,7 @@
   </ModalCrud>
 </template>
 <script>
-import VueTailwindDatePicker from "vue-tailwind-datepicker";
+// import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -230,7 +277,7 @@ export default {
     Card,
     MenuItem,
     Button,
-    VueTailwindDatePicker,
+    // VueTailwindDatePicker,
   },
   setup() {
     onMounted(() => {
@@ -240,6 +287,7 @@ export default {
     const userId = computed(() => state.auth.userData.id);
     const loading = computed(() => state.venue.getVenueLoading);
     const toast = useToast();
+    const total = computed(() => state.venue.total);
 
     const deleteVenueLoading = computed(() => state.venue.deleteVenueLoading);
     const deleteVenueSuccess = computed(() => state.venue.deleteVenueSuccess);
@@ -258,6 +306,11 @@ export default {
     const getVenues = () => {
       dispatch("getVenues", query);
     };
+
+    function perPage({ currentPerPage }) {
+      query.pageNumber = 1;
+      query.pageSize = currentPerPage;
+    }
     const debounceDelay = 800;
     const debouncedSearch = debounce(() => {
       getVenues();
@@ -293,6 +346,8 @@ export default {
     provide("query", query);
 
     return {
+      total,
+      perPage,
       venues,
       query,
       loading,

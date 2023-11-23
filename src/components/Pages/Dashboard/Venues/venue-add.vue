@@ -213,9 +213,8 @@ watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
     dispatch("getVenues", query);
+    closeModal();
   }
-
-  closeModal();
 });
 </script>
 
