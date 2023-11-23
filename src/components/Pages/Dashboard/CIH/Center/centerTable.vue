@@ -327,7 +327,7 @@ export default {
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
         dispatch("getAffiliationByMemberQuery", query);
-        toast.success("Mmeber deleted");
+        toast.success("Member deleted");
         modal.value.closeModal();
       }
     });
