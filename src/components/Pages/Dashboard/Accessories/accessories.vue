@@ -8,19 +8,19 @@
       >
         <InputGroup
           v-model="query.searchParameter"
-          placeholder="Search units"
+          placeholder="Search Accessories"
           type="search"
           prependIcon="heroicons-outline:search"
           classInput="w-full md:w-auto min-w-[320px] !h-9"
         />
 
-        <Select
+        <!-- <Select
           label=""
           :options="filters"
           v-model="query.sortOrder"
           placeholder="Sort by"
           classInput="hidden bg-white !h-9 min-w-[150px]  !min-h-[36px] w-full md:w-auto"
-        />
+        /> -->
       </div>
 
       <Button
@@ -30,7 +30,6 @@
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
         iconClass="text-lg"
         @click="toggleAddAccessory"
-        :isLoading="store.state.zone.isLoading"
       />
     </div>
     <GridSkletion :count="units.length" v-if="isSkeletion" />
@@ -45,7 +44,7 @@
 <script setup>
 import Button from "@/components/Button";
 import GridSkletion from "@/components/Skeleton/grid";
-import Select from "@/components/Select";
+// import Select from "@/components/Select";
 import InputGroup from "@/components/InputGroup";
 import { computed, ref, watch, onMounted, reactive, provide } from "vue";
 import AddModal from "./accessory-add";
@@ -57,16 +56,16 @@ const store = useStore();
 const { state } = useStore();
 const userId = computed(() => state.auth.userData.id);
 
-const filters = [
-  {
-    label: "Name",
-    value: "zoneName",
-  },
-  {
-    label: "Description",
-    value: "description",
-  },
-];
+// const filters = [
+//   {
+//     label: "Name",
+//     value: "zoneName",
+//   },
+//   {
+//     label: "Description",
+//     value: "description",
+//   },
+// ];
 let fillter = ref("grid");
 const toggleAddAccessory = () => {
   store.dispatch("toggleAddAccessory");
@@ -85,11 +84,6 @@ const query = reactive({
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
-  isSpecialUnit: false,
-  // userId:
-  //   state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
-  //     ? state.auth?.userData?.id
-  //     : "",
 });
 const units = computed(() => state.unit.units);
 

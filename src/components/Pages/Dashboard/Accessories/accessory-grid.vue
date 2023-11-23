@@ -1,12 +1,12 @@
 <template>
   <div class="">
-    <div v-if="getUnitsLoading && units?.length == 0" class="">
+    <div v-if="getAccessoriesLoading && accessories?.length == 0" class="">
       <EmptyGrid />
     </div>
     <div v-else>
-      <div v-if="units.length">
+      <div v-if="accessories.length">
         <div class="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5 mb-2">
-          <Card bodyClass="" v-for="(item, i) in units" :key="i">
+          <Card bodyClass="" v-for="(item, i) in accessories" :key="i">
             <div
               class="px-6 pt-6 cursor-pointer"
               @click="() => router.push(`#`)"
@@ -18,12 +18,15 @@
                     <div
                       class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal uppercase"
                     >
-                      {{ item.unitName.charAt(0) + item.unitName.charAt(1) }}
+                      {{
+                        item.accessoryName.charAt(0) +
+                        item.accessoryName.charAt(1)
+                      }}
                     </div>
                   </div>
                   <div class="font-medium text-lg leading-6">
                     <div class="dark:text-slate-200 text-slate-900">
-                      {{ item.unitName }}
+                      {{ item.accessoryName }}
                     </div>
                   </div>
                 </div>
@@ -39,7 +42,6 @@
             </div>
             <div
               v-if="
-                state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
                 state.auth.userData.userRole.toLowerCase() === 'administrator'
               "
               class="flex justify-end px-4 py-2 mt-6 border-t border-gray-200 gap-x-3"
@@ -79,7 +81,7 @@
     </div>
   </div>
   <Modal
-    title="Delete Unit"
+    title="Delete Accessory"
     label="Small modal"
     labelClass="btn-outline-danger"
     ref="modal"
@@ -87,7 +89,7 @@
     themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to delete this unit?
+      Are you sure you want to delete this accessory?
     </div>
 
     <template v-slot:footer>
@@ -98,11 +100,11 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          :isLoading="deleteUnitLoading"
-          :disabled="deleteUnitLoading"
+          :isLoading="deleteAccessoryLoading"
+          :disabled="deleteAccessoryLoading"
           text="Delete"
           btnClass="btn-danger btn-sm"
-          @click="deleteUnit"
+          @click="deleteAccessory"
         />
       </div>
     </template>
@@ -124,7 +126,7 @@ import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
 onMounted(() => {
-  getUnits();
+  getAccessories();
   // dispatch("getAffiliationByMemberQuery", {
   //   pageSize: 250000,
   //   pageNumber: 1,
@@ -134,14 +136,22 @@ onMounted(() => {
 const { dispatch, state } = useStore();
 const router = useRouter();
 
-const units = computed(() => state.unit.units);
-const total = computed(() => state.unit.total);
-const getUnitsLoading = computed(() => state.unit.getUnitsLoading);
-const deleteUnitSuccess = computed(() => state.unit.deleteUnitSuccess);
-const deleteUnitLoading = computed(() => state.unit.deleteUnitLoading);
+const accessories = computed(() => state.accessory.accessories);
+const total = computed(() => state.accessory.total);
+const getAccessoriesLoading = computed(
+  () => state.accessory.getAccessoriesLoading
+);
+const deleteAccessorySuccess = computed(
+  () => state.accessory.deleteAccessorySuccess
+);
+const deleteAccessoryLoading = computed(
+  () => state.accessory.deleteAccessoryLoading
+);
 
-const addUnitSuccess = computed(() => state.unit.addUnitSuccess);
-const updateUnitSuccess = computed(() => state.unit.updateUnitSuccess);
+const addAccessorySuccess = computed(() => state.accessory.addAccessorySuccess);
+const updateAccessorySuccess = computed(
+  () => state.accessory.updateAccessorySuccess
+);
 
 const toast = useToast();
 const modal = ref(null);
@@ -152,7 +162,7 @@ const actions = ref([
     name: "edit",
     icon: "heroicons-outline:pencil-alt",
     doit: (data) => {
-      dispatch("openUnitEditModal", data);
+      dispatch("openAccessoryEditModal", data);
     },
   },
   {
@@ -187,39 +197,39 @@ const options = [
     label: "100",
   },
 ];
-const getUnits = () => {
-  dispatch("getUnits", query);
+const getAccessories = () => {
+  dispatch("getAccessories", query);
 };
 
-const deleteUnit = () => {
-  dispatch("deleteUnit", detail.value.id);
+const deleteAccessory = () => {
+  dispatch("deleteAccessory", detail.value.id);
 };
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
   query.pageSize = currentPerPage;
 }
-watch(deleteUnitSuccess, () => {
-  if (deleteUnitSuccess.value) {
+watch(deleteAccessorySuccess, () => {
+  if (deleteAccessorySuccess.value) {
     toast.success("Successfully Deleted");
-    dispatch("getUnits", query);
+    dispatch("getAccessories", query);
     modal.value.closeModal();
   }
 
-  // getAllUnits();
+  // getAllaccessories();
 });
-watch([addUnitSuccess, updateUnitSuccess], () => {
-  if (addUnitSuccess.value || updateUnitSuccess.value) {
-    dispatch("getUnits", query);
+watch([addAccessorySuccess, updateAccessorySuccess], () => {
+  if (addAccessorySuccess.value || updateAccessorySuccess.value) {
+    dispatch("getAccessories", query);
   }
 
-  // getAllunits();
+  // getAllaccessories();
 });
 // eslint-disable-next-line no-unused-vars
 
 // eslint-disable-next-line no-unused-vars
 
 watch(query, () => {
-  dispatch("getUnits", query);
+  dispatch("getAccessories", query);
 });
 </script>
 <style lang="scss" scoped>
