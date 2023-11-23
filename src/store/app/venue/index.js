@@ -175,8 +175,29 @@ export default {
       }
     },
     // removeVenue
-    removeVenue({ commit }, data) {
-      commit("removeVenue", data);
+    async removeVenue({ commit }, id) {
+      try {
+        commit("deleteBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_VENUE}?id=${id}`
+        );
+        if (response.status === 200) {
+          commit("deleteSuccess");
+        }
+      } catch (err) {
+        commit("deleteErr", err);
+      }
+    },
+    async editVenue({ commit }, data) {
+      try {
+        commit("updateBegin");
+        const response = await DataService.put(`${urls.UPDATE_VENUE}`, data);
+        if (response.status === 200) {
+          commit("updateSuccess");
+        }
+      } catch (err) {
+        commit("updateErr", err);
+      }
     },
     // updateVenue
 

@@ -23,6 +23,8 @@ export default {
     error: null,
     updateloading: false,
     updatesuccess: false,
+    updateeventloading: false,
+    updateventsuccess: false,
     deleteloading: false,
     deletesuccess: false,
   },
@@ -73,6 +75,36 @@ export default {
       state.updateloading = false;
       state.error = err;
       state.updatesuccess = false;
+    },
+    updateEventBegin(state) {
+      state.updateeventloading = true;
+      state.error = null;
+      state.updateeventsuccess = false;
+    },
+    updateEventSuccess(state) {
+      state.updateeventloading = false;
+      state.updateeventsuccess = true;
+      state.error = null;
+    },
+    updateEventErr(state, err) {
+      state.updateeventloading = false;
+      state.error = err;
+      state.updateeventsuccess = false;
+    },
+    deleteBegin(state) {
+      state.deleteloading = true;
+      state.error = null;
+      state.deletesuccess = false;
+    },
+    deleteSuccess(state) {
+      state.deleteloading = false;
+      state.deletesuccess = true;
+      state.error = null;
+    },
+    deleteErr(state, err) {
+      state.deleteloading = false;
+      state.error = err;
+      state.deletesuccess = false;
     },
 
     // openEvent
@@ -147,14 +179,37 @@ export default {
       }
     },
 
+    async updateEvent({ commit }, data) {
+      try {
+        commit("updateEventBegin");
+        const response = await DataService.put(
+          `${urls.UPDATE_EVENT}?${new URLSearchParams(data)}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("updateEventSuccess");
+        }
+      } catch (err) {
+        commit("updateEventErr", err);
+      }
+    },
+
     // removeEvent
-    removeEvent({ commit }, data) {
-      commit("removeEvent", data);
+    async removeEvent({ commit }, data) {
+      try {
+        commit("deleteBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_EVENT}?${new URLSearchParams(data)}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("deleteSuccess");
+        }
+      } catch (err) {
+        commit("deleteErr", err);
+      }
     },
-    // updateEvent
-    updateEvent({ commit }, data) {
-      commit("updateEvent", data);
-    },
+
     // eopen event
     openEvent({ commit }) {
       commit("openEvent");

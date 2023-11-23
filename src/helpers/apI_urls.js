@@ -163,8 +163,17 @@ export const urls = {
   GET_ZONE_BY_ID: "/CIHZone/GetCIHZoneById",
 
   //Events
-  REQUEST_EVENT: "/ChurchAffiliation/RequestForEvent",
+  REQUEST_EVENT: "/Events/RequestForEvent",
   GET_EVENTS: "/Events/GetUserEvents",
   GET_ALL_EVENTS: "/Events/GetAllEvents",
   CHANGE_EVENT_STATUS: "/Events/ApproveOrRejectEvent",
+  DELETE_EVENT: "/Events/DeleteEventRequest",
+  UPDATE_EVENT: "/Events/UpdateRequestForEvent",
+
+  CREATE_ACCESSORY: "/Accessory/CreateAccessory",
+  UPDATE_ACCESSORY: "/Accessory/UpdateAccessory",
+  GET_ACCESSORY_BY_ID: "/Accessory/GetAccessoryById",
+  GET_ACCESSORY_BY_USER_ID: "/Accessory/GetAccessoryByUserId",
+  GET_ALL_ACCESSORY: "/Accessory/GetAllAccessory",
+  DELETE_ACCESSORY: "/Accessory/DeleteAccessory",
 };
