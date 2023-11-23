@@ -144,14 +144,15 @@
     </Card>
   </div>
   <Modal
-    title="Confirm action"
+    title="Delete member"
     label="Small modal"
-    labelClass="btn-outline-dark"
+    labelClass="btn-outline-danger"
     ref="modal"
     sizeClass="max-w-md"
+    themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to {{ type }} this member?
+      Are you sure you want to {{ type }} this member from department?
     </div>
     <div v-if="type.toLowerCase() === 'reject'">
       <textarea
@@ -169,9 +170,11 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          text="Proceed"
-          btnClass="btn-dark btn-sm"
-          @click="$refs.modal.closeModal()"
+          :isLoading="delistLoading"
+          :disabled="delistLoading"
+          text="Delete"
+          btnClass="btn-danger btn-sm"
+          @click="handleDelete(id)"
         />
       </div>
     </template>
@@ -212,13 +215,15 @@ import { useStore } from "vuex";
 import { debounce } from "lodash";
 import moment from "moment";
 import { useRoute } from "vue-router";
+import { useToast } from "vue-toastification";
+
 import {
   computed,
   onMounted,
   watch,
   reactive,
   ref,
-  getCurrentInstance,
+  // getCurrentInstance,
 } from "vue";
 
 export default {
@@ -237,6 +242,132 @@ export default {
     Card,
     MenuItem,
     Button,
+  },
+  setup() {
+    const route = useRoute();
+    const query = reactive({
+      pageNumber: 1,
+      pageSize: 25,
+      sortOrder: "",
+      searchParameter: "",
+      department: route.params.name,
+    });
+    const { state, dispatch } = useStore();
+    const toast = useToast();
+    dispatch("getAffiliationByMemberQuery", query);
+    // const id = ref(null);
+    const modal = ref(null);
+    const modalChange = ref(null);
+    const modalStatus = ref(null);
+    const filters = [
+      {
+        label: "Default",
+        value: "",
+      },
+
+      {
+        label: "Name",
+        value: "firstName",
+      },
+    ];
+    // none, firstName, userId, surname, department, center, zone, role
+    onMounted(() => {
+      dispatch("getAffiliationByMemberQuery", query);
+      dispatch("getRoles");
+      // id.value = getCurrentInstance().data.id;
+    });
+    function fetchRecords(page) {
+      dispatch("getAffiliationByMemberQuery", { ...query, pageNumber: page });
+    }
+
+    function perPage({ currentPerPage }) {
+      query.pageNumber = 1;
+      query.pageSize = currentPerPage;
+    }
+    const search = ref("");
+    const loading = computed(() => state.member.loading);
+    const delistLoading = computed(() => state.department.loading);
+    const delistSuccess = computed(() => state.department.deletesuccess);
+    const members = computed(() => {
+      if (state?.member?.data) {
+        return state?.member?.data?.map((item) => {
+          item.fullName = `${item.firstName} ${item.surName}`;
+          item.dateOfBirth = item?.dateOfBirth
+            ? moment(item?.dateOfBirth).format("ll")
+            : "-";
+          item.department = item?.department ? item?.department : "-";
+
+          return item;
+        });
+      }
+      return [];
+    });
+    const total = computed(() => state.profile.total);
+    const roles = computed(() => state.profile.roles);
+    const addsuccess = computed(() => state.profile.addsuccess);
+    const deleteloading = computed(() => state.profile.deleteloading);
+    // const deletesuccess = computed(() => state.profile.deletesuccess);
+
+    function handleDelete(id) {
+      dispatch("removeMemberFromDepartment", id);
+    }
+
+    // Define a debounce delay (e.g., 500 milliseconds)
+    const debounceDelay = 800;
+    const debouncedSearch = debounce((searchValue) => {
+      dispatch("getAffiliationByMemberQuery", { ...query, name: searchValue });
+    }, debounceDelay);
+    watch(addsuccess, () => {
+      addsuccess.value && dispatch("getAffiliationByMemberQuery", query);
+      modalChange.value.closeModal();
+    });
+
+    watch(delistSuccess, () => {
+      if (delistSuccess.value) {
+        dispatch("getAffiliationByMemberQuery", query);
+        toast.success("Member successfully removed");
+        modal.value.closeModal();
+      }
+    });
+
+    // watch(deletesuccess, () => {
+    //   if (deletesuccess.value) {
+    //     dispatch("getAffiliationByMemberQuery", query);
+    //     modalStatus.value.closeModal();
+    //   }
+    // });
+
+    watch(
+      () => query.searchParameter,
+      () => {
+        debouncedSearch(query.searchParameter);
+      }
+    );
+    watch(
+      () => [query.pageNumber, query.pageSize, query.sortOrder],
+      () => {
+        dispatch("getAffiliationByMemberQuery", query);
+      }
+    );
+    return {
+      query,
+      total,
+      fetchRecords,
+      loading,
+      deleteloading,
+      members,
+      roles,
+      search,
+      handleDelete,
+      modal,
+      modalChange,
+      modalStatus,
+      perPage,
+      filters,
+      state,
+      delistLoading,
+      delistSuccess,
+    };
   },
 
   data() {
@@ -263,7 +394,9 @@ export default {
         {
           name: "delete",
           icon: "heroicons-outline:trash",
-          doit: (name) => {
+          doit: (name, { userId }) => {
+            this.id = userId;
+
             this.type = name;
             this.$refs.modal.openModal();
           },
@@ -377,119 +510,6 @@ export default {
         ? this.actions.filter((i) => i.name.toLowerCase() !== "delete")
         : this.actions;
     },
-  },
-  setup() {
-    const route = useRoute();
-    const query = reactive({
-      pageNumber: 1,
-      pageSize: 25,
-      sortOrder: "",
-      searchParameter: "",
-      department: route.params.name,
-    });
-    const { state, dispatch } = useStore();
-    dispatch("getAffiliationByMemberQuery", query);
-    const id = ref(null);
-    const modal = ref(null);
-    const modalChange = ref(null);
-    const modalStatus = ref(null);
-    const filters = [
-      {
-        label: "Default",
-        value: "",
-      },
-
-      {
-        label: "Name",
-        value: "firstName",
-      },
-    ];
-    // none, firstName, userId, surname, department, center, zone, role
-    onMounted(() => {
-      dispatch("getAffiliationByMemberQuery", query);
-      dispatch("getRoles");
-      id.value = getCurrentInstance().data.id;
-    });
-    function fetchRecords(page) {
-      dispatch("getAffiliationByMemberQuery", { ...query, pageNumber: page });
-    }
-
-    function perPage({ currentPerPage }) {
-      query.pageNumber = 1;
-      query.pageSize = currentPerPage;
-    }
-    const search = ref("");
-    const loading = computed(() => state.member.loading);
-    const members = computed(() => {
-      if (state?.member?.data) {
-        return state?.member?.data?.map((item) => {
-          item.fullName = `${item.firstName} ${item.surName}`;
-          item.dateOfBirth = item?.dateOfBirth
-            ? moment(item?.dateOfBirth).format("ll")
-            : "-";
-          item.department = item?.department ? item?.department : "-";
-
-          return item;
-        });
-      }
-      return [];
-    });
-    const total = computed(() => state.profile.total);
-    const roles = computed(() => state.profile.roles);
-    const addsuccess = computed(() => state.profile.addsuccess);
-    const deleteloading = computed(() => state.profile.deleteloading);
-    const deletesuccess = computed(() => state.profile.deletesuccess);
-
-    function handleDelete() {
-      dispatch("disableUser", id.value);
-    }
-
-    // Define a debounce delay (e.g., 500 milliseconds)
-    const debounceDelay = 800;
-    const debouncedSearch = debounce((searchValue) => {
-      dispatch("getAffiliationByMemberQuery", { ...query, name: searchValue });
-    }, debounceDelay);
-    watch(addsuccess, () => {
-      addsuccess.value && dispatch("getAffiliationByMemberQuery", query);
-      modalChange.value.closeModal();
-    });
-
-    watch(deletesuccess, () => {
-      if (deletesuccess.value) {
-        dispatch("getAffiliationByMemberQuery", query);
-        modalStatus.value.closeModal();
-      }
-    });
-
-    watch(
-      () => query.searchParameter,
-      () => {
-        debouncedSearch(query.searchParameter);
-      }
-    );
-    watch(
-      () => [query.pageNumber, query.pageSize, query.sortOrder],
-      () => {
-        dispatch("getAffiliationByMemberQuery", query);
-      }
-    );
-    return {
-      query,
-      total,
-      fetchRecords,
-      loading,
-      deleteloading,
-      members,
-      roles,
-      search,
-      handleDelete,
-      modal,
-      modalChange,
-      modalStatus,
-      perPage,
-      filters,
-      state,
-    };
   },
 };
 </script>
