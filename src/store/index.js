@@ -22,6 +22,7 @@ import request from "./app/request";
 import report from "./app/report";
 import ministry from "./app/ministry";
 import unit from "./app/unit";
+import accessory from "./app/accessory";
 import specialUnit from "./app/special-unit";
 import moi from "./app/moi";
 import affinityGroup from "./app/affinityGroup";
@@ -125,5 +126,6 @@ export default createStore({
     unit,
     specialUnit,
     moi,
+    accessory,
   },
 });
