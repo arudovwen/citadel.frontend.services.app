@@ -168,9 +168,11 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
+          :isLoading="deleteVenueLoading"
+          :disabled="deleteVenueLoading"
           text="Delete"
           btnClass="btn-danger btn-sm"
-          @click="$refs.modal.closeModal()"
+          @click="handleDelete(id)"
         />
       </div>
     </template>
@@ -211,7 +213,8 @@ import EditVenue from "../venue-edit.vue";
 import ViewVenue from "../venue-preview.vue";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
-import { provide, computed, reactive, onMounted, watch } from "vue";
+import { useToast } from "vue-toastification";
+import { provide, computed, reactive, onMounted, watch, ref } from "vue";
 export default {
   mixins: [window],
   components: {
@@ -236,6 +239,11 @@ export default {
     const { state, dispatch } = useStore();
     const userId = computed(() => state.auth.userData.id);
     const loading = computed(() => state.venue.getVenueLoading);
+    const toast = useToast();
+
+    const deleteVenueLoading = computed(() => state.venue.deleteVenueLoading);
+    const deleteVenueSuccess = computed(() => state.venue.deleteVenueSuccess);
+    const modal = ref();
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
@@ -254,6 +262,18 @@ export default {
     const debouncedSearch = debounce(() => {
       getVenues();
     }, debounceDelay);
+
+    function handleDelete(id) {
+      dispatch("deleteVenue", id);
+    }
+
+    watch(deleteVenueSuccess, () => {
+      if (deleteVenueSuccess.value) {
+        dispatch("getVenues", query);
+        toast.success("Venue deleted");
+        modal.value.closeModal();
+      }
+    });
 
     watch(
       () => query.searchParameter,
@@ -276,6 +296,9 @@ export default {
       venues,
       query,
       loading,
+      handleDelete,
+      modal,
+      deleteVenueLoading,
     };
   },
 
@@ -300,7 +323,6 @@ export default {
           doit: (name, venue) => {
             this.type = name;
             this.$store.dispatch("openVenueModal", venue);
-            // console.log(venue);
           },
         },
         {
@@ -314,9 +336,11 @@ export default {
         {
           name: "delete",
           icon: "heroicons-outline:trash",
-          doit: (name) => {
+          doit: (name, { id }) => {
+            this.id = id;
+            // console.log(name);
             this.type = name;
-            this.$store.dispatch("openVenueModal");
+            this.$refs.modal.openModal();
           },
         },
       ],
