@@ -106,7 +106,7 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="item.doit(item.name)"
+                      @click="item.doit(item.name, props.row)"
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -175,7 +175,8 @@
     </template>
   </Modal>
   <ModalCrud
-    :activeModal="$store.state.venue.addModal"
+    :activeModal="$store.state.venue.modal"
+    @close="$store.dispatch('closeVenueModal')"
     centered
     :title="
       type === 'add'
@@ -184,7 +185,6 @@
         ? 'Edit Venue'
         : 'View Venue'
     "
-    @close="$store.dispatch('closeVenueModal')"
     labelClass="btn-outline-dark"
     sizeClass="max-w-3xl"
   >
@@ -296,17 +296,18 @@ export default {
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: (name) => {
+          doit: (name, venue) => {
             this.type = name;
-            this.$store.dispatch("openVenueModal");
+            this.$store.dispatch("openVenueModal", venue);
+            // console.log(venue);
           },
         },
         {
           name: "edit",
           icon: "heroicons:pencil-square",
-          doit: (name) => {
+          doit: (name, venue) => {
             this.type = name;
-            this.$refs.modalChange.openModal();
+            this.$store.dispatch("openVenueModal", venue);
           },
         },
         {
@@ -314,7 +315,7 @@ export default {
           icon: "heroicons-outline:trash",
           doit: (name) => {
             this.type = name;
-            this.$refs.modal.openModal();
+            this.$store.dispatch("openVenueModal");
           },
         },
       ],

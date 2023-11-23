@@ -8,7 +8,7 @@ export default {
   state: {
     isLoading: null,
     //create
-    addModal: false,
+    modal: false,
     addVenueLoading: false,
     addVenueSuccess: false,
     addVenueError: null,
@@ -106,12 +106,13 @@ export default {
     },
 
     // openVenueModal
-    openVenueModal(state) {
-      state.addModal = true;
+    openVenueModal(state, data) {
+      state.venue = data;
+      state.modal = true;
     },
     // closeVenueModal
     closeVenueModal(state) {
-      state.addModal = false;
+      state.modal = false;
     },
     // closeVenueEditModal
     closeVenueEditModal(state) {
@@ -184,8 +185,8 @@ export default {
       commit("openVenueEditModal", data);
     },
     // eopen Venue
-    openVenueModal({ commit }) {
-      commit("openVenueModal");
+    openVenueModal({ commit }, data = null) {
+      commit("openVenueModal", data);
     },
 
     closeVenueModal({ commit }) {
