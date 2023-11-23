@@ -1,6 +1,8 @@
 <template>
   <div class="">
-    <h1 class="text-lg font-semibold mb-6">Center Name</h1>
+    <h1 class="text-lg font-semibold mb-6 uppercase">
+      {{ detail?.cihAddress }}
+    </h1>
     <div class="mb-10">
       <Card>
         <div class="grid grid-cols-5 gap-x-4">
@@ -37,10 +39,11 @@
 // import Icon from "@/components/Icon";
 import Card from "@/components/Card";
 import Table from "./centerTable.vue";
-import { reactive, onMounted } from "vue";
+import { reactive, onMounted, computed, provide } from "vue";
 import { useStore } from "vuex";
 
 const { state, dispatch } = useStore();
+// eslint-disable-next-line no-unused-vars
 const centerQuery = reactive({
   pageNumber: 1,
   pageSize: 25,
@@ -79,10 +82,11 @@ const content = [
     females: "2",
   },
 ];
-
+const detail = computed(() => state.profile.churchAffiliationsData);
 onMounted(() => {
-  dispatch("getAllCentersTotal", centerQuery);
+  dispatch("getChurchAffiliationsById", state.auth.userData.id);
 });
+provide("detail", detail);
 </script>
 <style lang="scss">
 .custom-calender {

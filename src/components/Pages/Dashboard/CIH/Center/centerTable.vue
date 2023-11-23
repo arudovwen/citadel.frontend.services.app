@@ -35,6 +35,22 @@
             >
               {{ props.row.email }}
             </span>
+            <span
+              v-if="props.column.field == 'fullName'"
+              class="font-medium flex items-center gap-x-1"
+            >
+              <router-link
+                :to="`/profile/${props.row.userId}`"
+                class="hover:underline"
+              >
+                {{ props.row.fullName }}
+              </router-link>
+              <span
+                v-if="props.row.cihRoles"
+                class="px-2 py-[2px] rounded-full bg-gray-100 text-gray-500 text-xs"
+                >{{ props.row.cihRoles.replace("cih", "") }}</span
+              >
+            </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
                 <span class="text-xl"
@@ -130,7 +146,7 @@ import { membersTable } from "@/constant/basic-tablle-data";
 import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
-import { computed, onMounted, watch, reactive, ref } from "vue";
+import { computed, onMounted, watch, reactive, ref, inject } from "vue";
 import window from "@/mixins/window";
 import { useToast } from "vue-toastification";
 // import store from "@/store";
@@ -258,11 +274,12 @@ export default {
     const { state, dispatch } = useStore();
     const modalChange = ref(null);
     const modalStatus = ref(null);
+    const detail = inject("detail");
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
       searchParameter: "",
-      CenterId: "",
+      CenterId: detail?.value?.centerId,
     });
 
     onMounted(() => {
@@ -277,8 +294,7 @@ export default {
       query.pageSize = currentPerPage;
     }
     const search = ref("");
-    const loading = computed(() => state.profile.loading);
-    const centers = computed(() => state.center.centers);
+    const loading = computed(() => state.member.loading);
     const members = computed(() => {
       if (state?.member?.data) {
         return state?.member?.data.map((item) => {
@@ -293,7 +309,7 @@ export default {
       }
       return [];
     });
-    const total = computed(() => state.profile.total);
+    const total = computed(() => state.member.total);
     const roles = computed(() => state.profile.roles);
     const addsuccess = computed(() => state.profile.profileCreated);
     const deleteloading = computed(() => state.profile.deleteloading);
@@ -311,11 +327,11 @@ export default {
         searchParameter: searchValue,
       });
     }, debounceDelay);
-    watch(centers, () => {
-      if (centers?.value?.length) {
+    watch(detail, () => {
+      if (detail?.value) {
         dispatch("getAffiliationByMemberQuery", {
           ...query,
-          CenterId: centers.value[0].id,
+          CenterId: detail?.value?.centerId,
         });
       }
     });

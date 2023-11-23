@@ -291,7 +291,7 @@ export default {
       }
       return [];
     });
-    const total = computed(() => state.profile.total);
+    const total = computed(() => state.member.total);
     const roles = computed(() => state.profile.roles);
     const addsuccess = computed(() => state.profile.profileCreated);
     const deleteloading = computed(() => state.profile.deleteloading);

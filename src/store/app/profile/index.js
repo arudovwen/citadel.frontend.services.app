@@ -7,6 +7,7 @@ export default {
     //personal Info
 
     //post methods
+    total: 0,
     biodata: null,
     allbiodata: [],
     creatingProfile: false,

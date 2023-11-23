@@ -74,6 +74,22 @@
             >
               {{ props.row.email }}
             </span>
+            <span
+              v-if="props.column.field == 'fullName'"
+              class="font-medium flex items-center gap-x-1"
+            >
+              <router-link
+                :to="`/profile/${props.row.userId}`"
+                class="hover:underline"
+              >
+                {{ props.row.fullName }}
+              </router-link>
+              <!-- <span
+                v-if="props.row.cihRoles"
+                class="px-2 py-[2px] rounded-full bg-gray-100 text-gray-500 text-xs"
+                >{{ props.row.cihRoles.replace("cih", "") }}</span
+              > -->
+            </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
                 <span class="text-xl"
