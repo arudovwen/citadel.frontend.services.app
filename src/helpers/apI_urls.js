@@ -155,8 +155,10 @@ export const urls = {
   GET_ZONE_BY_ID: "/CIHZone/GetCIHZoneById",
 
   //Events
-  REQUEST_EVENT: "/ChurchAffiliation/RequestForEvent",
+  REQUEST_EVENT: "/Events/RequestForEvent",
   GET_EVENTS: "/Events/GetUserEvents",
   GET_ALL_EVENTS: "/Events/GetAllEvents",
   CHANGE_EVENT_STATUS: "/Events/ApproveOrRejectEvent",
+  DELETE_EVENT: "/Events/DeleteEventRequest",
+  UPDATE_EVENT: "/Events/UpdateRequestForEvent",
 };

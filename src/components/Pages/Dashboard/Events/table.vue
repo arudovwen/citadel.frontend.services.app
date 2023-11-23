@@ -23,7 +23,7 @@
             />
             <VueSelect
               class="min-w-[200px] w-full md:w-auto"
-              v-model="query.events"
+              v-model="eventType"
               :options="eventsOption"
               placeholder="Filter type"
               name="filterType"
@@ -255,7 +255,7 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          text="Delist"
+          text="Delete"
           :isLoading="deleteloading"
           :disabled="deleteloading"
           btnClass="btn-danger btn-sm"
@@ -350,9 +350,9 @@ export default {
         {
           name: "decline",
         },
-        {
-          name: "view",
-        },
+        // {
+        //   name: "view",
+        // },
 
         {
           name: "delete",
@@ -380,15 +380,21 @@ export default {
   },
   methods: {
     handleAction(status) {
-      if (status === true) {
-        return this.actions.filter(
-          (i) => i.name === "view" || i.name === "delete"
+      let newaction = this.actions;
+      if (this.$store.state.auth.userData.userRole.toLowerCase() === "member") {
+        newaction = this.actions.filter(
+          (i) => i.name !== "approve" && i.name !== "decline"
         );
       }
-      return this.actions;
+      if (status === true) {
+        return newaction.filter((i) => i.name === "view");
+      }
+      return newaction;
     },
 
-    handleDelete() {},
+    handleDelete() {
+      this.$store.dispatch("removeEvent", { id: this.id });
+    },
     handleStatus() {
       const data = {
         approveUserId: this.$store.state.auth.userData.id,
@@ -397,8 +403,6 @@ export default {
         Comments: this.comment,
         status: this.type === "approve" ? true : false,
       };
-
-      console.log("🚀 ~ file: table.vue:377 ~ handleStatus ~ data:", data);
 
       this.$store.dispatch("updateEventStatus", data);
     },
@@ -444,6 +448,7 @@ export default {
     },
   },
   setup() {
+    const modal = ref(null);
     const modalStatus = ref(null);
     const modalChange = ref(null);
     const toast = useToast();
@@ -456,6 +461,7 @@ export default {
     const total = computed(() => state.event.total);
     const events = computed(() => state.event.events);
     const deleteloading = computed(() => state.event.deleteloading);
+    const deletesuccess = computed(() => state.event.deletesuccess);
     const columns = [
       // {
       //   label: "Zone",
@@ -494,6 +500,10 @@ export default {
     ];
     const eventsOption = [
       {
+        value: "",
+        label: "All",
+      },
+      {
         value: "babyChristening",
         label: "Baby Christening",
       },
@@ -514,6 +524,7 @@ export default {
         label: "Burial Ceremony",
       },
     ];
+    const eventType = ref("");
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
@@ -573,16 +584,28 @@ export default {
         toast.success("Request updated");
       }
     });
+    watch(deletesuccess, () => {
+      if (deletesuccess.value) {
+        getData();
+        modal.value.closeModal();
+        toast.success("Event deleted");
+      }
+    });
 
     watch(
       () => query.dateValue,
       () => {
-        query.EndDate = moment(query.dateValue[1]).format(
-          "YYYY-MM-DDTHH:mm:ss.SSSZ"
-        );
-        query.FromDate = moment(query.dateValue[0]).format(
-          "YYYY-MM-DDTHH:mm:ss.SSSZ"
-        );
+        if (query.dateValue.length) {
+          query.EndDate = moment(query.dateValue[1]).format(
+            "YYYY-MM-DD HH:mm:ss.SSS"
+          );
+          query.FromDate = moment(query.dateValue[0]).format(
+            "YYYY-MM-DD HH:mm:ss.SSS"
+          );
+        } else {
+          query.EndDate = "";
+          query.FromDate = "";
+        }
       }
     );
     // Define a debounce delay (e.g., 500 milliseconds)
@@ -597,10 +620,14 @@ export default {
         debouncedSearch();
       }
     );
+
+    watch(eventType, () => {
+      query.events = eventType.value.value;
+    });
     watch(
       () => [
         query.pageNumber,
-        query.event,
+        query.events,
         query.pageSize,
         query.FromDate,
         query.EndDate,
@@ -628,6 +655,8 @@ export default {
       loading,
       deleteloading,
       modalStatus,
+      modal,
+      eventType,
     };
   },
 };
