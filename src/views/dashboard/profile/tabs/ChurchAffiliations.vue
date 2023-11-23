@@ -312,7 +312,8 @@ const schema = yup.object({
   affinityGroup: yup.string(),
   department: yup.string(),
   cihAddress: yup.string(),
-  // ageRange: yup.string(),
+  zoneId: yup.string(),
+  centerId: yup.string(),
 });
 
 const { handleSubmit, setValues, values } = useForm({
@@ -356,6 +357,8 @@ const prepareDetails = (values, type) => {
     affinityGroup: values.affinityGroup,
     department: values.department ? values.department : "",
     cihAddress: values.cihAddress,
+    zoneId: values.zoneId,
+    centerId: values.centerId,
   };
   const createObj = {
     userId: id.value,
@@ -371,6 +374,8 @@ const prepareDetails = (values, type) => {
     affinityGroup: values.affinityGroup,
     department: values.department ? values.department : "",
     cihAddress: values.cihAddress,
+    zoneId: values.zoneId,
+    centerId: values.centerId,
   };
   const obj = type == "create" ? createObj : updateObj;
   return obj;
@@ -455,6 +460,7 @@ watch(zoneObj, (newValue) => {
   setValues({
     ...values,
     cihZone: newValue?.label,
+    zoneId: newValue?.zoneId,
   });
 
   store.dispatch("getAllCenters", { zoneId: newValue?.zoneId });
@@ -476,6 +482,7 @@ watch(centerObj, (newValue) => {
   setValues({
     ...values,
     cihAddress: newValue?.label,
+    centerId: newValue?.centerId,
   });
 });
 
