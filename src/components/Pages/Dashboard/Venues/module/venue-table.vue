@@ -7,7 +7,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <InputGroup
-            v-model="searchTerm"
+            v-model="query.searchParameter"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
@@ -30,12 +30,13 @@
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Venue"
-            btnClass=" btn-primary font-normal btn-sm "
+            btnClass="
+          btn-primary font-normal btn-sm "
             iconClass="text-lg"
             @click="
               () => {
                 type = 'add';
-                $refs.modalChange.openModal();
+                $store.dispatch('openVenueModal');
               }
             "
           />
@@ -45,45 +46,27 @@
       <div class="-mx-6">
         <vue-good-table
           :columns="columns"
+          :isLoading="loading"
           mode="remote"
           styleClass=" vgt-table  centered "
-          :rows="venueTable"
+          :rows="venues || []"
           :sort-options="{
             enabled: false,
           }"
           :pagination-options="{
             enabled: true,
-            perPage: perpage,
-          }"
-          :search-options="{
-            enabled: true,
-            externalQuery: searchTerm,
+            perPage: query.pageSize,
           }"
         >
           <template v-slot:table-row="props">
-            <span
-              v-if="props.column.field == 'customer'"
-              class="flex items-center"
-            >
-              <span class="w-7 h-7 rounded-full mr-3 flex-none">
-                <img
-                  :src="
-                    require('@/assets/images/all-img/' +
-                      props.row.customer.image)
-                  "
-                  :alt="props.row.customer.name"
-                  class="object-cover w-full h-full rounded-full"
-                />
-              </span>
+            <span v-if="props.column.field == 'name'" class="flex items-center">
               <span
                 class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium"
-                >{{ props.row.customer.name }}</span
+                >{{ props.row.venueName }}</span
               >
             </span>
-            <span v-if="props.column.field == 'order'" class="font-medium">
-              {{ "#" + props.row.order }}
-            </span>
-            <span
+
+            <!-- <span
               v-if="props.column.field == 'accessories'"
               class="text-slate-500 dark:text-slate-300 text"
             >
@@ -92,35 +75,28 @@
                   {{ item.name }}
                 </li>
               </ol>
-            </span>
-            <span
-              v-if="props.column.field == 'date'"
-              class="text-slate-500 dark:text-slate-400"
-            >
-              {{ props.row.date }}
-            </span>
+            </span> -->
+
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
                 class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
                 :class="`${
-                  props.row.status === 'Available'
+                  props.row.isOnline === true
                     ? 'text-success-500 bg-success-500'
                     : ''
                 } 
               ${
-                props.row.status === 'due'
+                props.row.isOnline === false
                   ? 'text-warning-500 bg-warning-500'
                   : ''
               }
-              ${
-                props.row.status === 'Booked'
-                  ? 'text-danger-500 bg-danger-500'
-                  : ''
-              }
+            
               
                `"
               >
-                <span>{{ props.row.status }}</span>
+                <span>{{
+                  props.row?.isOnline === true ? "Available" : "Booked"
+                }}</span>
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
@@ -131,7 +107,7 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="item.doit(item.name)"
+                      @click="item.doit(item.name, props.row)"
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -199,7 +175,10 @@
       </div>
     </template>
   </Modal>
-  <Modal
+  <ModalCrud
+    :activeModal="$store.state.venue.modal"
+    @close="$store.dispatch('closeVenueModal')"
+    centered
     :title="
       type === 'add'
         ? 'Add Venue'
@@ -208,13 +187,12 @@
         : 'View Venue'
     "
     labelClass="btn-outline-dark"
-    ref="modalChange"
     sizeClass="max-w-3xl"
   >
     <AddVenue v-if="type === 'add'" />
     <EditVenue v-if="type === 'edit'" />
     <ViewVenue v-if="type === 'view'" />
-  </Modal>
+  </ModalCrud>
 </template>
 <script>
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
@@ -225,16 +203,19 @@ import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
-import { venueTable } from "@/constant/basic-tablle-data";
 import window from "@/mixins/window";
+import ModalCrud from "@/components/Modal";
 import Modal from "@/components/Modal/Modal";
 import AddVenue from "../venue-add.vue";
 import EditVenue from "../venue-edit.vue";
 import ViewVenue from "../venue-preview.vue";
-
+import { useStore } from "vuex";
+import { debounce } from "lodash";
+import { provide, computed, reactive, onMounted, watch } from "vue";
 export default {
   mixins: [window],
   components: {
+    ModalCrud,
     AddVenue,
     EditVenue,
     ViewVenue,
@@ -248,10 +229,58 @@ export default {
     Button,
     VueTailwindDatePicker,
   },
+  setup() {
+    onMounted(() => {
+      getVenues();
+    });
+    const { state, dispatch } = useStore();
+    const userId = computed(() => state.auth.userData.id);
+    const loading = computed(() => state.venue.getVenueLoading);
+    const query = reactive({
+      pageNumber: 1,
+      pageSize: 25,
+      searchParameter: "",
+      sortOrder: "",
+    });
+
+    const venues = computed(() => {
+      return state.venue.venues;
+    });
+
+    const getVenues = () => {
+      dispatch("getVenues", query);
+    };
+    const debounceDelay = 800;
+    const debouncedSearch = debounce(() => {
+      getVenues();
+    }, debounceDelay);
+
+    watch(
+      () => query.searchParameter,
+      () => {
+        debouncedSearch();
+      }
+    );
+
+    watch(
+      () => [query.pageNumber, query.pageSize],
+      () => {
+        getVenues();
+      }
+    );
+
+    provide("userId", userId);
+    provide("query", query);
+
+    return {
+      venues,
+      query,
+      loading,
+    };
+  },
 
   data() {
     return {
-      venueTable,
       current: 1,
       perpage: 10,
       pageRange: 5,
@@ -268,17 +297,18 @@ export default {
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: (name) => {
+          doit: (name, venue) => {
             this.type = name;
-            this.$refs.modalChange.openModal();
+            this.$store.dispatch("openVenueModal", venue);
+            // console.log(venue);
           },
         },
         {
           name: "edit",
           icon: "heroicons:pencil-square",
-          doit: (name) => {
+          doit: (name, venue) => {
             this.type = name;
-            this.$refs.modalChange.openModal();
+            this.$store.dispatch("openVenueModal", venue);
           },
         },
         {
@@ -286,7 +316,7 @@ export default {
           icon: "heroicons-outline:trash",
           doit: (name) => {
             this.type = name;
-            this.$refs.modal.openModal();
+            this.$store.dispatch("openVenueModal");
           },
         },
       ],
@@ -322,10 +352,10 @@ export default {
           field: "description",
         },
 
-        {
-          label: "Accessories",
-          field: "accessories",
-        },
+        // {
+        //   label: "Accessories",
+        //   field: "accessories",
+        // },
 
         {
           label: "Status",

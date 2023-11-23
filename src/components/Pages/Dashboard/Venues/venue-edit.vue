@@ -7,8 +7,8 @@
           type="text"
           placeholder="Type name of venue"
           name="name"
-          v-model="name"
-          :error="nameError"
+          v-model="venueName"
+          :error="venueNameError"
           classInput="h-[40px]"
         />
         <Textinput
@@ -29,7 +29,7 @@
           :error="capacityError"
           classInput="h-[40px]"
         />
-        <div class="">
+        <!-- <div class="">
           <div class="gap-4 flex items-end justify-between">
             <div class="flex-1">
               <Textinput
@@ -70,7 +70,7 @@
               </li>
             </ol>
           </div>
-        </div>
+        </div> -->
 
         <Textarea
           label="Description"
@@ -94,37 +94,37 @@
 </template>
 
 <script setup>
-import Icon from "@/components/Icon";
+// import Icon from "@/components/Icon";
 
 import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
 import Textarea from "@/components/Textarea";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import { ref } from "vue";
+// import { ref } from "vue";
 // Define a validation schema
 const schema = yup.object({
-  name: yup.string().required("Name is required"),
+  venueName: yup.string().required("Name is required"),
   location: yup.string().required("Location is required"),
   capacity: yup.number(),
   accessories: yup.string(),
   description: yup.string(),
 });
 
-const listOfAccessories = ref([]);
-const pushAccessory = (accessory) => {
-  if (accessory.length > 0) {
-    listOfAccessories.value.push(accessory);
-  }
-};
+// const listOfAccessories = ref([]);
+// const pushAccessory = (accessory) => {
+//   if (accessory.length > 0) {
+//     listOfAccessories.value.push(accessory);
+//   }
+// };
 
-const removeAccessory = (idx) => {
-  console.log(idx);
-  listOfAccessories.value.splice(idx, 1);
-};
+// const removeAccessory = (idx) => {
+//   console.log(idx);
+//   listOfAccessories.value.splice(idx, 1);
+// };
 
 const formValues = {
-  name: "",
+  venueName: "",
   location: "",
   capacity: 0,
   accessories: "dashcode@gmail.com",
@@ -138,11 +138,11 @@ const { handleSubmit } = useForm({
 });
 // No need to define rules for fields
 
-const { value: name, errorMessage: nameError } = useField("name");
+const { value: venueName, errorMessage: venueNameError } = useField("name");
 const { value: location, errorMessage: locationError } = useField("location");
 const { value: capacity, errorMessage: capacityError } = useField("capacity");
-const { value: accessories, errorMessage: accessoriesError } =
-  useField("accessories");
+// const { value: accessories, errorMessage: accessoriesError } =
+useField("accessories");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
 
