@@ -98,7 +98,7 @@ export const menuItems = [
   },
   {
     title: "Accessories",
-    icon: "heroicons-outline:rectangle-group",
+    icon: "heroicons-outline:table-cells",
     link: "/accessories",
     roles: ["administrator"],
     subroles: [],

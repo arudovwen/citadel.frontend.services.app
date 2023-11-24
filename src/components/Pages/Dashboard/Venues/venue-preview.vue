@@ -81,7 +81,7 @@
       </div>
 
       <div
-        class="hidden max-w-[980px] mx-auto shadow-base dark:shadow-none rounded-md overflow-x-auto"
+        class="max-w-[980px] mx-auto shadow-base dark:shadow-none rounded-md overflow-x-auto"
       >
         <TotalTable />
       </div>

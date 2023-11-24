@@ -282,6 +282,7 @@ export default {
   setup() {
     onMounted(() => {
       getVenues();
+      getAccessories();
     });
     const { state, dispatch } = useStore();
     const userId = computed(() => state.auth.userData.id);
@@ -303,8 +304,14 @@ export default {
       return state.venue.venues;
     });
 
+    const accessories = computed(() => state.accessory.accessories);
+
     const getVenues = () => {
       dispatch("getVenues", query);
+    };
+
+    const getAccessories = () => {
+      dispatch("getAccessories", { pageNumber: 1, pageSize: 10000 });
     };
 
     function perPage({ currentPerPage }) {
@@ -344,6 +351,7 @@ export default {
 
     provide("userId", userId);
     provide("query", query);
+    provide("accessories", accessories);
 
     return {
       total,
