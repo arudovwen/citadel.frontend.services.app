@@ -2,7 +2,7 @@
   <form @submit.prevent="onSubmit">
     <Card title="">
       <div class="grid gap-5">
-        <div class="">
+        <!-- <div class="">
           <FormGroup label="Requester Name" name="type" :error="nameError">
             <VueSelect
               class="min-w-[200px] w-full md:w-auto"
@@ -12,11 +12,11 @@
               name="name"
             />
           </FormGroup>
-        </div>
-        <FormGroup label="Event type" name="type" :error="requestTypeError">
+        </div> -->
+        <FormGroup label="Event type" name="type" :error="eventTypeError">
           <Select
             placeholder="Select type"
-            v-model="requestType"
+            v-model="eventType"
             :options="eventsOption"
           />
         </FormGroup>
@@ -26,7 +26,7 @@
             v-model="dateOfRequestedEvent"
             class="form-control"
             id="d1"
-            placeholder="yyyy, dd M"
+            placeholder="Select date of event"
           />
         </FormGroup>
       </div>
@@ -44,8 +44,8 @@
   </form>
 </template>
 <script setup>
-import VueSelect from "@/components/Select/VueSelect";
-import { reactive, computed, watch } from "vue";
+// import VueSelect from "@/components/Select/VueSelect";
+import { computed, watch, defineProps, onMounted } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
 import Button from "@/components/Button";
@@ -55,12 +55,14 @@ import FormGroup from "@/components/FormGroup";
 import Select from "@/components/Select";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
+import moment from "moment";
 
+const props = defineProps(["detail"]);
 const toast = useToast();
 // eslint-disable-next-line no-unused-vars
 const { state, dispatch } = useStore();
-const success = computed(() => state.event.addsuccess);
-const loading = computed(() => state.event.loading);
+const success = computed(() => state.event.updateeventsuccess);
+const loading = computed(() => state.event.updateeventloading);
 const eventsOption = [
   {
     value: "babyChristening",
@@ -83,53 +85,52 @@ const eventsOption = [
     label: "Burial Ceremony",
   },
 ];
-const membersOptions = computed(() =>
-  state?.member?.data?.map((i) => {
-    return {
-      label: `${i.firstName} ${i.surName}`,
-      value: i.userId,
-    };
-  })
-);
-const formData = reactive({
-  dateOfRequestedEvent: "",
-  requestType: "",
-
-  name: "",
-});
 
 const formDataSchema = Yup.object().shape({
   dateOfRequestedEvent: Yup.date()
     .typeError("Please enter a valid date")
     .required("Date is required"),
-  requestType: Yup.string().required("Type is required"),
-  name: Yup.object().typeError("Invalid value").required("Name is required"),
+  eventType: Yup.string().required("Type is required"),
+  // name: Yup.object().typeError("Invalid value").required("Name is required"),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setValues } = useForm({
   validationSchema: formDataSchema,
-  initialValues: formData,
+  initialValues: {
+    ...props.detail,
+
+    dateOfRequestedEvent: props.detail.eventDate,
+  },
 });
 
-const { value: name, errorMessage: nameError } = useField("name");
+// const { value: name, errorMessage: nameError } = useField("name");
 
 const { value: dateOfRequestedEvent, errorMessage: dateError } = useField(
   "dateOfRequestedEvent"
 );
 
-const { value: requestType, errorMessage: requestTypeError } =
-  useField("requestType");
+const { value: eventType, errorMessage: eventTypeError } =
+  useField("eventType");
 
-const onSubmit = handleSubmit((values) => {
-  dispatch("addEvent", {
-    requestType: values.requestType,
-    dateOfRequestedEvent: values.dateOfRequestedEvent,
-    userId: values.name.value,
+onMounted(() => {
+  setValues({
+    ...props.detail,
+    eventType: props.detail.eventType,
+    dateOfRequestedEvent: props.detail.eventDate,
   });
 });
-
+const onSubmit = handleSubmit((values) => {
+  console.log("🚀 ~ file: editevent.vue:123 ~ onSubmit ~ values:", values);
+  dispatch("updateEvent", {
+    ...values,
+    // requestType: values.eventType,
+    dateOfRequestedEvent: moment(values.dateOfRequestedEvent).format(
+      "YYYY-MM-DDTHH:mm:ss.SSSZ"
+    ),
+  });
+});
 watch(success, () => {
-  toast.success("Request sent");
+  success.value && toast.success("Event updated");
 });
 </script>
 <style lang=""></style>

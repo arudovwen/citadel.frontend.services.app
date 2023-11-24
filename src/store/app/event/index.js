@@ -182,10 +182,7 @@ export default {
     async updateEvent({ commit }, data) {
       try {
         commit("updateEventBegin");
-        const response = await DataService.put(
-          `${urls.UPDATE_EVENT}?${new URLSearchParams(data)}`,
-          data
-        );
+        const response = await DataService.put(`${urls.UPDATE_EVENT}`, data);
         if (response.status === 200) {
           commit("updateEventSuccess");
         }

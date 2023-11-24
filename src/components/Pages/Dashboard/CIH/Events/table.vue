@@ -132,7 +132,7 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="generateAction(item.name, props.row.id).doit"
+                      @click="generateAction(item.name, props.row).doit"
                       :class="`
                 
                   ${
@@ -222,7 +222,7 @@
     sizeClass="max-w-lg"
   >
     <AddEvent v-if="type === 'add'" />
-    <EditEvent v-if="type === 'edit'" />
+    <EditEvent v-if="type === 'edit'" :detail="detail" />
     <ViewEvent v-if="type === 'view'" />
   </Modal>
 </template>
@@ -273,6 +273,7 @@ export default {
       filterType: "",
       type: "",
       id: null,
+      detil: null,
       filters: ["all", "pending"],
       activeFilter: "",
       dateValue: [],
@@ -311,6 +312,9 @@ export default {
         },
         {
           name: "Decline",
+        },
+        {
+          name: "edit",
         },
         {
           name: "view",
@@ -377,9 +381,9 @@ export default {
     };
   },
   methods: {
-    generateAction(name, id) {
+    generateAction(name, { id, detail }) {
       this.id = id;
-
+      this.detail = detail;
       const actions = {
         view: {
           name: "view",

@@ -30,7 +30,7 @@
             />
             <VueSelect
               class="min-w-[250px] w-full md:w-auto"
-              v-model="zone"
+              v-model="selectedZone"
               :options="zoneOptions"
               placeholder="Filter zone"
               name="zone"
@@ -277,7 +277,7 @@
     sizeClass="max-w-lg"
   >
     <AddEvent v-if="type === 'add'" />
-    <EditEvent v-if="type === 'edit'" />
+    <EditEvent v-if="type === 'edit'" :detail="detail" />
     <ViewEvent v-if="type === 'view'" />
   </Modal>
 </template>
@@ -350,9 +350,9 @@ export default {
         {
           name: "decline",
         },
-        // {
-        //   name: "view",
-        // },
+        {
+          name: "edit",
+        },
 
         {
           name: "delete",
@@ -386,7 +386,12 @@ export default {
           (i) => i.name !== "approve" && i.name !== "decline"
         );
       }
-      if (status === true) {
+      if (this.$store.state.auth.userData.userRole.toLowerCase() !== "member") {
+        newaction = this.actions.filter(
+          (i) => i.name == "approve" && i.name == "decline"
+        );
+      }
+      if (status === true || status === false) {
         return newaction.filter((i) => i.name === "view");
       }
       return newaction;
@@ -426,6 +431,15 @@ export default {
             this.$refs.modalStatus.openModal();
           },
         },
+        edit: {
+          name: "edit",
+          icon: "heroicons:pencil-square",
+          doit: (data, detail) => {
+            this.type = data;
+            this.detail = detail;
+            this.$refs.modalChange.openModal();
+          },
+        },
         decline: {
           name: "decline",
           icon: "heroicons:pencil-square",
@@ -451,9 +465,11 @@ export default {
     const modal = ref(null);
     const modalStatus = ref(null);
     const modalChange = ref(null);
+    const selectedZone = ref(null);
     const toast = useToast();
     const { dispatch, state } = useStore();
     const success = computed(() => state.event.addsuccess);
+    const updateeventsuccess = computed(() => state.event.updateeventsuccess);
     const loading = computed(() => state.event.loading);
     const updateloading = computed(() => state.event.updateloading);
     const updatesuccess = computed(() => state.event.updatesuccess);
@@ -463,14 +479,14 @@ export default {
     const deleteloading = computed(() => state.event.deleteloading);
     const deletesuccess = computed(() => state.event.deletesuccess);
     const columns = [
-      // {
-      //   label: "Zone",
-      //   field: "zone",
-      // },
-      // {
-      //   label: "Center",
-      //   field: "center",
-      // },
+      {
+        label: "Zone",
+        field: "zone",
+      },
+      {
+        label: "Center",
+        field: "center",
+      },
       {
         label: "Request Date",
         field: "createdAt",
@@ -532,6 +548,7 @@ export default {
       EndDate: "",
       searchParameter: "",
       events: "",
+      zone: "",
       UserId:
         state.auth.userData.userRole === "member" ? state.auth.userData.id : "",
     });
@@ -584,6 +601,12 @@ export default {
         toast.success("Request updated");
       }
     });
+    watch(updateeventsuccess, () => {
+      if (updateeventsuccess.value) {
+        getData();
+        modalChange.value.closeModal();
+      }
+    });
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
         getData();
@@ -622,7 +645,11 @@ export default {
     );
 
     watch(eventType, () => {
-      query.events = eventType.value.value;
+      if (eventType.value) {
+        query.events = eventType.value.value;
+      } else {
+        query.events = "";
+      }
     });
     watch(
       () => [
@@ -631,9 +658,20 @@ export default {
         query.pageSize,
         query.FromDate,
         query.EndDate,
+        query.zone,
       ],
       () => {
         getData();
+      }
+    );
+    watch(
+      () => selectedZone.value,
+      () => {
+        if (selectedZone.value) {
+          query.zone = selectedZone.value.label;
+        } else {
+          query.zone = "";
+        }
       }
     );
     function perPage({ currentPerPage }) {
@@ -657,6 +695,7 @@ export default {
       modalStatus,
       modal,
       eventType,
+      selectedZone,
     };
   },
 };
