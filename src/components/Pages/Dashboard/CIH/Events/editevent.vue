@@ -45,8 +45,8 @@
 </template>
 <script setup>
 import VueSelect from "@/components/Select/VueSelect";
-import { reactive, computed, watch } from "vue";
-import { useField, useForm } from "vee-validate";
+import { reactive, computed, watch, defineProps } from "vue";
+import { useField, useForm, setValues } from "vee-validate";
 import * as Yup from "yup";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -59,6 +59,7 @@ import { useToast } from "vue-toastification";
 const toast = useToast();
 // eslint-disable-next-line no-unused-vars
 const { state, dispatch } = useStore();
+const props = defineProps(["detail"]);
 const success = computed(() => state.event.addsuccess);
 const loading = computed(() => state.event.loading);
 const eventsOption = [
@@ -126,6 +127,13 @@ const onSubmit = handleSubmit((values) => {
     dateOfRequestedEvent: values.dateOfRequestedEvent,
     userId: values.name.value,
   });
+});
+watch(props.detail, () => {
+  console.log(
+    "🚀 ~ file: editevent.vue:132 ~ watch ~ props.detail:",
+    props.detail
+  );
+  setValues(props.detail);
 });
 
 watch(success, () => {

@@ -84,6 +84,11 @@
             >
               {{ props.row.date }}
             </span>
+            <router-link
+              :to="`/cih/zones/center/${props.row.id}?name=${props.row.centerName}`"
+            >
+              {{ props.row.centerName }}
+            </router-link>
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
                 class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
