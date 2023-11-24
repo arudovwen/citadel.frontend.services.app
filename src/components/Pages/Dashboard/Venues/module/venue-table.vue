@@ -386,6 +386,7 @@ export default {
           doit: (name, venue) => {
             this.type = name;
             this.$store.dispatch("openVenueModal", venue);
+            this.$store.dispatch("getVenueById", venue.id);
           },
         },
         {
@@ -394,6 +395,7 @@ export default {
           doit: (name, venue) => {
             this.type = name;
             this.$store.dispatch("openVenueModal", venue);
+            this.$store.dispatch("getVenueById", venue.id);
           },
         },
         {

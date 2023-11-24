@@ -2,7 +2,7 @@
   <div>
     <div class="lg:flex justify-between flex-wrap items-center">
       <Breadcrumb />
-      {{ venue }}
+      <!-- {{ venue }} -->
       <!-- <div class="flex lg:justify-end items-center flex-wrap">
         <button
           class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
@@ -84,7 +84,7 @@
       <div
         class="max-w-[980px] mx-auto shadow-base dark:shadow-none rounded-md overflow-x-auto"
       >
-        <TotalTable />
+        <TotalTable :accessories="venue?.accessories" />
       </div>
     </Card>
   </div>

@@ -1,68 +1,42 @@
 <template>
   <div>
     <table
-      class="!text-left w-full border-collapse table-fixed dark:border-slate-700 dark:border"
+      class="bg-slate-50 dark:bg-slate-800 !text-left w-full border-collapse table-fixed border-t border-slate-200 dark:border-slate-700 dark:border"
     >
       <tr>
         <th class="!text-left">
           <span
-            class="text-slate-900 dark:text-slate-300 font-medium leading-5 text-lg"
-            >ACCESSORY LIST</span
+            class="text-slate-900 dark:text-slate-300 font-medium !py-2 text-base"
+            >Accessories</span
           >
         </th>
-        <!-- <th><span>QTY</span></th> -->
-        <!-- <th><span>PRICE</span></th>
-        <th><span>TOTAL</span></th> -->
       </tr>
 
       <tr
-        v-show="rows.length"
-        v-for="(data, index) in rows"
+        v-show="accessories?.length"
+        v-for="(data, index) in accessories"
         :key="index"
         class="bg-slate-50 border-b border-slate-100 dark:border-slate-700"
       >
-        <td class="!text-left"><span class=""></span>{{ data.item }}</td>
-        <!-- <td>
-          {{ data.qty }}
+        <td class="!text-left !py-2">
+          <span class="!py-2 mr-2">{{ index + 1 }}. </span
+          >{{ data.accessoryName }}
         </td>
-        <td>
-          {{ data.price }}
-        </td>
-        <td>
-          {{ data.total }}
-        </td> -->
       </tr>
+
+      <div class="mb-4"></div>
     </table>
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
-const rows = ref([
-  {
-    item: "Headphone",
-    qty: 2,
-    price: "$600.25",
-    total: "$1200.50",
+import { defineProps } from "vue";
+
+defineProps({
+  accessories: {
+    default: null,
+    type: Object,
   },
-  {
-    item: "Microphone",
-    qty: 2,
-    price: "$600.25",
-    total: "$1200.50",
-  },
-  // {
-  //   item: "Headphone",
-  //   qty: 2,
-  //   price: "$600.25",
-  //   total: "$1200.50",
-  // },
-  // {
-  //   item: "Headphone",
-  //   qty: 2,
-  //   price: "$600.25",
-  //   total: "$1200.50",
-  // },
-]);
+});
 </script>
 <style lang="scss" scoped>
 th {
