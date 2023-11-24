@@ -198,6 +198,19 @@ export default {
         commit("deleteErr", err);
       }
     },
+    async removeMemberFromDepartment({ commit }, id) {
+      try {
+        commit("deleteBegin");
+        const response = await DataService.delete(
+          `${urls.DELIST_MEMBER_FROM_DEPT}?userId=${id}`
+        );
+        if (response.status === 200) {
+          commit("deleteSuccess");
+        }
+      } catch (err) {
+        commit("deleteErr", err);
+      }
+    },
     async editDepartment({ commit }, data) {
       try {
         commit("updateBegin");

@@ -1,4 +1,12 @@
 export const urls = {
+  //Accessories
+  CREATE_ACCESSORY: "/Accessory/CreateAccessory",
+  UPDATE_ACCESSORY: "/Accessory/UpdateAccessory",
+  GET_ACCESSORY_BY_ID: "/Accessory/GetAccessoryById",
+  GET_ACCESSORY_BY_USER_ID: "/Accessory/GetAccessoryByUserId",
+  GET_ALL_ACCESSORIES: "/Accessory/GetAllAccessory",
+  DELETE_ACCESSORY: "/Accessory/DeleteAccessory",
+
   // Admin
   CREATE_ADMIN: "/Admin/CreateAdmin",
   DISABLE_USER: "/Admin/DisableUser",
@@ -61,6 +69,7 @@ export const urls = {
   GET_ALL_CHURCH_AFFILIATION: "/ChurchAffiliation/GetAllChurchAffiliation",
   DELETE_CHURCH_AFFILIATION: "/ChurchAffiliation/DeleteChurchAffiliation",
   GET_CHURCH_AFFILIATION_BY_MEMBER: "/ChurchAffiliation/GetMemberQuery",
+  DELIST_MEMBER_FROM_DEPT: "/ChurchAffiliation/DelistMemberFromDepartment",
   REQUEST_BY_MEMBER_TO_CHANGE_ZONE: "/ChurchAffiliation/RequestChangeOfCIHZone",
 
   REQUEST_BY_MEMBER_TO_JOIN_DEPT:
@@ -169,11 +178,4 @@ export const urls = {
   CHANGE_EVENT_STATUS: "/Events/ApproveOrRejectEvent",
   DELETE_EVENT: "/Events/DeleteEventRequest",
   UPDATE_EVENT: "/Events/UpdateRequestForEvent",
-
-  CREATE_ACCESSORY: "/Accessory/CreateAccessory",
-  UPDATE_ACCESSORY: "/Accessory/UpdateAccessory",
-  GET_ACCESSORY_BY_ID: "/Accessory/GetAccessoryById",
-  GET_ACCESSORY_BY_USER_ID: "/Accessory/GetAccessoryByUserId",
-  GET_ALL_ACCESSORY: "/Accessory/GetAllAccessory",
-  DELETE_ACCESSORY: "/Accessory/DeleteAccessory",
 };

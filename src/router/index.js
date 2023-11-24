@@ -8,6 +8,8 @@ import AppointmentsIndex from "@/views/dashboard/appointments/index.vue";
 import AffinityGroupsIndex from "@/views/dashboard/affinityGroups/index.vue";
 import MinistriesIndex from "@/views/dashboard/ministries/index.vue";
 import UnitsIndex from "@/views/dashboard/units/index.vue";
+import AccessoriesIndex from "@/components/Pages/Dashboard/Accessories/index.vue";
+
 import SpecialUnitsIndex from "@/views/dashboard/special-units/index.vue";
 import MountainOfInfluenceIndex from "@/views/dashboard/mountain-of-influence/index.vue";
 import "vue-toastification/dist/index.css";
@@ -194,6 +196,29 @@ const routes = [
               import("@/components/Pages/Dashboard/Ministries/ministries"),
             meta: {
               activeName: "ministries",
+            },
+          },
+        ],
+      },
+
+      {
+        path: "/accessories",
+        name: "accessories",
+        component: AccessoriesIndex,
+        meta: {
+          roles: ["administrator"],
+          subroles: [],
+        },
+        children: [
+          {
+            path: "",
+            name: "accessories",
+            component: () =>
+              import(
+                "@/components/Pages/Dashboard/Accessories/accessories.vue"
+              ),
+            meta: {
+              activeName: "accessories",
             },
           },
         ],

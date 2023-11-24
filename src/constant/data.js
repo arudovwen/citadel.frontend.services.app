@@ -97,6 +97,13 @@ export const menuItems = [
     subroles: [],
   },
   {
+    title: "Accessories",
+    icon: "heroicons-outline:table-cells",
+    link: "/accessories",
+    roles: ["administrator"],
+    subroles: [],
+  },
+  {
     title: "Venues",
     icon: "bx:buildings",
     link: "/venue-management",
