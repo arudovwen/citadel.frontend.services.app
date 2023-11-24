@@ -294,16 +294,17 @@ const getBiodata = () => {
 const creationSuccess = computed(() => store.getters["profile/profileCreated"]);
 // Define a validation schema
 const schema = yup.object({
-  firstName: yup.string().required("First name is required"),
-  surName: yup.string().required("Last name is required"),
-  middleName: yup.string(),
+  firstName: yup.string().required("First name is required").nullable(),
+  surName: yup.string().required("Last name is required").nullable(),
+  middleName: yup.string().nullable(),
   email: yup
     .string()
     .required("Email is required")
-    .email("Please enter a valid email address"),
-  mobile1: yup.string().required("Mobile 1 is required"),
-  mobile2: yup.string(),
-  address: yup.string(),
+    .email("Please enter a valid email address")
+    .nullable(),
+  mobile1: yup.string().required("Mobile 1 is required").nullable(),
+  mobile2: yup.string().nullable(),
+  address: yup.string().nullable(),
   // address2: yup.string(),
   // .required("Title text is required")
   title: yup.string().nullable(),
@@ -312,12 +313,12 @@ const schema = yup.object({
   state: yup.object().nullable(),
   country: yup.object().nullable(),
   gender: yup.string().nullable(),
-  employmentStatus: yup.string(),
-  placeOfBirth: yup.string(),
+  employmentStatus: yup.string().nullable(),
+  placeOfBirth: yup.string().nullable(),
   nationality: yup.object().nullable(),
   stateOfOrigin: yup.object().nullable(),
-  maritalStatus: yup.string(),
-  dateOfBirth: yup.string(),
+  maritalStatus: yup.string().nullable(),
+  dateOfBirth: yup.string().nullable(),
 });
 
 const { handleSubmit, setValues, values } = useForm({

@@ -202,12 +202,12 @@ const pushAccessory = (accessory) => {
   );
 
   if (!isObjectExists && accessory !== null) {
-    const accessoryWithoutLabel = { ...accessory };
-    delete accessoryWithoutLabel.label;
-    delete accessoryWithoutLabel.id;
-    delete accessoryWithoutLabel.createdBy;
-    delete accessoryWithoutLabel.modifiedBy;
-    accessories.value.push(accessoryWithoutLabel);
+    const data = {
+      userId: accessory.userId,
+      accessoryName: accessory.accessoryName,
+      description: accessory.description,
+    };
+    accessories.value.push(data);
   }
 };
 
