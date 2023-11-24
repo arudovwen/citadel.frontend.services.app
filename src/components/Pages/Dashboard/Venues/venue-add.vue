@@ -201,12 +201,16 @@ const pushAccessory = (accessory) => {
     (item) => item?.accessoryName === accessory?.accessoryName
   );
 
+  // console.log(accessory);
+
   if (!isObjectExists && accessory !== null) {
     const data = {
       userId: accessory.userId,
       accessoryName: accessory.accessoryName,
       description: accessory.description,
     };
+
+    console.log(data);
     accessories.value.push(data);
   }
 };

@@ -22,6 +22,9 @@ export default {
     getVenuesLoading: false,
     getVenuesSuccess: false,
     getVenuesError: null,
+    getVenueByIdLoading: false,
+    getVenueByIdSuccess: false,
+    getVenueByIdError: null,
     //delete
     deleteVenueLoading: false,
     deleteVenueSuccess: false,
@@ -66,6 +69,23 @@ export default {
       state.getVenuesLoading = false;
       state.getVenuesSuccess = false;
       state.getVenuesError = err;
+    },
+
+    getVenueByIdBegin(state) {
+      state.getVenueByIdLoading = true;
+      state.getVenueByIdSuccess = false;
+      state.getVenueByIdError = null;
+    },
+    getVenueByIdSuccess(state, data) {
+      state.getVenueByIdLoading = false;
+      state.getVenueByIdSuccess = true;
+      state.getVenueByIdError = null;
+      state.venue = data;
+    },
+    getVenueByIdError(state, err) {
+      state.getVenueByIdLoading = false;
+      state.getVenueByIdSuccess = false;
+      state.getVenueByIdError = err;
     },
 
     updateVenueBegin(state) {
@@ -144,6 +164,21 @@ export default {
         }
       } catch (err) {
         commit("getVenuesError", err);
+      }
+    },
+
+    async getVenueById({ commit }, id) {
+      try {
+        commit("getVenueByIdBegin");
+        const response = await DataService.get(
+          `${urls.GET_VENUE_BY_ID}?id=${id}`
+        );
+
+        if (response.status === 200) {
+          commit("getVenueByIdSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("getVenueByIdError", err);
       }
     },
 
