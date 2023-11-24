@@ -26,6 +26,7 @@
             v-model="dateOfRequestedEvent"
             class="form-control"
             id="d1"
+            :config="config"
             placeholder="Select date of event"
           />
         </FormGroup>
@@ -111,7 +112,7 @@ const { value: dateOfRequestedEvent, errorMessage: dateError } = useField(
 
 const { value: eventType, errorMessage: eventTypeError } =
   useField("eventType");
-
+const config = { enableTime: true };
 onMounted(() => {
   setValues({
     ...props.detail,
@@ -125,7 +126,7 @@ const onSubmit = handleSubmit((values) => {
     ...values,
     // requestType: values.eventType,
     dateOfRequestedEvent: moment(values.dateOfRequestedEvent).format(
-      "YYYY-MM-DDTHH:mm:ss.SSSZ"
+      "YYYY-MM-DDTHH:mm:ss"
     ),
   });
 });

@@ -43,7 +43,7 @@
           </div>
         </div>
         <div
-          v-if="state.auth.userData.userRole.toLowerCase() === 'member'"
+          v-if="state.auth.userData.userRole.toLowerCase() !== 'member'"
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
@@ -96,7 +96,7 @@
               v-if="props.column.field == 'eventDate'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ moment(props.row.eventDate).format("ll") }}
+              {{ moment(props.row.eventDate).format("lll") }}
             </span>
             <span
               v-if="props.column.field == 'requesterName'"

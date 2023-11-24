@@ -27,6 +27,7 @@
             class="form-control"
             id="d1"
             placeholder="Select date of event"
+            :config="config"
           />
         </FormGroup>
       </div>
@@ -55,6 +56,7 @@ import FormGroup from "@/components/FormGroup";
 import Select from "@/components/Select";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
+// eslint-disable-next-line no-unused-vars
 import moment from "moment";
 
 const toast = useToast();
@@ -110,7 +112,7 @@ const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
-
+const config = { enableTime: true };
 // const { value: name, errorMessage: nameError } = useField("name");
 
 const { value: dateOfRequestedEvent, errorMessage: dateError } = useField(
@@ -125,7 +127,7 @@ const onSubmit = handleSubmit((values) => {
     requestType: values.requestType,
     eventType: values.requestType,
     dateOfRequestedEvent: moment(values.dateOfRequestedEvent).format(
-      "YYYY-MM-DDTHH:mm:ss.SSSZ"
+      "YYYY-MM-DDTHH:mm:ss"
     ),
     userId: state.auth.userData.id,
   });

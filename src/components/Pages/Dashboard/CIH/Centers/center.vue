@@ -6,23 +6,26 @@
           <div
             v-for="item in content"
             :key="item.title"
-            class="border rounded-lg px-4 py-4 bg-gray-100"
+            :class="item.bgClass"
+            class="border rounded-lg px-6 py-4 text-gray-600"
           >
             <div class="flex mb-5 gap-x-8">
-              <span class="font-bold text-lg flex gap-x-8 capitalize"
+              <span
+                class="font-bold text-lg flex gap-x-8 capitalize w-full justify-between"
                 ><span>{{ item.title }}</span>
-                <span>{{ item.total }}</span></span
-              >
+                <span class="text-2xl">{{ item.total }}</span>
+              </span>
             </div>
-            <div class="flex text-sm gap-x-4">
-              <span class="flex gap-x-1">
-                <span>{{ item.males }}</span
-                ><span>Male(s)</span></span
+            <div class="flex flex-col text-sm">
+              <span class="flex gap-x-3">
+                <span>Male<span v-if="item.males > 1">s</span></span>
+                <span>{{ item.males }}</span></span
               >
-              <div class="h-4 border-l"></div>
-              <span class="flex gap-x-1">
-                <span>{{ item.females }}</span> <span>Female(s)</span></span
-              >
+
+              <span class="flex gap-x-3">
+                <span>Female<span v-if="item.females > 1">s</span></span
+                ><span>{{ item.females }}</span>
+              </span>
             </div>
           </div>
         </div>
@@ -43,30 +46,35 @@ const content = [
     total: "5",
     males: "1",
     females: "2",
+    bgClass: "bg-green-100",
   },
   {
     title: "adults",
     total: "5",
     males: "1",
     females: "2",
+    bgClass: "bg-yellow-100",
   },
   {
     title: "youths",
     total: "5",
     males: "1",
     females: "2",
+    bgClass: "bg-blue-100",
   },
   {
     title: "teenagers",
     total: "5",
     males: "1",
     females: "2",
+    bgClass: "bg-purple-100",
   },
   {
     title: "children",
     total: "5",
     males: "1",
     females: "2",
+    bgClass: "bg-orange-100",
   },
 ];
 </script>
