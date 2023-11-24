@@ -177,7 +177,6 @@ import { computed, watch, ref, onUnmounted } from "vue";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-// import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 // import VueSelect from "@/components/Select/VueSelect";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
@@ -307,7 +306,7 @@ const schema = yup.object({
     .transform((value) => (Number.isNaN(value) ? null : value))
     .nullable(),
   cihZone: yup.string(),
-  cihRole: yup.string(),
+  cihRole: yup.string().nullable(),
   mountainOfInfluence: yup.string(),
   affinityGroup: yup.string(),
   department: yup.string(),

@@ -1,6 +1,7 @@
 <template>
   <div>
     <form @submit.prevent="onSubmit" class="space-y-4 max-w-[700px]">
+      <!-- {{ values }} -->
       <div class="grid grid-cols-1 gap-4">
         <Textinput
           label="Name"
@@ -29,22 +30,22 @@
           :error="capacityError"
           classInput="h-[40px]"
         />
-        <!-- <div class="hidden">
-          <div class="gap-4 flex items-end justify-between">
-            <div class="flex-1">
-              <Textinput
-                label="Accessories/Equipment"
-                type="text"
-                placeholder="Type your accessories"
-                name="email"
-                v-model="accessories"
-                :error="accessoriesError"
-                classInput="h-[40px] w-full"
-              />
+        <div class="w-full">
+          <div class="gap-4 flex items-end justify-between w-full">
+            <div class="w-full">
+              <FormGroup label="Accessory" :error="accessoriesError">
+                <VueSelect
+                  class="w-full"
+                  v-model.value="accessory"
+                  :options="accessoryList"
+                  placeholder="Select accessory"
+                  name="country"
+                />
+              </FormGroup>
             </div>
 
             <div
-              @click="pushAccessory(accessories)"
+              @click="pushAccessory(accessory)"
               class="rounded px-4 btn-dark btn-sm h-[40px] flex items-center justify-center gap-2"
             >
               <Icon icon="heroicons-outline:plus" />
@@ -55,14 +56,16 @@
             <ol>
               <li
                 class="text-sm mb-2"
-                v-for="(item, idx) in listOfAccessories"
+                v-for="(item, idx) in accessories"
                 :key="item"
               >
                 <div class="flex items-center justify-between gap-4">
-                  <span> {{ item }}</span>
+                  <span class="capitalize text-slate-400">
+                    <span>{{ idx + 1 }}. </span> {{ item.accessoryName }}</span
+                  >
                   <div
                     @click="removeAccessory(idx)"
-                    class="inline-flex items-center justify-center h-10 w-10 bg-danger-500 text-lg border rounded border-danger-500 text-white"
+                    class="inline-flex items-center justify-center h-8 w-8 bg-danger-500 text-lg border rounded border-danger-500 text-white"
                   >
                     <Icon icon="heroicons-outline:trash" />
                   </div>
@@ -70,7 +73,7 @@
               </li>
             </ol>
           </div>
-        </div> -->
+        </div>
 
         <Textarea
           label="Description"
@@ -132,11 +135,13 @@
 </template>
 
 <script setup>
-// import Icon from "@/components/Icon";
+import Icon from "@/components/Icon";
 import Button from "@/components/Button";
 import { Switch, SwitchGroup, SwitchLabel } from "@headlessui/vue";
 import Textinput from "@/components/Textinput";
 import Textarea from "@/components/Textarea";
+import VueSelect from "@/components/Select/VueSelect";
+import FormGroup from "@/components/FormGroup";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { inject, ref, computed, watch } from "vue";
@@ -146,37 +151,34 @@ import { useToast } from "vue-toastification";
 const { state, dispatch } = useStore();
 const toast = useToast();
 const isOnline = ref(false);
+const accessory = ref(null);
 const success = computed(() => state.venue.addVenueSuccess);
 const loading = computed(() => state.venue.addVenueLoading);
 const userId = inject("userId");
 const query = inject("query");
+const accessoryList = computed(() =>
+  state.accessory?.accessories.map((i) => {
+    return {
+      label: i.accessoryName,
+      ...i,
+    };
+  })
+);
 // Define a validation schema
 const schema = yup.object({
   venueName: yup.string().required("Name is required"),
   location: yup.string().required("Location is required"),
   capacity: yup.number(),
   description: yup.string(),
-  // accessories: yup.string(),
+  accessories: yup.array(),
 });
-
-// const listOfAccessories = ref([]);
-// const pushAccessory = (accessory) => {
-//   if (accessory.length > 0) {
-//     listOfAccessories.value.push(accessory);
-//   }
-// };
-
-// const removeAccessory = (idx) => {
-//   console.log(idx);
-//   listOfAccessories.value.splice(idx, 1);
-// };
 
 const formValues = {
   venueName: "",
   location: "",
   capacity: 0,
   description: "",
-  // accessories: "dashcode@gmail.com",
+  accessories: [],
 };
 
 const { handleSubmit, resetForm } = useForm({
@@ -189,10 +191,30 @@ const { value: venueName, errorMessage: venueNameError } =
   useField("venueName");
 const { value: location, errorMessage: locationError } = useField("location");
 const { value: capacity, errorMessage: capacityError } = useField("capacity");
-// const { value: accessories, errorMessage: accessoriesError } =
-//   useField("accessories");
+const { value: accessories, errorMessage: accessoriesError } =
+  useField("accessories");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
+
+const pushAccessory = (accessory) => {
+  const isObjectExists = accessories.value.some(
+    (item) => item?.accessoryName === accessory?.accessoryName
+  );
+
+  if (!isObjectExists && accessory !== null) {
+    const accessoryWithoutLabel = { ...accessory };
+    delete accessoryWithoutLabel.label;
+    delete accessoryWithoutLabel.id;
+    delete accessoryWithoutLabel.createdBy;
+    delete accessoryWithoutLabel.modifiedBy;
+    accessories.value.push(accessoryWithoutLabel);
+  }
+};
+
+const removeAccessory = (idx) => {
+  // console.log(idx);
+  accessories.value.splice(idx, 1);
+};
 
 const onSubmit = handleSubmit((values) => {
   const data = {
