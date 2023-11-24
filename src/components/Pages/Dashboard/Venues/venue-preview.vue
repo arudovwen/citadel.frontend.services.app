@@ -2,7 +2,8 @@
   <div>
     <div class="lg:flex justify-between flex-wrap items-center">
       <Breadcrumb />
-      <div class="hidden lg:justify-end items-center flex-wrap">
+      {{ venue }}
+      <!-- <div class="flex lg:justify-end items-center flex-wrap">
         <button
           class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
         >
@@ -31,7 +32,7 @@
           /></span>
           <span>Send invoice</span>
         </button>
-      </div>
+      </div> -->
     </div>
     <Card bodyClass="p-0">
       <div
@@ -91,7 +92,7 @@
 <script setup>
 import Card from "@/components/Card";
 import Breadcrumb from "@/components/Breadcrumbs";
-import Icon from "@/components/Icon";
+// import Icon from "@/components/Icon";
 import TotalTable from "./module/TotalTable.vue";
 import { useStore } from "vuex";
 import { computed } from "vue";
@@ -100,9 +101,9 @@ const { state } = useStore();
 const venue = computed(() => {
   return state.venue.venue;
 });
-const print = () => {
-  window.print();
-};
+// const print = () => {
+//   window.print();
+// };
 </script>
 <style lang="scss">
 .vgt-wrap__actions-footer {
