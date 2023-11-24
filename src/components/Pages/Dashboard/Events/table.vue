@@ -3,10 +3,7 @@
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div>
-          <div
-            class="flex gap-x-4 items-center"
-            v-if="state.auth.userData.userRole.toLowerCase() !== 'member'"
-          >
+          <div class="flex gap-x-4 items-center">
             <InputGroup
               v-model="query.searchParameter"
               placeholder="Search"
@@ -29,7 +26,8 @@
               name="filterType"
             />
             <VueSelect
-              class="min-w-[250px] w-full md:w-auto"
+              v-if="state.auth.userData.userRole.toLowerCase() !== 'member'"
+              class="min-w-[300px] w-full md:w-auto"
               v-model="selectedZone"
               :options="zoneOptions"
               placeholder="Filter zone"

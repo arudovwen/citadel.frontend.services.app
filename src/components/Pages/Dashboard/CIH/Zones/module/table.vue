@@ -84,6 +84,14 @@
             <span v-if="props.column.field == 'order'" class="font-medium">
               {{ "#" + props.row.order }}
             </span>
+            <span v-if="props.column.field == 'centerName'" class="font-medium">
+              <router-link
+                class="hover:underline"
+                :to="`/cih/zones/center/${props.row.id}?name=${props.row.centerName}`"
+              >
+                {{ props.row.centerName }}
+              </router-link>
+            </span>
             <span
               v-if="props.column.field == 'date'"
               class="text-slate-500 dark:text-slate-400"
