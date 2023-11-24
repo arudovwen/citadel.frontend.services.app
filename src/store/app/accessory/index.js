@@ -22,6 +22,10 @@ export default {
     getAccessoryLoading: false,
     getAccessorySuccess: false,
     getAccessoryError: null,
+
+    getAccessoryByIdLoading: false,
+    getAccessoryByIdSuccess: false,
+    getAccessoryByIdError: null,
     //delete
     deleteAccessoryLoading: false,
     deleteAccessorySuccess: false,
@@ -67,6 +71,23 @@ export default {
       state.getAccessoriesLoading = false;
       state.getAccessoriesSuccess = false;
       state.getAccessoriesError = err;
+    },
+
+    getAccessoryByIdBegin(state) {
+      state.getAccessoryByIdLoading = true;
+      state.getAccessoryByIdSuccess = false;
+      state.getAccessoryByIdError = null;
+    },
+    getAccessoryByIdSuccess(state, { data }) {
+      state.getAccessoryByIdLoading = false;
+      state.getAccessoryByIdSuccess = true;
+      state.getAccessoryByIdError = null;
+      state.accessory = data;
+    },
+    getAccessoryByIdError(state, err) {
+      state.getAccessoryByIdLoading = false;
+      state.getAccessoryByIdSuccess = false;
+      state.getAccessoryByIdError = err;
     },
 
     updateAccessoryBegin(state) {
@@ -146,6 +167,21 @@ export default {
         }
       } catch (err) {
         commit("getAccessoriesError", err);
+      }
+    },
+
+    async getAccessoryById({ commit }, id) {
+      try {
+        commit("getAccessoryByIdBegin");
+        const response = await DataService.get(
+          `${urls.GET_ACCESSORY_BY_ID}?id=${id}`
+        );
+
+        if (response.status === 200) {
+          commit("getAccessoryByIdSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getAccessoryByIdError", err);
       }
     },
 
