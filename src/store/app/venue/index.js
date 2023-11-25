@@ -80,7 +80,7 @@ export default {
       state.getVenueByIdLoading = false;
       state.getVenueByIdSuccess = true;
       state.getVenueByIdError = null;
-      state.venue = data;
+      state.venue = { ...state.venue, ...data };
     },
     getVenueByIdError(state, err) {
       state.getVenueByIdLoading = false;
