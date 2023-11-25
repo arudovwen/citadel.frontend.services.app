@@ -201,6 +201,8 @@ const pushAccessory = (accessory) => {
       userId: accessory.userId,
       accessoryName: accessory.accessoryName,
       description: accessory.description,
+      id: accessory.id,
+      venueId: venue.value.id,
     };
 
     console.log(data);
@@ -213,6 +215,21 @@ const removeAccessory = (idx) => {
   accessories.value.splice(idx, 1);
 };
 
+const prepareDetails = (data) => {
+  const obj = {
+    userId: data.userId,
+    venueName: data.venueName,
+    description: data.description,
+    capacity: data.capacity,
+    location: data.location,
+    isOnline: data.isOnline,
+    id: data.id,
+    accessories: data.accessories,
+  };
+
+  return obj;
+};
+
 const onSubmit = handleSubmit((values) => {
   // console.log("PersonalDetails: " + JSON.stringify(values));
   const updatedAccessories = accessories.value.map((i) => {
@@ -220,6 +237,8 @@ const onSubmit = handleSubmit((values) => {
       accessoryName: i.accessoryName,
       description: i.description,
       userId: i.userId,
+      id: i.id,
+      venueId: venue.value.id,
     };
   });
   const data = {
@@ -228,8 +247,9 @@ const onSubmit = handleSubmit((values) => {
     userId: userId.value,
     isOnline: isOnline.value,
   };
+  console.log(JSON.stringify(prepareDetails(data)));
 
-  dispatch("updateVenue", data);
+  dispatch("updateVenue", prepareDetails(data));
 });
 
 const closeModal = () => {
