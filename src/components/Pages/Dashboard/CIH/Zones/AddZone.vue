@@ -15,6 +15,15 @@
           v-model.trim="zoneName"
           :error="zoneNameError"
         />
+        <FormGroup label="Assign coordinator" :error="membersError">
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto"
+            v-model="members"
+            :options="membersOptions"
+            placeholder="Select a coordinator"
+            name="members"
+          />
+        </FormGroup>
         <div class="assagin space-y-4">
           <Textarea
             label="Description"
@@ -24,7 +33,7 @@
           />
         </div>
 
-        <div class="text-right">
+        <div class="text-right mt-4">
           <Button
             :isLoading="loading"
             :disabled="loading"
@@ -37,6 +46,8 @@
   </div>
 </template>
 <script setup>
+import FormGroup from "@/components/FormGroup";
+import VueSelect from "@/components/Select/VueSelect";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import Textarea from "@/components/Textarea";
@@ -55,6 +66,7 @@ const toast = useToast();
 const schema = yup.object({
   zoneName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
+  members: yup.object().nullable(),
 });
 
 const { handleSubmit } = useForm({
@@ -64,15 +76,23 @@ const { handleSubmit } = useForm({
 const { value: zoneName, errorMessage: zoneNameError } = useField("zoneName");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
-
+const { value: members, errorMessage: membersError } = useField("members");
 const addZone = handleSubmit((values) => {
-  dispatch("addZone", values);
+  dispatch("addZone", { ...values, userId: members.value });
 });
 
 const closeModal = () => {
   dispatch("closeModal");
 };
 
+const membersOptions = computed(() =>
+  state?.member?.data.map((i) => {
+    return {
+      label: i.firstName + " " + i.surName,
+      value: i.userId,
+    };
+  })
+);
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
