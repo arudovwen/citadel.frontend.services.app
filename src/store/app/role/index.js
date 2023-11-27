@@ -22,9 +22,15 @@ export default {
     getRolesLoading: false,
     getRolesSuccess: false,
     getRolesError: null,
+    //read by id
     getRoleByIdLoading: false,
     getRoleByIdSuccess: false,
     getRoleByIdError: null,
+
+    //read modules
+    getModulesLoading: false,
+    getModulesSuccess: false,
+    getModulesError: null,
     //delete
     deleteRoleLoading: false,
     deleteRoleSuccess: false,
@@ -32,6 +38,7 @@ export default {
     role: null,
 
     roles: [],
+    modules: [],
     total: 0,
   },
   getters: {},
@@ -69,6 +76,23 @@ export default {
       state.getRolesLoading = false;
       state.getRolesSuccess = false;
       state.getRolesError = err;
+    },
+    getModulesBegin(state) {
+      state.getModulesLoading = true;
+      state.getModulesSuccess = false;
+      state.getModulesError = null;
+    },
+    getModulesSuccess(state, { data, totalCount }) {
+      state.getModulesLoading = false;
+      state.getModulesSuccess = true;
+      state.getModulesError = null;
+      state.modules = data;
+      state.total = totalCount;
+    },
+    getModulesError(state, err) {
+      state.getModulesLoading = false;
+      state.getModulesSuccess = false;
+      state.getModulesError = err;
     },
 
     getRoleByIdBegin(state) {
@@ -164,6 +188,20 @@ export default {
         }
       } catch (err) {
         commit("getRolesError", err);
+      }
+    },
+    async getModules({ commit }, data) {
+      try {
+        commit("getModulesBegin");
+        const response = await DataService.get(
+          `${urls.GET_MODULES}?${new URLSearchParams(cleanObject(data))}`
+        );
+
+        if (response.status === 200) {
+          commit("getModulesSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getModulesError", err);
       }
     },
 

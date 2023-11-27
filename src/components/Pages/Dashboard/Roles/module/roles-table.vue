@@ -245,7 +245,7 @@ export default {
   setup() {
     onMounted(() => {
       // getRoles();
-      getAccessories();
+      getModules();
     });
     const { state, dispatch } = useStore();
     const userId = computed(() => state.auth.userData.id);
@@ -258,9 +258,7 @@ export default {
     const modal = ref();
     const query = reactive({
       pageNumber: 1,
-      pageSize: 25,
-      searchParameter: "",
-      sortOrder: "",
+      pageSize: 10000,
     });
 
     const roles = computed(() => {
@@ -273,8 +271,8 @@ export default {
       dispatch("getRoles", query);
     };
 
-    const getAccessories = () => {
-      dispatch("getAccessories", { pageNumber: 1, pageSize: 10000 });
+    const getModules = () => {
+      dispatch("getModules", { pageNumber: 1, pageSize: 10000 });
     };
 
     function perPage({ currentPerPage }) {

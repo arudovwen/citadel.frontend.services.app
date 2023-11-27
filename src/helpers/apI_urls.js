@@ -128,6 +128,14 @@ export const urls = {
   GET_ALL_QUALIFICATION: "/Qualification/GetAllQualification",
   DELETE_QUALIFICATION: "/Qualification/DeleteQualification",
 
+  //Roles
+  GET_MODULES: "/Auth/GetPlatformModules",
+  GET_PERMISSIONS: "/Auth/GetPlatformPermissions",
+  CREATE_ROLE_WITH_PERMISSIONS: "/Auth/CreateRoleWithPermissions",
+  ASSIGN_PERMISSION_TO_USER: "/Auth/AssignPermissionsToUser",
+  REMOVE_PERMISSION_FROM_USER: "/Auth/RemovePermissionsFromUser",
+  REMOVE_ROLE_FROM_PLATFORM: "/Auth/RemoveUserRoleFromPlatform",
+
   // SpouseDetail
   CREATE_SPOUSE_DETAIL: "/SpouseDetail/CreateSpouseDetail",
   UPDATE_SPOUSE_DETAIL: "/SpouseDetail/UpdateSpouseDetail",
