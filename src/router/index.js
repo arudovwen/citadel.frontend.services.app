@@ -9,7 +9,7 @@ import AffinityGroupsIndex from "@/views/dashboard/affinityGroups/index.vue";
 import MinistriesIndex from "@/views/dashboard/ministries/index.vue";
 import UnitsIndex from "@/views/dashboard/units/index.vue";
 import AccessoriesIndex from "@/components/Pages/Dashboard/Accessories/index.vue";
-
+import RolesIndex from "@/views/dashboard/roles/index.vue";
 import SpecialUnitsIndex from "@/views/dashboard/special-units/index.vue";
 import MountainOfInfluenceIndex from "@/views/dashboard/mountain-of-influence/index.vue";
 import "vue-toastification/dist/index.css";
@@ -28,7 +28,7 @@ function guardAuth(to, from, next) {
 }
 const routes = [
   {
-    path: "/roles",
+    path: "/rolez",
     name: "Roles",
     component: () => import("@/views/roles/index.vue"),
     meta: { auth: true },
@@ -740,6 +740,26 @@ const routes = [
           subroles: [],
         },
       },
+      {
+        path: "/roles-management",
+        name: "roles-management",
+        component: RolesIndex,
+        children: [
+          {
+            path: "",
+            name: "roles-management",
+            component: () => import("@/components/Pages/Dashboard/Roles"),
+            meta: {
+              activeName: "roles-management",
+            },
+          },
+        ],
+        meta: {
+          roles: ["administrator"],
+          subroles: [],
+        },
+      },
+
       // {
       //   path: "/venue-management",
       //   name: "venue-management",

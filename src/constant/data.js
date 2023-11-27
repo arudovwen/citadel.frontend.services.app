@@ -194,6 +194,13 @@ export const menuItems = [
     roles: ["administrator"],
     subroles: [],
   },
+  {
+    title: "Roles Management",
+    icon: "heroicons-outline:shield-check",
+    link: "/roles-management",
+    roles: ["administrator"],
+    subroles: [],
+  },
   // {
   //   title: "Chat Management",
   //   icon: "heroicons-outline:user",

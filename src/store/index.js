@@ -13,6 +13,7 @@ import department from "./app/department";
 import meeting from "./app/meeting";
 import notification from "./app/notification";
 import venue from "./app/venue";
+import role from "./app/role";
 import zone from "./app/zone";
 import center from "./app/center";
 import apptodo from "./app/todo";
@@ -127,5 +128,6 @@ export default createStore({
     specialUnit,
     moi,
     accessory,
+    role,
   },
 });

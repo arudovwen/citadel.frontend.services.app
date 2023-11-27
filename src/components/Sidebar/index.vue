@@ -70,7 +70,7 @@
       ></div>
 
       <SimpleBar
-        class="sidebar-menu px-4 h-[calc(100%-80px)]"
+        class="sidebar-menu px-4 h-[calc(100%-80px)] pb-12"
         @created="
           (instance) => {
             simplebarInstance = instance;
