@@ -247,7 +247,7 @@ const onSubmit = handleSubmit((values) => {
     userId: userId.value,
     isOnline: isOnline.value,
   };
-  console.log(JSON.stringify(prepareDetails(data)));
+  // console.log(JSON.stringify(prepareDetails(data)));
 
   dispatch("updateVenue", prepareDetails(data));
 });
