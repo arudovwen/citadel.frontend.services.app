@@ -246,6 +246,7 @@ export default {
     onMounted(() => {
       // getRoles();
       getModules();
+      getPermissions();
     });
     const { state, dispatch } = useStore();
     const userId = computed(() => state.auth.userData.id);
@@ -269,6 +270,9 @@ export default {
 
     const getRoles = () => {
       dispatch("getRoles", query);
+    };
+    const getPermissions = () => {
+      dispatch("getPermissions", { pageNumber: 1, pageSize: 10000 });
     };
 
     const getModules = () => {

@@ -31,6 +31,11 @@ export default {
     getModulesLoading: false,
     getModulesSuccess: false,
     getModulesError: null,
+
+    //read permissions
+    getPermissionsLoading: false,
+    getPermissionsSuccess: false,
+    getPermissionsError: null,
     //delete
     deleteRoleLoading: false,
     deleteRoleSuccess: false,
@@ -39,6 +44,7 @@ export default {
 
     roles: [],
     modules: [],
+    permissions: [],
     total: 0,
   },
   getters: {},
@@ -93,6 +99,24 @@ export default {
       state.getModulesLoading = false;
       state.getModulesSuccess = false;
       state.getModulesError = err;
+    },
+
+    getPermissionsBegin(state) {
+      state.getPermissionsLoading = true;
+      state.getPermissionsSuccess = false;
+      state.getPermissionsError = null;
+    },
+    getPermissionsSuccess(state, { data, totalCount }) {
+      state.getPermissionsLoading = false;
+      state.getPermissionsSuccess = true;
+      state.getPermissionsError = null;
+      state.permissions = data;
+      state.total = totalCount;
+    },
+    getPermissionsError(state, err) {
+      state.getPermissionsLoading = false;
+      state.getPermissionsSuccess = false;
+      state.getPermissionsError = err;
     },
 
     getRoleByIdBegin(state) {
@@ -202,6 +226,21 @@ export default {
         }
       } catch (err) {
         commit("getModulesError", err);
+      }
+    },
+
+    async getPermissions({ commit }, data) {
+      try {
+        commit("getPermissionsBegin");
+        const response = await DataService.get(
+          `${urls.GET_PERMISSIONS}?${new URLSearchParams(cleanObject(data))}`
+        );
+
+        if (response.status === 200) {
+          commit("getPermissionsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getPermissionsError", err);
       }
     },
 

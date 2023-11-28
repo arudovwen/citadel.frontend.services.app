@@ -23,7 +23,7 @@
         class="border border-gray-200 rounded-lg overflow-x-auto p-6 max-h-[300px] overflow-y-auto"
       >
         <p class="mb-3 font-medium">Modules</p>
-        <li v-for="n in modules" :key="n.name">
+        <li v-for="n in modulesWithPermissions" :key="n.name">
           <div
             class="capitalize cursor-pointer mb-1"
             @click="handleIndex(n.name)"
@@ -68,7 +68,7 @@
   </form>
 </template>
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, watchEffect } from "vue";
 import { useField, useForm } from "vee-validate";
 import Button from "@/components/Button";
 // import Textarea from "@/components/Textarea";
@@ -92,14 +92,19 @@ const modules = computed(() => {
   return state?.role?.modules?.map((i) => {
     return {
       name: i,
-      permissions: [
-        "CAN_VIEW_MODUL_1",
-        "CAN_DELETE_MODULE_1",
-        "CAN_CREATE_MODULE_1",
-      ],
     };
   });
 });
+
+const fetchedPermissions = computed(() => {
+  return state?.role?.permissions?.map((i) => {
+    return {
+      name: i,
+    };
+  });
+});
+
+const modulesWithPermissions = ref([]);
 
 // const modules = [
 //   {
@@ -141,5 +146,22 @@ const { value: platformPermissions } = useField("platformPermissions");
 
 const addRole = handleSubmit((values) => {
   console.log("🚀 ~ file: index.vue:126 ~ addRole ~ values:", values);
+});
+
+watchEffect(() => {
+  if (modules.value?.length !== 0 && fetchedPermissions.value?.length !== 0) {
+    modulesWithPermissions.value = modules.value?.map((module) => {
+      const moduleName = module?.name ?? ""; // Use optional chaining to get the name property
+      return {
+        name: moduleName,
+        permissions: fetchedPermissions.value?.map(
+          (permission) =>
+            permission.name +
+            "_" +
+            moduleName.toLowerCase().replace(/\s+/g, "_")
+        ),
+      };
+    });
+  }
 });
 </script>
