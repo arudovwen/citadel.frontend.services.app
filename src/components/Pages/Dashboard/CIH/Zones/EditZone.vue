@@ -15,6 +15,15 @@
           v-model.trim="zoneName"
           :error="zoneNameError"
         />
+        <FormGroup label="Assign coordinator" :error="membersError">
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto"
+            v-model="members"
+            :options="membersOptions"
+            placeholder="Select a coordinator"
+            name="members"
+          />
+        </FormGroup>
         <div class="assagin space-y-4">
           <Textarea
             label="Description"
@@ -46,6 +55,8 @@ import { useStore } from "vuex";
 import * as yup from "yup";
 import { computed, watch } from "vue";
 import { useToast } from "vue-toastification";
+import FormGroup from "@/components/FormGroup";
+import VueSelect from "@/components/Select/VueSelect";
 
 const { state, dispatch } = useStore();
 const zone = computed(() => state.zone.zone);
@@ -56,6 +67,7 @@ const toast = useToast();
 const schema = yup.object({
   zoneName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
+  members: yup.object().typeError("Invalid value").nullable(),
 });
 const { handleSubmit, setValues } = useForm({
   validationSchema: schema,
@@ -64,11 +76,11 @@ const { handleSubmit, setValues } = useForm({
 const { value: zoneName, errorMessage: zoneNameError } = useField("zoneName");
 const { value: description, errorMessage: descriptionError } =
   useField("description");
-
+const { value: members, errorMessage: membersError } = useField("members");
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
 const updateZone = handleSubmit((values) => {
-  dispatch("updateZone", values);
+  dispatch("updateZone", { ...values, userId: members.value });
 });
 
 const closeModal = () => {
@@ -79,6 +91,14 @@ watch(zone, () => {
   setValues(zone.value);
 });
 
+const membersOptions = computed(() =>
+  state?.member?.data.map((i) => {
+    return {
+      label: i.firstName + " " + i.surName,
+      value: i.userId,
+    };
+  })
+);
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Updated");

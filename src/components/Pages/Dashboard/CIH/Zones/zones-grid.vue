@@ -140,6 +140,7 @@ onMounted(() => {
     pageSize: 250000,
     pageNumber: 1,
     searchParameter: "",
+    cihRole: "cihCoordinator",
   });
 });
 const { dispatch, state } = useStore();
