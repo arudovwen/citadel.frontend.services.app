@@ -39,7 +39,7 @@
                     v-model="platformPermissions"
                     type="checkbox"
                   />
-                  {{ p }}
+                  {{ p.accessRight }}
                 </label>
               </li>
             </ul>
@@ -47,14 +47,14 @@
         </li>
       </ul>
       <div
-        class="border border-gray-200 rounded-lg p-6 max-h-[400px] overflow-y-auto"
+        class="border border-gray-200 rounded-lg p-6 max-h-[300px] overflow-y-auto"
       >
         <p class="mb-3 font-medium">Selected Permissions</p>
         <ul>
           <ul>
             <li v-for="p in platformPermissions" :key="p">
               <label class="uppercase mb-1 text-sm flex gap-x-1 items-center">
-                {{ p }}
+                {{ p.accessRight }}
               </label>
             </li>
           </ul>
@@ -63,22 +63,28 @@
     </div>
 
     <div class="text-right mt-8">
-      <Button text="Create role" btnClass="btn-dark"></Button>
+      <Button
+        :isLoading="loading"
+        :disabled="loading"
+        text="Create role"
+        btnClass="btn-dark"
+      ></Button>
     </div>
   </form>
 </template>
 <script setup>
-import { ref, reactive, computed, watchEffect } from "vue";
+import { ref, reactive, computed, watchEffect, watch } from "vue";
 import { useField, useForm } from "vee-validate";
 import Button from "@/components/Button";
-// import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
-// import { useStore } from "vuex";
 import * as yup from "yup";
 import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
 
-const { state } = useStore();
-
+const { state, dispatch } = useStore();
+const toast = useToast();
+const success = computed(() => state.role.addRoleSuccess);
+const loading = computed(() => state.role.addRoleLoading);
 const selectedIndex = ref([]);
 function handleIndex(index) {
   if (selectedIndex.value.includes(index)) {
@@ -106,28 +112,8 @@ const fetchedPermissions = computed(() => {
 
 const modulesWithPermissions = ref([]);
 
-// const modules = [
-//   {
-//     name: "Module 1",
-//     permissions: [
-//       "CAN_VIEW_MODUL_1",
-//       "CAN_DELETE_MODULE_1",
-//       "CAN_CREATE_MODULE_1",
-//     ],
-//   },
-//   {
-//     name: "Module 2",
-//     permissions: [
-//       "CAN_VIEW_MODULE_2",
-//       "CAN_DELETE_MODULE_2",
-//       "CAN_CREATE_MODULE_2",
-//     ],
-//   },
-// ];
-
 const schema = yup.object({
-  roleName: yup.string().required("Nmae is required"),
-  // roleDesc: yup.string().required("Please provide a description"),
+  roleName: yup.string().required("Name is required"),
   platformPermissions: yup.array(),
 });
 
@@ -136,16 +122,17 @@ const formData = reactive({
   // roleDesc: "",
   platformPermissions: [],
 });
-const { handleSubmit } = useForm({
+const { handleSubmit, resetForm } = useForm({
   validationSchema: schema,
   initialValues: formData,
 });
 const { value: roleName, errorMessage: roleNameError } = useField("roleName");
-// const { value: roleDesc, errorMessage: roleDescError } = useField("roleDesc");
 const { value: platformPermissions } = useField("platformPermissions");
 
 const addRole = handleSubmit((values) => {
-  console.log("🚀 ~ file: index.vue:126 ~ addRole ~ values:", values);
+  // console.log("🚀 ~ file: index.vue:126 ~ addRole ~ values:", values);
+  // console.log("Role and permission payload: " + JSON.stringify(values));
+  dispatch("addRole", values);
 });
 
 watchEffect(() => {
@@ -154,14 +141,38 @@ watchEffect(() => {
       const moduleName = module?.name ?? ""; // Use optional chaining to get the name property
       return {
         name: moduleName,
-        permissions: fetchedPermissions.value?.map(
-          (permission) =>
-            permission.name +
-            "_" +
-            moduleName.toLowerCase().replace(/\s+/g, "_")
-        ),
+        // permissions: fetchedPermissions.value?.map(
+        //   (permission) =>
+        //     permission.name +
+        //     "_" +
+        //     moduleName.toLowerCase().replace(/\s+/g, "_")
+        // ),
+        permissions: fetchedPermissions.value?.map((permission) => {
+          return {
+            moduleName: moduleName,
+            accessRight:
+              permission.name +
+              "_" +
+              moduleName.toLowerCase().replace(/\s+/g, "_"),
+          };
+        }),
       };
     });
   }
+});
+
+const closeModal = () => {
+  dispatch("closeRoleEditModal");
+  resetForm();
+};
+
+watch(loading, () => {
+  console.log("loaded");
+  if (!loading.value && success.value) {
+    toast.success("Successfully Created");
+    dispatch("getRoles");
+  }
+
+  closeModal();
 });
 </script>

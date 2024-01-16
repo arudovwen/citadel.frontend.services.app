@@ -58,6 +58,7 @@ export default {
     addRoleSuccess(state) {
       state.addRoleLoading = false;
       state.addRoleSuccess = true;
+      state.addRoleError = null;
     },
 
     addRoleError(state, err) {
@@ -191,7 +192,10 @@ export default {
     async addRole({ commit }, data) {
       try {
         commit("addRoleBegin");
-        const response = await DataService.post(urls.CREATE_Role, data);
+        const response = await DataService.post(
+          urls.CREATE_ROLE_WITH_PERMISSIONS,
+          data
+        );
 
         if (response.status === 200) {
           commit("addRoleSuccess");
