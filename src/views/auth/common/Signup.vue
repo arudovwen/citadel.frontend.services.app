@@ -107,19 +107,7 @@ import { useToast } from "vue-toastification";
 const { state, dispatch } = useStore();
 const isLoading = computed(() => state.auth.loading);
 const isSuccess = computed(() => state.auth.signupsuccess);
-// const initialValues = {
-//   firstName: "string",
-//   middleName: "string",
-//   lastName: "string",
-//   gender: "string",
-//   avatarUrl: "string",
-//   emailAddress: "string",
-//   phoneNumber: "string",
-//   userRole: "administrator",
-//   status: "",
-//   dateOfBirth: "2023-10-24T15:14:35.483Z",
-//   password: "string",
-// };
+
 const checkbox = ref(false);
 // Define a validation schema
 const schema = yup.object({
