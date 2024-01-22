@@ -1,9 +1,9 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
     <Textinput
-      label="Email"
-      type="email"
-      placeholder="Type your email"
+      label="Email / Phone number"
+      type="test"
+      placeholder="Type your email or phone number"
       name="emailAddress"
       v-model="emailAddress"
       :error="emailAddressError"
@@ -86,10 +86,8 @@ export default {
     const error = computed(() => state.auth.error);
     // Define a validation schema
     const schema = yup.object({
-      emailAddress: yup
-        .string()
-        .required("Email is required")
-        .email("Please enter a valid email address"),
+      emailAddress: yup.string().required("This field is required"),
+      // .email("Please enter a valid email address"),
       // password: yup.string().required("Password is required"),
     });
 

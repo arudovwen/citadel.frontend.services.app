@@ -308,7 +308,7 @@ const schema = yup.object({
   // address2: yup.string(),
   // .required("Title text is required")
   title: yup.string().nullable(),
-  nearestBusStop: yup.string(),
+  nearestBusStop: yup.string().nullable(),
   lga: yup.object().nullable(),
   state: yup.object().nullable(),
   country: yup.object().nullable(),
