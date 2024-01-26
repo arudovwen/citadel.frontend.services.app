@@ -807,6 +807,38 @@ export const maritalStatusMenu = [
     value: "Single",
     label: "Single",
   },
+  {
+    value: "Divorced",
+    label: "Divorced",
+  },
+  {
+    value: "Divorced/Married",
+    label: "Divorced/Married",
+  },
+  {
+    value: "Separated",
+    label: "Separated",
+  },
+  {
+    value: "Widower",
+    label: "Widower",
+  },
+  {
+    value: "Widower/Remarried",
+    label: "Widower/Remarried",
+  },
+  {
+    value: "Single Parent",
+    label: "Single Parent",
+  },
+  {
+    value: "Widow",
+    label: "Widow",
+  },
+  {
+    value: "Widow/Remarried",
+    label: "Widow/Remarried",
+  },
 ];
 
 export const industryMenu = [

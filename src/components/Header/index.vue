@@ -46,7 +46,9 @@
           <!-- <LanguageVue /> -->
           <!-- <SwitchDark /> -->
           <!-- <Message v-if="window.width > 768" /> -->
+          <!-- <span>{{ $store.state.auth.userData.userRole }}</span> -->
           <Notification v-if="window.width > 768" />
+          <RoleSwitch />
           <Profile v-if="window.width > 768" />
           <handle-mobile-menu v-if="window.width < 768" />
         </div>
@@ -55,6 +57,7 @@
   </header>
 </template>
 <script>
+import RoleSwitch from "@/components/Header/Navtools/RoleSwitch";
 import Profile from "./Navtools/Profile.vue";
 import Notification from "./Navtools/Notification.vue";
 // import Message from "./Navtools/Message.vue";
@@ -82,6 +85,7 @@ export default {
     Logo,
     MobileLogo,
     HandleMobileMenu,
+    RoleSwitch,
   },
 
   methods: {
