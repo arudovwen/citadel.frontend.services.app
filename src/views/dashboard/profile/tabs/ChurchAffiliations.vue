@@ -299,20 +299,20 @@ const success = computed(
 );
 
 const schema = yup.object({
-  levelOfATS: yup.string(),
-  charteredMember: yup.bool(),
+  levelOfATS: yup.string().nullable(),
+  charteredMember: yup.bool().nullable(),
   charteredMemberNumber: yup
     .number()
     .transform((value) => (Number.isNaN(value) ? null : value))
     .nullable(),
-  cihZone: yup.string(),
+  cihZone: yup.string().nullable(),
   cihRole: yup.string().nullable(),
-  mountainOfInfluence: yup.string(),
-  affinityGroup: yup.string(),
-  department: yup.string(),
-  cihAddress: yup.string(),
-  zoneId: yup.string(),
-  centerId: yup.string(),
+  mountainOfInfluence: yup.string().nullable(),
+  affinityGroup: yup.array().nullable(),
+  department: yup.string().nullable(),
+  cihAddress: yup.string().nullable(),
+  zoneId: yup.string().nullable(),
+  centerId: yup.string().nullable(),
 });
 
 const { handleSubmit, setValues, values } = useForm({
@@ -446,6 +446,14 @@ watch(departmentOptions, () => {
 // watch(affinityGroupOptions, () => {
 //   matchAffinityGroup();
 // });
+watch(affinityGroup, () => {
+  console.log("affinityGroup:" + JSON.stringify(affinityGroup.value));
+  if (affinityGroup.value.length > 0) {
+    affinityGroup.value = affinityGroup.value.filter(
+      (item) => item.toLowerCase() !== "none"
+    );
+  }
+});
 
 watch(churchAffiliationsData, (newValue) => {
   setValues(newValue);
