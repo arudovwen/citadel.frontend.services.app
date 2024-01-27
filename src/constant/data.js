@@ -159,7 +159,7 @@ export const menuItems = [
   },
   {
     title: "Roles",
-    icon: "heroicons-outline:globe-europe-africa",
+    icon: "heroicons-outline:user-circle",
     link: "/roles-management",
     roles: ["administrator"],
     subroles: [],

@@ -22,6 +22,9 @@ export default {
     editRoleLoading: false,
     editRoleSuccess: false,
     editRoleError: null,
+    deleteRoleLoading: false,
+    deleteRoleSuccess: false,
+    deleteRoleError: null,
     role: null,
     roles: [],
     modules: [],
@@ -48,6 +51,22 @@ export default {
       state.getRoleLoading = false;
       state.getRoleSuccess = false;
       state.getRoleError = err;
+    },
+    deleteRoleBegin(state) {
+      state.deleteRoleLoading = true;
+      state.deleteRoleSuccess = false;
+      state.deleteRoleError = null;
+    },
+
+    deleteRoleSuccess(state) {
+      state.deleteRoleLoading = false;
+      state.deleteRoleSuccess = true;
+    },
+
+    deleteRoleError(state, err) {
+      state.deleteRoleLoading = false;
+      state.deleteRoleSuccess = false;
+      state.deleteRoleError = err;
     },
     getModulesBegin(state) {
       state.getModulesLoading = true;
@@ -152,6 +171,20 @@ export default {
         }
       } catch (err) {
         commit("getRoleError", err);
+      }
+    },
+    async deleteRolesFromList({ commit }, id) {
+      try {
+        commit("deleteRoleBegin");
+        const response = await DataService.delete(
+          `${urls.REMOVE_ROLE_FROM_PLATFORM}?RoleId=${id}`
+        );
+
+        if (response.status === 200) {
+          commit("deleteRoleSuccess", response.data);
+        }
+      } catch (err) {
+        commit("deleteRoleError", err);
       }
     },
 

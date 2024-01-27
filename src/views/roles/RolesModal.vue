@@ -24,12 +24,37 @@
           class="grid grid-cols-2 gap-x-8 max-h-[400px] overflow-y-auto overflow-x-auto"
         >
           <ul class="border border-gray-200 rounded-lg overflow-x-auto p-6">
-            <p class="mb-3 font-medium">Modules</p>
+            <p class="mb-3 font-medium cursor-pointer">Modules</p>
             <div v-if="modulesLoading || permissionsLoading" class="">
               ...Loading
             </div>
             <li v-for="n in modules" :key="n.name">
-              <div class="capitalize mb-1" @click="handleIndex(n.name)">
+              <div
+                class="capitalize mb-1 flex gap-3 items-center"
+                @click="handleIndex(n.name)"
+              >
+                <span
+                  :class="[
+                    selectedIndex.includes(n.name)
+                      ? 'transform rotate-90'
+                      : '',
+                    'mt-[-4px]',
+                  ]"
+                >
+                  <svg
+                    width="9"
+                    height="10"
+                    viewBox="0 0 9 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0.627552 0.912076L8.38375 5.46257L0.564808 9.90439L0.627552 0.912076Z"
+                      fill="#3B444C"
+                    />
+                  </svg>
+                </span>
+
                 {{ n.name }}
               </div>
               <div class="pl-2" v-if="selectedIndex.includes(n.name)">
