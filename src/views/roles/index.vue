@@ -38,6 +38,9 @@
         >
           <template v-slot:table-row="props">
             <span v-if="props.column.field == 'action'">
+              <span class="cursor-opointer" @click="openDelete(props.row.id)">
+                <Icon icon="heroicons-outline:trash"
+              /></span>
               <!-- <Dropdown classMenuItems=" w-[140px]">
                 <span class="text-xl"
                   ><Icon icon="heroicons-outline:dots-vertical"
@@ -84,33 +87,73 @@
       </div>
     </Card>
     <RolesModal />
+    <Modal
+      title="Delete Role"
+      label="Small modal"
+      labelClass="btn-outline-danger"
+      ref="modal"
+      sizeClass="max-w-md"
+      themeClass="bg-danger-500"
+    >
+      <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+        Are you sure you want to delete this role?
+      </div>
+
+      <template v-slot:footer>
+        <div class="flex gap-x-5">
+          <Button
+            :disabled="deleteLoading"
+            text="Cancel"
+            btnClass="btn-outline-secondary btn-sm"
+            @click="$refs.modal.closeModal()"
+          />
+          <Button
+            text="Delete"
+            :disabled="deleteLoading"
+            :isLoading="deleteLoading"
+            btnClass="btn-danger btn-sm"
+            @click="handleDelete()"
+          />
+        </div>
+      </template>
+    </Modal>
   </div>
 </template>
 <script setup>
+import Icon from "@/components/Icon";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, reactive, onMounted, computed, watch } from "vue";
 import window from "@/mixins/window";
 import RolesModal from "@/views/roles/RolesModal";
+import Modal from "@/components/Modal/Modal";
 import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
+
 // import Pagination from "@/components/Pagination";
 
 onMounted(() => {
   dispatch("getRolesList");
 });
 const { state, dispatch } = useStore();
+const toast = useToast();
 const loading = ref(state.role.getRoleLoading);
+const selectedId = ref("");
+const deleteLoading = computed(() => state.role.deleteRoleLoading);
+const deleteSuccess = computed(() => state.role.deleteRoleSuccess);
+const deleteRoleError = computed(() => state.role.deleteRoleError);
 const roles = computed(() => {
   const list = state?.role?.roles?.map((role) => {
     return {
       name: role.name,
       normalizedName: role.normalizedName,
+      id: role.id,
     };
   });
 
   return list;
 });
-
+const modal = ref(null);
 const type = ref("add");
 const query = reactive({
   pageNumber: 1,
@@ -128,10 +171,30 @@ const columns = [
     label: "Normalized name",
     field: "normalizedName",
   },
-  // {
-  //   label: "Action",
-  //   field: "action",
-  // },
+  {
+    label: "Action",
+    field: "action",
+  },
 ];
-columns;
+const openDelete = (id) => {
+  selectedId.value = id;
+  modal.value.openModal();
+};
+
+const handleDelete = () => {
+  dispatch("deleteRolesFromList", selectedId.value);
+};
+
+watch(deleteSuccess, () => {
+  if (deleteSuccess.value) {
+    toast.success("Role deleted");
+    modal.value.closeModal();
+  }
+});
+
+watch(deleteRoleError, () => {
+  if (deleteRoleError.value) {
+    modal.value.closeModal();
+  }
+});
 </script>

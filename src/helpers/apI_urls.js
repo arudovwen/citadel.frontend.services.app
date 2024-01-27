@@ -20,6 +20,7 @@ export const urls = {
   UPDATE_ROLE: "/Admin/ChangeUserRole",
   CREATE_ROLE_WITH_PERMISSIONS: "/Auth/CreateRoleWithPermissions",
   GET_PLATFORM_ROLES: "/Auth/GetPlatformRoles",
+  REMOVE_ROLE_FROM_PLATFORM: "/Auth/RemoveUserRoleFromPlatform",
 
   //Affinity Groups
   CREATE_AFFINITY_GROUP: "/AffinityGroup/CreateAffinityGroup",
@@ -187,3 +188,6 @@ export const urls = {
   DELETE_EVENT: "/Events/DeleteEventRequest",
   UPDATE_EVENT: "/Events/UpdateRequestForEvent",
 };
+
+// open delete modal
+//set id of item to delete
