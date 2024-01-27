@@ -18,19 +18,13 @@
           v-model.value="roleName"
           :error="roleNameError"
         />
-        <!-- 
-    <Textarea
-      label="Role description"
-      type="text"
-      placeholder="Enter role description"
-      name="title"
-      v-model.value="roleDesc"
-      :error="roleDescError"
-    /> -->
 
         <div class="grid grid-cols-2 gap-x-8">
           <ul class="border border-gray-200 rounded-lg overflow-x-auto p-6">
             <p class="mb-3 font-medium">Modules</p>
+            <div v-if="modulesLoading || permissionsLoading" class="">
+              ...Loading
+            </div>
             <li v-for="n in modules" :key="n.name">
               <div class="capitalize mb-1" @click="handleIndex(n.name)">
                 {{ n.name }}
@@ -46,7 +40,7 @@
                         v-model="selectedPermissions"
                         type="checkbox"
                       />
-                      {{ p }}
+                      {{ p.displayValue }}
                     </label>
                   </li>
                 </ul>
@@ -61,7 +55,7 @@
                   <label
                     class="uppercase mb-1 text-sm flex gap-x-1 items-center"
                   >
-                    {{ p }}
+                    {{ p.displayValue }}
                   </label>
                 </li>
               </ul>
@@ -84,7 +78,7 @@
 <script setup>
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted, watchEffect } from "vue";
 import Textinput from "@/components/Textinput";
 // import { useStore } from "vuex";
 import * as yup from "yup";
@@ -93,14 +87,21 @@ import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 
 import { computed, watch } from "vue";
+onMounted(() => {
+  dispatch("getModulesList");
+  dispatch("getPermissionsList");
+});
 
 const { state, dispatch } = useStore();
 const success = computed(() => state.role.addRoleSuccess);
-const loading = computed(() => state.member.addRoleLoading);
+const loading = computed(() => state.role.addRoleLoading);
+const modulesLoading = computed(() => state.role.getModulesLoading);
+const permissionsLoading = computed(() => state.role.getPermissionsLoading);
+const modulesList = computed(() => state.role.modules);
+const permissionsList = computed(() => state.role.permissions);
 const toast = useToast();
 const schema = yup.object({
-  roleName: yup.string().required("Nmae is required"),
-  roleDesc: yup.string().required("Please provide a description"),
+  roleName: yup.string().required("Name is required"),
   selectedPermissions: yup.array(),
 });
 
@@ -113,28 +114,29 @@ function handleIndex(index) {
   }
 }
 
-const modules = [
-  {
-    name: "Module 1",
-    permissions: [
-      "CAN_VIEW_MODUL_1",
-      "CAN_DELETE_MODULE_1",
-      "CAN_CREATE_MODULE_1",
-    ],
-  },
-  {
-    name: "Module 2",
-    permissions: [
-      "CAN_VIEW_MODULE_2",
-      "CAN_DELETE_MODULE_2",
-      "CAN_CREATE_MODULE_2",
-    ],
-  },
-];
+const modules = ref([]);
+
+// const modules = [
+//   {
+//     name: "Module 1",
+//     permissions: [
+//       "CAN_VIEW_MODUL_1",
+//       "CAN_DELETE_MODULE_1",
+//       "CAN_CREATE_MODULE_1",
+//     ],
+//   },
+//   {
+//     name: "Module 2",
+//     permissions: [
+//       "CAN_VIEW_MODULE_2",
+//       "CAN_DELETE_MODULE_2",
+//       "CAN_CREATE_MODULE_2",
+//     ],
+//   },
+// ];
 
 const formData = reactive({
   roleName: "",
-  roleDesc: "",
   selectedPermissions: [],
 });
 const { handleSubmit } = useForm({
@@ -145,7 +147,18 @@ const { value: roleName, errorMessage: roleNameError } = useField("roleName");
 const { value: selectedPermissions } = useField("selectedPermissions");
 
 const addRole = handleSubmit((values) => {
-  console.log("🚀 ~ file: index.vue:126 ~ addRole ~ values:", values);
+  const payload = {
+    roleName: values.roleName,
+    platformPermissions: values?.selectedPermissions?.map((p) => {
+      return {
+        moduleName: p.moduleName,
+
+        accessRight: p.accessRight,
+      };
+    }),
+  };
+  console.log("🚀 ~ file: index.vue:126 ~ addRole ~ values:", payload);
+  dispatch("addRole", payload);
 });
 const closeRoleModal = () => {
   dispatch("closeRoleModal");
@@ -153,13 +166,60 @@ const closeRoleModal = () => {
 
 watch(success, () => {
   if (success.value) {
-    toast.success("Successfully Created");
-    dispatch("getRones");
+    toast.success("Successfully Created Role");
+    dispatch("getRolesList");
   }
 
   closeRoleModal();
+});
 
-  // getAllroles();
+watchEffect(() => {
+  if (modulesList.value?.length > 0 && permissionsList.value?.length > 0) {
+    modules.value = modulesList.value?.map((module) => {
+      return {
+        name: module,
+        permissions: permissionsList.value?.map((permission) => {
+          return {
+            moduleName: module,
+            accessRight: permission,
+            displayValue: `${permission.toUpperCase()}_${module
+              .toUpperCase()
+              .replace(/\s+/g, "_")}`,
+          };
+        }),
+      };
+    });
+  }
 });
 </script>
 <style lang=""></style>
+
+<!-- 
+// {
+//   "roleName": "string",
+//   "platformPermissions": [
+//     {
+//       "createdBy": "string",
+//       "modifiedBy": "string",
+//       "id": 0,
+//       "moduleName": "string",
+//       "roleId": "string",
+//       "accessRight": "string"
+//     }
+//   ]
+// }
+\
+
+
+when i click on a permission i want to add the modulename, accessright
+
+
+s
+
+
+
+
+
+
+
+// -->

@@ -13,11 +13,19 @@ export default {
     getRoleLoading: false,
     getRoleSuccess: false,
     getRoleError: null,
+    getModulesLoading: false,
+    getModulesSuccess: false,
+    getModulesError: null,
+    getPermissionsLoading: false,
+    getPermissionsSuccess: false,
+    getPermissionsError: null,
     editRoleLoading: false,
     editRoleSuccess: false,
     editRoleError: null,
     role: null,
     roles: [],
+    modules: [],
+    permissions: [],
     total: 0,
   },
   getters: {
@@ -40,6 +48,40 @@ export default {
       state.getRoleLoading = false;
       state.getRoleSuccess = false;
       state.getRoleError = err;
+    },
+    getModulesBegin(state) {
+      state.getModulesLoading = true;
+      state.getModulesSuccess = false;
+      state.getModulesError = null;
+    },
+
+    getModulesSuccess(state, data) {
+      state.getModulesLoading = false;
+      state.getModulesSuccess = true;
+      state.modules = data?.data;
+    },
+
+    getModulesError(state, err) {
+      state.getModulesLoading = false;
+      state.getModulesSuccess = false;
+      state.getModulesError = err;
+    },
+    getPermissionsBegin(state) {
+      state.getPermissionsLoading = true;
+      state.getPermissionsSuccess = false;
+      state.getPermissionsError = null;
+    },
+
+    getPermissionsSuccess(state, data) {
+      state.getPermissionsLoading = false;
+      state.getPermissionsSuccess = true;
+      state.permissions = data?.data;
+    },
+
+    getPermissionsError(state, err) {
+      state.getPermissionsLoading = false;
+      state.getPermissionsSuccess = false;
+      state.getPermissionsError = err;
     },
     addRoleBegin(state) {
       state.addRoleLoading = true;
@@ -87,14 +129,17 @@ export default {
   actions: {
     async addRole({ commit }, data) {
       try {
-        commit("addZoneBegin");
-        const response = await DataService.post(urls.CREATE_ZONE, data);
+        commit("addRoleBegin");
+        const response = await DataService.post(
+          urls.CREATE_ROLE_WITH_PERMISSIONS,
+          data
+        );
 
         if (response.status === 200) {
-          commit("addZoneSuccess");
+          commit("addRoleSuccess");
         }
       } catch (err) {
-        commit("addZoneError", err);
+        commit("addRoleError", err);
       }
     },
     async getRolesList({ commit }) {
@@ -107,6 +152,33 @@ export default {
         }
       } catch (err) {
         commit("getRoleError", err);
+      }
+    },
+
+    async getModulesList({ commit }) {
+      try {
+        commit("getModulesBegin");
+        const response = await DataService.get(`${urls.GET_PLATFORM_MODULES}`);
+
+        if (response.status === 200) {
+          commit("getModulesSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getModulesError", err);
+      }
+    },
+    async getPermissionsList({ commit }) {
+      try {
+        commit("getRoleBegin");
+        const response = await DataService.get(
+          `${urls.GET_PLATFORM_PERMISSIONS}`
+        );
+
+        if (response.status === 200) {
+          commit("getPermissionsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getPermissionsError", err);
       }
     },
 

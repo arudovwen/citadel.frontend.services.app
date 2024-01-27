@@ -123,34 +123,10 @@ const columns = [
     label: "Name",
     field: "name",
   },
-  {
-    label: "Action",
-    field: "action",
-  },
+  // {
+  //   label: "Action",
+  //   field: "action",
+  // },
 ];
 columns;
 </script>
-
-//
-<!-- 
-// {
-//   "roleName": "string",
-//   "platformPermissions": [
-//     {
-//       "createdBy": "string",
-//       "modifiedBy": "string",
-//       "id": 0,
-//       "moduleName": "string",
-//       "roleId": "string",
-//       "accessRight": "string"
-//     }
-//   ]
-// }
-// put roles into modal
-// get all roles and put it on a table
-// get list of modules
-// get list of permissions
-
-
-
-// -->
