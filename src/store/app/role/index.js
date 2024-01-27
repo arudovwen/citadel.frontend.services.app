@@ -145,7 +145,7 @@ export default {
     async getRolesList({ commit }) {
       try {
         commit("getRoleBegin");
-        const response = await DataService.get(`${urls.GET_USER_ROLES}`);
+        const response = await DataService.get(`${urls.GET_PLATFORM_ROLES}`);
 
         if (response.status === 200) {
           commit("getRoleSuccess", response.data);

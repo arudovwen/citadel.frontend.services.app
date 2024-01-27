@@ -103,7 +103,8 @@ const loading = ref(state.role.getRoleLoading);
 const roles = computed(() => {
   const list = state?.role?.roles?.map((role) => {
     return {
-      name: role,
+      name: role.name,
+      normalizedName: role.normalizedName,
     };
   });
 
@@ -122,6 +123,10 @@ const columns = [
   {
     label: "Name",
     field: "name",
+  },
+  {
+    label: "Normalized name",
+    field: "normalizedName",
   },
   // {
   //   label: "Action",
