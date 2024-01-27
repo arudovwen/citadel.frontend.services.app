@@ -102,17 +102,25 @@
         />
       </div>
 
-      <div>
+      <div class="relative">
         <Textinput
           :disabled="true"
           label="Affinity Group"
-          type="text"
-          placeholder="Affinity group"
           name="Affinity Group"
-          v-model="affinityGroup"
-          :error="affinityGroupError"
           classInput="h-[40px]"
         />
+
+        <div
+          class="absolute px-3 h-[40px] border bottom-0 left-0 border-gray-200 rounded-[4px] w-full flex gap-2 overflow-x-auto"
+        >
+          <div
+            class="my-auto h-[30px] px-2 flex items-center justify-center text-xs rounded-lg bg-gray-100"
+            v-for="group in affinityGroup"
+            :key="group"
+          >
+            {{ group }}
+          </div>
+        </div>
       </div>
 
       <div>
@@ -332,8 +340,7 @@ const {
 const { errorMessage: cihZoneError } = useField("cihZone");
 const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
   useField("mountainOfInfluence");
-const { value: affinityGroup, errorMessage: affinityGroupError } =
-  useField("affinityGroup");
+const { value: affinityGroup } = useField("affinityGroup");
 const { value: cihRole, errorMessage: cihRoleError } = useField("cihRole");
 
 const { errorMessage: departmentError } = useField("department");

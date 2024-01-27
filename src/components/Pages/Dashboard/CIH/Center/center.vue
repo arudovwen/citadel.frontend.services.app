@@ -92,7 +92,7 @@ const content = [
 ];
 const detail = computed(() => state.profile.churchAffiliationsData);
 onMounted(() => {
-  dispatch("getChurchAffiliationsById", state.auth.userData.id);
+  dispatch("getChurchAffiliationsById", state.auth.userData?.id);
 });
 provide("detail", detail);
 </script>

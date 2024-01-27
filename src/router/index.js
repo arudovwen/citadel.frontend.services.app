@@ -28,13 +28,6 @@ function guardAuth(to, from, next) {
 }
 const routes = [
   {
-    path: "/roles",
-    name: "Roles",
-    component: () => import("@/views/roles/index.vue"),
-    meta: { auth: true },
-    beforeEnter: guardAuth,
-  },
-  {
     path: "/",
     name: "Login",
     component: () => import("@/views/auth/login/index.vue"),
@@ -149,6 +142,19 @@ const routes = [
           roles: ["administrator", "hod", "inspectorate"],
           subroles: [],
         },
+      },
+      {
+        path: "/roles-management",
+        name: "Roles",
+        component: () => import("@/views/roles/index.vue"),
+        meta: {
+          // auth: true,
+          activeName: "roles-management",
+          roles: ["administrator"],
+          subroles: [],
+        },
+
+        // beforeEnter: guardAuth,
       },
       {
         path: "/users-management",
@@ -853,6 +859,14 @@ router.beforeEach((to, from, next) => {
         store?.state?.auth?.userData?.cihRole?.toLowerCase()
       )
     ) {
+      console.log(
+        "this is " +
+          to?.meta?.roles?.includes(
+            store?.state?.auth?.userData?.userRole?.toLowerCase()
+          )
+      );
+      console.log(to?.meta?.roles);
+      console.log(store?.state?.auth?.userData?.userRole?.toLowerCase());
       next();
     } else {
       toast.error("You are not authorised");
