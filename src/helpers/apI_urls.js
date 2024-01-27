@@ -19,6 +19,7 @@ export const urls = {
   BULK_CONVERT_FIRST_TO_MEMBER: "/Admin/BulkConvertFirstTimersToMembers",
   UPDATE_ROLE: "/Admin/ChangeUserRole",
   CREATE_ROLE_WITH_PERMISSIONS: "/Auth/CreateRoleWithPermissions",
+  GET_PLATFORM_ROLES: "/Auth/GetPlatformRoles",
 
   //Affinity Groups
   CREATE_AFFINITY_GROUP: "/AffinityGroup/CreateAffinityGroup",
