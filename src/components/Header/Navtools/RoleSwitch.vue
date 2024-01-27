@@ -66,8 +66,13 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/vue";
+// import { useStore } from "vuex";
 // import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
-
+// onMounted(() => {
+//   console.log(JSON.stringify(computedUerData.value));
+// });
+// const { state } = useStore();
+// const computedUerData = computed(() => state?.auth?.userData);
 const roleOptions = [
   {
     value: "member",

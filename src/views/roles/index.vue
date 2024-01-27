@@ -1,122 +1,156 @@
 <template>
-  <form @submit.prevent="addRole" class="max-w-[60rem] p-6 space-y-4 bg-white">
-    <Textinput
-      label="Role name"
-      type="text"
-      placeholder="Enter role name"
-      name="title"
-      v-model.value="roleName"
-      :error="roleNameError"
-    />
-
-    <Textarea
-      label="Role description"
-      type="text"
-      placeholder="Enter role description"
-      name="title"
-      v-model.value="roleDesc"
-      :error="roleDescError"
-    />
-
-    <div class="grid grid-cols-2 gap-x-8">
-      <ul class="border border-gray-200 rounded-lg overflow-x-auto p-6">
-        <p class="mb-3 font-medium">Modules</p>
-        <li v-for="n in modules" :key="n.name">
-          <div class="capitalize mb-1" @click="handleIndex(n.name)">
-            {{ n.name }}
-          </div>
-          <div class="pl-2" v-if="selectedIndex.includes(n.name)">
-            <ul>
-              <li v-for="p in n.permissions" :key="p">
-                <label class="uppercase mb-1 text-sm flex gap-x-1 items-center">
-                  <input
-                    :value="p"
-                    v-model="selectedPermissions"
-                    type="checkbox"
-                  />
-                  {{ p }}
-                </label>
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-      <div class="border border-gray-200 rounded-lg p-6">
-        <p class="mb-3 font-medium">Selected Permissions</p>
-        <ul>
-          <ul>
-            <li v-for="p in selectedPermissions" :key="p">
-              <label class="uppercase mb-1 text-sm flex gap-x-1 items-center">
-                {{ p }}
-              </label>
-            </li>
-          </ul>
-        </ul>
+  <div>
+    <Card noborder>
+      <div class="md:flex pb-6 items-center justify-between">
+        <div class="flex rounded-[6px] text-sm overflow-hidden gap-x-4"></div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
+          <Button
+            icon="ri:user-add-line"
+            text="Add role"
+            btnClass=" btn-primary font-normal btn-sm "
+            iconClass="text-lg"
+            @click="
+              () => {
+                type = 'add';
+                $store.dispatch('openRoleModal');
+              }
+            "
+          />
+        </div>
       </div>
-    </div>
-
-    <div class="text-right mt-8">
-      <Button text="Create role" btnClass="btn-dark"></Button>
-    </div>
-  </form>
+      <div class="-mx-6">
+        <vue-good-table
+          :columns="columns"
+          mode="remote"
+          styleClass="vgt-table"
+          :isLoading="loading"
+          :rows="roles || []"
+          :sort-options="{
+            enabled: false,
+          }"
+          :pagination-options="{
+            enabled: true,
+            perPage: query.pageSize,
+          }"
+        >
+          <template v-slot:table-row="props">
+            <span v-if="props.column.field == 'action'">
+              <!-- <Dropdown classMenuItems=" w-[140px]">
+                <span class="text-xl"
+                  ><Icon icon="heroicons-outline:dots-vertical"
+                /></span>
+                <template v-slot:menus>
+                  <MenuItem v-for="(item, i) in actions" :key="i">
+                    <div
+                      @click="item.doit(props.row)"
+                      :class="`
+                
+                  ${
+                    item.name === 'delete'
+                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
+                      : 'hover:bg-slate-900 hover:text-white'
+                  }
+                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
+                    >
+                      <span class="text-base"><Icon :icon="item.icon" /></span>
+                      <span>{{ item.name }}</span>
+                    </div>
+                  </MenuItem>
+                </template>
+              </Dropdown> -->
+            </span>
+          </template>
+          <template #pagination-bottom>
+            <div class="py-4 px-3">
+              <!-- <Pagination
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="pageRange"
+                @page-changed="query.pageNumber = $event"
+                :perPageChanged="perPage"
+                enableSearch
+                enableSelect
+                :options="options"
+              >
+                >
+              </Pagination> -->
+            </div>
+          </template>
+        </vue-good-table>
+      </div>
+    </Card>
+    <RolesModal />
+  </div>
 </template>
 <script setup>
-import { ref, reactive } from "vue";
-import { useField, useForm } from "vee-validate";
+import Card from "@/components/Card";
 import Button from "@/components/Button";
-import Textarea from "@/components/Textarea";
-import Textinput from "@/components/Textinput";
-// import { useStore } from "vuex";
-import * as yup from "yup";
+import { ref, reactive, onMounted, computed } from "vue";
+import window from "@/mixins/window";
+import RolesModal from "@/views/roles/RolesModal";
+import { useStore } from "vuex";
+// import Pagination from "@/components/Pagination";
 
-const selectedIndex = ref([]);
-function handleIndex(index) {
-  if (selectedIndex.value.includes(index)) {
-    selectedIndex.value = selectedIndex.value.filter((i) => i != index);
-  } else {
-    selectedIndex.value.push(index);
-  }
-}
+onMounted(() => {
+  dispatch("getRolesList");
+});
+const { state, dispatch } = useStore();
+const loading = ref(state.role.getRoleLoading);
+const roles = computed(() => {
+  const list = state?.role?.roles?.map((role) => {
+    return {
+      name: role,
+    };
+  });
 
-const modules = [
+  return list;
+});
+
+const type = ref("add");
+const query = reactive({
+  pageNumber: 1,
+  pageSize: 25,
+  searchParameter: "",
+  isFirstTimer: false,
+  sortOrder: "",
+});
+const columns = [
   {
-    name: "Module 1",
-    permissions: [
-      "CAN_VIEW_MODUL_1",
-      "CAN_DELETE_MODULE_1",
-      "CAN_CREATE_MODULE_1",
-    ],
+    label: "Name",
+    field: "name",
   },
   {
-    name: "Module 2",
-    permissions: [
-      "CAN_VIEW_MODULE_2",
-      "CAN_DELETE_MODULE_2",
-      "CAN_CREATE_MODULE_2",
-    ],
+    label: "Action",
+    field: "action",
   },
 ];
-
-const schema = yup.object({
-  roleName: yup.string().required("Nmae is required"),
-  roleDesc: yup.string().required("Please provide a description"),
-  selectedPermissions: yup.array(),
-});
-
-const formData = reactive({
-  roleName: "",
-  roleDesc: "",
-  selectedPermissions: [],
-});
-const { handleSubmit } = useForm({
-  validationSchema: schema,
-  initialValues: formData,
-});
-const { value: roleName, errorMessage: roleNameError } = useField("roleName");
-const { value: roleDesc, errorMessage: roleDescError } = useField("roleDesc");
-const { value: selectedPermissions } = useField("selectedPermissions");
-
-const addRole = handleSubmit((values) => {
-  console.log("🚀 ~ file: index.vue:126 ~ addRole ~ values:", values);
-});
+columns;
 </script>
+
+//
+<!-- 
+// {
+//   "roleName": "string",
+//   "platformPermissions": [
+//     {
+//       "createdBy": "string",
+//       "modifiedBy": "string",
+//       "id": 0,
+//       "moduleName": "string",
+//       "roleId": "string",
+//       "accessRight": "string"
+//     }
+//   ]
+// }
+// put roles into modal
+// get all roles and put it on a table
+// get list of modules
+// get list of permissions
+
+
+
+// -->
