@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div className="">
     <Modal
       :activeModal="state.role.roleModal"
       @close="closeRoleModal"
       title="Create Role"
+      sizeClass="max-w-[800px]"
       centered
     >
       <form
@@ -19,7 +20,9 @@
           :error="roleNameError"
         />
 
-        <div class="grid grid-cols-2 gap-x-8">
+        <div
+          class="grid grid-cols-2 gap-x-8 max-h-[400px] overflow-y-auto overflow-x-auto"
+        >
           <ul class="border border-gray-200 rounded-lg overflow-x-auto p-6">
             <p class="mb-3 font-medium">Modules</p>
             <div v-if="modulesLoading || permissionsLoading" class="">
@@ -47,7 +50,9 @@
               </div>
             </li>
           </ul>
-          <div class="border border-gray-200 rounded-lg p-6">
+          <div
+            class="border border-gray-200 rounded-lg p-6 max-h-[400px] overflow-y-auto overflow-x-auto min-h-full"
+          >
             <p class="mb-3 font-medium">Selected Permissions</p>
             <ul>
               <ul>
@@ -93,7 +98,9 @@ onMounted(() => {
 });
 
 const { state, dispatch } = useStore();
+const isOpen = computed(() => state.role.roleModal);
 const success = computed(() => state.role.addRoleSuccess);
+const err = computed(() => state.role.addRoleError);
 const loading = computed(() => state.role.addRoleLoading);
 const modulesLoading = computed(() => state.role.getModulesLoading);
 const permissionsLoading = computed(() => state.role.getPermissionsLoading);
@@ -139,7 +146,7 @@ const formData = reactive({
   roleName: "",
   selectedPermissions: [],
 });
-const { handleSubmit } = useForm({
+const { handleSubmit, resetForm } = useForm({
   validationSchema: schema,
   initialValues: formData,
 });
@@ -171,6 +178,17 @@ watch(success, () => {
   }
 
   closeRoleModal();
+});
+
+watch(err, () => {
+  resetForm();
+  closeRoleModal();
+});
+
+watch(isOpen, () => {
+  if (!isOpen.value) {
+    resetForm();
+  }
 });
 
 watchEffect(() => {
