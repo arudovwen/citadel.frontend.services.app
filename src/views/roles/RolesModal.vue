@@ -35,9 +35,7 @@
               >
                 <span
                   :class="[
-                    selectedIndex.includes(n.name)
-                      ? 'transform rotate-90'
-                      : '',
+                    selectedIndex.includes(n.name) ? 'transform rotate-90' : '',
                     'mt-[-4px]',
                   ]"
                 >

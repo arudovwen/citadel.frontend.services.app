@@ -71,14 +71,14 @@ import { useStore } from "vuex";
 
 const { state, dispatch } = useStore();
 onMounted(() => {
-  dispatch("getRoles");
+  dispatch("getRolesList");
 });
 const loading = computed(() => state.member.addloading);
 const roles = computed(() =>
-  state.member.roles
-    .filter((i) => i.toLowerCase() !== "firsttimers")
+  state?.role?.roles
+    ?.filter((i) => i.name.toLowerCase() !== "firsttimers")
     .map((i) => {
-      return { value: i, label: i };
+      return { value: i.name, label: i.name };
     })
 );
 const formData = reactive({
