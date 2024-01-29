@@ -33,7 +33,7 @@
             />
           </export-excel>
           <Button
-            icon="heroicons-outline:plusplus"
+          icon="heroicons-outline:plus-sm"
             text="Add role"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
