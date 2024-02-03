@@ -178,4 +178,11 @@ export const urls = {
   CHANGE_EVENT_STATUS: "/Events/ApproveOrRejectEvent",
   DELETE_EVENT: "/Events/DeleteEventRequest",
   UPDATE_EVENT: "/Events/UpdateRequestForEvent",
+
+  // Cihactivity
+  CREATE_ACTIVITY_REPORT: "/CreateCIHActivity",
+  UPDATE_ACTIVITY_REPORT: "/UpdateCIHActivity",
+  GET_ACTIVITY_REPORTS: "/GetAllCIHActivity",
+  GET_ACTIVITY_REPORT: "/GetCIHActivityById",
+  DELETE_ACTIVITY_REPORT: "/DeleteCIHActivity",
 };

@@ -11,6 +11,13 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
+          <Select
+            label=""
+            :options="sortFilters"
+            v-model="query.sortOrder"
+            placeholder="Sort by"
+            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
+          />
           <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
@@ -79,7 +86,7 @@
           "
           mode="remote"
           styleClass=" vgt-table  centered "
-          :rows="advancedTable"
+          :rows="reports"
           :sort-options="{
             enabled: false,
           }"
@@ -131,14 +138,23 @@
                 >{{ props.row.customer.name }}</span
               >
             </span>
-            <span v-if="props.column.field == 'order'" class="font-medium">
-              {{ "#" + props.row.order }}
+            <span
+              v-if="props.column.field == 'totalAttendee'"
+              class="font-medium"
+            >
+              {{ props.row.totalAttendee || "-" }}
+            </span>
+            <span v-if="props.column.field == 'zoneName'" class="font-medium">
+              {{ props.row.zoneName || "-" }}
+            </span>
+            <span v-if="props.column.field == 'centerName'" class="font-medium">
+              {{ props.row.centerName || "-" }}
             </span>
             <span
-              v-if="props.column.field == 'date'"
+              v-if="props.column.field == 'activityDate'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ props.row.date }}
+              {{ moment(props.row.activityDate).format("lll") }}
             </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
@@ -194,7 +210,7 @@
           <template #pagination-bottom>
             <div class="py-4 px-3">
               <Pagination
-                :total="0"
+                :total="total"
                 :current="query.pageNumber"
                 :per-page="query.pageSize"
                 :pageRange="5"
@@ -214,6 +230,36 @@
   </div>
 
   <Modal
+    title="Delete report"
+    label="Small modal"
+    labelClass="btn-outline-danger"
+    ref="modal"
+    sizeClass="max-w-md"
+    themeClass="bg-danger-500"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure you want to delete this report?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          :disabled="deletereportloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Delete"
+          :isLoading="deletereportloading"
+          :disabled="deletereportloading"
+          btnClass="btn-danger btn-sm"
+          @click="handleDelete"
+        />
+      </div>
+    </template>
+  </Modal>
+  <Modal
     :title="
       type === 'add'
         ? `Create ${active} report`
@@ -227,15 +273,18 @@
   >
     <AddReport v-if="type === 'add' && active === 'activity'" />
     <AddInspectionReport v-if="type === 'add' && active === 'inspection'" />
-    <EditReport v-if="type === 'edit report'" />
-    <ViewReport v-if="type === 'view report'" />
+    <EditReport v-if="type === 'edit'" :id="id" />
+    <ViewReport v-if="type === 'view'" :id="id" />
   </Modal>
 </template>
 <script>
+import Select from "@/components/Select";
 import { useStore } from "vuex";
-import { computed, ref, reactive } from "vue";
+import { computed, ref, reactive, watch, onMounted } from "vue";
+import moment from "moment";
 import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
+import { useToast } from "vue-toastification";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -249,8 +298,9 @@ import AddReport from "./addreport.vue";
 import AddInspectionReport from "./addinspectionreport.vue";
 import EditReport from "./editreport.vue";
 import ViewReport from "./preview.vue";
-
+import { debounce } from "lodash";
 import window from "@/mixins/window";
+
 export default {
   mixins: [window],
   components: {
@@ -263,6 +313,7 @@ export default {
     Modal,
     Dropdown,
     Icon,
+    Select,
     Card,
     MenuItem,
     Button,
@@ -274,9 +325,7 @@ export default {
   data() {
     return {
       advancedTable,
-      current: 1,
-      perpage: 10,
-      pageRange: 5,
+
       searchParameter: "",
       type: "",
       id: null,
@@ -296,12 +345,11 @@ export default {
       },
       actions: [
         {
-          name: "view report",
+          name: "view",
         },
         {
-          name: "edit report",
+          name: "edit",
         },
-
         {
           name: "delete",
         },
@@ -327,38 +375,38 @@ export default {
       activityColumns: [
         {
           label: "Date",
-          field: "date",
+          field: "activityDate",
         },
         {
           label: "Zone",
-          field: "zone",
+          field: "zoneName",
         },
         {
           label: "Center",
-          field: "center",
+          field: "centerName",
         },
         {
           label: "Activity Name",
-          field: "name",
+          field: "activityName",
         },
         {
           label: "Activity Type",
-          field: "type",
+          field: "activityType",
         },
 
         {
           label: "Venue",
-          field: "venue",
+          field: "activityVenue",
         },
 
         {
           label: "Attendees",
-          field: "attendees",
+          field: "totalAttendee",
         },
 
         {
           label: "State of flock",
-          field: "state_of_flock",
+          field: "stateOfTheFlock",
         },
 
         {
@@ -388,6 +436,9 @@ export default {
     };
   },
   methods: {
+    handleDelete() {
+      this.$store.dispatch("deleteActivityReport", this.id);
+    },
     generateAction(name, id) {
       this.id = id;
 
@@ -396,6 +447,7 @@ export default {
           name: "view",
           icon: "heroicons-outline:eye",
           doit: () => {
+            this.type = name;
             this.$refs.modalChange.openModal();
           },
         },
@@ -403,6 +455,7 @@ export default {
           name: "edit",
           icon: "heroicons:pencil-square",
           doit: () => {
+            this.type = name;
             this.$refs.modalChange.openModal();
           },
         },
@@ -420,15 +473,63 @@ export default {
     },
   },
   setup() {
+    const sortFilters = [
+      {
+        label: "Default",
+        value: "",
+      },
+
+      {
+        label: "Activity name",
+        value: "activityName",
+      },
+
+      {
+        label: "Activity venue",
+        value: "activityVenue",
+      },
+      {
+        label: "Activity type",
+        value: "activityType",
+      },
+      {
+        label: "Center name",
+        value: "centerName",
+      },
+      {
+        label: "Zone name",
+        value: "zoneName",
+      },
+    ];
+
+    const modalChange = ref(null);
+    const modal = ref(null);
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
       searchParameter: "",
+      sortOrder: "",
     });
-    const { state } = useStore();
+    const toast = useToast();
+    const { state, dispatch } = useStore();
+    const success = computed(() => state.report.addsuccess);
+    const updatereportsuccess = computed(
+      () => state.report.updatereportsuccess
+    );
     const loading = computed(() => state.report.loading);
+    const total = computed(() => state.report.total);
+    const deletereportloading = computed(
+      () => state.report.deletereportloading
+    );
+    const deletereportsuccess = computed(
+      () => state.report.deletereportsuccess
+    );
+    const reports = computed(() => state.report.data);
     const active = ref("activity");
 
+    onMounted(() => {
+      dispatch("getActivityReports", query);
+    });
     function handleReports() {
       console.log(
         "🚀 ~ file: centers.vue:415 ~ handleReports ~ handleReports:"
@@ -438,6 +539,45 @@ export default {
       query.pageNumber = 1;
       query.pageSize = currentPerPage;
     }
+    watch(success, () => {
+      if (success.value) {
+        dispatch("getActivityReports", query);
+        toast.success("Report added");
+        modalChange.value.closeModal();
+      }
+    });
+    watch(updatereportsuccess, () => {
+      if (updatereportsuccess.value) {
+        dispatch("getActivityReports", query);
+        toast.success("Report updated");
+        modalChange.value.closeModal();
+      }
+    });
+
+    watch(deletereportsuccess, () => {
+      if (deletereportsuccess.value) {
+        dispatch("getActivityReports", query);
+        toast.success("Report deleted");
+        modal.value.closeModal();
+      }
+    });
+    // Define a debounce delay (e.g., 500 milliseconds)
+    const debounceDelay = 800;
+    const debouncedSearch = debounce((searchValue) => {
+      dispatch("getAllCentersTotal", { ...query, name: searchValue });
+    }, debounceDelay);
+    watch(
+      () => query.searchParameter,
+      () => {
+        debouncedSearch(query.searchParameter);
+      }
+    );
+    watch(
+      () => [query.pageNumber, query.pageSize, query.sortOrder],
+      () => {
+        dispatch("getAllCentersTotal", query);
+      }
+    );
     return {
       state,
       handleReports,
@@ -445,6 +585,13 @@ export default {
       active,
       query,
       perPage,
+      modalChange,
+      reports,
+      moment,
+      deletereportloading,
+      modal,
+      sortFilters,
+      total,
     };
   },
 };

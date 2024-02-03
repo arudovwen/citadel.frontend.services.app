@@ -5,14 +5,30 @@
         <div class="">
           <Textinput
             label="Activity Name"
-            v-model="name"
-            :error="nameError"
+            v-model="activityName"
+            :error="activityNameError"
             placeholder="Provide name for activity"
           />
         </div>
-        <FormGroup label="Activity Date" name="date" :error="dateError">
+        <div class="">
+          <Textinput
+            label="Activity Venue"
+            v-model="activityVenue"
+            :error="activityVenueError"
+            placeholder="Provide a venue for activity"
+          />
+        </div>
+        <div class="">
+          <Textinput
+            label="Activity Type"
+            v-model="activityType"
+            :error="activityTypeError"
+            placeholder="Provide a type for activity"
+          />
+        </div>
+        <FormGroup label="Activity Date" name="date" :error="activityDateError">
           <flat-pickr
-            v-model="date"
+            v-model="activityDate"
             class="form-control"
             id="d1"
             placeholder="yyyy, dd M"
@@ -21,90 +37,81 @@
         <div class="">
           <Textinput
             label="State of flocks"
-            v-model="name"
-            :error="nameError"
+            v-model="stateOfTheFlock"
+            :error="stateOfTheFlockError"
             placeholder=""
           />
         </div>
-        <div>
-          <h3 class="text-base font-bold mb-8">Attendance Detail</h3>
-          <div class="flex flex-col md:flex-row gap-8 md:items-start mb-7">
-            <h3 class="text-base font-medium min-w-[150px]">Adults</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="mb-8">
+          <h3 class="text-base font-bold mb-5 mt-6">Attendance Detail</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="">
               <Textinput
-                label="Males"
-                v-model="adultMales"
-                :error="adultMalesError"
+                label="Total adults"
+                v-model="adult"
+                :error="adultError"
                 placeholder="Enter value"
-              />
-              <Textinput
-                label="Females"
-                v-model="adultFemales"
-                :error="adultFemalesError"
-                placeholder="Enter value"
+                type="number"
               />
             </div>
-          </div>
-          <div class="flex flex-col md:flex-row gap-8 md:items-start mb-7">
-            <h3 class="text-base font-medium min-w-[150px]">Youths</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="">
               <Textinput
-                label="Males"
-                v-model="youthMales"
-                :error="youthMalesError"
+                label="Total Youths"
+                v-model="youth"
+                :error="youthError"
                 placeholder="Enter value"
-              />
-              <Textinput
-                label="Females"
-                v-model="youthFemales"
-                :error="youthFemalesError"
-                placeholder="Enter value"
+                type="number"
               />
             </div>
-          </div>
-          <div class="flex flex-col md:flex-row gap-8 md:items-start mb-7">
-            <h3 class="text-base font-medium min-w-[150px]">Teenagers</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="">
               <Textinput
-                label="Males"
-                v-model="teenagerMales"
-                :error="teenagerMalesError"
+                label="Total teenagers"
+                v-model="teenager"
+                :error="teenagerError"
                 placeholder="Enter value"
-              />
-              <Textinput
-                label="Females"
-                v-model="teenagerFemales"
-                :error="teenagerFemalesError"
-                placeholder="Enter value"
+                type="number"
               />
             </div>
-          </div>
-          <div class="flex flex-col md:flex-row gap-8 md:items-start mb-7">
-            <h3 class="text-base font-medium min-w-[150px]">Children</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="">
               <Textinput
-                label="Males"
-                v-model="childrenMales"
-                :error="childrenMalesError"
+                label="Total children"
+                v-model="children"
+                :error="childrenError"
                 placeholder="Enter value"
+                type="number"
               />
+            </div>
+            <div class="">
               <Textinput
-                label="Females"
-                v-model="childrenFemales"
-                :error="childrenFemalesError"
+                label="Total males"
+                v-model="male"
+                :error="maleError"
                 placeholder="Enter value"
+                type="number"
+              />
+            </div>
+            <div class="">
+              <Textinput
+                label="Total females"
+                v-model="female"
+                :error="femaleError"
+                placeholder="Enter value"
+                type="number"
               />
             </div>
           </div>
         </div>
         <FormGroup
-          label="Provide a summary"
-          name="summary"
-          :error="summaryError"
+          label="Provide a summaryOfEvent"
+          name="summaryOfEvent"
+          :error="summaryOfEventError"
         >
           <ckeditor
             :editor="editor"
-            v-model="summary"
+            v-model="summaryOfEvent"
             :config="editorConfig"
             class="h-[400px]"
           ></ckeditor>
@@ -112,21 +119,32 @@
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Submit" btnClass="btn-dark" />
+        <Button
+          type="submit"
+          text="Submit"
+          btnClass="btn-dark"
+          :isLoading="loading"
+          :disabled="loading"
+        />
       </div>
     </Card>
   </form>
 </template>
 <script setup>
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { reactive } from "vue";
+import { reactive, computed } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
+import { useStore } from "vuex";
+// import moment from "moment";
 
+// const config = { enableTime: true };
+const { state, dispatch } = useStore();
+const loading = computed(() => state.report.loading);
 const editor = ClassicEditor;
 const editorConfig = {
   toolbar: {
@@ -152,65 +170,56 @@ const editorConfig = {
   },
 };
 const formData = reactive({
-  date: "",
-  type: "",
+  activityDate: "",
+  activityType: "",
+  activityVenue: "",
   center: "",
   zone: "",
-  state_of_flock: "",
-  summary: "",
-  name: "",
+  stateOfTheFlock: "",
+  summaryOfEvent: "",
+  activityName: "",
   attendance: {
-    adults: {
-      total: null,
-      males: null,
-      females: null,
-    },
-    youths: {
-      total: null,
-      males: null,
-      females: null,
-    },
-
-    teenagers: {
-      total: null,
-      males: null,
-      females: null,
-    },
-    children: {
-      total: null,
-      males: null,
-      females: null,
-    },
+    adult: null,
+    youth: null,
+    teenager: null,
+    children: null,
+    male: null,
+    female: null,
   },
 });
 const formDataSchema = Yup.object().shape({
-  date: Yup.date()
+  activityDate: Yup.date()
     .typeError("Please enter a valid date")
     .required("Date is required"),
-  type: Yup.string().required("Type is required"),
-  center: Yup.string().required("Center is required"),
-  zone: Yup.string().required("Zone is required"),
-  state_of_flock: Yup.string().required("State of Flock is required"),
-  summary: Yup.string().required("Summary is required"),
-  name: Yup.string().required("Name is required"),
+  // activityType: Yup.string().required("Type is required"),
+  stateOfTheFlock: Yup.string().required("State of Flock is required"),
+  summaryOfEvent: Yup.string().required("Summary Of Event is required"),
+  activityName: Yup.string().required("Actvity Name is required"),
   attendance: Yup.object().shape({
-    adults: Yup.object().shape({
-      males: Yup.number().required("Male Adult is required").nullable(),
-      females: Yup.number().required("Female Adult is required").nullable(),
-    }),
-    youths: Yup.object().shape({
-      males: Yup.number().required("Male Youth is required").nullable(),
-      females: Yup.number().required("Female Youth is required").nullable(),
-    }),
-
-    teenagers: Yup.object().shape({
-      males: Yup.number().required("Male Teenager is required").nullable(),
-      females: Yup.number().required("Female Teenager is required").nullable(),
-    }),
-    children: Yup.object().shape({
-      males: Yup.number().required("Male Children is required").nullable(),
-      females: Yup.number().required("Female Children is required").nullable(),
-    }),
+    adult: Yup.number()
+      .typeError("Invalid value")
+      .required("Value is required")
+      .nullable(),
+    youth: Yup.number()
+      .typeError("Invalid value")
+      .required("Value is required")
+      .nullable(),
+    teenager: Yup.number()
+      .typeError("Invalid value")
+      .required("Value is required")
+      .nullable(),
+    children: Yup.number()
+      .typeError("Invalid value")
+      .required("Value is required")
+      .nullable(),
+    male: Yup.number()
+      .typeError("Invalid value")
+      .required("Value is required")
+      .nullable(),
+    female: Yup.number()
+      .typeError("Invalid value")
+      .required("Value is required")
+      .nullable(),
   }),
 });
 
@@ -219,46 +228,48 @@ const { handleSubmit } = useForm({
   initialValues: formData,
 });
 
-const { value: name, errorMessage: nameError } = useField("name");
+const { value: activityName, errorMessage: activityNameError } =
+  useField("activityName");
 
-const { value: adultMales, errorMessage: adultMalesError } = useField(
-  "attendance.adults.males"
-);
-const { value: adultFemales, errorMessage: adultFemalesError } = useField(
-  "attendance.adults.females"
-);
+const { value: activityVenue, errorMessage: activityVenueError } =
+  useField("activityVenue");
 
-const { value: youthMales, errorMessage: youthMalesError } = useField(
-  "attendance.youths.males"
-);
-const { value: youthFemales, errorMessage: youthFemalesError } = useField(
-  "attendance.youths.females"
-);
+const { value: activityType, errorMessage: activityTypeError } =
+  useField("activityType");
 
-const { value: teenagerMales, errorMessage: teenagerMalesError } = useField(
-  "attendance.teenagers.males"
+const { value: stateOfTheFlock, errorMessage: stateOfTheFlockError } =
+  useField("stateOfTheFlock");
+
+const { value: adult, errorMessage: adultError } = useField("attendance.adult");
+const { value: youth, errorMessage: youthError } = useField("attendance.youth");
+const { value: teenager, errorMessage: teenagerError } = useField(
+  "attendance.teenager"
 );
-const { value: teenagerFemales, errorMessage: teenagerFemalesError } = useField(
-  "attendance.teenagers.females"
+const { value: children, errorMessage: childrenError } = useField(
+  "attendance.children"
 );
+const { value: male, errorMessage: maleError } = useField("attendance.male");
+const { value: female, errorMessage: femaleError } =
+  useField("attendance.female");
 
-const { value: childrenMales, errorMessage: childrenMalesError } = useField(
-  "attendance.teenagers.males"
-);
-const { value: childrenFemales, errorMessage: childrenFemalesError } = useField(
-  "attendance.teenagers.females"
-);
+const { value: summaryOfEvent, errorMessage: summaryOfEventError } =
+  useField("summaryOfEvent");
 
-const { value: summary, errorMessage: summaryError } = useField("summary");
-
-const { value: date, errorMessage: dateError } = useField("date");
-
-// const { value: zone, errorMessage: Error } = useField("zone");
-
-// const { value: center, errorMessage: centerError } = useField("center");
+const { value: activityDate, errorMessage: activityDateError } =
+  useField("activityDate");
 
 const onSubmit = handleSubmit((values) => {
-  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
+  const sum = Object.keys(values.attendance)
+    .filter((key) => key !== "male" && key !== "female")
+    .reduce((acc, key) => acc + parseInt(values.attendance[key], 10), 0);
+
+  const data = {
+    ...values,
+    // activityDate: moment(values.activityDate).format("YYYY-MM-DD HH:mm:ss.SSS"),
+    cihAttendances: [values.attendance],
+    totalAttendee: sum,
+  };
+  dispatch("addActivityReport", data);
 });
 </script>
 <style lang=""></style>
