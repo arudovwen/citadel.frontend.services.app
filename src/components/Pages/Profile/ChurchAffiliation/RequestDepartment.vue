@@ -84,9 +84,9 @@ const toast = useToast();
 const userId = inject("id");
 const reqSuccess = computed(() => state.profile.requestToJoinDeptSuccess);
 const reqError = computed(() => state.profile.requestToJoinDeptError);
-const hasDepartment = computed(() => {
-  return state.profile.churchAffiliationsData?.department ? true : false;
-});
+// const hasDepartment = computed(() => {
+//   return state.profile.churchAffiliationsData?.department ? true : false;
+// });
 const departmentOptions = computed(() =>
   state?.department?.departments.map((i) => {
     return {
@@ -118,11 +118,7 @@ const { value: reason, errorMessage: reasonError } = useField("reason");
 const onSubmit = handleSubmit((values) => {
   //   console.log(values);
 
-  if (hasDepartment.value) {
-    dispatch("requestToChangeDept", values);
-  } else {
-    dispatch("requestToJoinDept", values);
-  }
+  dispatch("requestToJoinDept", values);
 });
 
 const getDepartments = () => {
