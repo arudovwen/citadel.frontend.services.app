@@ -18,6 +18,9 @@ export const urls = {
   CONVERT_FIRST_TO_MEMBER: "/Admin/ConvertFirstTimersToMembers",
   BULK_CONVERT_FIRST_TO_MEMBER: "/Admin/BulkConvertFirstTimersToMembers",
   UPDATE_ROLE: "/Admin/ChangeUserRole",
+  CREATE_ROLE_WITH_PERMISSIONS: "/Auth/CreateRoleWithPermissions",
+  GET_PLATFORM_ROLES: "/Auth/GetPlatformRoles",
+  REMOVE_ROLE_FROM_PLATFORM: "/Auth/RemoveUserRoleFromPlatform",
 
   //Affinity Groups
   CREATE_AFFINITY_GROUP: "/AffinityGroup/CreateAffinityGroup",
@@ -112,6 +115,9 @@ export const urls = {
   GET_ALL_MINISTRIES: "/Ministry/GetAllMinistry",
   DELETE_MINISTRY: "/Ministry/DeleteMinistry",
 
+  //Modules
+  GET_PLATFORM_MODULES: "/Auth/GetPlatformModules",
+
   //MOI
   CREATE_MOI: "/MountainOfInfluence/CreateMountainOfInfluence",
   UPDATE_MOI: "/MountainOfInfluence/UpdateMountainOfInfluence",
@@ -119,6 +125,9 @@ export const urls = {
   GET_MOI_BY_USER_ID: "/MountainOfInfluence/GetMountainOfInfluenceByUserId",
   GET_ALL_MOIS: "/MountainOfInfluence/GetAllMountainOfInfluence",
   DELETE_MOI: "/MountainOfInfluence/DeleteMountainOfInfluence",
+
+  //Permissions
+  GET_PLATFORM_PERMISSIONS: "/Auth/GetPlatformPermissions",
 
   // Qualification
   CREATE_QUALIFICATION: "/Qualification/CreateQualification",
@@ -186,3 +195,6 @@ export const urls = {
   GET_ACTIVITY_REPORT: "/GetCIHActivityById",
   DELETE_ACTIVITY_REPORT: "/DeleteCIHActivity",
 };
+
+// open delete modal
+//set id of item to delete

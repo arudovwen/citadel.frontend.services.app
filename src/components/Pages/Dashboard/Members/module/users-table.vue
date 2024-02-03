@@ -33,6 +33,17 @@
             />
           </export-excel>
           <Button
+            icon="heroicons-outline:plus-sm"
+            text="Add role"
+            btnClass=" btn-primary font-normal btn-sm "
+            iconClass="text-lg"
+            @click="
+              () => {
+                $store.dispatch('openRoleModal');
+              }
+            "
+          />
+          <Button
             v-if="
               state.auth.userData.userRole.toLowerCase() === 'administrator'
             "
@@ -234,8 +245,11 @@
     <EditRecord v-if="type === 'edit'" />
     <ViewRecord v-if="type === 'view'" />
   </Modal>
+  <RolesModal />
 </template>
 <script>
+import RolesModal from "@/views/roles/RolesModal";
+
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
@@ -271,6 +285,7 @@ export default {
     ViewRecord,
     Pagination,
     InputGroup,
+    RolesModal,
     Modal,
     Dropdown,
     Icon,

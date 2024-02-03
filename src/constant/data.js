@@ -150,10 +150,17 @@ export const menuItems = [
       // },
     ],
   },
+  // {
+  //   title: "Ministries",
+  //   icon: "heroicons-outline:building-library",
+  //   link: "/ministries",
+  //   roles: ["administrator"],
+  //   subroles: [],
+  // },
   {
-    title: "Ministries",
-    icon: "heroicons-outline:building-library",
-    link: "/ministries",
+    title: "Roles",
+    icon: "heroicons-outline:user-circle",
+    link: "/roles-management",
     roles: ["administrator"],
     subroles: [],
   },
@@ -806,6 +813,38 @@ export const maritalStatusMenu = [
   {
     value: "Single",
     label: "Single",
+  },
+  {
+    value: "Divorced",
+    label: "Divorced",
+  },
+  {
+    value: "Divorced/Married",
+    label: "Divorced/Married",
+  },
+  {
+    value: "Separated",
+    label: "Separated",
+  },
+  {
+    value: "Widower",
+    label: "Widower",
+  },
+  {
+    value: "Widower/Remarried",
+    label: "Widower/Remarried",
+  },
+  {
+    value: "Single Parent",
+    label: "Single Parent",
+  },
+  {
+    value: "Widow",
+    label: "Widow",
+  },
+  {
+    value: "Widow/Remarried",
+    label: "Widow/Remarried",
   },
 ];
 

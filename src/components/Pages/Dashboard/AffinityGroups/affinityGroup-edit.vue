@@ -10,6 +10,14 @@
           :error="affinityGroupNameError"
           placeholder="Type in your group name"
         />
+        <Select
+          label="Marital Status"
+          :options="maritalStatusMenu"
+          v-model.value="maritalStatus"
+          :modelValue="maritalStatus"
+          :error="maritalStatusError"
+          classInput="!h-[40px]"
+        />
         <Textinput
           label="Minimum age"
           placeholder="Enter a minimum age"
@@ -51,6 +59,8 @@ import Card from "@/components/Card";
 import Textinput from "@/components/Textinput";
 import Textarea from "@/components/Textarea";
 import { useToast } from "vue-toastification";
+import { maritalStatusMenu } from "@/constant/data";
+import Select from "@/components/Select";
 
 import { useStore } from "vuex";
 
@@ -63,6 +73,7 @@ const success = computed(() => state.affinityGroup.updateAffinityGroupSuccess);
 
 const schema = yup.object().shape({
   affinityGroupName: yup.string().required("Group is required"),
+  maritalStatus: yup.string(),
   startAge: yup
     .number()
     .typeError("Invalid value")
@@ -87,6 +98,8 @@ const { handleSubmit, setValues } = useForm({
   initialValues: { ...defaultData.value, userId: userId.value },
 });
 
+const { value: maritalStatus, errorMessage: maritalStatusError } =
+  useField("maritalStatus");
 const { value: affinityGroupName, errorMessage: affinityGroupNameError } =
   useField("affinityGroupName");
 const { value: description, errorMessage: descriptionError } =
@@ -110,7 +123,7 @@ watch(defaultData, () => {
 
 watch(success, () => {
   if (success.value) {
-    toast.success("Affinity group successfully created");
+    toast.success("Affinity group successfully edited");
     dispatch("closeModal");
     dispatch("resetSuccess");
 

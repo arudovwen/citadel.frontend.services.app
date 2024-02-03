@@ -65,6 +65,7 @@
         v-model="email"
         :error="emailError"
         classInput="h-[40px]"
+        :disabled="email.length > 0"
       />
       <Textinput
         label="Mobile 1"
@@ -74,6 +75,7 @@
         v-model="mobile1"
         :error="mobile1Error"
         classInput="h-[40px]"
+        :disabled="mobile1.length > 0"
       />
 
       <Textinput
@@ -308,7 +310,7 @@ const schema = yup.object({
   // address2: yup.string(),
   // .required("Title text is required")
   title: yup.string().nullable(),
-  nearestBusStop: yup.string(),
+  nearestBusStop: yup.string().nullable(),
   lga: yup.object().nullable(),
   state: yup.object().nullable(),
   country: yup.object().nullable(),

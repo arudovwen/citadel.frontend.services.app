@@ -25,6 +25,7 @@ import unit from "./app/unit";
 import accessory from "./app/accessory";
 import specialUnit from "./app/special-unit";
 import moi from "./app/moi";
+import role from "./app/role";
 import affinityGroup from "./app/affinityGroup";
 
 export default createStore({
@@ -127,5 +128,6 @@ export default createStore({
     specialUnit,
     moi,
     accessory,
+    role,
   },
 });
