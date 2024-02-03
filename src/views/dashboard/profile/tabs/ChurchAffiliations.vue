@@ -123,7 +123,7 @@
         </div>
       </div>
 
-      <div>
+      <div className="hidden ">
         <CustomVueSelect
           :request="
             requestFnObj(
