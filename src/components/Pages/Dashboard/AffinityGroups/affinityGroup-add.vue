@@ -9,6 +9,14 @@
           :error="affinityGroupNameError"
           placeholder="Type in your group name"
         />
+        <Select
+          label="Marital Status"
+          :options="maritalStatusMenu"
+          v-model.value="maritalStatus"
+          :modelValue="maritalStatus"
+          :error="maritalStatusError"
+          classInput="!h-[40px]"
+        />
 
         <Textinput
           type="number"
@@ -45,6 +53,8 @@
   </form>
 </template>
 <script setup>
+import Select from "@/components/Select";
+
 import { reactive, computed, watch } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
@@ -55,6 +65,7 @@ import Textarea from "@/components/Textarea";
 import { useToast } from "vue-toastification";
 
 import { useStore } from "vuex";
+import { maritalStatusMenu } from "@/constant/data";
 
 const { state, dispatch } = useStore();
 const toast = useToast();
@@ -70,6 +81,7 @@ const formData = reactive({
 });
 const schema = yup.object().shape({
   affinityGroupName: yup.string().required("Group is required"),
+  maritalStatus: yup.string(),
   startAge: yup
     .number()
     .typeError("Invalid value")
@@ -91,7 +103,8 @@ const { handleSubmit } = useForm({
   validationSchema: schema,
   initialValues: formData,
 });
-
+const { value: maritalStatus, errorMessage: maritalStatusError } =
+  useField("maritalStatus");
 const { value: affinityGroupName, errorMessage: affinityGroupNameError } =
   useField("affinityGroupName");
 const { value: description, errorMessage: descriptionError } =
