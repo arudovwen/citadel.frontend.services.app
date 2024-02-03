@@ -150,13 +150,13 @@ export const menuItems = [
       // },
     ],
   },
-  {
-    title: "Ministries",
-    icon: "heroicons-outline:building-library",
-    link: "/ministries",
-    roles: ["administrator"],
-    subroles: [],
-  },
+  // {
+  //   title: "Ministries",
+  //   icon: "heroicons-outline:building-library",
+  //   link: "/ministries",
+  //   roles: ["administrator"],
+  //   subroles: [],
+  // },
   {
     title: "Roles",
     icon: "heroicons-outline:user-circle",

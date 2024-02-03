@@ -71,6 +71,7 @@
     <SpouseDetails v-if="selectedTab == 'Spouse Details'" />
     <ChildrenDetails v-if="selectedTab == 'Children Details'" />
     <ChurchAffiliations v-if="selectedTab == 'Church Affiliations'" />
+    <UserDepartment v-if="selectedTab == 'Departments'" />
   </div>
 </template>
 
@@ -81,6 +82,7 @@ import Employer from "./EmployerDetails.vue";
 import SpouseDetails from "./SpouseDetails.vue";
 import ChildrenDetails from "./ChildrenDetails.vue";
 import ChurchAffiliations from "./ChurchAffiliations.vue";
+import UserDepartment from "./UserDepartment.vue";
 // import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import { inject, ref } from "vue";
 
@@ -121,6 +123,11 @@ const allButtons = ref([
   {
     id: 6,
     title: "Church Affiliations",
+    isShowing: true,
+  },
+  {
+    id: 7,
+    title: "Departments",
     isShowing: true,
   },
 ]);
