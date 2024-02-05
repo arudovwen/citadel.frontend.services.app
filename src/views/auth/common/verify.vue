@@ -153,18 +153,18 @@ watch(isOtpSuccess, () => {
   }
 });
 watch(isSuccess, () => {
-  const isMember = userData.value?.userRole.toLowerCase() == "member";
+  // const isMember = userData.value?.userRole.toLowerCase() == "member";
   const userId = userData.value?.id;
   toast.success("Login successful");
 
   if (route.query.redirect_from) {
     window.location.replace(route.query.redirect_from);
   } else {
-    if (isMember) {
-      window.location.replace(`/profile/${userId}`);
-    } else {
-      window.location.replace("/overview");
-    }
+    // if (isMember) {
+    window.location.replace(`/profile/${userId}`);
+    // } else {
+    //   window.location.replace("/overview");
+    // }
   }
 });
 </script>
