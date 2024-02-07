@@ -253,6 +253,7 @@ onMounted(() => {
   fetchUser();
   getChurchAffiliationsData();
   dispatch("getRoles");
+  dispatch("getRolesList");
 });
 // const isReqDepartmentOpen = computed(() => state.profile.isReqDepartmentOpen);
 const toggleReqDepartment = (boolean) => {
@@ -278,10 +279,13 @@ const profileError = computed(() => state.member.profileerror);
 const convertsuccess = computed(() => state.member.convertsuccess);
 const convertloading = computed(() => state.member.convertloading);
 const roles = computed(() =>
-  state.member.roles
-    .filter((i) => i.toLowerCase() !== "firsttimers")
+  state.role.roles
+    .filter((i) => i?.normalizedName?.toLowerCase() !== "firsttimers")
     .map((i) => {
-      return { value: i.toLowerCase(), label: i };
+      return {
+        value: i?.normalizedName?.toLowerCase(),
+        label: i?.name,
+      };
     })
 );
 const role = ref("");
