@@ -453,14 +453,14 @@ watch(departmentOptions, () => {
 // watch(affinityGroupOptions, () => {
 //   matchAffinityGroup();
 // });
-watch(affinityGroup, () => {
-  console.log("affinityGroup:" + JSON.stringify(affinityGroup.value));
-  if (affinityGroup.value.length > 0) {
-    affinityGroup.value = affinityGroup.value.filter(
-      (item) => item.toLowerCase() !== "none"
-    );
-  }
-});
+// watch(affinityGroup, () => {
+//   console.log("affinityGroup:" + JSON.stringify(affinityGroup.value));
+//   if (affinityGroup.value.length > 0) {
+//     affinityGroup.value = affinityGroup.value.filter(
+//       (item) => item.toLowerCase() !== "none"
+//     );
+//   }
+// });
 
 watch(churchAffiliationsData, (newValue) => {
   setValues(newValue);
