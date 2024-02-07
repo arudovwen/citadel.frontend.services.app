@@ -280,10 +280,10 @@ const convertsuccess = computed(() => state.member.convertsuccess);
 const convertloading = computed(() => state.member.convertloading);
 const roles = computed(() =>
   state.role.roles
-    .filter((i) => i?.normalizedName?.toLowerCase() !== "firsttimers")
+    .filter((i) => i?.name?.toLowerCase() !== "firsttimers")
     .map((i) => {
       return {
-        value: i?.normalizedName?.toLowerCase(),
+        value: i?.name?.toLowerCase(),
         label: i?.name,
       };
     })
