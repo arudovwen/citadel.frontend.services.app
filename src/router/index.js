@@ -131,6 +131,8 @@ const routes = [
         meta: {
           roles: ["administrator", "hod", "member", "inspectorate"],
           subroles: ["cihpastor", "cihcoordinator"],
+
+          activeName: "profile",
         },
       },
       {
