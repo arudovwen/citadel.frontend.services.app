@@ -1,7 +1,16 @@
+import store from "../store";
+// store.state.auth.userData.id
 export const menuItems = [
   {
     isHeadr: true,
     title: "menu",
+  },
+  {
+    title: "Profile",
+    icon: "heroicons-outline:user-group",
+    link: "/profile/" + store?.state?.auth?.userData?.id,
+    roles: ["member"],
+    subroles: [],
   },
   {
     title: "Overview",
@@ -10,7 +19,6 @@ export const menuItems = [
     roles: [
       "administrator",
       "hod",
-      "member",
       "inspectorate",
       "dsa",
       "coordinator",
