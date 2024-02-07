@@ -18,14 +18,14 @@
             >
               {{ profileData?.fullName }}
             </div>
+
             <div
               class="text-sm font-light text-slate-600 dark:text-slate-400 capitalize flex gap-x-2 items-center"
             >
               {{ profileData?.userRole }}
               <span
                 v-if="
-                  state.auth.userData.userRole === 'administrator' &&
-                  state.auth.userData.id !== userId
+                  state.auth.userData.userRole.toLowerCase() === 'administrator'
                 "
                 @click="() => $refs.modal.openModal()"
                 class="p-1"
