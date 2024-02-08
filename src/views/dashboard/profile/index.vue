@@ -276,14 +276,14 @@ const profileData = computed(() => state.member.profile);
 // const success = computed(() => state.member.profilesuccess);
 const profileLoading = computed(() => state.member.profileloading);
 const profileError = computed(() => state.member.profileerror);
-const convertsuccess = computed(() => state.member.convertsuccess);
-const convertloading = computed(() => state.member.convertloading);
+const convertsuccess = computed(() => state.role.setPermissionsSuccess);
+const convertloading = computed(() => state.role.setPermissionsLoading);
 const roles = computed(() =>
   state.role.roles
     .filter((i) => i?.name?.toLowerCase() !== "firsttimers")
     .map((i) => {
       return {
-        value: i?.name?.toLowerCase(),
+        value: i?.id,
         label: i?.name,
       };
     })
@@ -352,9 +352,9 @@ watch(convertsuccess, () => {
   }
 });
 function changeRole() {
-  dispatch("updateRole", {
-    UserId: profileData.value.email,
-    userRole: role.value,
+  dispatch("assignRoleWithPermissions", {
+    userId: userId.value,
+    roleId: role.value,
   });
 }
 provide("isMarried", isMarried);

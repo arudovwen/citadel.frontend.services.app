@@ -19,6 +19,9 @@ export default {
     getPermissionsLoading: false,
     getPermissionsSuccess: false,
     getPermissionsError: null,
+    setPermissionsLoading: false,
+    setPermissionsSuccess: false,
+    setPermissionsError: null,
     editRoleLoading: false,
     editRoleSuccess: false,
     editRoleError: null,
@@ -101,6 +104,22 @@ export default {
       state.getPermissionsLoading = false;
       state.getPermissionsSuccess = false;
       state.getPermissionsError = err;
+    },
+    setPermissionsBegin(state) {
+      state.setPermissionsLoading = true;
+      state.setPermissionsSuccess = false;
+      state.setPermissionsError = null;
+    },
+
+    setPermissionsSuccess(state) {
+      state.setPermissionsLoading = false;
+      state.setPermissionsSuccess = true;
+    },
+
+    setPermissionsError(state, err) {
+      state.setPermissionsLoading = false;
+      state.setPermissionsSuccess = false;
+      state.setPermissionsError = err;
     },
     addRoleBegin(state) {
       state.addRoleLoading = true;
@@ -225,6 +244,22 @@ export default {
         }
       } catch (err) {
         commit("updateZoneError", err);
+      }
+    },
+
+    async assignRoleWithPermissions({ commit }, data) {
+      try {
+        commit("setPermissionsBegin");
+        const response = await DataService.post(
+          `${urls.ASSIGN_PERMISSIONS_TO_USERS}?RoleId=${data.roleId}&UserId=${data.userId}`,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("setPermissionsSuccess");
+        }
+      } catch (err) {
+        commit("setPermissionsError", err);
       }
     },
 
