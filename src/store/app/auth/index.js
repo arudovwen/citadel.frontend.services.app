@@ -39,7 +39,7 @@ export default {
     userData: JSON.parse(localStorage.getItem("userData")) || null,
     userAffiliation:
       JSON.parse(localStorage.getItem("userAffiliation")) || null,
-
+    permissions: JSON.parse(localStorage.getItem("permissions")) || null,
     // for edit
   },
   getters: {
@@ -54,8 +54,9 @@ export default {
     loginSuccess(state, data) {
       state.loading = false;
       state.loginsuccess = true;
-      state.login = data;
-      state.accessToken = data;
+      state.login = data.accessToken;
+      state.accessToken = data.accessToken;
+      state.permissions = data.permissions;
     },
     loginErr(state, err) {
       state.loading = false;
@@ -206,9 +207,13 @@ export default {
 
         if (response.status === 200) {
           const accessToken = response.data.data.token;
+
+          const permissions = JSON.stringify(response.data.data.permissions);
           const userData = response.data.data.user;
           const userAffiliation = response.data.data.churchAffiliation;
           localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("permissions", permissions);
+
           localStorage.setItem(
             "userAffiliation",
             JSON.stringify(userAffiliation)
@@ -220,7 +225,7 @@ export default {
               cihRole: userAffiliation?.cihRole?.toLowerCase(),
             })
           );
-          commit("loginSuccess", accessToken);
+          commit("loginSuccess", { accessToken, permissions });
 
           // console.log('')
         }

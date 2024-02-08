@@ -50,7 +50,7 @@
       <div class="text-right space-x-3 mt-8">
         <Button
           type="submit"
-          text="Add member"
+          text="Add user"
           btnClass="btn-dark w-full disabled:opacity-50"
           :disabled="loading"
           :isLoading="loading"

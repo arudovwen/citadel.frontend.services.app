@@ -156,6 +156,7 @@ watch(isSuccess, () => {
   // const isMember = userData.value?.userRole.toLowerCase() == "member";
   const userId = userData.value?.id;
   toast.success("Login successful");
+  // dispatch("getRolesList");
 
   if (route.query.redirect_from) {
     window.location.replace(route.query.redirect_from);

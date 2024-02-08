@@ -266,8 +266,11 @@ const userId = computed(() => route.params.userId);
 const isUserProfile = computed(
   () => route.params.userId === state.auth.userData.id
 );
-const userData = computed(() => state.auth.userData);
-console.log("🚀 ~ userData:", userData.value);
+// const userData = computed(() => state.auth.userData);
+const permissions = computed(() => state.auth.permissions);
+
+console.log("🚀 ~ permissions2*: ", permissions.value);
+
 const avatar = computed(() => state.member.avatar);
 const biodata = computed(() => state.profile.biodata);
 console.log(state.auth.accessToken);
