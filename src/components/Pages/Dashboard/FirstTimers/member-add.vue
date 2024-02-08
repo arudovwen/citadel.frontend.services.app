@@ -82,6 +82,21 @@
           v-model="placeOfVisit"
           :error="placeOfVisitError"
         />
+        <Textinput
+          label="Name of Inviter"
+          type="text"
+          v-model="nameOfInviter"
+          :error="nameOfInviterError"
+          placeholder="Add your inviter's name"
+        />
+        <Textinput
+          label="How the First Timer knew about us?"
+          type="text"
+          v-model="howFirstTimerKnew"
+          :error="howFirstTimerKnewError"
+          placeholder="Add your inviter's name"
+        />
+
         <div class="lg:col-span-2 col-span-1">
           <Textinput
             label="Residential Address"
@@ -196,6 +211,8 @@ const formData = reactive({
   country: "",
   purposeOfVisit: "",
   placeOfVisit: "",
+  nameOfInviter: "",
+  howFirstTimerKnew: "",
 });
 const formDataSchema = yup.object().shape({
   dateOfVisit: yup
@@ -230,6 +247,8 @@ const formDataSchema = yup.object().shape({
     .nullable(),
   purposeOfVisit: yup.string().required("Purpose of Visit is required"),
   placeOfVisit: yup.string().required("Place of Visit is required"),
+  nameOfInviter: yup.string(),
+  howFirstTimerKnew: yup.string(),
 });
 const purposeOptions = [
   { value: "become member", label: "Become Member" },
@@ -245,6 +264,12 @@ const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
+
+const { value: howFirstTimerKnew, errorMessage: howFirstTimerKnewError } =
+  useField("howFirstTimerKnew");
+
+const { value: nameOfInviter, errorMessage: nameOfInviterError } =
+  useField("nameOfInviter");
 
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: dateOfVisit, errorMessage: dateOfVisitError } =
