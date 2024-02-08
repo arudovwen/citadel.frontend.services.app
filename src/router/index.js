@@ -173,7 +173,7 @@ const routes = [
         name: "affinity-groups",
         component: AffinityGroupsIndex,
         meta: {
-          roles: ["administrator", "headaffinity"],
+          roles: ["administrator", "headaffinity", "inspectorate"],
           subroles: [],
         },
         children: [

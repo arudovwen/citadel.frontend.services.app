@@ -47,7 +47,7 @@ export const menuItems = [
     title: "Affinity Groups",
     icon: "ic:sharp-join-inner",
     link: "/affinity-groups",
-    roles: ["administrator", "headaffinity"],
+    roles: ["administrator", "headaffinity", "inspectorate"],
     subroles: [],
   },
   {
