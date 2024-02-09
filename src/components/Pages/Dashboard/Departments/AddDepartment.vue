@@ -98,6 +98,8 @@
             v-model.value="hod"
             :error="hodError"
           />
+
+          <!-- {{ membersOptions[0] }} -->
         </div>
 
         <div class="text-right">
@@ -116,7 +118,7 @@
 <script setup>
 import Select from "@/components/Select";
 import Button from "@/components/Button";
-import { computed, watch } from "vue";
+import { computed, watch, onMounted } from "vue";
 import Modal from "@/components/Modal";
 import { useToast } from "vue-toastification";
 import Textarea from "@/components/Textarea";
@@ -126,16 +128,25 @@ import { useField, useForm } from "vee-validate";
 import { useStore } from "vuex";
 import * as yup from "yup";
 
+onMounted(() => {
+  dispatch("getAllUsers", {
+    pageNumber: 1,
+    pageSize: 25000,
+    name: "",
+  });
+});
+
 let { dispatch, state } = useStore();
 const toast = useToast();
 const membersOptions = computed(() =>
-  state?.member?.data.map((i) => {
+  state?.member?.allUsers?.map((i) => {
     return {
-      label: `${i.firstName} ${i.surName}`,
+      label: `${i.firstName} ${i.lastName}`,
       value: i.userId,
     };
   })
 );
+// const membersOptions = computed(() => state?.member?.data);
 const success = computed(() => state.department.addsuccess);
 const loading = computed(() => state.department.loading);
 
@@ -171,6 +182,10 @@ watch(success, () => {
     closeModal();
     toast.success("Department created");
   }
+});
+
+watch(membersOptions, () => {
+  console.log("🚀 ~ watch ~ membersOptions:", membersOptions.value);
 });
 </script>
 <style lang=""></style>

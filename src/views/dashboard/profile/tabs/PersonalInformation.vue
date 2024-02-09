@@ -252,6 +252,7 @@ import * as yup from "yup";
 import Countries from "@/util/countries.json";
 import VueSelect from "@/components/Select/VueSelect";
 import lgas from "@/util/lgas.json";
+import lgaState from "@/util/lgastate.json";
 import {
   titleMenu,
   genderMenu,
@@ -382,9 +383,17 @@ const nationalityOption = computed(() =>
 );
 
 const lgaOption = computed(() =>
-  lgas.map((i) => {
-    return { label: i, value: i };
-  })
+  // lgas.map((i) => {
+  //   return { label: i, value: i };
+  // })
+  lgaState
+    .find(
+      (item) =>
+        item?.state?.toLowerCase() === state?.value?.value?.toLowerCase()
+    )
+    ?.lgas?.map((i) => {
+      return { label: i, value: i };
+    })
 );
 const stateOfOriginOption = computed(() => {
   return Countries.find(
