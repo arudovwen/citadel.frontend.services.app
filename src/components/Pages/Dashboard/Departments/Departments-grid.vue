@@ -47,7 +47,7 @@
             </div>
             <div class="text-slate-600 dark:text-slate-400 text-xs font-medium">
               <span>HOD</span>:
-              <span class="font-medium">{{ handleHod(item.userId) }}</span>
+              <span class="font-medium">{{ item?.hodName || "n/a" }}</span>
             </div>
             <div class="flex justify-start mt-5">
               <div class="text-right">
@@ -244,11 +244,11 @@ function handleSuccess() {
   modal.value.closeModal();
 }
 
-function handleHod(id) {
-  if (!id) return "n/a";
-  const result = membersOptions.value.find((i) => i.value === id);
-  return result?.label;
-}
+// function handleHod(id) {
+//   if (!id) return "n/a";
+//   const result = membersOptions.value.find((i) => i.value === id);
+//   return result?.label;
+// }
 watch(updatesuccess, handleSuccess);
 watch(success, handleSuccess);
 
