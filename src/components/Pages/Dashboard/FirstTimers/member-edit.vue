@@ -76,11 +76,34 @@
           v-model="purposeOfVisit"
           :error="purposeOfVisitError"
         />
+        <div class="" v-if="purposeOfVisit === 'other'">
+          <Textinput
+            label="Other Purpose"
+            type="other"
+            v-model="other"
+            :error="otherError"
+            placeholder="Provide other purpose of visit"
+          />
+        </div>
         <Select
           label="Place of visit"
           :options="placeOptions"
           v-model="placeOfVisit"
           :error="placeOfVisitError"
+        />
+        <Textinput
+          label="Name of Inviter"
+          type="text"
+          v-model="nameOfInviter"
+          :error="nameOfInviterError"
+          placeholder="Add your inviter's name"
+        />
+        <Textinput
+          label="How the First Timer knew about us?"
+          type="text"
+          v-model="howFirstTimerKnew"
+          :error="howFirstTimerKnewError"
+          placeholder=""
         />
         <div class="lg:col-span-2 col-span-1">
           <Textinput
@@ -190,7 +213,10 @@ const formData = reactive({
   state: "",
   country: "",
   purposeOfVisit: "",
+  other: "",
   placeOfVisit: "",
+  nameOfInviter: "",
+  howFirstTimerKnew: "",
 });
 const formDataSchema = yup.object().shape({
   dateOfVisit: yup
@@ -219,7 +245,10 @@ const formDataSchema = yup.object().shape({
     .typeError("Invalid country")
     .required("Country is required"),
   purposeOfVisit: yup.string().required("Purpose of Visit is required"),
+  other: yup.string(),
   placeOfVisit: yup.string().required("Place of Visit is required"),
+  nameOfInviter: yup.string(),
+  howFirstTimerKnew: yup.string(),
 });
 const purposeOptions = [
   { value: "become member", label: "Become Member" },
@@ -274,6 +303,11 @@ const { value: purposeOfVisit, errorMessage: purposeOfVisitError } =
   useField("purposeOfVisit");
 const { value: placeOfVisit, errorMessage: placeOfVisitError } =
   useField("placeOfVisit");
+const { value: other, errorMessage: otherError } = useField("other");
+const { value: nameOfInviter, errorMessage: nameOfInviterError } =
+  useField("nameOfInviter");
+const { value: howFirstTimerKnew, errorMessage: howFirstTimerKnewError } =
+  useField("howFirstTimerKnew");
 
 const profileCreated = computed(() => vState.profile.profileCreated);
 const onSubmit = handleSubmit((values) => {

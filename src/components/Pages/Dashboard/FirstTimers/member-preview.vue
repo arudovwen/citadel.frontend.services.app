@@ -85,6 +85,22 @@
             </p>
           </div>
           <div>
+            <h6 class="text-xs font-semibold text-slate-400">
+              Name of Inviter
+            </h6>
+            <p class="text-base font-semibold text-slate-900 capitalize">
+              {{ detail?.placeOfVisit || "-" }}
+            </p>
+          </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">
+              How did they hear about us
+            </h6>
+            <p class="text-base font-semibold text-slate-900 capitalize">
+              {{ detail?.placeOfVisit || "-" }}
+            </p>
+          </div>
+          <div>
             <h6 class="text-xs font-semibold text-slate-400">Country</h6>
             <p class="text-base font-semibold text-slate-90 capitalize">
               {{ detail?.country || "-" }}

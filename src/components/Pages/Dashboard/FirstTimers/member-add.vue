@@ -48,7 +48,7 @@
           :error="mobile1Error"
           placeholder="Add your phone"
         />
-        <div class="lg:col-span-2 col-span-1">
+        <div class="">
           <Textinput
             label="Email"
             type="email"
@@ -76,6 +76,15 @@
           v-model="purposeOfVisit"
           :error="purposeOfVisitError"
         />
+        <div class="" v-if="purposeOfVisit === 'other'">
+          <Textinput
+            label="Other Purpose"
+            type="other"
+            v-model="other"
+            :error="otherError"
+            placeholder="Provide other purpose of visit"
+          />
+        </div>
         <Select
           label="Place of visit"
           :options="placeOptions"
@@ -94,7 +103,7 @@
           type="text"
           v-model="howFirstTimerKnew"
           :error="howFirstTimerKnewError"
-          placeholder="Add your inviter's name"
+          placeholder=""
         />
 
         <div class="lg:col-span-2 col-span-1">
@@ -210,6 +219,7 @@ const formData = reactive({
   state: "",
   country: "",
   purposeOfVisit: "",
+  other: "",
   placeOfVisit: "",
   nameOfInviter: "",
   howFirstTimerKnew: "",
@@ -246,6 +256,7 @@ const formDataSchema = yup.object().shape({
     .required("Country is required")
     .nullable(),
   purposeOfVisit: yup.string().required("Purpose of Visit is required"),
+  other: yup.string(),
   placeOfVisit: yup.string().required("Place of Visit is required"),
   nameOfInviter: yup.string(),
   howFirstTimerKnew: yup.string(),
@@ -291,6 +302,7 @@ const { value: state, errorMessage: stateError } = useField("state");
 const { value: country, errorMessage: countryError } = useField("country");
 const { value: purposeOfVisit, errorMessage: purposeOfVisitError } =
   useField("purposeOfVisit");
+const { value: other, errorMessage: otherError } = useField("other");
 const { value: placeOfVisit, errorMessage: placeOfVisitError } =
   useField("placeOfVisit");
 
