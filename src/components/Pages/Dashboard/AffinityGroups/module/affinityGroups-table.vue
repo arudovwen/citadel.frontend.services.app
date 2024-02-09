@@ -32,7 +32,8 @@
         >
           <Button
             v-if="
-              state.auth.userData.userRole.toLowerCase() === 'administrator'
+              state.auth.userData.userRole.toLowerCase() === 'administrator' ||
+              state.auth.userData.userRole.toLowerCase() === 'inspectorate'
             "
             icon="ri:user-add-line"
             text="Add Affinity Group"
@@ -71,7 +72,9 @@
             <span v-if="props.column.field == 'action'">
               <Dropdown
                 v-if="
-                  state.auth.userData.userRole.toLowerCase() === 'administrator'
+                  state.auth.userData.userRole.toLowerCase() ===
+                    'administrator' ||
+                  state.auth.userData.userRole.toLowerCase() === 'inspectorate'
                 "
                 classMenuItems=" w-[140px]"
               >
