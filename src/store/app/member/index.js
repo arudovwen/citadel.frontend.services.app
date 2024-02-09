@@ -45,6 +45,10 @@ export default {
     convertloading: false,
     converterror: false,
     convertsuccess: false,
+    getUsersSuccess: false,
+    getUsersLoading: false,
+    getUsersError: null,
+    allUsers: [],
   },
   getters: {
     members: (state) => state.members,
@@ -126,18 +130,36 @@ export default {
       state.loading = true;
       state.error = null;
       state.success = false;
-      state.data = [];
+      // state.data = [];
     },
     fetchUserSuccess(state, { data, totalCount }) {
       state.loading = false;
       state.success = true;
       state.data = data;
+      // state.allUsers = data;
       state.total = totalCount;
     },
     fetchUserErr(state, err) {
       state.loading = false;
       state.error = err;
       state.success = false;
+    },
+    getUsersBegin(state) {
+      state.getUsersLoading = true;
+      state.getUsersError = null;
+      state.getUsersSuccess = false;
+      // state.data = [];
+    },
+    getUsersSuccess(state, { data }) {
+      state.getUsersLoading = false;
+      state.getUsersSuccess = true;
+
+      state.allUsers = data;
+    },
+    getUsersError(state, err) {
+      state.getUsersLoading = false;
+      state.getUsersError = err;
+      state.getUsersSuccess = false;
     },
     deleteBegin(state) {
       state.deleteloading = true;
@@ -249,6 +271,21 @@ export default {
         }
       } catch (err) {
         commit("fetchUserErr", err);
+      }
+    },
+    async getAllUsers({ commit }, data) {
+      try {
+        commit("getUsersBegin");
+        const response = await DataService.get(
+          `${urls.ADMIN_GET_ALL_USERS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("getUsersSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getUsersError", err);
       }
     },
     async getUserById({ commit }, id) {

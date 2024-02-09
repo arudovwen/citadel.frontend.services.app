@@ -473,7 +473,12 @@ export default {
     getChurchAffiliationsDataSuccess(state, data) {
       state.getChurchAffiliationsDataloading = false;
       state.getChurchAffiliationsDatasuccess = true;
-      state.churchAffiliationsData = data;
+      state.churchAffiliationsData = {
+        ...data,
+        affinityGroup: data?.affinityGroup?.filter(
+          (item) => item.toLowerCase() !== "none"
+        ),
+      };
     },
 
     getChurchAffiliationsDataErr(state, err) {

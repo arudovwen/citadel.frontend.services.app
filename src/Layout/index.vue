@@ -45,6 +45,7 @@
           <router-view v-slot="{ Component }">
             <transition name="router-animation" mode="out-in" appear>
               <component :is="Component"></component>
+              <!-- <span class="my-40 mt-[300px]"> Span:{{ myHeader }}</span> -->
             </transition>
           </router-view>
         </div>
@@ -67,8 +68,18 @@ import Sidebar from "../components/Sidebar/";
 import window from "@/mixins/window";
 import MobileSidebar from "@/components/Sidebar/MobileSidebar.vue";
 import FooterMenu from "@/components/Footer/FooterMenu.vue";
+import { provide } from "vue";
 
 export default {
+  setup() {
+    const userRoles = ["roles"];
+
+    provide("userRoles", userRoles);
+
+    return {
+      userRoles,
+    };
+  },
   mixins: [window],
   components: {
     Header,

@@ -128,6 +128,7 @@ export const urls = {
 
   //Permissions
   GET_PLATFORM_PERMISSIONS: "/Auth/GetPlatformPermissions",
+  ASSIGN_PERMISSIONS_TO_USERS: "/Auth/AssignPermissionsToUser",
 
   // Qualification
   CREATE_QUALIFICATION: "/Qualification/CreateQualification",

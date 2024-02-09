@@ -65,7 +65,7 @@
         v-model="email"
         :error="emailError"
         classInput="h-[40px]"
-        :disabled="email.length > 0"
+        :disabled="email?.length > 0"
       />
       <Textinput
         label="Mobile 1"
@@ -75,7 +75,7 @@
         v-model="mobile1"
         :error="mobile1Error"
         classInput="h-[40px]"
-        :disabled="mobile1.length > 0"
+        :disabled="mobile1?.length > 0"
       />
 
       <Textinput
@@ -252,6 +252,7 @@ import * as yup from "yup";
 import Countries from "@/util/countries.json";
 import VueSelect from "@/components/Select/VueSelect";
 import lgas from "@/util/lgas.json";
+import lgaState from "@/util/lgastate.json";
 import {
   titleMenu,
   genderMenu,
@@ -382,9 +383,17 @@ const nationalityOption = computed(() =>
 );
 
 const lgaOption = computed(() =>
-  lgas.map((i) => {
-    return { label: i, value: i };
-  })
+  // lgas.map((i) => {
+  //   return { label: i, value: i };
+  // })
+  lgaState
+    .find(
+      (item) =>
+        item?.state?.toLowerCase() === state?.value?.value?.toLowerCase()
+    )
+    ?.lgas?.map((i) => {
+      return { label: i, value: i };
+    })
 );
 const stateOfOriginOption = computed(() => {
   return Countries.find(

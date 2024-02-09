@@ -68,11 +68,11 @@ const isLoading = computed(() => state.auth.loading);
 const isOtpLoading = computed(() => state.auth.loading);
 const isSuccess = computed(() => state.auth.loginsuccess);
 const isOtpSuccess = computed(() => state.auth.requestsuccess);
-// const isMember = computed(
-//   () =>
-//     JSON.parse(localStorage.getItem("userData"))?.userRole?.toLowerCase() ===
-//     "member"
-// );
+const isMember = computed(
+  () =>
+    JSON.parse(localStorage.getItem("userData"))?.userRole?.toLowerCase() ===
+    "member"
+);
 const userData = computed(() => JSON.parse(localStorage.getItem("userData")));
 const resendCountdown = ref(20);
 const resendDisabled = ref(true);
@@ -153,14 +153,15 @@ watch(isOtpSuccess, () => {
   }
 });
 watch(isSuccess, () => {
-  const isMember = userData.value?.userRole.toLowerCase() == "member";
+  // const isMember = userData.value?.userRole.toLowerCase() == "member";
   const userId = userData.value?.id;
   toast.success("Login successful");
+  // dispatch("getRolesList");
 
   if (route.query.redirect_from) {
     window.location.replace(route.query.redirect_from);
   } else {
-    if (isMember) {
+    if (isMember.value) {
       window.location.replace(`/profile/${userId}`);
     } else {
       window.location.replace("/overview");
