@@ -48,6 +48,7 @@
           <!-- <Message v-if="window.width > 768" /> -->
           <!-- <span>{{ $store.state.auth.userData.userRole }}</span> -->
           <Notification v-if="window.width > 768" />
+          <!-- {{ userRoles[0] }} -->
           <RoleSwitch />
           <Profile v-if="window.width > 768" />
           <handle-mobile-menu v-if="window.width < 768" />
@@ -70,8 +71,15 @@ import Logo from "./Navtools/Logo.vue";
 import MobileLogo from "./Navtools/MobileLogo.vue";
 import window from "@/mixins/window";
 import HandleMobileMenu from "./Navtools/HandleMobileMenu.vue";
+import { inject } from "vue";
 
 export default {
+  setup() {
+    const userRoles = inject("userRoles");
+    return {
+      userRoles,
+    };
+  },
   mixins: [window],
   components: {
     Profile,

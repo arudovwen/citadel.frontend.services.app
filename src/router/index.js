@@ -861,14 +861,14 @@ router.beforeEach((to, from, next) => {
         store?.state?.auth?.userData?.cihRole?.toLowerCase()
       )
     ) {
-      console.log(
-        "this is " +
-          to?.meta?.roles?.includes(
-            store?.state?.auth?.userData?.userRole?.toLowerCase()
-          )
-      );
-      console.log(to?.meta?.roles);
-      console.log(store?.state?.auth?.userData?.userRole?.toLowerCase());
+      // console.log(
+      //   "this is " +
+      //     to?.meta?.roles?.includes(
+      //       store?.state?.auth?.userData?.userRole?.toLowerCase()
+      //     )
+      // );
+      // console.log(to?.meta?.roles);
+      // console.log(store?.state?.auth?.userData?.userRole?.toLowerCase());
       next();
     } else {
       toast.error("You are not authorised");
