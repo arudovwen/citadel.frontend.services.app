@@ -249,14 +249,26 @@
   <Modal
     :title="type"
     label="Small modal"
-    labelClass="btn-primary-600"
+    :labelClass="`${
+      type === 'assign role' ? 'btn-primary-600' : 'btn-outline-danger'
+    }`"
     ref="roleModalChange"
     sizeClass="max-w-md"
-    themeClass="bg-primary-500"
+    :themeClass="`${
+      type === 'assign role' ? 'bg-primary-500' : 'bg-danger-500'
+    }`"
   >
     <div>
-      <AssignRole v-if="type === 'assign role'" :userId="id" />
-      <RemoveRole v-if="type === 'remove role'" />
+      <AssignRole
+        v-if="type === 'assign role'"
+        :userId="id"
+        :closeModal="closeRoleModalChange"
+      />
+      <RemoveRole
+        v-if="type === 'remove role'"
+        :userId="id"
+        :closeModal="closeRoleModalChange"
+      />
     </div>
   </Modal>
   <RolesModal />
@@ -509,6 +521,9 @@ export default {
       pageSize: 25,
       name: "",
     });
+    const closeRoleModalChange = () => {
+      roleModalChange.value.closeModal();
+    };
     const { state, dispatch } = useStore();
     onMounted(() => {
       dispatch("getUsers", query);
@@ -584,6 +599,7 @@ export default {
       modal,
       modalChange,
       roleModalChange,
+      closeRoleModalChange,
       modalStatus,
       perPage,
       state,

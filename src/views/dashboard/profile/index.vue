@@ -22,8 +22,9 @@
             <div
               class="text-sm font-light text-slate-600 dark:text-slate-400 capitalize flex gap-x-2 items-center"
             >
-              {{ profileData?.userRole }}
-              <span
+              <!-- {{ profileData?.userRole }} -->
+              <span class="">{{ authUserRoles }}</span>
+              <!-- <span
                 v-if="
                   state.auth.userData.userRole.toLowerCase() === 'administrator'
                 "
@@ -31,7 +32,7 @@
                 class="p-1"
               >
                 <Icon icon="heroicons:pencil-square"
-              /></span>
+              /></span> -->
             </div>
           </div>
         </div>
@@ -252,6 +253,7 @@ onMounted(() => {
   getUserAvatar();
   fetchUser();
   getChurchAffiliationsData();
+  getAuthUsersRoles();
   dispatch("getRoles");
   dispatch("getRolesList");
 });
@@ -268,7 +270,9 @@ const isUserProfile = computed(
 );
 // const userData = computed(() => state.auth.userData);
 const permissions = computed(() => state.auth.permissions);
-
+const getAuthUsersRoles = () => {
+  dispatch("getAuthUserRoles", userId.value);
+};
 console.log("🚀 ~ permissions2*: ", permissions.value);
 
 const avatar = computed(() => state.member.avatar);
@@ -291,6 +295,15 @@ const roles = computed(() =>
       };
     })
 );
+
+const authUserRoles = computed(() =>
+  state?.role?.authUserRoles
+    ?.map((i) => {
+      return i;
+    })
+    .join(", ")
+);
+
 const role = ref("");
 const churchAffiliationsData = computed(
   () => state.profile.churchAffiliationsData

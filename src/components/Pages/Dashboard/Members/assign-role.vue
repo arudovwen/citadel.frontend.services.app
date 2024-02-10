@@ -4,6 +4,7 @@
       Are you sure you want to assign this role?
     </div>
     <Select label="Role" :options="roles" v-model="role" />
+    <!-- <span>UserId: {{ userId }}</span> -->
     <div class="flex gap-x-5 justify-end mt-4">
       <Button
         :disabled="false"
@@ -35,7 +36,7 @@ import { useToast } from "vue-toastification";
 //     type: String,
 //   },
 // });
-const props = defineProps(["userId"]);
+const props = defineProps(["userId", "closeModal"]);
 
 const toast = useToast();
 
@@ -47,6 +48,7 @@ const { dispatch, state } = useStore();
 // const userId = computed(() => "");
 const assignLoading = computed(() => state.role.setPermissionsLoading);
 const assignSuccess = computed(() => state.role.setPermissionsSuccess);
+const assignError = computed(() => state.role.setPermissionsError);
 
 const role = ref("");
 const roles = computed(() =>
@@ -69,6 +71,12 @@ function assignRole() {
 watch(assignSuccess, () => {
   if (assignSuccess.value) {
     toast.success("Role updated");
+    props.closeModal();
+  }
+});
+watch(assignError, () => {
+  if (assignError.value) {
+    props.closeModal();
     // close the modal
     // modal.value.closeModal();
   }

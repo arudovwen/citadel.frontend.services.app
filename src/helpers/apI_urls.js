@@ -21,7 +21,10 @@ export const urls = {
   CREATE_ROLE_WITH_PERMISSIONS: "/Auth/CreateRoleWithPermissions",
   GET_PLATFORM_ROLES: "/Auth/GetPlatformRoles",
   REMOVE_ROLE_FROM_PLATFORM: "/Auth/RemoveUserRoleFromPlatform",
-
+  REMOVE_PERMISSION_FROM_USER: "/Auth/RemovePermissionsFromUser",
+  ASSIGN_PERMISSIONS_TO_USERS: "/Auth/AssignPermissionsToUser",
+  GET_PLATFORM_PERMISSIONS: "/Auth/GetPlatformPermissions",
+  GET_AUTH_USER_ROLES: "/Auth/GetUserRoles",
   //Affinity Groups
   CREATE_AFFINITY_GROUP: "/AffinityGroup/CreateAffinityGroup",
   UPDATE_AFFINITY_GROUP: "/AffinityGroup/UpdateAffinityGroup",
@@ -125,10 +128,6 @@ export const urls = {
   GET_MOI_BY_USER_ID: "/MountainOfInfluence/GetMountainOfInfluenceByUserId",
   GET_ALL_MOIS: "/MountainOfInfluence/GetAllMountainOfInfluence",
   DELETE_MOI: "/MountainOfInfluence/DeleteMountainOfInfluence",
-
-  //Permissions
-  GET_PLATFORM_PERMISSIONS: "/Auth/GetPlatformPermissions",
-  ASSIGN_PERMISSIONS_TO_USERS: "/Auth/AssignPermissionsToUser",
 
   // Qualification
   CREATE_QUALIFICATION: "/Qualification/CreateQualification",
