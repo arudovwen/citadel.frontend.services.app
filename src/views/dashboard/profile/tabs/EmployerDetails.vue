@@ -145,7 +145,7 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { industryMenu } from "@/constant/data";
-import lgas from "@/util/lgas.json";
+import lgaState from "@/util/lgastate.json";
 import { useToast } from "vue-toastification";
 import { inject, onMounted, computed, watch } from "vue";
 import { useStore } from "vuex";
@@ -185,9 +185,14 @@ const statesOption = computed(() => {
 });
 
 const lgaOption = computed(() =>
-  lgas.map((i) => {
-    return { label: i, value: i };
-  })
+  lgaState
+    .find(
+      (item) =>
+        item?.state?.toLowerCase() === state?.value?.value?.toLowerCase()
+    )
+    ?.lgas?.map((i) => {
+      return { label: i, value: i };
+    })
 );
 const toast = useToast();
 // Define a validation schema
