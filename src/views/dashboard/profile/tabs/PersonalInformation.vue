@@ -251,7 +251,7 @@ import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import Countries from "@/util/countries.json";
 import VueSelect from "@/components/Select/VueSelect";
-import lgas from "@/util/lgas.json";
+// import lgas from "@/util/lgas.json";
 import lgaState from "@/util/lgastate.json";
 import {
   titleMenu,

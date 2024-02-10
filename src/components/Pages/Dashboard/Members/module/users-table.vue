@@ -99,11 +99,12 @@
               {{ props.row.emailAddress }}
             </span>
             <span v-if="props.column.field == 'action'">
-              <Dropdown classMenuItems=" w-[140px]">
+              <Dropdown classMenuItems=" w-[160px]">
                 <span class="text-xl"
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
+                  <!-- <span>dd</span> -->
                   <MenuItem
                     v-for="(item, i) in handleActions(
                       props?.row?.statusText?.toLowerCase()
@@ -245,12 +246,27 @@
     <EditRecord v-if="type === 'edit'" />
     <ViewRecord v-if="type === 'view'" />
   </Modal>
+  <Modal
+    :title="type"
+    label="Small modal"
+    labelClass="btn-primary-600"
+    ref="roleModalChange"
+    sizeClass="max-w-md"
+    themeClass="bg-primary-500"
+  >
+    <div>
+      <AssignRole v-if="type === 'assign role'" :userId="id" />
+      <RemoveRole v-if="type === 'remove role'" />
+    </div>
+  </Modal>
   <RolesModal />
 </template>
 <script>
 import RolesModal from "@/views/roles/RolesModal";
 
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
+import AssignRole from "../assign-role.vue";
+import RemoveRole from "../remove-role.vue";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -283,6 +299,8 @@ export default {
     AddRecord,
     EditRecord,
     ViewRecord,
+    AssignRole,
+    RemoveRole,
     Pagination,
     InputGroup,
     RolesModal,
@@ -325,6 +343,12 @@ export default {
         },
         {
           name: "delist",
+        },
+        {
+          name: "assign role",
+        },
+        {
+          name: "remove role",
         },
       ],
       options: [
@@ -431,6 +455,22 @@ export default {
             this.$refs.modalStatus.openModal();
           },
         },
+        "assign role": {
+          name: "assign role",
+          icon: "heroicons-outline:user-plus",
+          doit: () => {
+            this.type = name;
+            this.$refs.roleModalChange.openModal();
+          },
+        },
+        "remove role": {
+          name: "remove role",
+          icon: "heroicons-outline:minus",
+          doit: () => {
+            this.type = name;
+            this.$refs.roleModalChange.openModal();
+          },
+        },
       };
 
       return actions[name] || null;
@@ -462,6 +502,7 @@ export default {
     const toast = useToast();
     const modal = ref(null);
     const modalChange = ref(null);
+    const roleModalChange = ref(null);
     const modalStatus = ref(null);
     const query = reactive({
       pageNumber: 1,
@@ -542,6 +583,7 @@ export default {
       search,
       modal,
       modalChange,
+      roleModalChange,
       modalStatus,
       perPage,
       state,
