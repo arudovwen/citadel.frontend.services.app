@@ -13,6 +13,9 @@ export default {
     getRoleLoading: false,
     getRoleSuccess: false,
     getRoleError: null,
+    getAuthUserRolesLoading: false,
+    getAuthUserRolesSuccess: false,
+    getAuthUserRolesError: null,
     getModulesLoading: false,
     getModulesSuccess: false,
     getModulesError: null,
@@ -32,12 +35,32 @@ export default {
     roles: [],
     modules: [],
     permissions: [],
+    authUserRoles: [],
     total: 0,
   },
   getters: {
     roles: (state) => state.roles,
   },
   mutations: {
+    getAuthUserRolesBegin(state) {
+      state.getAuthUserRolesLoading = true;
+      state.getAuthUserRolesSuccess = false;
+      state.getAuthUserRolesError = null;
+    },
+
+    getAuthUserRolesSuccess(state, data) {
+      state.getAuthUserRolesLoading = false;
+      state.getAuthUserRolesSuccess = true;
+      // console.log("🚀 ~ getAuthUserRolesSuccess ~ data:", JSON.stringify(data));
+
+      state.authUserRoles = data;
+    },
+
+    getAuthUserRolesError(state, err) {
+      state.getAuthUserRolesLoading = false;
+      state.getAuthUserRolesSuccess = false;
+      state.getAuthUserRolesError = err;
+    },
     getRoleBegin(state) {
       state.getRoleLoading = true;
       state.getRoleSuccess = false;
@@ -192,6 +215,21 @@ export default {
         commit("getRoleError", err);
       }
     },
+    async getAuthUserRoles({ commit }, userId) {
+      try {
+        commit("getAuthUserRolesBegin");
+        const response = await DataService.get(
+          `${urls.GET_AUTH_USER_ROLES}?UserId=${userId}`
+        );
+
+        if (response.status === 200) {
+          commit("getAuthUserRolesSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getAuthUserRolesError", err);
+      }
+    },
+
     async deleteRolesFromList({ commit }, id) {
       try {
         commit("deleteRoleBegin");
@@ -252,6 +290,21 @@ export default {
         commit("setPermissionsBegin");
         const response = await DataService.post(
           `${urls.ASSIGN_PERMISSIONS_TO_USERS}?RoleId=${data.roleId}&UserId=${data.userId}`,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("setPermissionsSuccess");
+        }
+      } catch (err) {
+        commit("setPermissionsError", err);
+      }
+    },
+    async removeRoleFromPermissions({ commit }, data) {
+      try {
+        commit("setPermissionsBegin");
+        const response = await DataService.post(
+          `${urls.REMOVE_PERMISSION_FROM_USER}?RoleId=${data.roleId}&UserId=${data.userId}`,
           data
         );
 
