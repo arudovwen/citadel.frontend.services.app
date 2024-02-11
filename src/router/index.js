@@ -145,19 +145,19 @@ const routes = [
           subroles: [],
         },
       },
-      {
-        path: "/roles-management",
-        name: "Roles",
-        component: () => import("@/views/roles/index.vue"),
-        meta: {
-          // auth: true,
-          activeName: "roles-management",
-          roles: ["administrator"],
-          subroles: [],
-        },
+      // {
+      //   path: "/roles-management",
+      //   name: "Roles",
+      //   component: () => import("@/views/roles/index.vue"),
+      //   meta: {
+      //     // auth: true,
+      //     activeName: "roles-management",
+      //     roles: ["administrator"],
+      //     subroles: [],
+      //   },
 
-        // beforeEnter: guardAuth,
-      },
+      //   // beforeEnter: guardAuth,
+      // },
       {
         path: "/users-management",
         name: "users management",
