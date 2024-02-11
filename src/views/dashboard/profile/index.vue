@@ -269,11 +269,11 @@ const isUserProfile = computed(
   () => route.params.userId === state.auth.userData.id
 );
 // const userData = computed(() => state.auth.userData);
-const permissions = computed(() => state.auth.permissions);
+// const permissions = computed(() => state.auth.permissions);
 const getAuthUsersRoles = () => {
   dispatch("getAuthUserRoles", userId.value);
 };
-console.log("🚀 ~ permissions2*: ", permissions.value);
+// console.log("🚀 ~ permissions2*: ", permissions.value);
 
 const avatar = computed(() => state.member.avatar);
 const biodata = computed(() => state.profile.biodata);

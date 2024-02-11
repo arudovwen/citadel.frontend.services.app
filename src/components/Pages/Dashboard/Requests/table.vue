@@ -312,6 +312,8 @@ function handleRequest() {
 }
 
 onMounted(() => {
+  console.log("🚀 ~ onMounted ~ authUserRoles:", state.role.authUserRoles);
+
   if (state.auth.userData.userRole.toLowerCase() === "hod") {
     dispatch("getAllHodRequests", query);
   }

@@ -2,7 +2,16 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex rounded-[6px] text-sm overflow-hidden gap-x-4"></div>
+        <span
+          @click="$router.push('/users-management')"
+          class="flex items-center gap-2 cursor-pointer"
+        >
+          <Icon icon="heroicons-outline:arrow-left" />
+
+          back</span
+        >
+
+        <!-- <div class="flex rounded-[6px] text-sm overflow-hidden gap-x-4"></div> -->
         <div
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
@@ -129,6 +138,7 @@ import RolesModal from "@/views/roles/RolesModal";
 import Modal from "@/components/Modal/Modal";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
+// import Icon from "@/components/Icon";
 
 // import Pagination from "@/components/Pagination";
 
