@@ -11,7 +11,7 @@ import UnitsIndex from "@/views/dashboard/units/index.vue";
 import AccessoriesIndex from "@/components/Pages/Dashboard/Accessories/index.vue";
 
 import SpecialUnitsIndex from "@/views/dashboard/special-units/index.vue";
-import MountainOfInfluenceIndex from "@/views/dashboard/mountain-of-influence/index.vue";
+// import MountainOfInfluenceIndex from "@/views/dashboard/mountain-of-influence/index.vue";
 import "vue-toastification/dist/index.css";
 
 const toast = useToast();
@@ -145,19 +145,19 @@ const routes = [
           subroles: [],
         },
       },
-      // {
-      //   path: "/roles-management",
-      //   name: "Roles",
-      //   component: () => import("@/views/roles/index.vue"),
-      //   meta: {
-      //     // auth: true,
-      //     activeName: "roles-management",
-      //     roles: ["administrator"],
-      //     subroles: [],
-      //   },
+      {
+        path: "/roles-management",
+        name: "Roles",
+        component: () => import("@/views/roles/index.vue"),
+        meta: {
+          // auth: true,
+          activeName: "roles-management",
+          roles: ["administrator"],
+          subroles: [],
+        },
 
-      //   // beforeEnter: guardAuth,
-      // },
+        // beforeEnter: guardAuth,
+      },
       {
         path: "/users-management",
         name: "users management",
@@ -271,28 +271,28 @@ const routes = [
         ],
       },
 
-      {
-        path: "/mountain-of-influence",
-        name: "mountain of influence",
-        component: MountainOfInfluenceIndex,
-        meta: {
-          roles: ["administrator"],
-          subroles: [],
-        },
-        children: [
-          {
-            path: "",
-            name: "mountain of influence",
-            component: () =>
-              import(
-                "@/components/Pages/Dashboard/MountainOfInfluence/moi.vue"
-              ),
-            meta: {
-              activeName: "mountain-of-influence",
-            },
-          },
-        ],
-      },
+      // {
+      //   path: "/mountain-of-influence",
+      //   name: "mountain of influence",
+      //   component: MountainOfInfluenceIndex,
+      //   meta: {
+      //     roles: ["administrator"],
+      //     subroles: [],
+      //   },
+      //   children: [
+      //     {
+      //       path: "",
+      //       name: "mountain of influence",
+      //       component: () =>
+      //         import(
+      //           "@/components/Pages/Dashboard/MountainOfInfluence/moi.vue"
+      //         ),
+      //       meta: {
+      //         activeName: "mountain-of-influence",
+      //       },
+      //     },
+      //   ],
+      // },
       {
         path: "/departments",
         name: "departments",

@@ -51,11 +51,19 @@ import Modal from "@/components/Modal";
 import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
-import { computed, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 // import vSelect from "vue-select";
 import { useToast } from "vue-toastification";
 import { useStore } from "vuex";
 import * as yup from "yup";
+
+onMounted(() => {
+  dispatch("getAllUsers", {
+    pageNumber: 1,
+    pageSize: 25000,
+    name: "",
+  });
+});
 
 let { dispatch, state } = useStore();
 
@@ -70,9 +78,9 @@ const schema = yup.object({
   hod: yup.string().nullable(),
 });
 const membersOptions = computed(() =>
-  state?.member?.data.map((i) => {
+  state?.member?.allUsers?.map((i) => {
     return {
-      label: `${i.firstName} ${i.surName}`,
+      label: `${i.firstName} ${i.lastName}`,
       value: i.userId,
     };
   })

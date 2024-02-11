@@ -2,27 +2,6 @@
   <form @submit.prevent="onSubmit">
     <Card title="">
       <div class="flex flex-col gap-y-5">
-        <Textinput
-          label="First Name"
-          type="text"
-          v-model="firstname"
-          :error="firstnameError"
-          placeholder="Provide a first name"
-        />
-        <Textinput
-          label="Middle name"
-          type="text"
-          v-model="middlename"
-          :error="middlenameError"
-          placeholder="Provide a middle name"
-        />
-        <Textinput
-          label="Last name"
-          type="text"
-          v-model="lastName"
-          :error="lastNameError"
-          placeholder="Provide a surnanme"
-        />
         <div class="">
           <Textinput
             label="Email"
@@ -32,13 +11,7 @@
             placeholder="Provide an email address"
           />
         </div>
-        <Textinput
-          label="Phone"
-          type="text"
-          v-model="phoneNumber"
-          :error="phoneNumberError"
-          placeholder="Provide a phone number"
-        />
+
         <Select
           label="Role"
           :options="roles"
@@ -82,22 +55,13 @@ const roles = computed(() =>
     })
 );
 const formData = reactive({
-  lastName: "",
-  firstname: "",
-  middlename: "",
   userRole: "",
-  phoneNumber: "",
+
   emailAddress: "",
 });
 const formDataSchema = yup.object().shape({
-  lastName: yup.string().required("lastName is required"),
-  firstname: yup.string().required("Firstname is required"),
-  middlename: yup.string(),
   userRole: yup.string().required("Please select a role"),
-  phoneNumber: yup
-    .string()
-    .max(11, "Phone number must be 11 digits or less")
-    .required("Phone number is required"),
+
   emailAddress: yup
     .string()
     .email("Invalid email format")
@@ -112,15 +76,7 @@ const { handleSubmit } = useForm({
 const { value: emailAddress, errorMessage: emailAddressError } =
   useField("emailAddress");
 
-const { value: lastName, errorMessage: lastNameError } = useField("lastName");
-const { value: firstname, errorMessage: firstnameError } =
-  useField("firstname");
-const { value: middlename, errorMessage: middlenameError } =
-  useField("middlename");
 const { value: userRole, errorMessage: roleError } = useField("userRole");
-
-const { value: phoneNumber, errorMessage: phoneNumberError } =
-  useField("phoneNumber");
 
 const onSubmit = handleSubmit((values) => {
   dispatch("addUser", {

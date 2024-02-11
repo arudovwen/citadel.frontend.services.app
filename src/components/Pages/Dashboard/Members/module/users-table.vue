@@ -32,14 +32,16 @@
               iconClass="text-lg"
             />
           </export-excel>
+          <!-- icon="heroicons-outline:plus-sm" -->
+
           <Button
-            icon="heroicons-outline:plus-sm"
-            text="Add role"
+            text="Roles"
             btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg"
             @click="
               () => {
-                $store.dispatch('openRoleModal');
+                $router.push('/roles-management');
+                // $store.dispatch('openRoleModal');
               }
             "
           />
@@ -121,7 +123,7 @@
                       :class="`
                 
                   ${
-                    item.name === 'delist'
+                    item.name === 'delete'
                       ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
                       : 'hover:bg-slate-900 hover:text-white'
                   }
@@ -174,7 +176,7 @@
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to {{ type.toLowerCase() }} this member?
     </div>
-    <div v-if="type.toLowerCase() === 'delist'">
+    <div v-if="type.toLowerCase() === 'delete'">
       <textarea
         resize="none"
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
@@ -213,7 +215,7 @@
     themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to delist this member?
+      Are you sure you want to delete this member?
     </div>
 
     <template v-slot:footer>
@@ -225,7 +227,7 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          text="Delist"
+          text="Delete"
           :isLoading="deleteloading"
           :disabled="deleteloading"
           btnClass="btn-danger btn-sm"
@@ -353,14 +355,15 @@ export default {
         {
           name: "enlist",
         },
-        {
-          name: "delist",
-        },
+
         {
           name: "assign role",
         },
         {
           name: "remove role",
+        },
+        {
+          name: "delete",
         },
       ],
       options: [
@@ -451,8 +454,8 @@ export default {
             this.$router.push("/profile/" + id);
           },
         },
-        delist: {
-          name: "delist",
+        delete: {
+          name: "delete",
           icon: "heroicons-outline:trash",
           doit: () => {
             this.type = name;
@@ -499,11 +502,11 @@ export default {
         return this.actions.filter((i) => i.name !== "enlist");
       }
       if (value === "deactivated") {
-        return this.actions.filter((i) => i.name !== "delist");
+        return this.actions.filter((i) => i.name !== "delete");
       }
       if (value === "pendingactivation") {
         return this.actions.filter(
-          (i) => i.name !== "delist" && i.name !== "approve"
+          (i) => i.name !== "delete" && i.name !== "approve"
         );
       }
       return value;
@@ -572,7 +575,7 @@ export default {
 
     watch(deletesuccess, () => {
       if (deletesuccess.value) {
-        toast.success("Member delisted");
+        toast.success("Member deleteed");
         dispatch("getUsers", query);
         modalStatus.value.closeModal();
       }
