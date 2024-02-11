@@ -165,13 +165,13 @@ export const menuItems = [
   //   roles: ["administrator"],
   //   subroles: [],
   // },
-  {
-    title: "Roles",
-    icon: "heroicons-outline:user-circle",
-    link: "/roles-management",
-    roles: ["administrator"],
-    subroles: [],
-  },
+  // {
+  //   title: "Roles",
+  //   icon: "heroicons-outline:user-circle",
+  //   link: "/roles-management",
+  //   roles: ["administrator"],
+  //   subroles: [],
+  // },
   {
     title: "Units",
     icon: "heroicons-outline:rectangle-group",
