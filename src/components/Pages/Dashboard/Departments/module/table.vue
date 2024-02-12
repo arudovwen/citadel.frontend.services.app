@@ -14,6 +14,7 @@
   </div>
 </template>
 <script setup>
+import Card from "@/components/Card";
 import { ref, provide } from "vue";
 import ApprovedTable from "./ApprovedTable";
 import PendingTable from "./PendingTable";

@@ -102,7 +102,7 @@
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in filteredActions" :key="i">
+                  <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
                       @click="item.doit(item.name, props.row)"
                       :class="{
@@ -217,7 +217,7 @@ import ViewRecord from "../member-preview.vue";
 import window from "@/mixins/window";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
-import moment from "moment";
+// import moment from "moment";
 import { useRoute } from "vue-router";
 import { useToast } from "vue-toastification";
 
@@ -291,20 +291,7 @@ export default {
     const loading = computed(() => state.member.loading);
     const delistLoading = computed(() => state.department.loading);
     const delistSuccess = computed(() => state.department.deletesuccess);
-    const members = computed(() => {
-      if (state?.member?.data) {
-        return state?.member?.data?.map((item) => {
-          item.fullName = `${item.firstName} ${item.surName}`;
-          item.dateOfBirth = item?.dateOfBirth
-            ? moment(item?.dateOfBirth).format("ll")
-            : "-";
-          item.department = item?.department ? item?.department : "-";
-
-          return item;
-        });
-      }
-      return [];
-    });
+    const members = computed(() => state.department.departments);
     const total = computed(() => state.profile.total);
     const roles = computed(() => state.profile.roles);
     const addsuccess = computed(() => state.profile.addsuccess);

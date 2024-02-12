@@ -16,75 +16,6 @@
           :error="departmentNameError"
         />
         <div class="assagin space-y-4">
-          <!-- <div class="grid lg:grid-cols-2 gap-4 grid-cols-1">
-            <FormGroup label="Start Date" name="d1" :error="errorstartDate">
-              <flat-pickr
-                v-model="startDate"
-                class="form-control"
-                id="d1"
-                placeholder="yyyy, dd M"
-                :config="{
-                  altInput: true,
-                  altFormat: 'F j, Y',
-                  dateFormat: 'Y-m-d',
-                }"
-              />
-            </FormGroup>
-            <FormGroup label="End Date" name="d2" :error="errorendDate">
-              <flat-pickr
-                v-model="endDate"
-                class="form-control"
-                id="d2"
-                placeholder="yyyy, dd M"
-                :config="{
-                  altInput: true,
-                  altFormat: 'F j, Y',
-                  dateFormat: 'Y-m-d',
-                }"
-              />
-            </FormGroup>
-          </div>
-          <VueSelect label="Assignee" :error="errorassign">
-            <vSelect
-              :options="assignOption"
-              label="title"
-              v-model="assign"
-              multiple
-            >
-              <template #option="{ title, image }">
-                <span class="flex items-center space-x-4">
-                  <div class="flex-none">
-                    <div class="h-7 w-7 rounded-full">
-                      <img
-                        :src="image"
-                        alt=""
-                        class="w-full h-full rounded-full"
-                      />
-                    </div>
-                  </div>
-                  <span class="flex-1">{{ title }}</span>
-                </span>
-              </template>
-              <template #selected-option="{ title, image }">
-                <span class="flex items-center space-x-4">
-                  <div class="flex-none">
-                    <div class="h-7 w-7 rounded-full">
-                      <img
-                        :src="image"
-                        alt=""
-                        class="w-full h-full rounded-full"
-                      />
-                    </div>
-                  </div>
-                  <span class="flex-1">{{ title }}</span>
-                </span>
-              </template>
-            </vSelect>
-          </VueSelect>
-
-          <VueSelect label="Tag" :error="errorCategory"
-            ><vSelect :options="options" v-model="category" multiple
-          /></VueSelect> -->
           <Textarea
             label="Department description"
             placeholder="Department description"
@@ -129,19 +60,19 @@ import { useStore } from "vuex";
 import * as yup from "yup";
 
 onMounted(() => {
-  dispatch("getAllUsers", {
+  dispatch("getAffiliationByMemberQuery", {
     pageNumber: 1,
     pageSize: 25000,
-    name: "",
+    role: "hod",
   });
 });
 
 let { dispatch, state } = useStore();
 const toast = useToast();
 const membersOptions = computed(() =>
-  state?.member?.allUsers?.map((i) => {
+  state?.member?.data?.map((i) => {
     return {
-      label: `${i.firstName} ${i.lastName}`,
+      label: `${i.firstName} ${i.surName}`,
       value: i.userId,
     };
   })

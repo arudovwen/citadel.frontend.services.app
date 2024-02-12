@@ -61,7 +61,7 @@ onMounted(() => {
   dispatch("getAllUsers", {
     pageNumber: 1,
     pageSize: 25000,
-    name: "",
+    name: "hod",
   });
 });
 

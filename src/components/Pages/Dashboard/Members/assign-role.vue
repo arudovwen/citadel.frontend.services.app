@@ -27,7 +27,7 @@
 import Select from "@/components/Select";
 import Button from "@/components/Button";
 import { useStore } from "vuex";
-import { computed, onMounted, ref, watch, defineProps } from "vue";
+import { computed, onMounted, ref, watch, defineProps, reactive } from "vue";
 import { useToast } from "vue-toastification";
 
 // defineProps({
@@ -49,15 +49,19 @@ const { dispatch, state } = useStore();
 const assignLoading = computed(() => state.role.setPermissionsLoading);
 const assignSuccess = computed(() => state.role.setPermissionsSuccess);
 const assignError = computed(() => state.role.setPermissionsError);
-
+const query = reactive({
+  pageNumber: 1,
+  pageSize: 25,
+  name: "",
+});
 const role = ref("");
 const roles = computed(() =>
   state.role.roles
     .filter((i) => i?.name?.toLowerCase() !== "firsttimers")
     .map((i) => {
       return {
-        value: i?.id,
-        label: i?.name,
+        value: i?.roleId,
+        label: i?.roleName,
       };
     })
 );
@@ -71,6 +75,7 @@ function assignRole() {
 watch(assignSuccess, () => {
   if (assignSuccess.value) {
     toast.success("Role updated");
+    dispatch("getUsers", query);
     props.closeModal();
   }
 });

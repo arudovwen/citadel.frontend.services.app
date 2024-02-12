@@ -29,28 +29,6 @@
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
-          <div
-            class="flex border border-gray-200 rounded"
-            v-if="
-              state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
-              state.auth.userData.userRole.toLowerCase() === 'administrator'
-            "
-          >
-            <Button
-              text="Activity reports"
-              @click="active = 'activity'"
-              :btnClass="`border-r h-9 py-2 rounded-[0px] flex items-center ${
-                active === 'activity' ? 'bg-gray-100' : ''
-              }`"
-            />
-            <Button
-              text="Inspection reports"
-              @click="active = 'inspection'"
-              :btnClass="`h-9 py-2 flex items-center ${
-                active === 'inspection' ? 'bg-gray-100' : ''
-              }`"
-            />
-          </div>
           <Button
             v-if="active === 'inspection'"
             icon="heroicons-outline:plus-sm"
@@ -77,6 +55,28 @@
               }
             "
           />
+          <div
+            class="flex border border-gray-200 rounded"
+            v-if="
+              state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
+              state.auth.userData.userRole.toLowerCase() === 'administrator'
+            "
+          >
+            <Button
+              text="Activity reports"
+              @click="active = 'activity'"
+              :btnClass="`border-r h-9 py-2 rounded-[0px] flex items-center ${
+                active === 'activity' ? 'bg-gray-100' : ''
+              }`"
+            />
+            <Button
+              text="Inspection reports"
+              @click="active = 'inspection'"
+              :btnClass="`h-9 py-2 flex items-center ${
+                active === 'inspection' ? 'bg-gray-100' : ''
+              }`"
+            />
+          </div>
         </div>
       </div>
       <div class="-mx-6">

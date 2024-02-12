@@ -104,6 +104,7 @@ export const urls = {
   GET_ALL_DEPARTMENT: "/Department/GetAllDepartment",
   GET_ALL_DEPARTMENT_TOTAL: "/Department/GetAllDepartmentByTotal",
   DELETE_DEPARTMENT: "/Department/DeleteDepartment",
+  GET_DEPARTMENT_MEMBERS: "Department/getdepartmentmembers",
   GET_LOGGEDIN_USER_DEPARTMENT: "/Department/GetDepartmentByUserId",
 
   // Employer
