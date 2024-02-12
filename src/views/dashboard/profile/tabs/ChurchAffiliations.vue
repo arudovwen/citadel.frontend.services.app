@@ -18,7 +18,7 @@
 
       <div>
         <Select
-          :disabled="isInspectorate ? false : true"
+          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
           label="Level Of ATS"
           :options="levelOfATSMenu"
           v-model.value="levelOfATS"
@@ -30,7 +30,7 @@
 
       <div>
         <Select
-          :disabled="isInspectorate ? false : true"
+          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
           label="Charter Member"
           :options="isCharterMemberMenu"
           v-model.value="charteredMember"
@@ -47,7 +47,7 @@
         "
       >
         <Textinput
-          :disabled="isInspectorate ? false : true"
+          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
           label="Charter Member Number"
           type="number"
           placeholder="Type your charter number"
@@ -60,9 +60,11 @@
 
       <div>
         <CustomVueSelect
-          :canRequest="!isInspectorate && isUserProfile"
+          :canRequest="
+            !loggedInUserRoles.includes('inspectorate') && isUserProfile
+          "
           :request="requestFnObj('Request to change zone', 'toggleReqZone')"
-          :disabled="isInspectorate ? false : true"
+          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
           label="CIH Zone"
           class="min-w-[200px] w-full md:w-auto"
           v-model.value="zoneObj"
@@ -76,7 +78,9 @@
 
       <div>
         <CustomVueSelect
-          :disabled="centersLoading || !isInspectorate"
+          :disabled="
+            centersLoading || !loggedInUserRoles.includes('inspectorate')
+          "
           :menuLoading="centersLoading"
           label="Center Address"
           class="min-w-[200px] w-full md:w-auto"
@@ -91,7 +95,7 @@
 
       <div>
         <Textinput
-          :disabled="isInspectorate ? false : true"
+          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
           label="Mountain of Influence"
           type="text"
           placeholder="Type your mountain of influence"
@@ -133,8 +137,12 @@
               'toggleReqDepartment'
             )
           "
-          :canRequest="!isInspectorate && !isHOD && isUserProfile"
-          :disabled="isInspectorate ? false : true"
+          :canRequest="
+            !loggedInUserRoles.includes('inspectorate') &&
+            !isHOD &&
+            isUserProfile
+          "
+          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
           label="Department"
           classInput="!h-[40px]"
           v-model.value="departmentObj"
@@ -148,7 +156,7 @@
 
       <div>
         <Select
-          :disabled="isInspectorate ? false : true"
+          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
           label="CIH Role"
           :options="cihRoles"
           v-model.value="cihRole"
@@ -161,9 +169,9 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
       <Button
-        v-if="isInspectorate"
+        v-if="loggedInUserRoles.includes('inspectorate')"
         :isLoading="submitLoading"
-        :disabled="!isInspectorate"
+        :disabled="!loggedInUserRoles.includes('inspectorate')"
         type="submit"
         class="btn btn-primary block w-full text-center"
       >
@@ -217,11 +225,11 @@ onUnmounted(() => {
 });
 const store = useStore();
 const id = inject("id");
-// const isAdmin = inject("isAdmin");
+const loggedInUserRoles = inject("loggedInUserRoles");
 const isHOD = inject("isHOD");
 const isUserProfile = inject("isUserProfile");
 
-const isInspectorate = inject("isInspectorate");
+// const isInspectorate = inject("isInspectorate");
 
 const toast = useToast();
 const getChurchAffiliationsData = () => {

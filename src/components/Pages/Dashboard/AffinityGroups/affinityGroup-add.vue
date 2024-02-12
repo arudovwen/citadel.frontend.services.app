@@ -127,7 +127,12 @@ watch(success, () => {
   if (success.value) {
     dispatch("closeModal");
     toast.success("Affinity group successfully created");
-    dispatch("getAffinityGroups");
+    dispatch("getAffinityGroups", {
+      pageNumber: 1,
+      pageSize: 25,
+      searchParameter: "",
+      sortOrder: "",
+    });
   }
 });
 </script>
