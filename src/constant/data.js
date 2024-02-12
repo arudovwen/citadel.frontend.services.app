@@ -1077,3 +1077,16 @@ export const ageRangeMenu = [
     value: "0-100",
   },
 ];
+
+export const UserDepartmentsCardList = [
+  {
+    departmentName: "Hebi",
+    description: "Find killer Bee",
+    isDefault: true,
+  },
+  {
+    departmentName: "Akatsuki",
+    description: "Find Biju",
+    isDefault: false,
+  },
+];
