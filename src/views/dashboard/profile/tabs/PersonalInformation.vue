@@ -4,7 +4,7 @@
       v-if="!canEditDetails"
       class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
     ></div>
-    <!-- {{ biodata }}s -->
+    <!-- {{ biodata }} -->
 
     <!-- {{ getBiodataError !== null }} -->
     <!-- <span>{{ createProfileLoading }}</span>
@@ -65,7 +65,7 @@
         v-model="email"
         :error="emailError"
         classInput="h-[40px]"
-        :disabled="email?.length > 0"
+        :disabled="biodata?.email?.length > 0"
       />
       <Textinput
         label="Mobile 1"
@@ -75,7 +75,7 @@
         v-model="mobile1"
         :error="mobile1Error"
         classInput="h-[40px]"
-        :disabled="mobile1?.length > 0"
+        :disabled="biodata?.mobile1?.length > 0"
       />
 
       <Textinput
