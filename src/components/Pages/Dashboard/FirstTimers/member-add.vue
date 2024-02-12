@@ -79,7 +79,6 @@
         <div class="" v-if="purposeOfVisit === 'other'">
           <Textinput
             label="Other Purpose"
-            type="other"
             v-model="other"
             :error="otherError"
             placeholder="Provide other purpose of visit"
@@ -94,15 +93,15 @@
         <Textinput
           label="Name of Inviter"
           type="text"
-          v-model="nameOfInviter"
-          :error="nameOfInviterError"
+          v-model="inviterName"
+          :error="inviterNameError"
           placeholder="Add your inviter's name"
         />
         <Textinput
           label="How the First Timer knew about us?"
           type="text"
-          v-model="howFirstTimerKnew"
-          :error="howFirstTimerKnewError"
+          v-model="howDidYouKnow"
+          :error="howDidYouKnowError"
           placeholder=""
         />
 
@@ -219,10 +218,10 @@ const formData = reactive({
   state: "",
   country: "",
   purposeOfVisit: "",
-  other: "",
   placeOfVisit: "",
-  nameOfInviter: "",
-  howFirstTimerKnew: "",
+  inviterName: "",
+  howDidYouKnow: "",
+  other: "",
 });
 const formDataSchema = yup.object().shape({
   dateOfVisit: yup
@@ -256,10 +255,10 @@ const formDataSchema = yup.object().shape({
     .required("Country is required")
     .nullable(),
   purposeOfVisit: yup.string().required("Purpose of Visit is required"),
-  other: yup.string(),
   placeOfVisit: yup.string().required("Place of Visit is required"),
-  nameOfInviter: yup.string(),
-  howFirstTimerKnew: yup.string(),
+  inviterName: yup.string(),
+  howDidYouKnow: yup.string(),
+  other: yup.string(),
 });
 const purposeOptions = [
   { value: "become member", label: "Become Member" },
@@ -276,11 +275,11 @@ const { handleSubmit } = useForm({
   initialValues: formData,
 });
 
-const { value: howFirstTimerKnew, errorMessage: howFirstTimerKnewError } =
-  useField("howFirstTimerKnew");
+const { value: howDidYouKnow, errorMessage: howDidYouKnowError } =
+  useField("howDidYouKnow");
 
-const { value: nameOfInviter, errorMessage: nameOfInviterError } =
-  useField("nameOfInviter");
+const { value: inviterName, errorMessage: inviterNameError } =
+  useField("inviterName");
 
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: dateOfVisit, errorMessage: dateOfVisitError } =
@@ -302,9 +301,10 @@ const { value: state, errorMessage: stateError } = useField("state");
 const { value: country, errorMessage: countryError } = useField("country");
 const { value: purposeOfVisit, errorMessage: purposeOfVisitError } =
   useField("purposeOfVisit");
-const { value: other, errorMessage: otherError } = useField("other");
+
 const { value: placeOfVisit, errorMessage: placeOfVisitError } =
   useField("placeOfVisit");
+const { value: other, errorMessage: otherError } = useField("other");
 
 const onSubmit = handleSubmit((values) => {
   dispatch("createProfile", {
@@ -312,6 +312,7 @@ const onSubmit = handleSubmit((values) => {
     country: values.country.value,
     state: values.state.value,
     lga: values.lga.value,
+    purposeOfVisit: values.other,
     isFirstTime: true,
   });
 });

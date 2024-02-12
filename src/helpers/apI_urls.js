@@ -90,6 +90,12 @@ export const urls = {
   GET_INSPECTORATE_REQUESTS: "/ChurchAffiliation/GetInspectorateRequests",
   APPROVE_CHANGE_OF_ZONE: "/ChurchAffiliation/ApproveChangeOfCIHZone",
   APPROVE_CHANGE_OF_DEPARTMENT: "/ChurchAffiliation/ApproveChangeOfDepartment",
+  GET_APPROVED_DEPARTMENT_MEMBERS:
+    "/ChurchAffiliation/GetApprovedDepartmentRequest",
+  GET_REJECTED_DEPARTMENT_REQUESTS:
+    "/ChurchAffiliation/GetRejectedDepartmentRequest",
+  GET_PENDING_DEPARTMENT_REQUESTS:
+    "/ChurchAffiliation/GetPendingDepartmentRequest",
 
   // Department
   CREATE_DEPARTMENT: "/Department/CreateDepartment",

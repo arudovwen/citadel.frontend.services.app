@@ -26,7 +26,7 @@
           <div>
             <h6 class="text-xs font-semibold text-slate-400">Date of birth</h6>
             <p class="text-base font-semibold text-slate-900 capitalize">
-              {{ moment(detail?.dateOfBirth).format("lll") }}
+              {{ moment(detail?.dateOfBirth).format("ll") }}
             </p>
           </div>
           <div class="col-span-1 md:col-span-2">
@@ -89,7 +89,7 @@
               Name of Inviter
             </h6>
             <p class="text-base font-semibold text-slate-900 capitalize">
-              {{ detail?.placeOfVisit || "-" }}
+              {{ detail?.inviterName || "-" }}
             </p>
           </div>
           <div>
@@ -97,7 +97,7 @@
               How did they hear about us
             </h6>
             <p class="text-base font-semibold text-slate-900 capitalize">
-              {{ detail?.placeOfVisit || "-" }}
+              {{ detail?.howDidYouKnow || "-" }}
             </p>
           </div>
           <div>
@@ -112,7 +112,14 @@
               {{ detail?.state || "-" }}
             </p>
           </div>
-
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">
+              Local Govt Area
+            </h6>
+            <p class="text-base font-semibold text-slate-900 capitalize">
+              {{ detail?.lga || "-" }}
+            </p>
+          </div>
           <div>
             <h6 class="text-xs font-semibold text-slate-400">City</h6>
             <p class="text-base font-semibold text-slate-900 capitalize">
