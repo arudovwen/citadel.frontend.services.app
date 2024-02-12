@@ -440,7 +440,12 @@ export default {
       if (deleteAffinityGroupSuccess.value) {
         dispatch("setDeleteModal", false);
         toast.success("Successfully deleted");
-        dispatch("getAffinityGroups");
+        dispatch("getAffinityGroups", {
+          pageNumber: 1,
+          pageSize: 25,
+          searchParameter: "",
+          sortOrder: "",
+        });
       }
     });
     watch(
