@@ -251,7 +251,7 @@ export default {
       pageSize: 25,
       sortOrder: "",
       searchParameter: "",
-      department: route.params.name,
+      name: route.params.name,
     });
     const { state, dispatch } = useStore();
     const toast = useToast();
@@ -272,12 +272,12 @@ export default {
     ];
     // none, firstName, userId, surname, department, center, zone, role
     onMounted(() => {
-      dispatch("getAffiliationByMemberQuery", query);
+      dispatch("getApprovedDepartments", query);
       dispatch("getRoles");
       // id.value = getCurrentInstance().data.id;
     });
     function fetchRecords(page) {
-      dispatch("getAffiliationByMemberQuery", { ...query, pageNumber: page });
+      dispatch("getApprovedDepartments", { ...query, pageNumber: page });
     }
 
     function perPage({ currentPerPage }) {
@@ -315,16 +315,16 @@ export default {
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
-      dispatch("getAffiliationByMemberQuery", { ...query, name: searchValue });
+      dispatch("getApprovedDepartments", { ...query, name: searchValue });
     }, debounceDelay);
     watch(addsuccess, () => {
-      addsuccess.value && dispatch("getAffiliationByMemberQuery", query);
+      addsuccess.value && dispatch("getApprovedDepartments", query);
       modalChange.value.closeModal();
     });
 
     watch(delistSuccess, () => {
       if (delistSuccess.value) {
-        dispatch("getAffiliationByMemberQuery", query);
+        dispatch("getApprovedDepartments", query);
         toast.success("Member successfully removed");
         modal.value.closeModal();
       }
@@ -332,7 +332,7 @@ export default {
 
     // watch(deletesuccess, () => {
     //   if (deletesuccess.value) {
-    //     dispatch("getAffiliationByMemberQuery", query);
+    //     dispatch("getApprovedDepartments", query);
     //     modalStatus.value.closeModal();
     //   }
     // });
@@ -346,7 +346,7 @@ export default {
     watch(
       () => [query.pageNumber, query.pageSize, query.sortOrder],
       () => {
-        dispatch("getAffiliationByMemberQuery", query);
+        dispatch("getApprovedDepartments", query);
       }
     );
     return {
