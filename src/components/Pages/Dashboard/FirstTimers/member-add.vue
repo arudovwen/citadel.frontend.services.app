@@ -312,7 +312,8 @@ const onSubmit = handleSubmit((values) => {
     country: values.country.value,
     state: values.state.value,
     lga: values.lga.value,
-    purposeOfVisit: values.other,
+    purposeOfVisit:
+      values.purposeOfVisit === "other" ? values.other : values.purposeOfVisit,
     isFirstTime: true,
   });
 });
