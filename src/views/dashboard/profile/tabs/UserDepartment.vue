@@ -20,9 +20,9 @@
         name="Department"
       /> -->
 
-      <div :class="`inline-block input-label `">
+      <div :class="`inline-block input-label mb-8 ml-auto`">
         <span
-          class="ml-auto text-blue-400"
+          class="text-blue-400"
           @click="$store.dispatch('toggleReqDepartment', true)"
           >Request to join department</span
         >
