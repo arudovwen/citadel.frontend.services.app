@@ -1,6 +1,11 @@
 <template>
   <div class="grid grid-cols-2 gap-6">
-    <Card bodyClass="" v-for="(item, i) in props.departments" :key="i">
+    <Card
+      bodyClass=""
+      className="border border-gray-200"
+      v-for="(item, i) in props.departments"
+      :key="i"
+    >
       <div class="px-6 pt-6">
         <header class="flex justify-between items-end mb-4">
           <div class="flex space-x-4 items-center">
@@ -33,7 +38,7 @@
       </div>
 
       <div
-        class="flex justify-end px-4 py-2 mt-6 border-t border-gray-100 gap-x-3"
+        class="flex justify-end px-4 py-2 mt-6 border-t border-gray-200 gap-x-3"
       >
         <button
           class="text-xs text-blue-400 active:scale-95 px-1 py-1 rounded-full"

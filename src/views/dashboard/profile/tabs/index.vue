@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <div class="flex overflow-x-auto">
-      <div v-for="item in allButtons" :key="item.id">
+      <div v-for="(item, i) in allButtons" :key="item.id">
         <div v-if="item.title == 'Spouse Details'">
           <div v-if="showMarriedTab">
             <button
@@ -56,6 +56,7 @@
               selectedTab == item.title
                 ? 'text-primary-600 before:w-full'
                 : 'text-slate-500 before:w-0 dark:text-slate-300',
+              i == 0 ? 'pl-0' : '',
             ]"
             class="whitespace-nowrap text-sm font-medium mb-7 capitalize bg-white dark:bg-slate-800 ring-0 foucs:ring-0 focus:outline-none px-2 transition duration-150 before:transition-all before:duration-150 relative before:absolute before:left-1/2 before:bottom-[-6px] before:h-[1.5px] before:bg-primary-500 before:-translate-x-1/2"
           >
