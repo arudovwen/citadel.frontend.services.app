@@ -294,7 +294,7 @@ export default {
     },
     async getPermissionsList({ commit }) {
       try {
-        commit("getRoleBegin");
+        commit("getPermissionsBegin");
         const response = await DataService.get(
           `${urls.GET_PLATFORM_PERMISSIONS}`
         );
