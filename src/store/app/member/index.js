@@ -246,11 +246,12 @@ export default {
         commit("fetchUserErr", err);
       }
     },
+    // eslint-disable-next-line no-unused-vars
     async getRoles({ commit }) {
-      const response = await DataService.get(`${urls.GET_USER_ROLES}`);
-      if (response.status === 200) {
-        commit("rolesSuccess", response.data);
-      }
+      // const response = await DataService.get(`${urls.GET_USER_ROLES}`);
+      // if (response.status === 200) {
+      //   commit("rolesSuccess", response.data);
+      // }
     },
     async getAdminRoles({ commit }) {
       const response = await DataService.get(`${urls.GET_ADMIN_ROLES}`);

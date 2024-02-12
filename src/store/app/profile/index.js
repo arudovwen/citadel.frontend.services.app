@@ -76,16 +76,7 @@ export default {
     getSpouseDataloading: false,
     getSpouseDatasuccess: false,
     getSpouseDataerror: null,
-    employerData: {
-      employerName: "",
-      employerAddress: "",
-      positionHeld: "",
-      lga: "",
-      state: "",
-      country: "",
-      sector: "",
-      subSector: "",
-    },
+    employerData: null,
     getEmployerDataloading: false,
     getEmployerDatasuccess: false,
     getEmployerDataerror: null,
@@ -110,10 +101,6 @@ export default {
     //edit modal
     editModal: false,
     deleteModal: false,
-    userDepartments: [],
-    getAllUserDepartmentLoading: false,
-    getAllUserDepartmentSuccess: false,
-    getAllUserDepartmentErr: false,
   },
   getters: {
     creatingProfile(state) {
@@ -127,29 +114,6 @@ export default {
     },
   },
   mutations: {
-    getAllUserDepartmentBegin(state) {
-      state.getAllUserDepartmentLoading = true;
-      state.getAllUserDepartmentSuccess = false;
-      state.getAllUserDepartmentErr = null;
-    },
-
-    getAllUserDepartmentSuccess(state, { data, totalCount }) {
-      state.getAllUserDepartmentLoading = false;
-      state.getAllUserDepartmentSuccess = true;
-      state.userDepartments = data;
-      state.total = totalCount;
-
-      console.log(
-        "🚀 ~ getAllUserDepartmentSuccess ~ data:",
-        JSON.stringify({ data, totalCount })
-      );
-    },
-
-    getAllUserDepartmentErr(state, err) {
-      state.getAllUserDepartmentLoading = false;
-      state.getAllUserDepartmentErr = err;
-      state.getAllUserDepartmentSuccess = false;
-    },
     uploadFileBegin(state) {
       state.uploadFileLoading = true;
       state.uploadFileSuccess = false;
@@ -573,20 +537,6 @@ export default {
     },
   },
   actions: {
-    async getAllUserDepartment({ commit }, id) {
-      try {
-        commit("getAllUserDepartmentBegin");
-        const response = await DataService.get(
-          `${urls.GET_LOGGEDIN_USER_DEPARTMENT}?id=${id}`
-        );
-        if (response.status === 200) {
-          commit("getAllUserDepartmentSuccess", response.data);
-        }
-      } catch (err) {
-        console.log("getAllUserDepartmentErr", JSON.stringify(err));
-        commit("getAllUserDepartmentErr", err);
-      }
-    },
     async getAllCihRoles({ commit }) {
       try {
         commit("getAllCihRolesBegin");

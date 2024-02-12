@@ -42,7 +42,7 @@
         </div>
         <div
           class="w-full flex justify-center items-center p-12"
-          v-else-if="!departmentsLoading && userDepartments.length == 0"
+          v-else-if="!departmentsLoading && !userDepartments?.length"
         >
           Nothing to see yet
         </div>

@@ -8,7 +8,7 @@
         >
           <Icon icon="heroicons-outline:arrow-left" />
 
-          back</span
+          Back</span
         >
 
         <!-- <div class="flex rounded-[6px] text-sm overflow-hidden gap-x-4"></div> -->
@@ -155,7 +155,7 @@ const deleteRoleError = computed(() => state.role.deleteRoleError);
 const roles = computed(() => {
   const list = state?.role?.roles?.map((role) => {
     return {
-      name: role.name,
+      name: role.roleName,
       normalizedName: role.normalizedName,
       id: role.id,
     };
