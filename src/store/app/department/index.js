@@ -144,6 +144,51 @@ export default {
         commit("fetchErr", err);
       }
     },
+    async getApprovedDepartments({ commit }, data) {
+      try {
+        commit("fetchBegin");
+        const response = await DataService.get(
+          `${urls.GET_APPROVED_DEPARTMENT_MEMBERS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("fetchSuccess", response.data);
+        }
+      } catch (err) {
+        commit("fetchErr", err);
+      }
+    },
+    async getRejectedDepartments({ commit }, data) {
+      try {
+        commit("fetchBegin");
+        const response = await DataService.get(
+          `${urls.GET_REJECTED_DEPARTMENT_REQUESTS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("fetchSuccess", response.data);
+        }
+      } catch (err) {
+        commit("fetchErr", err);
+      }
+    },
+    async getPendingDepartments({ commit }, data) {
+      try {
+        commit("fetchBegin");
+        const response = await DataService.get(
+          `${urls.GET_PENDING_DEPARTMENT_REQUESTS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("fetchSuccess", response.data);
+        }
+      } catch (err) {
+        commit("fetchErr", err);
+      }
+    },
     async getDepartmentsTotal({ commit }, data) {
       try {
         commit("fetchBegin");

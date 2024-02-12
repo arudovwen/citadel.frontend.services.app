@@ -94,15 +94,15 @@
         <Textinput
           label="Name of Inviter"
           type="text"
-          v-model="nameOfInviter"
-          :error="nameOfInviterError"
+          v-model="inviterName"
+          :error="inviterNameError"
           placeholder="Add your inviter's name"
         />
         <Textinput
           label="How the First Timer knew about us?"
           type="text"
-          v-model="howFirstTimerKnew"
-          :error="howFirstTimerKnewError"
+          v-model="howDidYouKnow"
+          :error="howDidYouKnowError"
           placeholder=""
         />
         <div class="lg:col-span-2 col-span-1">
@@ -215,8 +215,8 @@ const formData = reactive({
   purposeOfVisit: "",
   other: "",
   placeOfVisit: "",
-  nameOfInviter: "",
-  howFirstTimerKnew: "",
+  inviterName: "",
+  howDidYouKnow: "",
 });
 const formDataSchema = yup.object().shape({
   dateOfVisit: yup
@@ -247,8 +247,8 @@ const formDataSchema = yup.object().shape({
   purposeOfVisit: yup.string().required("Purpose of Visit is required"),
   other: yup.string(),
   placeOfVisit: yup.string().required("Place of Visit is required"),
-  nameOfInviter: yup.string(),
-  howFirstTimerKnew: yup.string(),
+  inviterName: yup.string(),
+  howDidYouKnow: yup.string(),
 });
 const purposeOptions = [
   { value: "become member", label: "Become Member" },
@@ -304,10 +304,10 @@ const { value: purposeOfVisit, errorMessage: purposeOfVisitError } =
 const { value: placeOfVisit, errorMessage: placeOfVisitError } =
   useField("placeOfVisit");
 const { value: other, errorMessage: otherError } = useField("other");
-const { value: nameOfInviter, errorMessage: nameOfInviterError } =
-  useField("nameOfInviter");
-const { value: howFirstTimerKnew, errorMessage: howFirstTimerKnewError } =
-  useField("howFirstTimerKnew");
+const { value: inviterName, errorMessage: inviterNameError } =
+  useField("inviterName");
+const { value: howDidYouKnow, errorMessage: howDidYouKnowError } =
+  useField("howDidYouKnow");
 
 const profileCreated = computed(() => vState.profile.profileCreated);
 const onSubmit = handleSubmit((values) => {
@@ -316,6 +316,7 @@ const onSubmit = handleSubmit((values) => {
     country: values.country.value,
     state: values.state.value,
     lga: values.lga.value,
+    purposeOfVisit: values.other,
   });
 });
 watch(profileCreated, () => {
