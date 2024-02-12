@@ -127,7 +127,12 @@ watch(success, () => {
     dispatch("closeModal");
     dispatch("resetSuccess");
 
-    dispatch("getAffinityGroups");
+    dispatch("getAffinityGroups", {
+      pageNumber: 1,
+      pageSize: 25,
+      searchParameter: "",
+      sortOrder: "",
+    });
   }
 });
 </script>

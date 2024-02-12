@@ -23,7 +23,9 @@
               class="text-sm font-light text-slate-600 dark:text-slate-400 capitalize flex gap-x-2 items-center"
             >
               <!-- {{ profileData?.userRole }} -->
-              <span class="">{{ authUserRoles }}</span>
+              <span class="">{{
+                `${authUserRoles.length > 0 ? authUserRoles : "Member"}`
+              }}</span>
               <!-- <span
                 v-if="
                   state.auth.userData.userRole.toLowerCase() === 'administrator'
@@ -254,6 +256,7 @@ onMounted(() => {
   fetchUser();
   getChurchAffiliationsData();
   getAuthUsersRoles();
+  getloggedInUserRoles();
   dispatch("getRoles");
   dispatch("getRolesList");
 });
@@ -272,6 +275,10 @@ const isUserProfile = computed(
 // const permissions = computed(() => state.auth.permissions);
 const getAuthUsersRoles = () => {
   dispatch("getAuthUserRoles", userId.value);
+};
+
+const getloggedInUserRoles = () => {
+  dispatch("getLoggedInUserRoles", state.auth.userData.id);
 };
 // console.log("🚀 ~ permissions2*: ", permissions.value);
 
@@ -300,6 +307,14 @@ const authUserRoles = computed(() =>
   state?.role?.authUserRoles
     ?.map((i) => {
       return i;
+    })
+    .join(", ")
+);
+
+const loggedInUserRoles = computed(() =>
+  state?.role?.loggedInUserRoles
+    ?.map((i) => {
+      return i.toLowerCase();
     })
     .join(", ")
 );
@@ -387,5 +402,7 @@ provide("isInspectorate", isInspectorate);
 provide("canEditDetails", canEditDetails);
 provide("isHOD", isHOD);
 provide("roles", roles);
+provide("authUserRoles", authUserRoles);
+provide("loggedInUserRoles", loggedInUserRoles);
 </script>
 <style lang="scss" scoped></style>

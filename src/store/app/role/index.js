@@ -16,6 +16,9 @@ export default {
     getAuthUserRolesLoading: false,
     getAuthUserRolesSuccess: false,
     getAuthUserRolesError: null,
+    getLoggedInUserRolesLoading: false,
+    getLoggedInUserRolesSuccess: false,
+    getLoggedInUserRolesError: null,
     getModulesLoading: false,
     getModulesSuccess: false,
     getModulesError: null,
@@ -36,12 +39,31 @@ export default {
     modules: [],
     permissions: [],
     authUserRoles: [],
+    loggedInUserRoles: [],
     total: 0,
   },
   getters: {
     roles: (state) => state.roles,
   },
   mutations: {
+    getLoggedInUserRolesBegin(state) {
+      state.getLoggedInUserRolesLoading = true;
+      state.getLoggedInUserRolesSuccess = false;
+      state.getLoggedInUserRolesError = null;
+    },
+
+    getLoggedInUserRolesSuccess(state, data) {
+      state.getLoggedInUserRolesLoading = false;
+      state.getLoggedInUserRolesSuccess = true;
+
+      state.loggedInUserRoles = data;
+    },
+
+    getLoggedInUserRolesError(state, err) {
+      state.getLoggedInUserRolesLoading = false;
+      state.getLoggedInUserRolesSuccess = false;
+      state.getLoggedInUserRolesError = err;
+    },
     getAuthUserRolesBegin(state) {
       state.getAuthUserRolesLoading = true;
       state.getAuthUserRolesSuccess = false;
@@ -51,7 +73,6 @@ export default {
     getAuthUserRolesSuccess(state, data) {
       state.getAuthUserRolesLoading = false;
       state.getAuthUserRolesSuccess = true;
-      // console.log("🚀 ~ getAuthUserRolesSuccess ~ data:", JSON.stringify(data));
 
       state.authUserRoles = data;
     },
@@ -229,6 +250,20 @@ export default {
         commit("getAuthUserRolesError", err);
       }
     },
+    async getLoggedInUserRoles({ commit }, userId) {
+      try {
+        commit("getLoggedInUserRolesBegin");
+        const response = await DataService.get(
+          `${urls.GET_AUTH_USER_ROLES}?UserId=${userId}`
+        );
+
+        if (response.status === 200) {
+          commit("getLoggedInUserRolesSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getLoggedInUserRolesError", err);
+      }
+    },
 
     async deleteRolesFromList({ commit }, id) {
       try {
@@ -259,7 +294,7 @@ export default {
     },
     async getPermissionsList({ commit }) {
       try {
-        commit("getRoleBegin");
+        commit("getPermissionsBegin");
         const response = await DataService.get(
           `${urls.GET_PLATFORM_PERMISSIONS}`
         );
