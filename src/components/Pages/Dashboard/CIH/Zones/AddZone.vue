@@ -57,8 +57,9 @@ import { useStore } from "vuex";
 import * as yup from "yup";
 import { useToast } from "vue-toastification";
 
-import { computed, watch } from "vue";
+import { computed, watch, inject } from "vue";
 
+const query = inject("query");
 const { state, dispatch } = useStore();
 const success = computed(() => state.zone.addZoneSuccess);
 const loading = computed(() => state.zone.addZoneLoading);
@@ -69,7 +70,7 @@ const schema = yup.object({
   members: yup.object().nullable(),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, resetForm } = useForm({
   validationSchema: schema,
 });
 
@@ -96,10 +97,10 @@ const membersOptions = computed(() =>
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Created");
-    dispatch("getZones");
+    dispatch("getZonesTotal", query);
+    resetForm();
+    closeModal();
   }
-
-  closeModal();
 
   // getAllZones();
 });
