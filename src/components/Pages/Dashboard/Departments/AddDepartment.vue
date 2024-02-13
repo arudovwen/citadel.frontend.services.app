@@ -23,12 +23,22 @@
             :error="descriptionError"
           />
 
-          <Select
+          <!-- <Select
             label="HOD"
             :options="membersOptions"
             v-model.value="hod"
             :error="hodError"
-          />
+          /> -->
+          <FormGroup label="HOD" :error="hodError">
+            <VueSelect
+              class="w-full mb-10"
+              v-model.value="hod"
+              :options="membersOptions"
+              placeholder="Select HOD"
+              name="hod"
+              optionClass=""
+            />
+          </FormGroup>
 
           <!-- {{ membersOptions[0] }} -->
         </div>
@@ -47,7 +57,8 @@
   </div>
 </template>
 <script setup>
-import Select from "@/components/Select";
+import FormGroup from "@/components/FormGroup";
+import VueSelect from "@/components/Select/VueSelect";
 import Button from "@/components/Button";
 import { computed, watch, onMounted } from "vue";
 import Modal from "@/components/Modal";
@@ -83,7 +94,11 @@ const loading = computed(() => state.department.loading);
 const schema = yup.object({
   departmentName: yup.string().required("Name is required"),
   description: yup.string().required("Please provide a short description"),
-  hod: yup.string().nullable(),
+  hod: yup.mixed().nullable(),
+  // hod: yup.object().shape({
+  //   label: yup.string().required(),
+  //   value: yup.string().required(),
+  // }),
 });
 
 const { handleSubmit } = useForm({
@@ -96,7 +111,7 @@ const { value: description, errorMessage: descriptionError } =
 const { value: hod, errorMessage: hodError } = useField("hod");
 const createDepartment = handleSubmit((values) => {
   dispatch("addDepartment", {
-    userId: values.hod,
+    userId: values.hod.value,
     departmentCode:
       values.departmentName.slice(0, 2).toUpperCase() +
       Math.floor(Math.random() * 100 + 100),
@@ -118,4 +133,8 @@ watch(membersOptions, () => {
   console.log("🚀 ~ watch ~ membersOptions:", membersOptions.value);
 });
 </script>
-<style lang=""></style>
+<style lang="scss">
+.vs__dropdown-menu {
+  max-height: 114px !important;
+}
+</style>

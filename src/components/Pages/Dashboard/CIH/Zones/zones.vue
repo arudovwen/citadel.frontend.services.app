@@ -55,9 +55,14 @@ import ZoneAddmodal from "./AddZone";
 import UpdateModal from "./EditZone";
 import Grid from "./zones-grid";
 import { useStore } from "vuex";
-
+onMounted(() => {
+  dispatch("getAllUsers", {
+    pageNumber: 1,
+    pageSize: 25000,
+  });
+});
 const store = useStore();
-const { state } = useStore();
+const { state, dispatch } = useStore();
 
 const filters = [
   {

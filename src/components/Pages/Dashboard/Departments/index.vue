@@ -52,6 +52,11 @@ import DepartmentAddmodal from "./AddDepartment";
 import UpdateModal from "./EditDepartment";
 import Grid from "./Departments-grid";
 import { useStore } from "vuex";
+
+onMounted(() => {
+  window.addEventListener("resize", handleResize);
+  handleResize();
+});
 const store = useStore();
 const { state } = useStore();
 
@@ -83,10 +88,7 @@ const width = ref(0);
 const handleResize = () => {
   width.value = window.innerWidth;
 };
-onMounted(() => {
-  window.addEventListener("resize", handleResize);
-  handleResize();
-});
+
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
