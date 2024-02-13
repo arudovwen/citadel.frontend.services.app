@@ -18,6 +18,7 @@
             >
               {{ profileData?.fullName }}
             </div>
+            <!-- <div>{{ $store.state.auth.permissions }}</div> -->
 
             <div
               class="text-sm font-light text-slate-600 dark:text-slate-400 capitalize flex gap-x-2 items-center"

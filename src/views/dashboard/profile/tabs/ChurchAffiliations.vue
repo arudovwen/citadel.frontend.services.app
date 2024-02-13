@@ -108,6 +108,7 @@
 
       <div class="relative">
         <Textinput
+          placeholder=""
           :disabled="true"
           label="Affinity Group"
           name="Affinity Group"
