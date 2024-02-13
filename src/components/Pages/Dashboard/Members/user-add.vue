@@ -76,9 +76,9 @@ onMounted(() => {
 const loading = computed(() => state.member.addloading);
 const roles = computed(() =>
   state?.role?.roles
-    ?.filter((i) => i.name.toLowerCase() !== "firsttimers")
+    ?.filter((i) => i?.roleName?.toLowerCase() !== "firsttimers")
     .map((i) => {
-      return { value: i.name, label: i.name };
+      return { value: i?.roleName, label: i?.roleName };
     })
 );
 const formData = reactive({

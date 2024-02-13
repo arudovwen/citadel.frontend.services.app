@@ -530,7 +530,7 @@ export default {
     const { state, dispatch } = useStore();
     onMounted(() => {
       dispatch("getUsers", query);
-      dispatch("getAdminRoles");
+      // dispatch("getAdminRoles");
       id.value = getCurrentInstance().data.id;
     });
     function fetchRecords(page) {
