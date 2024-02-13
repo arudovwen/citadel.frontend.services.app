@@ -23,12 +23,22 @@
             :error="descriptionError"
           />
 
-          <Select
+          <!-- <Select
             label="HOD"
             :options="membersOptions"
             v-model.value="hod"
             :error="hodError"
-          />
+          /> -->
+          <FormGroup label="HOD" :error="hodError">
+            <VueSelect
+              class="w-full mb-10"
+              v-model.value="hod"
+              :options="membersOptions"
+              placeholder="Select HOD"
+              name="hod"
+              optionClass=""
+            />
+          </FormGroup>
         </div>
         <div class="text-right">
           <Button
@@ -44,7 +54,9 @@
   </div>
 </template>
 <script setup>
-import Select from "@/components/Select";
+// import Select from "@/components/Select";
+import FormGroup from "@/components/FormGroup";
+import VueSelect from "@/components/Select/VueSelect";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 // import VueSelect from "@/components/Select/VueSelect";
@@ -74,7 +86,7 @@ const loading = computed(() => state.department.loading);
 const schema = yup.object({
   departmentName: yup.string().required("Name is required"),
   description: yup.string().required("Please provide a short description"),
-  hod: yup.string().nullable(),
+  hod: yup.mixed().nullable(),
 });
 const membersOptions = computed(() =>
   state?.member?.allUsers?.map((i) => {
@@ -95,16 +107,29 @@ const { value: description, errorMessage: descriptionError } =
 const { value: hod, errorMessage: hodError } = useField("hod");
 
 const updateDepartment = handleSubmit((values) => {
-  dispatch("editDepartment", { ...values, userId: values.hod });
+  dispatch("editDepartment", {
+    id: values.id,
+    userId: values.hod.value,
+    departmentName: values.departmentName,
+    departmentCode: values.departmentCode,
+    description: values.description,
+  });
 });
+// ...values,
+// userId: values.hod.value,
 
 const closeModal = () => {
   dispatch("closeModal");
 };
 
 watch(department, () => {
-  // console.log(JSON.stringify(department.value));
-  setValues({ ...department.value, hod: department.value.userId });
+  setValues({
+    ...department.value,
+    hod: {
+      label: department.value.hodName,
+      value: department.value.userId,
+    },
+  });
 });
 watch(success, () => {
   if (success.value) {
