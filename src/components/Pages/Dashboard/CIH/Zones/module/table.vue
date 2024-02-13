@@ -510,10 +510,10 @@ export default {
         },
       ],
       columns: [
-        {
-          label: "Date created",
-          field: "createdAt",
-        },
+        // {
+        //   label: "Date created",
+        //   field: "createdAt",
+        // },
         {
           label: "Center Name",
           field: "centerName",
