@@ -80,7 +80,7 @@ const { value: members, errorMessage: membersError } = useField("members");
 // const { value: category, errorMessage: errorCategory } = useField("category");
 
 const updateZone = handleSubmit((values) => {
-  dispatch("updateZone", { ...values, userId: members.value });
+  dispatch("updateZone", { ...values, userId: members.value.value });
 });
 
 const closeModal = () => {
@@ -88,13 +88,20 @@ const closeModal = () => {
 };
 
 watch(zone, () => {
-  setValues(zone.value);
+  setValues({
+    ...zone.value,
+
+    members: {
+      label: zone.value.coordinator,
+      value: zone.value.userId,
+    },
+  });
 });
 
 const membersOptions = computed(() =>
-  state?.member?.data.map((i) => {
+  state?.member?.allUsers?.map((i) => {
     return {
-      label: i.firstName + " " + i.surName,
+      label: i.firstName + " " + i.lastName,
       value: i.userId,
     };
   })
@@ -112,4 +119,8 @@ watch(success, () => {
   // getAllZones();
 });
 </script>
-<style lang=""></style>
+<style lang="scss">
+.vs__dropdown-menu {
+  max-height: 114px !important;
+}
+</style>
