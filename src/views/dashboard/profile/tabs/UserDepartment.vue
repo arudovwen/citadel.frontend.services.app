@@ -20,7 +20,7 @@
         name="Department"
       /> -->
 
-      <div :class="`inline-block input-label mb-8 ml-auto`">
+      <div :class="`inline-block input-label mb-4 ml-auto`">
         <span
           class="text-blue-400"
           @click="$store.dispatch('toggleReqDepartment', true)"
@@ -28,7 +28,7 @@
         >
       </div>
 
-      <div class="">
+      <div class="max-w-[650px]">
         <div
           v-if="departmentsLoading"
           class="w-full grid grid-cols-1 sm:grid-cols-2 gap-6"
@@ -46,18 +46,22 @@
         >
           Nothing to see yet
         </div>
-        <UserDepartmentsCard v-else :departments="UserDepartmentsCardList" />
+        <UserDepartmentsCard
+          v-else
+          :departments="userDepartments"
+          :columns="userDepartmentsTable"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { UserDepartmentsCardList } from "@/constant/data.js";
-import { onMounted, inject, computed } from "vue";
+import { userDepartmentsTable } from "@/constant/data.js";
+import { onMounted, inject, computed, provide } from "vue";
+
 import { useStore } from "vuex";
-// import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
-// import RequestDepartment from "@/components/Pages/Profile/ChurchAffiliation/RequestDepartment.vue";
+
 import UserDepartmentsCard from "@/components/Pages/Profile/UserDepartmentsCard.vue";
 onMounted(async () => {
   try {
@@ -74,10 +78,17 @@ const { dispatch, state } = useStore();
 // const isUserProfile = inject("isUserProfile");
 // const isHOD = inject("isHOD");
 const id = inject("id");
-const departmentsLoading = computed(
-  () => state.profile.getAllUserDepartmentLoading
+const departmentsLoading = computed(() => state.department.getDeptLoading);
+
+const userDepartments = computed(() =>
+  state.department.userDepartments.map((department) => {
+    return {
+      departmentName: department.departmentName,
+      description: "",
+      isDefault: department.isPrimaryDepartment,
+    };
+  })
 );
-const userDepartments = computed(() => state.profile.userDepartments);
 
 // const departmentObj = ref({
 //   label: "",
@@ -88,7 +99,7 @@ const getDepartments = () => {
   dispatch("getDepartments", { pageNumber: 1, pageSize: 25000 });
 };
 const getAllUserDepartment = () => {
-  dispatch("getAllUserDepartment", id);
+  dispatch("getDepartmentByUserId", id.value);
 };
 
 // const requestFnObj = (name, toggle) => {
@@ -105,6 +116,7 @@ const getAllUserDepartment = () => {
 //     };
 //   })
 // );
+provide("getAllUserDepartment", getAllUserDepartment);
 </script>
 
 <style lang="scss" scoped></style>

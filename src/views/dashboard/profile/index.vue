@@ -149,7 +149,7 @@
                 </div>
               </div>
             </li>
-            <li
+            <!-- <li
               class="flex space-x-3 rtl:space-x-reverse"
               v-if="
                 state.auth.userData.userRole !== 'administrator' &&
@@ -190,7 +190,7 @@
                   </span>
                 </div>
               </div>
-            </li>
+            </li> -->
             <!-- end single list -->
           </ul>
         </Card>
@@ -262,9 +262,9 @@ onMounted(() => {
   dispatch("getRolesList");
 });
 // const isReqDepartmentOpen = computed(() => state.profile.isReqDepartmentOpen);
-const toggleReqDepartment = (boolean) => {
-  dispatch("toggleReqDepartment", boolean);
-};
+// const toggleReqDepartment = (boolean) => {
+//   dispatch("toggleReqDepartment", boolean);
+// };
 const toast = useToast();
 const modal = ref(null);
 const route = useRoute();
@@ -353,12 +353,12 @@ const canEditDetails = computed(() =>
     ? true
     : false
 );
-const churchAffiliationsDataLoading = computed(
-  () => state.profile.getChurchAffiliationsDataloading
-);
-const department = computed(
-  () => state.profile.churchAffiliationsData?.department
-);
+// const churchAffiliationsDataLoading = computed(
+//   () => state.profile.getChurchAffiliationsDataloading
+// );
+// const department = computed(
+//   () => state.profile.churchAffiliationsData?.department
+// );
 const getChurchAffiliationsData = () => {
   dispatch("getChurchAffiliationsById", userId.value);
 };

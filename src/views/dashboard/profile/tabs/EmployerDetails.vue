@@ -38,7 +38,7 @@
         classInput="!h-[40px]"
       />
 
-      <Textinput
+      <!-- <Textinput
         label="Sub Sector"
         type="text"
         placeholder="Type your position"
@@ -46,6 +46,14 @@
         v-model="subSector"
         :error="subSectorError"
         classInput="h-[40px]"
+      /> -->
+      <Select
+        label="Sub Sector"
+        :options="industryMenu"
+        v-model.value="subSector"
+        :modelValue="subSector"
+        :error="subSectorError"
+        classInput="!h-[40px]"
       />
 
       <Textinput

@@ -96,6 +96,7 @@ export const urls = {
     "/ChurchAffiliation/GetRejectedDepartmentRequest",
   GET_PENDING_DEPARTMENT_REQUESTS:
     "/ChurchAffiliation/GetPendingDepartmentRequest",
+  SET_PRIMARY_DEPARTMENT: "/Department/SetPrimaryDepartment",
 
   // Department
   CREATE_DEPARTMENT: "/Department/CreateDepartment",
