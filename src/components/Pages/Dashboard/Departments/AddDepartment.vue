@@ -60,19 +60,18 @@ import { useStore } from "vuex";
 import * as yup from "yup";
 
 onMounted(() => {
-  dispatch("getAffiliationByMemberQuery", {
+  dispatch("getAllUsers", {
     pageNumber: 1,
     pageSize: 25000,
-    role: "hod",
   });
 });
 
 let { dispatch, state } = useStore();
 const toast = useToast();
 const membersOptions = computed(() =>
-  state?.member?.data?.map((i) => {
+  state?.member?.allUsers?.map((i) => {
     return {
-      label: `${i.firstName} ${i.surName}`,
+      label: `${i.firstName} ${i.lastName}`,
       value: i.userId,
     };
   })

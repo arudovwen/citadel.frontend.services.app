@@ -30,7 +30,7 @@
         <vue-good-table
           :columns="columns"
           styleClass="vgt-table"
-          :isLoading="loading"
+          :isLoading="deptloading"
           :rows="members || []"
           :sort-options="{
             enabled: false,
@@ -46,25 +46,18 @@
               class="font-medium flex items-center gap-x-1"
             >
               <router-link
-                :to="`/profile/${props.row.userId}`"
+                :to="`/profile/${props.row.id}`"
                 class="hover:underline"
               >
                 {{ props.row.fullName }}
               </router-link>
-              <!-- <span
-                  v-if="props.row.cihRoles"
-                  class="px-2 py-[2px] rounded-full bg-gray-100 text-gray-500 text-xs"
-                  >{{ props.row.cihRoles.replace("cih", "") }}</span
-                > -->
             </span>
-            <span v-if="props.column.field == 'order'" class="font-medium">
-              {{ "#" + props.row.order }}
-            </span>
+
             <span
               v-if="props.column.field == 'date'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ props.row.date }}
+              {{ props.row.actionDate }}
             </span>
             <span
               v-if="props.column.field == 'email'"
@@ -76,24 +69,27 @@
               <span
                 class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
                 :class="`${
-                  props.row.status === 'active'
+                  props.row.status === 'active' ||
+                  props.row.statusText === 'approved'
                     ? 'text-success-500 bg-success-500'
                     : ''
                 } 
               ${
-                props.row.status === 'inactive'
+                props.row.status === 'inactive' ||
+                props.row.statusText === 'rejected'
                   ? 'text-warning-500 bg-warning-500'
                   : ''
               }
               ${
-                props.row.status === 'pending'
+                props.row.status === 'pending' ||
+                props.row.statusText === 'pending'
                   ? 'text-blue-500 bg-blue-500'
                   : ''
               }
               
                `"
               >
-                {{ props.row.status }}
+                {{ props.row.statusText }}
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
@@ -104,7 +100,7 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="item.doit(item.name, props.row)"
+                      @click="item.doit(props.row)"
                       :class="{
                         'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                           item.name === 'delete',
@@ -148,15 +144,17 @@
     </div>
   </div>
   <Modal
-    title="Delete member"
+    :title="`${type} request`"
     label="Small modal"
-    labelClass="btn-outline-danger"
+    :labelClass="
+      type === 'approve' ? 'btn-outline-success' : 'btn-outline-danger'
+    "
     ref="modal"
     sizeClass="max-w-md"
-    themeClass="bg-danger-500"
+    :themeClass="type === 'approve' ? 'bg-success-500' : 'bg-danger-500'"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to {{ type }} this member from department?
+      Are you sure you want to {{ type }} this request?
     </div>
     <div v-if="type.toLowerCase() === 'reject'">
       <textarea
@@ -164,6 +162,7 @@
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
         rows="4"
         placeholder="Provide reason"
+        v-model="comment"
       ></textarea>
     </div>
     <template v-slot:footer>
@@ -174,11 +173,13 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          :isLoading="delistLoading"
-          :disabled="delistLoading"
+          :isLoading="approveloading"
+          :disabled="approveloading"
           text="Proceed"
-          btnClass="btn-danger btn-sm"
-          @click="handleDelete(id)"
+          :btnClass="
+            type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
+          "
+          @click="handleRequest()"
         />
       </div>
     </template>
@@ -204,7 +205,6 @@
 <script>
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
-
 import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Select from "@/components/Select";
@@ -258,10 +258,31 @@ export default {
     });
     const { state, dispatch } = useStore();
     const toast = useToast();
-    // const id = ref(null);
+    const type = ref(null);
+    const detail = ref(null);
+    const comment = ref("");
     const modal = ref(null);
-    const modalChange = ref(null);
-    const modalStatus = ref(null);
+
+    const actions = {
+      Approve: {
+        name: "Approve",
+        icon: "ph:check",
+        doit: (data) => {
+          detail.value = data;
+          type.value = "approve";
+          modal.value.openModal();
+        },
+      },
+      Reject: {
+        name: "Reject",
+        icon: "ph:x-light",
+        doit: (data) => {
+          detail.value = data;
+          type.value = "reject";
+          modal.value.openModal();
+        },
+      },
+    };
     const filters = [
       {
         label: "Default",
@@ -275,9 +296,8 @@ export default {
     ];
     // none, firstName, userId, surname, department, center, zone, role
     onMounted(() => {
-      dispatch("getPendingDepartments", query);
+      fetchRecords(1);
       dispatch("getRoles");
-      // id.value = getCurrentInstance().data.id;
     });
     function fetchRecords(page) {
       dispatch("getPendingDepartments", { ...query, pageNumber: page });
@@ -288,18 +308,35 @@ export default {
       query.pageSize = currentPerPage;
     }
     const search = ref("");
+    const success = computed(() => state.request.approvesuccess);
+    const approveloading = computed(() => state.request.approveloading);
     const loading = computed(() => state.member.loading);
-    const delistLoading = computed(() => state.department.loading);
-    const delistSuccess = computed(() => state.department.deletesuccess);
-    const members = computed(() => state.department.departments);
+    const deptloading = computed(() => state.department.loading);
+    const members = computed(() =>
+      state.department.departments.map((i) => {
+        return {
+          ...i,
+          fullName: `${i.firstName} ${i.lastName}`,
+          statusText:
+            i.status === null
+              ? "pending"
+              : i.status === true
+              ? "approved"
+              : "rejected",
+        };
+      })
+    );
     const total = computed(() => state.profile.total);
     const roles = computed(() => state.profile.roles);
-    const addsuccess = computed(() => state.profile.addsuccess);
-    const deleteloading = computed(() => state.profile.deleteloading);
-    // const deletesuccess = computed(() => state.profile.deletesuccess);
 
-    function handleDelete(id) {
-      dispatch("removeMemberFromDepartment", id);
+    function handleRequest() {
+      dispatch("approveCOD", {
+        approveUserId: state.auth.userData.id,
+        reqUserId: detail.value.userId,
+        actionId: detail.value.id,
+        Comments: comment.value,
+        status: type.value === "approve" ? true : false,
+      });
     }
 
     // Define a debounce delay (e.g., 500 milliseconds)
@@ -307,25 +344,6 @@ export default {
     const debouncedSearch = debounce((searchValue) => {
       dispatch("getPendingDepartments", { ...query, name: searchValue });
     }, debounceDelay);
-    watch(addsuccess, () => {
-      addsuccess.value && dispatch("getPendingDepartments", query);
-      modalChange.value.closeModal();
-    });
-
-    watch(delistSuccess, () => {
-      if (delistSuccess.value) {
-        dispatch("getPendingDepartments", query);
-        toast.success("Member successfully removed");
-        modal.value.closeModal();
-      }
-    });
-
-    // watch(deletesuccess, () => {
-    //   if (deletesuccess.value) {
-    //     dispatch("getPendingDepartments", query);
-    //     modalStatus.value.closeModal();
-    //   }
-    // });
 
     watch(
       () => query.searchParameter,
@@ -339,30 +357,43 @@ export default {
         dispatch("getPendingDepartments", query);
       }
     );
+
+    watch(success, () => {
+      if (success.value) {
+        fetchRecords(1);
+        modal.value.closeModal();
+        if (type.value === "approve") {
+          toast.success("Approve Successfully");
+        } else {
+          toast.success("Request Rejected");
+        }
+      }
+    });
+
     return {
       query,
       total,
       fetchRecords,
       loading,
-      deleteloading,
       members,
       roles,
       search,
-      handleDelete,
       modal,
-      modalChange,
-      modalStatus,
       perPage,
       filters,
       state,
-      delistLoading,
-      delistSuccess,
+      detail,
+      comment,
+      type,
+      handleRequest,
+      actions,
+      approveloading,
+      deptloading,
     };
   },
 
   data() {
     return {
-      type: "",
       id: null,
       activeFilter: "all",
       dateValue: null,
@@ -403,7 +434,7 @@ export default {
 
         {
           label: "Phone",
-          field: "mobile1",
+          field: "phone",
         },
 
         {
@@ -417,7 +448,7 @@ export default {
         },
         {
           label: "Date",
-          field: "created_at",
+          field: "actionDate",
         },
         {
           label: "Action",
