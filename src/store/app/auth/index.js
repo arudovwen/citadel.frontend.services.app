@@ -208,7 +208,14 @@ export default {
         if (response.status === 200) {
           const accessToken = response.data.data.token;
 
-          const permissions = JSON.stringify(response.data.data.permissions);
+          const permissions = JSON.stringify(
+            response.data.data.permissions.map(
+              (i) =>
+                `${i.accessRight.toUpperCase()}_${i.moduleName
+                  .replaceAll(" ", "_")
+                  .toUpperCase()}`
+            )
+          );
           const userData = response.data.data.user;
           const userAffiliation = response.data.data.churchAffiliation;
           localStorage.setItem("accessToken", accessToken);

@@ -110,16 +110,13 @@ export default defineComponent({
     const { state } = useStore();
     const shadowbase = ref(false);
     const simplebarInstance = ref(null);
+    const permissions = computed(() => state.auth.permissions);
     const menuLink = computed(() => {
       // eslint-disable-next-line no-unused-vars
       let newItems;
       const filteredItems = menuItems
         .slice(1)
-        .filter(
-          (i) =>
-            i.roles.includes(state.auth.userData.userRole?.toLowerCase()) ||
-            i.subroles.includes(state.auth.userData?.cihRole?.toLowerCase())
-        );
+        .filter((i) => permissions.value.includes(i.roles) || !i.roles);
       newItems = filteredItems;
       if (
         state.auth.userData.userRole.toLowerCase() === "administrator" ||
