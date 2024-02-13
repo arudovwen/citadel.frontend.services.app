@@ -29,7 +29,7 @@
       <vue-good-table
         :columns="columns"
         styleClass="vgt-table"
-        :isLoading="loading"
+        :isLoading="deptloading"
         :rows="members || []"
         :sort-options="{
           enabled: false,
@@ -45,25 +45,24 @@
             class="font-medium flex items-center gap-x-1"
           >
             <router-link
-              :to="`/profile/${props.row.userId}`"
+              :to="`/profile/${props.row.id}`"
               class="hover:underline"
             >
               {{ props.row.fullName }}
             </router-link>
-            <!-- <span
-                  v-if="props.row.cihRoles"
-                  class="px-2 py-[2px] rounded-full bg-gray-100 text-gray-500 text-xs"
-                  >{{ props.row.cihRoles.replace("cih", "") }}</span
-                > -->
           </span>
-          <span v-if="props.column.field == 'order'" class="font-medium">
-            {{ "#" + props.row.order }}
-          </span>
+
           <span
-            v-if="props.column.field == 'date'"
+            v-if="props.column.field == 'approveDate'"
             class="text-slate-500 dark:text-slate-400"
           >
-            {{ props.row.date }}
+            {{ moment(props.row.approveDate).format("ll") }}
+          </span>
+          <span
+            v-if="props.column.field == 'doB'"
+            class="text-slate-500 dark:text-slate-400"
+          >
+            {{ moment(props.row.doB).format("ll") }}
           </span>
           <span
             v-if="props.column.field == 'email'"
@@ -73,26 +72,9 @@
           </span>
           <span v-if="props.column.field == 'status'" class="block w-full">
             <span
-              class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-              :class="`${
-                props.row.status === 'active'
-                  ? 'text-success-500 bg-success-500'
-                  : ''
-              } 
-              ${
-                props.row.status === 'inactive'
-                  ? 'text-warning-500 bg-warning-500'
-                  : ''
-              }
-              ${
-                props.row.status === 'pending'
-                  ? 'text-blue-500 bg-blue-500'
-                  : ''
-              }
-              
-               `"
+              class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500 bg-success-500"
             >
-              {{ props.row.status }}
+              Approved
             </span>
           </span>
           <span v-if="props.column.field == 'action'">
@@ -101,9 +83,9 @@
                 ><Icon icon="heroicons-outline:dots-vertical"
               /></span>
               <template v-slot:menus>
-                <MenuItem v-for="(item, i) in filteredActions" :key="i">
+                <MenuItem v-for="(item, i) in actions" :key="i">
                   <div
-                    @click="item.doit(item.name, props.row)"
+                    @click="item.doit(props.row)"
                     :class="{
                       'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
                         item.name === 'delete',
@@ -146,7 +128,7 @@
     </div>
   </div>
   <Modal
-    title="Delete member"
+    title="Delist member"
     label="Small modal"
     labelClass="btn-outline-danger"
     ref="modal"
@@ -154,14 +136,15 @@
     themeClass="bg-danger-500"
   >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to {{ type }} this member from department?
+      Are you sure you want to delist this member from department?
     </div>
-    <div v-if="type.toLowerCase() === 'delist'">
+    <div>
       <textarea
         resize="none"
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
         rows="4"
         placeholder="Provide reason"
+        v-model="reason"
       ></textarea>
     </div>
     <template v-slot:footer>
@@ -176,7 +159,7 @@
           :disabled="delistLoading"
           text="Proceed"
           btnClass="btn-danger btn-sm"
-          @click="handleDelete(id)"
+          @click="handleDelist()"
         />
       </div>
     </template>
@@ -288,29 +271,26 @@ export default {
     const loading = computed(() => state.member.loading);
     const delistLoading = computed(() => state.department.loading);
     const delistSuccess = computed(() => state.department.deletesuccess);
-    const members = computed(() => {
-      if (state?.member?.data) {
-        return state?.member?.data?.map((item) => {
-          item.fullName = `${item.firstName} ${item.surName}`;
-          item.dateOfBirth = item?.dateOfBirth
-            ? moment(item?.dateOfBirth).format("ll")
-            : "-";
-          item.department = item?.department ? item?.department : "-";
-
-          return item;
-        });
-      }
-      return [];
-    });
+    const deptloading = computed(() => state.department.loading);
+    const members = computed(() =>
+      state.department.departments.map((i) => {
+        return {
+          ...i,
+          fullName: `${i.firstName} ${i.lastName}`,
+          statusText:
+            i.status === null
+              ? "pending"
+              : i.status === true
+              ? "approved"
+              : "rejected",
+        };
+      })
+    );
     const total = computed(() => state.profile.total);
     const roles = computed(() => state.profile.roles);
     const addsuccess = computed(() => state.profile.addsuccess);
     const deleteloading = computed(() => state.profile.deleteloading);
     // const deletesuccess = computed(() => state.profile.deletesuccess);
-
-    function handleDelete(id) {
-      dispatch("removeMemberFromDepartment", id);
-    }
 
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
@@ -358,7 +338,7 @@ export default {
       members,
       roles,
       search,
-      handleDelete,
+
       modal,
       modalChange,
       modalStatus,
@@ -367,6 +347,8 @@ export default {
       state,
       delistLoading,
       delistSuccess,
+      deptloading,
+      moment,
     };
   },
 
@@ -377,6 +359,7 @@ export default {
       activeFilter: "all",
       dateValue: null,
       pageRange: 5,
+      reason: "",
       formatter: {
         date: "DD MMM YYYY",
         month: "MMM",
@@ -385,19 +368,17 @@ export default {
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: (name, { userId }) => {
-            this.type = name;
-            this.$router.push("/profile/" + userId);
+          doit: ({ id }) => {
+            this.$router.push("/profile/" + id);
           },
         },
 
         {
           name: "delist",
           icon: "heroicons-outline:trash",
-          doit: (name, { userId }) => {
-            this.id = userId;
+          doit: ({ id }) => {
+            this.id = id;
 
-            this.type = name;
             this.$refs.modal.openModal();
           },
         },
@@ -433,7 +414,7 @@ export default {
 
         {
           label: "Phone",
-          field: "mobile1",
+          field: "phone",
         },
 
         {
@@ -442,15 +423,15 @@ export default {
         },
         {
           label: "Dob",
-          field: "dateOfBirth",
+          field: "doB",
         },
         {
           label: "Status",
           field: "status",
         },
         {
-          label: "Date",
-          field: "created_at",
+          label: "Approval Date",
+          field: "approveDate",
         },
         {
           label: "Action",
@@ -483,6 +464,13 @@ export default {
       };
 
       return actions[name] || null;
+    },
+    handleDelist() {
+      this.$store.dispatch("removeMemberFromDepartment", {
+        reason: this.reason,
+        userId: this.id,
+        departmentId: this.$route.params.id,
+      });
     },
   },
   computed: {

@@ -100,7 +100,7 @@ export default {
           commit("approveSuccess");
         }
       } catch (err) {
-        commit("approveErr", err);
+        commit("approveError", err);
       }
     },
     async approveCOZ({ commit }, data) {
@@ -115,7 +115,7 @@ export default {
           commit("approveSuccess");
         }
       } catch (err) {
-        commit("approveErr", err);
+        commit("approveError", err);
       }
     },
   },

@@ -54,10 +54,10 @@
             </span>
 
             <span
-              v-if="props.column.field == 'date'"
+              v-if="props.column.field == 'requestDate'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ props.row.actionDate }}
+              {{ moment(props.row.requestDate).format("ll") }}
             </span>
             <span
               v-if="props.column.field == 'email'"
@@ -217,7 +217,7 @@ import ViewRecord from "../member-preview.vue";
 import window from "@/mixins/window";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
-// import moment from "moment";
+import moment from "moment";
 import { useRoute } from "vue-router";
 import { useToast } from "vue-toastification";
 
@@ -389,6 +389,7 @@ export default {
       actions,
       approveloading,
       deptloading,
+      moment,
     };
   },
 
@@ -448,7 +449,7 @@ export default {
         },
         {
           label: "Date",
-          field: "actionDate",
+          field: "requestDate",
         },
         {
           label: "Action",

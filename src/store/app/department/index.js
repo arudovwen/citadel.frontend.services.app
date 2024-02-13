@@ -243,11 +243,11 @@ export default {
         commit("deleteErr", err);
       }
     },
-    async removeMemberFromDepartment({ commit }, id) {
+    async removeMemberFromDepartment({ commit }, data) {
       try {
         commit("deleteBegin");
         const response = await DataService.delete(
-          `${urls.DELIST_MEMBER_FROM_DEPT}?userId=${id}`
+          `${urls.DELIST_MEMBER_FROM_DEPT}?${new URLSearchParams(data)}`
         );
         if (response.status === 200) {
           commit("deleteSuccess");

@@ -240,19 +240,19 @@ export default {
         commit("getAllErr", err);
       }
     },
-    async approveCOD({ commit }, data) {
-      try {
-        commit("approveBegin");
-        const response = await DataService.put(
-          `${urls.APPROVE_CHANGE_OF_DEPARTMENT}?${new URLSearchParams(data)}`
-        );
-        if (response.status === 200) {
-          commit("approveSuccess");
-        }
-      } catch (err) {
-        commit("approveErr", err);
-      }
-    },
+    // async approveCOD({ commit }, data) {
+    //   try {
+    //     commit("approveBegin");
+    //     const response = await DataService.put(
+    //       `${urls.APPROVE_CHANGE_OF_DEPARTMENT}?${new URLSearchParams(data)}`
+    //     );
+    //     if (response.status === 200) {
+    //       commit("approveSuccess");
+    //     }
+    //   } catch (err) {
+    //     commit("approveErr", err);
+    //   }
+    // },
     async approveCOZ({ commit }, data) {
       try {
         commit("approveBegin");
