@@ -938,6 +938,17 @@ export const childrenDetailstable = [
   },
 ];
 
+export const userDepartmentsTable = [
+  {
+    label: "Department Name",
+    field: "departmentName",
+  },
+  {
+    label: "",
+    field: "isPrimaryDepartment",
+  },
+];
+
 export const qualificationDetailsTable = [
   {
     label: "Highest Qualification",

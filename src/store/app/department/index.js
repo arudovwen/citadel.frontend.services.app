@@ -6,6 +6,9 @@ import { cleanObject } from "@/util/cleanObject";
 const toast = useToast();
 export default {
   state: {
+    getDeptSuccess: false,
+    getDeptError: null,
+    getDeptLoading: false,
     addmodal: false,
     total: 0,
     loading: false,
@@ -24,13 +27,33 @@ export default {
     editcta: null,
     editId: null,
     editdesc: null,
+    setPrimaryLoading: false,
+    setPrimaryError: null,
+    setPrimarySuccess: false,
     department: null,
     departments: [],
+    userDepartments: [],
   },
   getters: {
     departments: (state) => state.departments,
   },
   mutations: {
+    getDeptBegin(state) {
+      state.getDeptLoading = true;
+      state.getDeptError = null;
+      state.getDeptSuccess = false;
+    },
+    getDeptSuccess(state, { data }) {
+      state.getDeptLoading = false;
+      state.getDeptSuccess = true;
+      state.userDepartments = data;
+      // state.total = totalCount;
+    },
+    getDeptErr(state, err) {
+      state.getDeptLoading = false;
+      state.getDeptError = err;
+      state.getDeptSuccess = false;
+    },
     fetchBegin(state) {
       state.loading = true;
       state.error = null;
@@ -89,6 +112,21 @@ export default {
       state.error = err;
       state.addsuccess = false;
     },
+    setPrimaryBegin(state) {
+      state.setPrimaryLoading = true;
+      state.setPrimaryError = null;
+      state.setPrimarySuccess = false;
+    },
+    setPrimarySuccess(state) {
+      state.setPrimaryLoading = false;
+      state.setPrimarySuccess = true;
+    },
+    setPrimaryError(state, err) {
+      state.setPrimaryLoading = false;
+      state.setPrimaryError = err;
+      state.setPrimarySuccess = false;
+    },
+
     //
     addDepartment(state, data) {
       state.isLoading = true;
@@ -131,6 +169,19 @@ export default {
     },
   },
   actions: {
+    async getDepartmentByUserId({ commit }, id) {
+      try {
+        commit("getDeptBegin");
+        const response = await DataService.get(
+          `${urls.GET_LOGGEDIN_USER_DEPARTMENT}?id=${id}`
+        );
+        if (response.status === 200) {
+          commit("getDeptSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getDeptErr", err);
+      }
+    },
     async getDepartments({ commit }, data) {
       try {
         commit("fetchBegin");
@@ -229,6 +280,21 @@ export default {
         commit("addErr", err);
       }
     },
+    async setPrimaryDepartment({ commit }, { userId, departmentName }) {
+      try {
+        commit("setPrimaryBegin");
+        const response = await DataService.put(
+          `${urls.SET_PRIMARY_DEPARTMENT}?UserId=${userId}&DepartmentName=${departmentName}`,
+          {}
+        );
+        if (response.status === 200) {
+          commit("setPrimarySuccess");
+        }
+      } catch (err) {
+        commit("setPrimaryError", err);
+      }
+    },
+
     // removeDepartment
     async removeDepartment({ commit }, id) {
       try {
