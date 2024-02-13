@@ -224,13 +224,16 @@ watch(deleteZoneSuccess, () => {
 
   // getAllZones();
 });
-watch([addZoneSuccess, updateZoneSuccess], () => {
-  if (addZoneSuccess.value || updateZoneSuccess.value) {
-    dispatch("getZonesTotal", query);
-  }
+watch(
+  () => [addZoneSuccess, updateZoneSuccess],
+  () => {
+    if (addZoneSuccess.value || updateZoneSuccess.value) {
+      dispatch("getZonesTotal", query);
+    }
 
-  // getAllZones();
-});
+    // getAllZones();
+  }
+);
 // eslint-disable-next-line no-unused-vars
 function handleCoordinator(id) {
   if (!id) return "n/a";

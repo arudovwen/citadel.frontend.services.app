@@ -53,7 +53,7 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { useStore } from "vuex";
 import * as yup from "yup";
-import { computed, watch } from "vue";
+import { computed, watch, inject } from "vue";
 import { useToast } from "vue-toastification";
 import FormGroup from "@/components/FormGroup";
 import VueSelect from "@/components/Select/VueSelect";
@@ -63,13 +63,13 @@ const zone = computed(() => state.zone.zone);
 const success = computed(() => state.zone.updateZoneSuccess);
 const loading = computed(() => state.zone.updateZoneLoading);
 const toast = useToast();
-
+const query = inject("query");
 const schema = yup.object({
   zoneName: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
   members: yup.object().typeError("Invalid value").nullable(),
 });
-const { handleSubmit, setValues } = useForm({
+const { handleSubmit, setValues, resetForm } = useForm({
   validationSchema: schema,
   initialValues: zone.value,
 });
@@ -102,7 +102,8 @@ const membersOptions = computed(() =>
 watch(success, () => {
   if (success.value) {
     toast.success("Successfully Updated");
-    dispatch("getZones");
+    dispatch("getZonesTotal", query);
+    resetForm();
     closeModal();
   } else {
     closeModal();

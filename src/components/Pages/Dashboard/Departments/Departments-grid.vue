@@ -31,7 +31,7 @@
                 </div>
                 <div class="font-medium text-base leading-6">
                   <div
-                    class="dark:text-slate-200 text-slate-900 max-w-[200px] truncate"
+                    class="dark:text-slate-200 text-slate-900 max-w-[300px] truncate"
                   >
                     {{ item?.departmentName }} Department
                   </div>
