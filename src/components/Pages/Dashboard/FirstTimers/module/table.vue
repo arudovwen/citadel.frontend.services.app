@@ -42,6 +42,7 @@
           </export-excel>
 
           <Button
+            v-if="permissions.includes('CAN_CREATE_FIRSTTIMERS')"
             icon="ri:user-add-line"
             text="Add First timer"
             btnClass="btn-primary font-normal btn-sm"
@@ -393,6 +394,7 @@ const query = reactive({
   sortOrder: "",
   isFirstTimer: true,
 });
+const permissions = computed(() => state.auth.permissions);
 const { state, dispatch } = useStore();
 const profileCreated = computed(() => state.profile.profileCreated);
 

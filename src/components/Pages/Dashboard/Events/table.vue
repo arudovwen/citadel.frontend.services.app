@@ -43,7 +43,7 @@
           </div>
         </div>
         <div
-          v-if="state.auth.userData.userRole.toLowerCase() !== 'member'"
+          v-if="permissions.includes('CAN_CREATE_EVENTS')"
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
@@ -471,6 +471,7 @@ export default {
     const loading = computed(() => state.event.loading);
     const updateloading = computed(() => state.event.updateloading);
     const updatesuccess = computed(() => state.event.updatesuccess);
+    const permissions = computed(() => state.auth.permissions);
 
     const total = computed(() => state.event.total);
     const events = computed(() => state.event.events);
@@ -694,6 +695,7 @@ export default {
       modal,
       eventType,
       selectedZone,
+      permissions,
     };
   },
 };

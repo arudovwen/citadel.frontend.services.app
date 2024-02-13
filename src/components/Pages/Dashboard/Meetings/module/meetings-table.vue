@@ -28,6 +28,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
+            v-if="permissions.includes('CAN_CREATE_MEETINGS')"
             icon="heroicons-outline:plus-sm"
             text="Add Meeting"
             btnClass=" btn-primary font-normal btn-sm "
@@ -192,6 +193,9 @@ import Modal from "@/components/Modal/Modal";
 import AddMeeting from "../meeting-add.vue";
 import EditMeeting from "../meeting-edit.vue";
 import ViewMeeting from "../meeting-preview.vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
+
 export default {
   mixins: [window],
   components: {
@@ -334,6 +338,13 @@ export default {
 
       return actions[name] || null;
     },
+  },
+  setup() {
+    const { state } = useStore();
+    const permissions = computed(() => state.auth.permissions);
+    return {
+      permissions,
+    };
   },
 };
 </script>

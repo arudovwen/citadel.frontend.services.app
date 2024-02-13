@@ -26,6 +26,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
+            v-if="permissions.includes('CAN_CREATE_CENTERS')"
             icon="mdi:house-group-add"
             text="Add center"
             btnClass=" btn-primary font-normal btn-sm "
@@ -246,6 +247,7 @@ export default {
 
   setup() {
     const route = useRoute();
+    const permissions = computed(() => state.auth.permissions);
     const filters = [
       {
         label: "Default",
@@ -416,6 +418,7 @@ export default {
       deleteloading,
       handleDelete,
       filters,
+      permissions,
     };
   },
 

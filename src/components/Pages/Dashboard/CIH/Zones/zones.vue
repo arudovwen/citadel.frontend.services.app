@@ -24,10 +24,7 @@
       </div>
 
       <Button
-        v-if="
-          state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
-          state.auth.userData.userRole.toLowerCase() === 'administrator'
-        "
+        v-if="permissions.includes('CAN_CREATE_ZONES')"
         icon="heroicons-outline:plus"
         text="Add zone"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
@@ -63,7 +60,7 @@ onMounted(() => {
 });
 const store = useStore();
 const { state, dispatch } = useStore();
-
+const permissions = computed(() => state.auth.permissions);
 const filters = [
   {
     label: "Name",

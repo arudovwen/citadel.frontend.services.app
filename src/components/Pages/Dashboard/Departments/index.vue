@@ -25,7 +25,7 @@
       </div>
 
       <Button
-        v-if="state.auth.userData.userRole.toLowerCase() === 'administrator'"
+        v-if="permissions.includes('CAN_CREATE_DEPARTMENT')"
         icon="heroicons-outline:plus"
         text="Add Department"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
@@ -100,7 +100,7 @@ const query = reactive({
       : "",
 });
 const projects = computed(() => store.getters.projects);
-
+const permissions = computed(() => state.auth.permissions);
 const isSkeletion = ref(true);
 const isSkeletion2 = ref(null);
 setTimeout(() => {

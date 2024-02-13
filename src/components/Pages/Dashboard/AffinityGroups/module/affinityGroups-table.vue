@@ -31,10 +31,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
-            v-if="
-              state.auth.userData.userRole.toLowerCase() === 'administrator' ||
-              state.auth.userData.userRole.toLowerCase() === 'inspectorate'
-            "
+            v-if="permissions.includes('CAN_CREATE_AFFINITYGROUPS')"
             icon="ri:user-add-line"
             text="Add Affinity Group"
             btnClass=" btn-primary font-normal btn-sm "
@@ -362,6 +359,7 @@ export default {
     onMounted(() => {
       getAllAffinityGroups();
     });
+    const permissions = computed(() => state.auth.permissions);
     const filters = [
       {
         label: "Default",
@@ -468,6 +466,7 @@ export default {
       modalChange,
       modalStatus,
       perPage,
+      permissions,
     };
   },
 };

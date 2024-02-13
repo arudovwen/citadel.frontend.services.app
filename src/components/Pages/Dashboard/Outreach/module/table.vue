@@ -25,6 +25,7 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
+            v-if="permissions.includes('CAN_CREATE_OUTREACH')"
             icon="heroicons-outline:plus-sm"
             text="Create outreach"
             btnClass=" btn-primary font-normal btn-sm "
@@ -224,6 +225,8 @@ import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
+import { computed } from "vue";
+import { useStore } from "vuex";
 import window from "@/mixins/window";
 export default {
   mixins: [window],
@@ -356,6 +359,13 @@ export default {
         this.$refs.modalChange.openModal();
       }
     },
+  },
+  setup() {
+    const { state } = useStore();
+    const permissions = computed(() => state.auth.permissions);
+    return {
+      permissions,
+    };
   },
 };
 </script>

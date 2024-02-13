@@ -39,9 +39,11 @@
             />
           </export-excel>
           <Button
+            v-if="permissions.includes('CAN_CREATE_MEMBERS')"
             icon="ri:user-add-line"
             text="Add member"
-            btnClass=" btn-primary font-normal btn-sm "
+            btnClass=" btn-primary
+          font-normal btn-sm "
             iconClass="text-lg"
             @click="
               () => {
@@ -350,6 +352,7 @@ export default {
     const modal = ref(null);
     const modalChange = ref(null);
     const modalStatus = ref(null);
+    const permissions = computed(() => state.auth.permissions);
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
@@ -440,6 +443,7 @@ export default {
       perPage,
       state,
       roleFilters,
+      permissions,
     };
   },
 };
