@@ -93,7 +93,7 @@
         />
       </div>
 
-      <div>
+      <div class="hidden">
         <Textinput
           :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
           label="Mountain of Influence"
