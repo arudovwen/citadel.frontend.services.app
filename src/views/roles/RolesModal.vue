@@ -213,19 +213,44 @@ watch(isOpen, () => {
     resetForm();
   }
 });
-
+const defaultPermissions = [
+  "can_create",
+  "can_view",
+  "can_update",
+  "can_delete",
+];
+const otherPermissions = {
+  Events: ["can_approve_reject_event"],
+  Department: ["can_approve_reject_department_request"],
+  Appoitment: ["can_approve_reject_appointment"],
+  "CIH Management": [
+    "can_view_all_zones",
+    "can_view_zone",
+    "can_view_all_centers",
+    "can_view_center",
+    "can_view_all_center_reports",
+    "can_view_center_reports",
+  ],
+  Members: ["can_update_church_affiliation"],
+};
 watchEffect(() => {
   if (modulesList.value?.length > 0 && permissionsList.value?.length > 0) {
     modules.value = modulesList.value?.map((module) => {
       return {
         name: module,
-        permissions: permissionsList.value?.map((permission) => {
-          return {
-            moduleName: module,
-            accessRight: permission,
-            displayValue: permission.toUpperCase(),
-          };
-        }),
+        permissions: permissionsList.value
+          ?.map((permission) => {
+            return {
+              moduleName: module,
+              accessRight: permission,
+              displayValue: permission.toUpperCase(),
+            };
+          })
+          .filter(
+            (i) =>
+              defaultPermissions.includes(i.accessRight) ||
+              otherPermissions[module]?.includes(i.accessRight)
+          ),
       };
     });
   }
