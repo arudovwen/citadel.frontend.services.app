@@ -46,6 +46,7 @@
             "
           />
           <Button
+            class="hidden"
             v-if="permissions.includes('CAN_CREATE_USER_MANAGEMENT')"
             icon="ri:user-add-line"
             text="Add user"
