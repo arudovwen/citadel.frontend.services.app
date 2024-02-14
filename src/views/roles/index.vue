@@ -143,7 +143,7 @@ import { useToast } from "vue-toastification";
 // import Pagination from "@/components/Pagination";
 
 onMounted(() => {
-  dispatch("getRolesList");
+  getRolesList();
 });
 const { state, dispatch } = useStore();
 const toast = useToast();
@@ -157,7 +157,7 @@ const roles = computed(() => {
     return {
       name: role.roleName,
       normalizedName: role.normalizedName,
-      id: role.id,
+      id: role.roleId,
     };
   });
 
@@ -186,6 +186,10 @@ const columns = [
     field: "action",
   },
 ];
+
+const getRolesList = () => {
+  dispatch("getRolesList");
+};
 const openDelete = (id) => {
   selectedId.value = id;
   modal.value.openModal();
@@ -198,6 +202,7 @@ const handleDelete = () => {
 watch(deleteSuccess, () => {
   if (deleteSuccess.value) {
     toast.success("Role deleted");
+    getRolesList();
     modal.value.closeModal();
   }
 });
