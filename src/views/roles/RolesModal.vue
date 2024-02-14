@@ -223,9 +223,7 @@ watchEffect(() => {
           return {
             moduleName: module,
             accessRight: permission,
-            displayValue: `${permission.toUpperCase()}_${module
-              .toUpperCase()
-              .replace(/\s+/g, "_")}`,
+            displayValue: permission.toUpperCase(),
           };
         }),
       };

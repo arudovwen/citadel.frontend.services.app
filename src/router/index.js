@@ -15,6 +15,7 @@ import SpecialUnitsIndex from "@/views/dashboard/special-units/index.vue";
 import "vue-toastification/dist/index.css";
 
 const toast = useToast();
+console.log("🚀 ~ toast:", toast);
 
 function guard(to, from, next) {
   if (store.state.auth.accessToken) {
@@ -92,16 +93,7 @@ const routes = [
         name: "home",
         component: () => import("@/views/index.vue"),
         meta: {
-          roles: [
-            "administrator",
-            "hod",
-            "member",
-            "inspectorate",
-            "dsa",
-            "headaffinity",
-            "support",
-            "coordinator",
-          ],
+          roles: "",
           subroles: ["cihpastor", "cihcoordinator"],
         },
       },
@@ -112,15 +104,7 @@ const routes = [
         meta: {
           hide: true,
           activeName: "overview",
-          roles: [
-            "administrator",
-            "hod",
-            "member",
-            "inspectorate",
-            "dsa",
-            "headaffinity",
-            "support",
-          ],
+          roles: "",
           subroles: ["cihpastor", "cihcoordinator"],
         },
       },
@@ -129,7 +113,7 @@ const routes = [
         name: "profile",
         component: ProfileIndex,
         meta: {
-          roles: ["administrator", "hod", "member", "inspectorate"],
+          roles: "",
           subroles: ["cihpastor", "cihcoordinator"],
 
           activeName: "profile",
@@ -141,7 +125,7 @@ const routes = [
         component: () => import("@/components/Pages/Dashboard/Members"),
         meta: {
           activeName: "members-management",
-          roles: ["administrator", "hod", "inspectorate"],
+          roles: "CAN_VIEW_MEMBERS",
           subroles: [],
         },
       },
@@ -152,7 +136,7 @@ const routes = [
         meta: {
           // auth: true,
           activeName: "roles-management",
-          roles: ["administrator"],
+          roles: "",
           subroles: [],
         },
 
@@ -164,7 +148,7 @@ const routes = [
         component: () => import("@/components/Pages/Dashboard/Members/users"),
         meta: {
           activeName: "users-management",
-          roles: ["administrator"],
+          roles: "CAN_VIEW_USER_MANAGEMENT",
           subroles: [],
         },
       },
@@ -173,7 +157,7 @@ const routes = [
         name: "affinity-groups",
         component: AffinityGroupsIndex,
         meta: {
-          roles: ["administrator", "headaffinity", "inspectorate"],
+          roles: "CAN_VIEW_AFFINITYGROUPS",
           subroles: [],
         },
         children: [
@@ -193,7 +177,7 @@ const routes = [
         name: "ministries",
         component: MinistriesIndex,
         meta: {
-          roles: ["administrator"],
+          roles: "",
           subroles: [],
         },
         children: [
@@ -214,7 +198,7 @@ const routes = [
         name: "accessories",
         component: AccessoriesIndex,
         meta: {
-          roles: ["administrator"],
+          roles: "CAN_VIEW_ACCESSORIES",
           subroles: [],
         },
         children: [
@@ -236,7 +220,7 @@ const routes = [
         name: "units",
         component: UnitsIndex,
         meta: {
-          roles: ["administrator"],
+          roles: "CAN_VIEW_UNITS",
           subroles: [],
         },
         children: [
@@ -255,7 +239,7 @@ const routes = [
         name: "special unitz",
         component: SpecialUnitsIndex,
         meta: {
-          roles: ["administrator"],
+          roles: "",
           subroles: [],
         },
         children: [
@@ -276,7 +260,7 @@ const routes = [
       //   name: "mountain of influence",
       //   component: MountainOfInfluenceIndex,
       //   meta: {
-      //     roles: ["administrator"],
+      //      roles: "",
       //     subroles: [],
       //   },
       //   children: [
@@ -322,7 +306,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "hod", "dsa", "inspectorate"],
+          roles: "CAN_VIEW_DEPARTMENT",
           subroles: [],
         },
       },
@@ -342,7 +326,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "inspectorate"],
+          roles: "CAN_VIEW_FIRSTTIMERS",
           subroles: [],
         },
       },
@@ -357,7 +341,7 @@ const routes = [
             component: () => import("@/components/Pages/Dashboard/CIH/Zones"),
             meta: {
               activeName: "cih management",
-              roles: ["administrator", "inspectorate"],
+              roles: "",
               subroles: ["cihcoordinator"],
             },
             children: [
@@ -380,7 +364,7 @@ const routes = [
                     name: "CIH Zones",
                     url: "/cih/zones",
                   },
-                  // roles: ["administrator", "inspectorate", "coordinator"],
+                  roles: "",
                 },
               },
               {
@@ -421,7 +405,7 @@ const routes = [
             component: () => import("@/components/Pages/Dashboard/CIH/Centers"),
             meta: {
               activeName: "cih management",
-              roles: ["administrator", "inspectorate"],
+              roles: "",
               subroles: ["cihcoordinator", "cihpastor"],
             },
             children: [
@@ -432,7 +416,7 @@ const routes = [
                   import("@/components/Pages/Dashboard/CIH/Centers/centers"),
                 meta: {
                   activeName: "cih management",
-                  roles: ["administrator", "inspectorate"],
+                  roles: "",
                   subroles: ["cihcoordinator", "cihpastor"],
                 },
               },
@@ -472,6 +456,7 @@ const routes = [
                 name: "Center",
                 url: "/cih/center",
               },
+              roles: "",
               subroles: ["cihpastor", "cihcoordinator"],
             },
           },
@@ -481,7 +466,7 @@ const routes = [
             component: () => import("@/views/dashboard/cih/reports"),
             meta: {
               activeName: "cih management",
-              roles: ["administrator", "inspectorate"],
+              roles: "",
               subroles: ["cihcoordinator", "cihpastor"],
             },
             children: [
@@ -518,6 +503,7 @@ const routes = [
                   import("@/components/Pages/Dashboard/CIH/Reports/zones"),
                 meta: {
                   activeName: "reports",
+                  roles: "",
                   groupParent: {
                     name: "Reports",
                     url: "/cih/reports/zones",
@@ -538,13 +524,7 @@ const routes = [
           // },
         ],
         meta: {
-          roles: [
-            "administrator",
-            "inspectorate",
-            "member",
-            "coordinator",
-            "accreditor",
-          ],
+          roles: "CAN_VIEW_CIH_MANAGEMENT",
           subroles: ["cihcoordinator", "cihpastor"],
         },
       },
@@ -560,6 +540,7 @@ const routes = [
               import("@/components/Pages/Dashboard/Requests/table"),
             meta: {
               activeName: "requests",
+              roles: "CAN_VIEW_REQUESTS",
             },
           },
           // {
@@ -591,7 +572,7 @@ const routes = [
           // },
         ],
         meta: {
-          roles: ["administrator", "hod", "inspectorate"],
+          roles: "",
           subroles: [],
         },
       },
@@ -610,7 +591,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "inspectorate", "hod"],
+          roles: "CAN_VIEW_OUTREACH",
           subroles: [],
         },
       },
@@ -625,11 +606,12 @@ const routes = [
             component: () => import("@/components/Pages/Dashboard/Members"),
             meta: {
               activeName: "attendance",
+              roles: "CAN_VIEW_ATTENDANCE",
             },
           },
         ],
         meta: {
-          roles: ["administrator", "inspectorate"],
+          roles: "CAN_VIEW_ATTENDANCE",
           subroles: [],
         },
       },
@@ -648,7 +630,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "hod"],
+          roles: "CAN_VIEW_GOALS",
           subroles: [],
         },
       },
@@ -667,7 +649,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "hod", "inspectorate"],
+          roles: "CAN_VIEW_MEETINGS",
           subroles: [],
         },
       },
@@ -686,7 +668,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "inspectorate", "member"],
+          roles: "CAN_VIEW_EVENTS",
         },
       },
       {
@@ -705,7 +687,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "hod"],
+          roles: "",
           subroles: [],
         },
       },
@@ -725,7 +707,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator", "hod"],
+          roles: "CAN_VIEW_APPOITMENT",
           subroles: [],
         },
       },
@@ -744,7 +726,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: ["administrator"],
+          roles: "CAN_VIEW_VENUES",
           subroles: [],
         },
       },
@@ -852,23 +834,12 @@ router.beforeEach((to, from, next) => {
   }
 
   document.title = "Citadel  - " + words;
+
   if (store.state.auth.accessToken) {
     if (
-      to?.meta?.roles?.includes(
-        store?.state?.auth?.userData?.userRole?.toLowerCase()
-      ) ||
-      to?.meta?.subroles?.includes(
-        store?.state?.auth?.userData?.cihRole?.toLowerCase()
-      )
+      store?.state?.auth?.permissions?.includes(to?.meta?.roles) ||
+      !to?.meta?.roles
     ) {
-      // console.log(
-      //   "this is " +
-      //     to?.meta?.roles?.includes(
-      //       store?.state?.auth?.userData?.userRole?.toLowerCase()
-      //     )
-      // );
-      // console.log(to?.meta?.roles);
-      // console.log(store?.state?.auth?.userData?.userRole?.toLowerCase());
       next();
     } else {
       toast.error("You are not authorised");

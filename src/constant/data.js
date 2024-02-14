@@ -100,7 +100,7 @@ export const menuItems = [
     title: "Accessories",
     icon: "heroicons-outline:table-cells",
     link: "/accessories",
-    roles: "CAN_VIEW_MEMBERS",
+    roles: "CAN_VIEW_ACCESSORIES",
     subroles: [],
   },
   {
