@@ -51,20 +51,13 @@
               >
                 {{ props.row.fullName }}
               </router-link>
-              <!-- <span
-                  v-if="props.row.cihRoles"
-                  class="px-2 py-[2px] rounded-full bg-gray-100 text-gray-500 text-xs"
-                  >{{ props.row.cihRoles.replace("cih", "") }}</span
-                > -->
             </span>
-            <span v-if="props.column.field == 'order'" class="font-medium">
-              {{ "#" + props.row.order }}
-            </span>
+
             <span
-              v-if="props.column.field == 'date'"
+              v-if="props.column.field == 'actionDate'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ props.row.date }}
+              {{ moment(props.row.actionDate).format("ll") }}
             </span>
             <span
               v-if="props.column.field == 'email'"
@@ -74,26 +67,9 @@
             </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
-                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                :class="`${
-                  props.row.status === 'active'
-                    ? 'text-success-500 bg-success-500'
-                    : ''
-                } 
-              ${
-                props.row.status === 'inactive'
-                  ? 'text-warning-500 bg-warning-500'
-                  : ''
-              }
-              ${
-                props.row.status === 'pending'
-                  ? 'text-blue-500 bg-blue-500'
-                  : ''
-              }
-              
-               `"
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500 bg-warning-500"
               >
-                {{ props.row.status }}
+                Rejected
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
@@ -231,13 +207,9 @@ export default {
     const delistLoading = computed(() => state.department.loading);
     const delistSuccess = computed(() => state.department.deletesuccess);
     const members = computed(() => {
-      if (state?.member?.data) {
-        return state?.member?.data?.map((item) => {
-          item.fullName = `${item.firstName} ${item.surName}`;
-          item.dateOfBirth = item?.dateOfBirth
-            ? moment(item?.dateOfBirth).format("ll")
-            : "-";
-          item.department = item?.department ? item?.department : "-";
+      if (state.department.departments) {
+        return state.department.departments?.map((item) => {
+          item.fullName = `${item.firstName} ${item.lastName}`;
 
           return item;
         });
@@ -309,6 +281,7 @@ export default {
       state,
       delistLoading,
       delistSuccess,
+      moment,
     };
   },
 
@@ -359,7 +332,7 @@ export default {
 
         {
           label: "Phone",
-          field: "mobile1",
+          field: "phone",
         },
 
         {
@@ -377,7 +350,7 @@ export default {
         },
         {
           label: "Date",
-          field: "created_at",
+          field: "actionDate",
         },
         {
           label: "Action",
