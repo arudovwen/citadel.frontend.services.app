@@ -95,7 +95,11 @@
             name="state"
           />
         </FormGroup>
-        <FormGroup label="Lga" :error="lgaError">
+        <FormGroup
+          label="Lga"
+          :error="lgaError"
+          v-if="country && country?.value?.toLowerCase() === 'nigeria'"
+        >
           <VueSelect
             class="w-full"
             v-model.value="lga"

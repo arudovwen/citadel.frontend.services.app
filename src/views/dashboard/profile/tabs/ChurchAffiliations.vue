@@ -154,7 +154,7 @@
           name="Department"
         />
       </div>
-
+      <!-- 
       <div>
         <Select
           :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
@@ -165,7 +165,7 @@
           :error="cihRoleError"
           classInput="!h-[40px]"
         />
-      </div>
+      </div> -->
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
@@ -284,14 +284,14 @@ const departmentOptions = computed(() =>
   })
 );
 
-const cihRoles = computed(() =>
-  store?.state?.profile?.allCihRoles.map((i) => {
-    return {
-      label: i,
-      value: i,
-    };
-  })
-);
+// const cihRoles = computed(() =>
+//   store?.state?.profile?.allCihRoles.map((i) => {
+//     return {
+//       label: i,
+//       value: i,
+//     };
+//   })
+// );
 
 const churchAffiliationsDataLoading = computed(
   () => store.state.profile.getChurchAffiliationsDataloading
@@ -350,7 +350,7 @@ const { errorMessage: cihZoneError } = useField("cihZone");
 const { value: mountainOfInfluence, errorMessage: mountainOfInfluenceError } =
   useField("mountainOfInfluence");
 const { value: affinityGroup } = useField("affinityGroup");
-const { value: cihRole, errorMessage: cihRoleError } = useField("cihRole");
+// const { value: cihRole, errorMessage: cihRoleError } = useField("cihRole");
 
 const { errorMessage: departmentError } = useField("department");
 
