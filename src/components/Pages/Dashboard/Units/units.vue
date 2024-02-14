@@ -24,7 +24,7 @@
       </div>
 
       <Button
-        v-if="state.auth.userData.userRole.toLowerCase() === 'administrator'"
+        v-if="permissions.includes('CAN_CREATE_UNITS')"
         icon="heroicons-outline:plus"
         text="Add Unit"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"
@@ -53,6 +53,7 @@ import EditModal from "./unit-edit";
 import Grid from "./unit-grid";
 import { useStore } from "vuex";
 
+const permissions = computed(() => state.auth.permissions);
 const store = useStore();
 const { state } = useStore();
 const userId = computed(() => state.auth.userData.id);

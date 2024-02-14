@@ -63,10 +63,10 @@
         </router-link>
 
         <div
-          v-if="state.auth.userData.userRole.toLowerCase() === 'administrator'"
           class="flex justify-end px-4 py-2 mt-6 border-t border-gray-200 gap-x-3"
         >
           <button
+            v-if="permissions.includes('CAN_UPDATE_DEPARTMENT')"
             @click="actions[0].doit(item)"
             class="text-xs active:scale-95 px-1 py-1 rounded-full"
           >
@@ -74,6 +74,7 @@
           </button>
 
           <button
+            v-if="permissions.includes('CAN_DELETE_DEPARTMENT')"
             @click="actions[1].doit(item)"
             class="text-xs active:scale-95 px-1 py-1 rounded-full"
           >
@@ -161,6 +162,7 @@ const success = computed(() => state.department.addsuccess);
 const deletesuccess = computed(() => state.department.deletesuccess);
 const updatesuccess = computed(() => state.department.updatesuccess);
 const departments = computed(() => state.department.departments);
+const permissions = computed(() => state.auth.permissions);
 const membersOptions = computed(() =>
   state?.member?.data.map((i) => {
     return {

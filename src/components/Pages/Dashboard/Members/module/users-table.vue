@@ -46,12 +46,11 @@
             "
           />
           <Button
-            v-if="
-              state.auth.userData.userRole.toLowerCase() === 'administrator'
-            "
+            v-if="permissions.includes('CAN_CREATE_USER_MANAGEMENT')"
             icon="ri:user-add-line"
             text="Add user"
-            btnClass=" btn-primary font-normal btn-sm "
+            btnClass=" btn-primary
+          font-normal btn-sm "
             iconClass="text-lg"
             @click="
               () => {
@@ -519,6 +518,7 @@ export default {
     const modalChange = ref(null);
     const roleModalChange = ref(null);
     const modalStatus = ref(null);
+    const permissions = computed(() => state.auth.permissions);
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
@@ -606,6 +606,7 @@ export default {
       modalStatus,
       perPage,
       state,
+      permissions,
     };
   },
 };

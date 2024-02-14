@@ -118,51 +118,52 @@ export default defineComponent({
         .slice(1)
         .filter((i) => permissions.value.includes(i.roles) || !i.roles);
       newItems = filteredItems;
-      // if (
-      //   state.auth.userData.userRole.toLowerCase() === "administrator" ||
-      //   state.auth.userData.userRole.toLowerCase() === "inspectorate"
-      // ) {
-      //   newItems = filteredItems.map((i) => {
-      //     if (i.title.toLowerCase() === "cih management") {
-      //       i.child = i.child.filter(
-      //         (j) =>
-      //           j.childtitle.toLowerCase() !== "centers" &&
-      //           j.childtitle.toLowerCase() !== "center" &&
-      //           j.for?.toLowerCase() !== "ordinary"
-      //       );
-      //     }
-      //     return i;
-      //   });
-      //   return [menuItems[0], ...newItems];
-      // } else if (
-      //   state.auth.userData?.cihRole?.toLowerCase() === "cihcoordinator"
-      // ) {
-      //   newItems = filteredItems.map((i) => {
-      //     if (i.title.toLowerCase() === "cih management") {
-      //       i.child = i.child.filter(
-      //         (j) =>
-      //           j.childtitle.toLowerCase() !== "centers" &&
-      //           j.childtitle.toLowerCase() !== "center" &&
-      //           j.for?.toLowerCase() !== "ordinary"
-      //       );
-      //     }
-      //     return i;
-      //   });
-      //   return [menuItems[0], ...newItems];
-      // } else if (state.auth.userData?.cihRole?.toLowerCase() === "cihpastor") {
-      //   newItems = filteredItems.map((i) => {
-      //     if (i.title.toLowerCase() === "cih management") {
-      //       i.child = i.child.filter(
-      //         (j) =>
-      //           j.childtitle.toLowerCase() !== "zones" &&
-      //           j.childtitle.toLowerCase() !== "centers" &&
-      //           j.for?.toLowerCase() !== "admin"
-      //       );
-      //     }
-      //     return i;
-      //   });
-      //   return [menuItems[0], ...newItems];
-      // }
+      if (
+        permissions.value.includes("CAN_VIEW_ALL_ZONES_CIH_MANAGEMENT") &&
+        permissions.value.includes("CAN_VIEW_ALL_CENTERS_CIH_MANAGEMENT")
+      ) {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.child.filter(
+              (j) =>
+                j.childtitle.toLowerCase() !== "centers" &&
+                j.childtitle.toLowerCase() !== "center" &&
+                j.for?.toLowerCase() !== "ordinary"
+            );
+          }
+          return i;
+        });
+        return [menuItems[0], ...newItems];
+      } else if (
+        permissions.value.includes("CAN_VIEW_ALL_CENTERS_CIH_MANAGEMENT") &&
+        permissions.value.includes("CAN_VIEW_ZONE_CIH_MANAGEMENT")
+      ) {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.child.filter(
+              (j) =>
+                j.childtitle.toLowerCase() !== "centers" &&
+                j.childtitle.toLowerCase() !== "center" &&
+                j.for?.toLowerCase() !== "ordinary"
+            );
+          }
+          return i;
+        });
+        return [menuItems[0], ...newItems];
+      } else if (permissions.value.includes("CAN_VIEW_CENTER_CIH_MANAGEMENT")) {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.child.filter(
+              (j) =>
+                j.childtitle.toLowerCase() !== "zones" &&
+                j.childtitle.toLowerCase() !== "centers" &&
+                j.for?.toLowerCase() !== "admin"
+            );
+          }
+          return i;
+        });
+        return [menuItems[0], ...newItems];
+      }
       return [menuItems[0], ...newItems];
     });
     onMounted(() => {

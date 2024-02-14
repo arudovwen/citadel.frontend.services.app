@@ -26,7 +26,7 @@
               name="filterType"
             />
             <VueSelect
-              v-if="state.auth.userData.userRole.toLowerCase() !== 'member'"
+              v-if="permissions.includes('CAN_VIEW_ALL_ZONES_CIH_MANAGEMENT')"
               class="min-w-[300px] w-full md:w-auto"
               v-model="selectedZone"
               :options="zoneOptions"
