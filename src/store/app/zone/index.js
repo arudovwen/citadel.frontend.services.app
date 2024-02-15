@@ -59,6 +59,7 @@ export default {
       state.getZonesLoading = true;
       state.getZonesSuccess = false;
       state.getZonesError = null;
+      state.zones = [];
     },
     getZonesSuccess(state, { data, totalCount }) {
       state.getZonesLoading = false;

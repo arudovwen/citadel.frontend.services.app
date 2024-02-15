@@ -75,6 +75,7 @@ export default {
       state.getcentersloading = true;
       state.getcenterssuccess = false;
       state.getcenterserror = null;
+      state.centers = [];
     },
     getCentersSuccess(state, { data, totalCount }) {
       state.getcentersloading = false;

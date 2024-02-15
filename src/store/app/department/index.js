@@ -58,6 +58,7 @@ export default {
       state.loading = true;
       state.error = null;
       state.fetchsuccess = false;
+      state.departments = [];
     },
     fetchSuccess(state, { data, totalCount }) {
       state.loading = false;
@@ -230,6 +231,21 @@ export default {
         commit("fetchBegin");
         const response = await DataService.get(
           `${urls.GET_PENDING_DEPARTMENT_REQUESTS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("fetchSuccess", response.data);
+        }
+      } catch (err) {
+        commit("fetchErr", err);
+      }
+    },
+    async getDelistedDepartments({ commit }, data) {
+      try {
+        commit("fetchBegin");
+        const response = await DataService.get(
+          `${urls.GET_DELISTED_DEPARTMENT_REQUESTS}?${new URLSearchParams(
             cleanObject(data)
           )}`
         );

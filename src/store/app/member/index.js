@@ -130,7 +130,7 @@ export default {
       state.loading = true;
       state.error = null;
       state.success = false;
-      // state.data = [];
+      state.data = [];
     },
     fetchUserSuccess(state, { data, totalCount }) {
       state.loading = false;

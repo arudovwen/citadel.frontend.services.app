@@ -100,7 +100,7 @@ export const menuItems = [
     title: "Accessories",
     icon: "heroicons-outline:table-cells",
     link: "/accessories",
-    roles: "CAN_VIEW_ACCESSORIES",
+    roles: "CAN_VIEW_VENUES",
     subroles: [],
   },
   {
@@ -176,7 +176,7 @@ export const menuItems = [
     title: "Special Units",
     icon: "heroicons-outline:squares-2x2",
     link: "/special-unit",
-    roles: "CAN_VIEW_MEMBERS",
+    roles: "CAN_VIEW_UNITS",
     subroles: [],
   },
   // {
