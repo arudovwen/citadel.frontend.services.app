@@ -7,6 +7,7 @@ import { urls } from "@/helpers/apI_urls";
 export default {
   state: {
     roleModal: false,
+    roleEditModal: false,
     addRoleLoading: false,
     addRoleSuccess: false,
     addRoleError: null,
@@ -25,6 +26,9 @@ export default {
     getPermissionsLoading: false,
     getPermissionsSuccess: false,
     getPermissionsError: null,
+    getRolePermissionsLoading: false,
+    getRolePermissionsSuccess: false,
+    getRolePermissionsError: null,
     setPermissionsLoading: false,
     setPermissionsSuccess: false,
     setPermissionsError: null,
@@ -38,6 +42,7 @@ export default {
     roles: [],
     modules: [],
     permissions: [],
+    rolepermissions: [],
     authUserRoles: [],
     loggedInUserRoles: [],
     total: 0,
@@ -149,6 +154,23 @@ export default {
       state.getPermissionsSuccess = false;
       state.getPermissionsError = err;
     },
+    getRolePermissionsBegin(state) {
+      state.getRolePermissionsLoading = true;
+      state.getRolePermissionsSuccess = false;
+      state.getRolePermissionsError = null;
+    },
+
+    getRolePermissionsSuccess(state, data) {
+      state.getRolePermissionsLoading = false;
+      state.getRolePermissionsSuccess = true;
+      state.rolepermissions = data;
+    },
+
+    getRolePermissionsError(state, err) {
+      state.getRolePermissionsLoading = false;
+      state.getRolePermissionsSuccess = false;
+      state.getRolePermissionsError = err;
+    },
     setPermissionsBegin(state) {
       state.setPermissionsLoading = true;
       state.setPermissionsSuccess = false;
@@ -207,6 +229,15 @@ export default {
     closeRoleModal(state) {
       state.roleModal = false;
     },
+
+    openEditRoleModal(state, data) {
+      state.roleEditModal = true;
+      state.role = data;
+    },
+
+    closeEditRoleModal(state) {
+      state.roleEditModal = false;
+    },
   },
   actions: {
     async addRole({ commit }, data) {
@@ -214,6 +245,21 @@ export default {
         commit("addRoleBegin");
         const response = await DataService.post(
           urls.CREATE_ROLE_WITH_PERMISSIONS,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("addRoleSuccess");
+        }
+      } catch (err) {
+        commit("addRoleError", err);
+      }
+    },
+    async updateRolePermissions({ commit }, data) {
+      try {
+        commit("addRoleBegin");
+        const response = await DataService.put(
+          urls.UPDATE_ROLE_WITH_PERMISSIONS,
           data
         );
 
@@ -236,6 +282,21 @@ export default {
         commit("getRoleError", err);
       }
     },
+    async getRolePermissionsList({ commit }, RoleId) {
+      try {
+        commit("getRolePermissionsBegin");
+        const response = await DataService.get(
+          `${urls.GET_PLATFORM_ROLE_PERMISSIONS}?RoleId=${RoleId}`
+        );
+
+        if (response.status === 200) {
+          commit("getRolePermissionsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getRolePermissionsError", err);
+      }
+    },
+
     async getAuthUserRoles({ commit }, userId) {
       try {
         commit("getAuthUserRolesBegin");
@@ -307,19 +368,6 @@ export default {
       }
     },
 
-    async updateRole({ commit }, data) {
-      try {
-        commit("updateZoneBegin");
-        const response = await DataService.put(urls.UPDATE_ZONE, data);
-
-        if (response.status === 200) {
-          commit("updateZoneSuccess", response.data.data);
-        }
-      } catch (err) {
-        commit("updateZoneError", err);
-      }
-    },
-
     async assignRoleWithPermissions({ commit }, data) {
       try {
         commit("setPermissionsBegin");
@@ -377,6 +425,14 @@ export default {
 
     closeRoleModal({ commit }) {
       commit("closeRoleModal");
+    },
+    //open edit modal
+    openEditRoleModal({ commit }, data) {
+      commit("openEditRoleModal", data);
+    },
+
+    closeEditRoleModal({ commit }) {
+      commit("closeEditRoleModal");
     },
   },
 };

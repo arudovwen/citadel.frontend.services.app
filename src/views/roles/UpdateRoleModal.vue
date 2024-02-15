@@ -1,14 +1,14 @@
 <template>
   <div className="">
     <Modal
-      :activeModal="state.role.roleModal"
-      @close="closeRoleModal"
-      title="Create Role"
-      sizeClass="max-w-[800px]"
+      :activeModal="state.role.roleEditModal"
+      @close="closeEditRoleModal"
+      :title="`Update ${roleName} permissions`"
+      sizeClass="max-w-[900px]"
       centered
     >
       <form
-        @submit.prevent="addRole"
+        @submit.prevent="updateRole"
         class="max-w-[100rem] p-6 space-y-4 bg-white"
       >
         <Textinput
@@ -16,14 +16,15 @@
           type="text"
           placeholder="Enter role name"
           name="title"
-          v-model.value="roleName"
+          v-model="roleName"
+          disabled
           :error="roleNameError"
         />
 
-        <div
-          class="grid grid-cols-2 gap-x-8 max-h-[400px] overflow-y-auto overflow-x-auto"
-        >
-          <ul class="border border-gray-200 rounded-lg overflow-x-auto p-6">
+        <div class="grid grid-cols-2 gap-x-8 max-h-[400px] overflow-x-auto">
+          <ul
+            class="border border-gray-200 rounded-lg max-h-[400px] overflow-y-auto overflow-x-auto p-6"
+          >
             <p class="mb-3 font-medium cursor-pointer">Modules</p>
             <div v-if="modulesLoading || permissionsLoading" class="">
               ...Loading
@@ -65,6 +66,7 @@
                         :value="p"
                         v-model="selectedPermissions"
                         type="checkbox"
+                        :checked="true"
                       />
                       {{ p.displayValue }}
                     </label>
@@ -93,7 +95,7 @@
 
         <div class="text-right mt-8">
           <Button
-            text="Create role"
+            text="Update role"
             btnClass="btn-dark"
             :isLoading="loading"
             :disabled="loading"
@@ -106,7 +108,7 @@
 <script setup>
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
-import { ref, reactive, onMounted, watchEffect } from "vue";
+import { ref, reactive, onMounted, watchEffect, defineProps } from "vue";
 import Textinput from "@/components/Textinput";
 // import { useStore } from "vuex";
 import * as yup from "yup";
@@ -115,19 +117,27 @@ import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 
 import { computed, watch } from "vue";
+
+const props = defineProps(["detail"]);
 onMounted(() => {
-  dispatch("getModulesList");
-  dispatch("getPermissionsList");
+  if (props?.detail?.id) {
+    dispatch("getRolePermissionsList", props.detail.id);
+    setFieldValue("roleName", props.detail.name);
+  }
 });
 
 const { state, dispatch } = useStore();
-const isOpen = computed(() => state.role.roleModal);
+const isOpen = computed(() => state.role.roleEditModal);
 const success = computed(() => state.role.addRoleSuccess);
+const getRolePermissionsSuccess = computed(
+  () => state.role.getRolePermissionsSuccess
+);
 const err = computed(() => state.role.addRoleError);
 const loading = computed(() => state.role.addRoleLoading);
 const modulesLoading = computed(() => state.role.getModulesLoading);
-const permissionsLoading = computed(() => state.role.getPermissionsLoading);
+const permissionsLoading = computed(() => state.role.getRolePermissionsLoading);
 const modulesList = computed(() => state.role.modules);
+const rolepermissions = computed(() => state.role.rolepermissions);
 const permissionsList = computed(() => state.role.permissions);
 const toast = useToast();
 const schema = yup.object({
@@ -146,53 +156,54 @@ function handleIndex(index) {
 
 const modules = ref([]);
 
-// const modules = [
-//   {
-//     name: "Module 1",
-//     permissions: [
-//       "CAN_VIEW_MODUL_1",
-//       "CAN_DELETE_MODULE_1",
-//       "CAN_CREATE_MODULE_1",
-//     ],
-//   },
-//   {
-//     name: "Module 2",
-//     permissions: [
-//       "CAN_VIEW_MODULE_2",
-//       "CAN_DELETE_MODULE_2",
-//       "CAN_CREATE_MODULE_2",
-//     ],
-//   },
-// ];
-
 const formData = reactive({
-  roleName: "",
+  roleName: props?.detail?.name || "",
   selectedPermissions: [],
 });
-const { handleSubmit, resetForm } = useForm({
+const { handleSubmit, resetForm, setFieldValue } = useForm({
   validationSchema: schema,
   initialValues: formData,
 });
 const { value: roleName, errorMessage: roleNameError } = useField("roleName");
 const { value: selectedPermissions } = useField("selectedPermissions");
 
-const addRole = handleSubmit((values) => {
+const updateRole = handleSubmit((values) => {
   const payload = {
     roleName: values.roleName,
     platformPermissions: values?.selectedPermissions?.map((p) => {
       return {
         moduleName: p.moduleName,
-
         accessRight: p.accessRight,
       };
     }),
   };
   console.log("🚀 ~ file: index.vue:126 ~ addRole ~ values:", payload);
-  dispatch("addRole", payload);
+  dispatch("updateRolePermissions", payload);
 });
-const closeRoleModal = () => {
-  dispatch("closeRoleModal");
+const closeEditRoleModal = () => {
+  dispatch("closeEditRoleModal");
 };
+watch(getRolePermissionsSuccess, () => {
+  if (getRolePermissionsSuccess.value) {
+    setFieldValue(
+      "selectedPermissions",
+      rolepermissions.value.map((i) => ({
+        accessRight: i.accessRight,
+        displayValue: `${i.accessRight.toUpperCase()}_${i.moduleName.toUpperCase()}`,
+        moduleName: i.moduleName,
+      }))
+    );
+    formData.selectedPermissions = rolepermissions.value.map((i) => ({
+      accessRight: i.accessRight,
+
+      displayValue: `${i.accessRight.toUpperCase()}_${i.moduleName.toUpperCase()}`,
+      moduleName: i.moduleName,
+    }));
+    selectedIndex.value = [
+      ...new Set(rolepermissions.value.map((i) => i.moduleName)),
+    ];
+  }
+});
 
 watch(success, () => {
   if (success.value) {
@@ -200,12 +211,12 @@ watch(success, () => {
     dispatch("getRolesList");
   }
 
-  closeRoleModal();
+  closeEditRoleModal();
 });
 
 watch(err, () => {
   resetForm();
-  closeRoleModal();
+  closeEditRoleModal();
 });
 
 watch(isOpen, () => {
@@ -241,9 +252,9 @@ watchEffect(() => {
         permissions: permissionsList.value
           ?.map((permission) => {
             return {
-              moduleName: module,
               accessRight: permission,
               displayValue: `${permission.toUpperCase()}_${module.toUpperCase()}`,
+              moduleName: module,
             };
           })
           .filter(

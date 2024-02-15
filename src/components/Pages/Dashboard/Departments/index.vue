@@ -88,19 +88,18 @@ const width = ref(0);
 const handleResize = () => {
   width.value = window.innerWidth;
 };
-
+const permissions = computed(() => state.auth.permissions);
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
-  userId:
-    state.auth.userData.userRole.toLowerCase() === "hod"
-      ? state.auth.userData.id
-      : "",
+  userId: permissions.value.includes("CAN_VIEW_ALL_DEPARTMENT")
+    ? state.auth.userData.id
+    : "",
 });
 const projects = computed(() => store.getters.projects);
-const permissions = computed(() => state.auth.permissions);
+
 const isSkeletion = ref(true);
 const isSkeletion2 = ref(null);
 setTimeout(() => {

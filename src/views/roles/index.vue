@@ -46,33 +46,19 @@
           }"
         >
           <template v-slot:table-row="props">
-            <span v-if="props.column.field == 'action'">
-              <span class="cursor-opointer" @click="openDelete(props.row.id)">
+            <span v-if="props.column.field == 'action'" class="flex gap-x-2">
+              <span
+                class="cursor-pointer text-lg p-1"
+                @click="openEdit(props.row)"
+              >
+                <Icon icon="fa-solid:edit"
+              /></span>
+              <span
+                class="cursor-pointer text-lg p-1"
+                @click="openDelete(props.row.id)"
+              >
                 <Icon icon="heroicons-outline:trash"
               /></span>
-              <!-- <Dropdown classMenuItems=" w-[140px]">
-                <span class="text-xl"
-                  ><Icon icon="heroicons-outline:dots-vertical"
-                /></span>
-                <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in actions" :key="i">
-                    <div
-                      @click="item.doit(props.row)"
-                      :class="`
-                
-                  ${
-                    item.name === 'delete'
-                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
-                      : 'hover:bg-slate-900 hover:text-white'
-                  }
-                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
-                    >
-                      <span class="text-base"><Icon :icon="item.icon" /></span>
-                      <span>{{ item.name }}</span>
-                    </div>
-                  </MenuItem>
-                </template>
-              </Dropdown> -->
             </span>
           </template>
           <template #pagination-bottom>
@@ -95,7 +81,12 @@
         </vue-good-table>
       </div>
     </Card>
-    <RolesModal />
+    <div v-if="state.role.roleModal">
+      <RolesModal />
+    </div>
+    <div v-if="state.role.roleEditModal">
+      <UpdateRoleModal :detail="detail" />
+    </div>
     <Modal
       title="Delete Role"
       label="Small modal"
@@ -135,6 +126,7 @@ import Button from "@/components/Button";
 import { ref, reactive, onMounted, computed, watch } from "vue";
 import window from "@/mixins/window";
 import RolesModal from "@/views/roles/RolesModal";
+import UpdateRoleModal from "@/views/roles/UpdateRoleModal";
 import Modal from "@/components/Modal/Modal";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
@@ -164,6 +156,8 @@ const roles = computed(() => {
   return list;
 });
 const modal = ref(null);
+
+const detail = ref(null);
 const type = ref("add");
 const query = reactive({
   pageNumber: 1,
@@ -194,7 +188,10 @@ const openDelete = (id) => {
   selectedId.value = id;
   modal.value.openModal();
 };
-
+const openEdit = (val) => {
+  detail.value = val;
+  dispatch("openEditRoleModal", true);
+};
 const handleDelete = () => {
   dispatch("deleteRolesFromList", selectedId.value);
 };
