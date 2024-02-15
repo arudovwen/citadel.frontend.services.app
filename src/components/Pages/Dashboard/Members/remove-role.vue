@@ -3,7 +3,7 @@
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to remove role from this user?
     </div>
-    <Select label="Role" :options="roles" v-model="role" />
+    <Select v-if="!isCIH" label="Role" :options="roles" v-model="role" />
     <!-- <span>UserId: {{ userId }}</span> -->
     <div class="flex gap-x-5 justify-end mt-4">
       <Button
@@ -36,7 +36,7 @@ import { useToast } from "vue-toastification";
 //     type: String,
 //   },
 // });
-const props = defineProps(["userId", "closeModal"]);
+const props = defineProps(["userId", "closeModal", "isCIH", "refetch"]);
 
 const toast = useToast();
 
@@ -45,6 +45,8 @@ onMounted(() => {
 });
 
 const { dispatch, state } = useStore();
+const inspectorId = computed(() => state.auth.userData.id);
+
 // const userId = computed(() => "");
 const removeLoading = computed(() => state.role.setPermissionsLoading);
 const removeSuccess = computed(() => state.role.setPermissionsSuccess);
@@ -59,6 +61,14 @@ const roles = computed(() =>
   })
 );
 function removeRole() {
+  if (props.isCIH) {
+    dispatch("removeCIHRoleByInspectorate", {
+      userId: props.userId,
+      inspectorId: inspectorId.value,
+      cihRole: "none",
+    });
+    return;
+  }
   dispatch("removeRoleFromPermissions", {
     userId: props.userId,
     roleId: role.value,
@@ -67,6 +77,10 @@ function removeRole() {
 
 watch(removeSuccess, () => {
   if (removeSuccess.value) {
+    if (props.isCIH) {
+      props.refetch ? props.refetch() : () => {};
+    }
+
     toast.success("Role updated");
     props.closeModal();
   }
