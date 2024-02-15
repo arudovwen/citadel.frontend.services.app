@@ -2,8 +2,11 @@
   <div class="flex flex-col">
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to assign this role?
+      <!-- <p>{{ userId }}</p>
+      <p>{{ inspectorateId }}</p> -->
     </div>
-    <Select label="Role" :options="roles" v-model="role" />
+    <!-- {{ role }} -->
+    <Select label="Role" :options="isCIH ? cihRoles : roles" v-model="role" />
     <!-- <span>UserId: {{ userId }}</span> -->
     <div class="flex gap-x-5 justify-end mt-4">
       <Button
@@ -36,15 +39,17 @@ import { useToast } from "vue-toastification";
 //     type: String,
 //   },
 // });
-const props = defineProps(["userId", "closeModal"]);
+const props = defineProps(["userId", "closeModal", "isCIH", "refetch"]);
 
 const toast = useToast();
 
 onMounted(() => {
+  getAllCihRoles();
   dispatch("getRolesList");
 });
 
 const { dispatch, state } = useStore();
+const inspectorId = computed(() => state.auth.userData.id);
 // const userId = computed(() => "");
 const assignLoading = computed(() => state.role.setPermissionsLoading);
 const assignSuccess = computed(() => state.role.setPermissionsSuccess);
@@ -65,7 +70,40 @@ const roles = computed(() =>
       };
     })
 );
+// const cihRoles = computed(() =>
+//   state.role.roles
+//     .filter((i) => i?.roleName?.toLowerCase().includes("cih"))
+//     .map((i) => {
+//       return {
+//         value: i?.roleId,
+//         label: i?.roleName,
+//       };
+//     })
+// );
+const cihRoles = computed(() =>
+  state?.profile?.allCihRoles.map((i) => {
+    return {
+      label: i,
+      value: i,
+    };
+  })
+);
+
+const getAllCihRoles = () => {
+  if (props.isCIH) {
+    dispatch("getAllCihRoles");
+  }
+};
 function assignRole() {
+  if (props.isCIH) {
+    dispatch("assignCIHRoleByInspectorate", {
+      userId: props.userId,
+      inspectorId: inspectorId.value,
+      cihRole: role.value,
+    });
+    return;
+  }
+
   dispatch("assignRoleWithPermissions", {
     userId: props.userId,
     roleId: role.value,
@@ -75,7 +113,12 @@ function assignRole() {
 watch(assignSuccess, () => {
   if (assignSuccess.value) {
     toast.success("Role updated");
-    dispatch("getUsers", query);
+    if (props.isCIH) {
+      props.refetch ? props.refetch() : () => {};
+    } else {
+      dispatch("getUsers", query);
+    }
+
     props.closeModal();
   }
 });

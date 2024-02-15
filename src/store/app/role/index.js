@@ -335,6 +335,37 @@ export default {
         commit("setPermissionsError", err);
       }
     },
+
+    async assignCIHRoleByInspectorate({ commit }, data) {
+      try {
+        commit("setPermissionsBegin");
+        const response = await DataService.put(
+          `${urls.ASSIGN_CIHROLE_TO_USER}?userId=${data.userId}&InspectorId=${data.inspectorId}&cihRole=${data.cihRole}`,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("setPermissionsSuccess");
+        }
+      } catch (err) {
+        commit("setPermissionsError", err);
+      }
+    },
+    async removeCIHRoleByInspectorate({ commit }, data) {
+      try {
+        commit("setPermissionsBegin");
+        const response = await DataService.put(
+          `${urls.ASSIGN_CIHROLE_TO_USER}?userId=${data.userId}&InspectorId=${data.inspectorId}&cihRole=${data.cihRole}`,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("setPermissionsSuccess");
+        }
+      } catch (err) {
+        commit("setPermissionsError", err);
+      }
+    },
     async removeRoleFromPermissions({ commit }, data) {
       try {
         commit("setPermissionsBegin");
