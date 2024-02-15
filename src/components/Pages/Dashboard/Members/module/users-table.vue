@@ -279,8 +279,8 @@
 import RolesModal from "@/views/roles/RolesModal";
 
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
-import AssignRole from "../assign-role.vue";
-import RemoveRole from "../remove-role.vue";
+import AssignRole from "@/components/Pages/Dashboard/Members/assign-role.vue";
+import RemoveRole from "@/components/Pages/Dashboard/Members/remove-role.vue";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";

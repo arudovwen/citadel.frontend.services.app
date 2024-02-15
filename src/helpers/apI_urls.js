@@ -23,6 +23,7 @@ export const urls = {
   REMOVE_ROLE_FROM_PLATFORM: "/Auth/RemoveUserRoleFromPlatform",
   REMOVE_PERMISSION_FROM_USER: "/Auth/RemovePermissionsFromUser",
   ASSIGN_PERMISSIONS_TO_USERS: "/Auth/AssignPermissionsToUser",
+  ASSIGN_CIHROLE_TO_USER: "/ChurchAffiliation/AssignCIHRoleByInspectorate",
   GET_PLATFORM_PERMISSIONS: "/Auth/GetPlatformPermissions",
   GET_AUTH_USER_ROLES: "/Auth/GetUserRoles",
   //Affinity Groups

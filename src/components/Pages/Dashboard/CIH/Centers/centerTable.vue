@@ -55,14 +55,14 @@
               >
             </span>
             <span v-if="props.column.field == 'action'">
-              <Dropdown classMenuItems=" w-[140px]">
+              <Dropdown classMenuItems=" w-[160px]">
                 <span class="text-xl"
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
                     <div
-                      @click="item.doit(props.row)"
+                      @click="item.doit(props.row, item.name)"
                       :class="`
                 
                   ${
@@ -134,8 +134,40 @@
       </div>
     </template>
   </Modal>
+  <!-- ///CIH Modal/// -->
+  <Modal
+    :title="type"
+    label="Small modal"
+    :labelClass="`${
+      type === 'assign role' ? 'btn-primary-600' : 'btn-outline-danger'
+    }`"
+    ref="roleModalChange"
+    sizeClass="max-w-md"
+    :themeClass="`${
+      type === 'assign role' ? 'bg-primary-500' : 'bg-danger-500'
+    }`"
+  >
+    <div>
+      <AssignRole
+        v-if="type === 'assign role'"
+        :userId="id"
+        :closeModal="closeRoleModalChange"
+        :isCIH="true"
+        :refetch="refetchCenterMembers"
+      />
+      <RemoveRole
+        v-if="type === 'remove role'"
+        :userId="id"
+        :closeModal="closeRoleModalChange"
+        :isCIH="true"
+        :refetch="refetchCenterMembers"
+      />
+    </div>
+  </Modal>
 </template>
 <script>
+import AssignRole from "@/components/Pages/Dashboard/Members/assign-role.vue";
+import RemoveRole from "@/components/Pages/Dashboard/Members/remove-role.vue";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import { useRoute } from "vue-router";
@@ -165,6 +197,8 @@ export default {
     Card,
     MenuItem,
     Button,
+    AssignRole,
+    RemoveRole,
   },
 
   data() {
@@ -190,6 +224,24 @@ export default {
           icon: "heroicons-outline:eye",
           doit: ({ userId }) => {
             this.$router.push("/profile/" + userId);
+          },
+        },
+        {
+          name: "assign role",
+          icon: "heroicons-outline:user-plus",
+          doit: ({ userId }, type) => {
+            this.id = userId;
+            this.type = type;
+            this.$refs.roleModalChange.openModal();
+          },
+        },
+        {
+          name: "remove role",
+          icon: "heroicons-outline:minus",
+          doit: ({ userId }, type) => {
+            this.id = userId;
+            this.type = type;
+            this.$refs.roleModalChange.openModal();
           },
         },
       ],
@@ -274,6 +326,7 @@ export default {
     const route = useRoute();
     const modalChange = ref(null);
     const modalStatus = ref(null);
+    const roleModalChange = ref(null);
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
@@ -315,10 +368,16 @@ export default {
     const addsuccess = computed(() => state.profile.profileCreated);
     const deleteloading = computed(() => state.profile.deleteloading);
     const deletesuccess = computed(() => state.profile.deletesuccess);
-
+    const closeRoleModalChange = () => {
+      roleModalChange.value.closeModal();
+    };
     function handleDelete(id) {
       dispatch("deleteBiodata", id);
     }
+
+    const refetchCenterMembers = () => {
+      dispatch("getAffiliationByMemberQuery", query);
+    };
 
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
@@ -365,6 +424,9 @@ export default {
       modalStatus,
       perPage,
       state,
+      roleModalChange,
+      closeRoleModalChange,
+      refetchCenterMembers,
     };
   },
 };
