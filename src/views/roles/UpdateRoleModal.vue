@@ -20,7 +20,6 @@
           disabled
           :error="roleNameError"
         />
-
         <div class="grid grid-cols-2 gap-x-8 max-h-[400px] overflow-x-auto">
           <ul
             class="border border-gray-200 rounded-lg max-h-[400px] overflow-y-auto overflow-x-auto p-6"

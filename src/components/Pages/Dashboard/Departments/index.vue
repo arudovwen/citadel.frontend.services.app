@@ -94,7 +94,7 @@ const query = reactive({
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
-  userId: permissions.value.includes("CAN_VIEW_ALL_DEPARTMENT")
+  userId: !permissions.value.includes("CAN_VIEW_ALL_DEPARTMENT")
     ? state.auth.userData.id
     : "",
 });
