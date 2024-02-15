@@ -171,7 +171,6 @@ export default {
     });
     const { state, dispatch } = useStore();
     const toast = useToast();
-    dispatch("getDelistedDepartments", query);
     // const id = ref(null);
     const modal = ref(null);
     const modalChange = ref(null);
