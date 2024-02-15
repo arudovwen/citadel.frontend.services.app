@@ -469,6 +469,7 @@ export default {
       this.$store.dispatch("removeMemberFromDepartment", {
         reason: this.reason,
         userId: this.id,
+        hodUserId: this.$store.state.auth.userData.id,
         departmentId: this.$route.params.id,
       });
     },

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white py-8 rouned-[10px]">
+  <div class="bg-white rounded-[10px]">
     <Card noborder>
       <div class="mb-6">
         <AppTabs :tabs="tabs" className="px-5" />
