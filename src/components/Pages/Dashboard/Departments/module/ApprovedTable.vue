@@ -138,7 +138,7 @@
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to delist this member from department?
     </div>
-    <div>
+    <div class="w-full flex flex-col">
       <textarea
         resize="none"
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
@@ -146,6 +146,10 @@
         placeholder="Provide reason"
         v-model="reason"
       ></textarea>
+      <span v-if="reasonErr?.length > 0" class="mt-2 text-danger-500 text-xs">
+        <!-- <Icon icon="heroicons-outline:information-circle" /> -->
+        {{ reasonErr }}
+      </span>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
@@ -209,6 +213,8 @@ import {
   ref,
   // getCurrentInstance,
 } from "vue";
+// import { useField, useForm } from "vee-validate";
+// import * as yup from "yup";
 
 export default {
   mixins: [window],
@@ -360,6 +366,7 @@ export default {
       dateValue: null,
       pageRange: 5,
       reason: "",
+      reasonErr: "",
       formatter: {
         date: "DD MMM YYYY",
         month: "MMM",
@@ -466,6 +473,10 @@ export default {
       return actions[name] || null;
     },
     handleDelist() {
+      if (this.reason?.length == 0) {
+        this.reasonErr = "Reason is a required field";
+        return;
+      }
       this.$store.dispatch("removeMemberFromDepartment", {
         reason: this.reason,
         userId: this.id,
@@ -480,6 +491,13 @@ export default {
         this.$store.state.auth.userData.userRole !== "hod"
         ? this.actions.filter((i) => i.name.toLowerCase() !== "delete")
         : this.actions;
+    },
+  },
+  watch: {
+    reason() {
+      if (this.reason?.length > 0) {
+        this.reasonErr = "";
+      }
     },
   },
 };
