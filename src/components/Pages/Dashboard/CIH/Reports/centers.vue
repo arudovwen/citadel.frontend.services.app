@@ -92,7 +92,7 @@
           }"
           :pagination-options="{
             enabled: true,
-            perPage: perpage,
+            perPage: perPage,
           }"
           :search-options="{
             enabled: true,
@@ -516,6 +516,9 @@ export default {
     const updatereportsuccess = computed(
       () => state.report.updatereportsuccess
     );
+    const getChurchAffiliationsDatasuccess = computed(
+      () => state.profile.getChurchAffiliationsDatasuccess
+    );
     const loading = computed(() => state.report.loading);
     const total = computed(() => state.report.total);
     const deletereportloading = computed(
@@ -525,10 +528,11 @@ export default {
       () => state.report.deletereportsuccess
     );
     const reports = computed(() => state.report.data);
+    const detail = computed(() => state.profile.churchAffiliationsData);
     const active = ref("activity");
 
     onMounted(() => {
-      dispatch("getActivityReports", query);
+      dispatch("getChurchAffiliationsById", state.auth.userData?.id);
     });
     function handleReports() {
       console.log(
@@ -539,16 +543,31 @@ export default {
       query.pageNumber = 1;
       query.pageSize = currentPerPage;
     }
+    watch(getChurchAffiliationsDatasuccess, () => {
+      if (getChurchAffiliationsDatasuccess.value) {
+        dispatch("getActivityReports", {
+          ...query,
+          centerName: detail.value.cihAddress,
+        });
+      }
+    });
+
     watch(success, () => {
       if (success.value) {
-        dispatch("getActivityReports", query);
+        dispatch("getActivityReports", {
+          ...query,
+          centerName: detail.value.cihAddress,
+        });
         toast.success("Report added");
         modalChange.value.closeModal();
       }
     });
     watch(updatereportsuccess, () => {
       if (updatereportsuccess.value) {
-        dispatch("getActivityReports", query);
+        dispatch("getActivityReports", {
+          ...query,
+          centerName: detail.value.cihAddress,
+        });
         toast.success("Report updated");
         modalChange.value.closeModal();
       }
@@ -556,7 +575,10 @@ export default {
 
     watch(deletereportsuccess, () => {
       if (deletereportsuccess.value) {
-        dispatch("getActivityReports", query);
+        dispatch("getActivityReports", {
+          ...query,
+          centerName: detail.value.cihAddress,
+        });
         toast.success("Report deleted");
         modal.value.closeModal();
       }
