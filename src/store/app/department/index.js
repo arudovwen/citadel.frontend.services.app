@@ -196,11 +196,12 @@ export default {
         commit("fetchErr", err);
       }
     },
+
     async getApprovedDepartments({ commit }, data) {
       try {
         commit("fetchBegin");
         const response = await DataService.get(
-          `${urls.GET_DEPARTMENT_MEMBERS}?${new URLSearchParams(
+          `${urls.GET_APPROVED_DEPARTMENT_MEMBERS}?${new URLSearchParams(
             cleanObject(data)
           )}`
         );

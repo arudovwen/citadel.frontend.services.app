@@ -234,7 +234,7 @@ export default {
       pageSize: 25,
       sortOrder: "",
       searchParameter: "",
-      name: route.params.name,
+      DepartmentName: route.params.name,
     });
     const { state, dispatch } = useStore();
     const toast = useToast();
