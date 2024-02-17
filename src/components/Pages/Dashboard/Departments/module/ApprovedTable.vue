@@ -234,7 +234,7 @@ export default {
       pageSize: 25,
       sortOrder: "",
       searchParameter: "",
-      name: route.params.name,
+      DepartmentName: route.params.name,
     });
     const { state, dispatch } = useStore();
     const toast = useToast();
@@ -368,16 +368,16 @@ export default {
         {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: ({ id }) => {
-            this.$router.push("/profile/" + id);
+          doit: ({ userId }) => {
+            this.$router.push("/profile/" + userId);
           },
         },
 
         {
           name: "delist",
           icon: "heroicons-outline:trash",
-          doit: ({ id }) => {
-            this.id = id;
+          doit: ({ userId }) => {
+            this.id = userId;
 
             this.$refs.modal.openModal();
           },
