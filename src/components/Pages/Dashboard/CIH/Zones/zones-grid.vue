@@ -51,19 +51,17 @@
               </div>
             </div>
             <div
-              v-if="
-                state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
-                state.auth.userData.userRole.toLowerCase() === 'administrator'
-              "
               class="flex justify-end px-4 py-2 mt-6 border-t border-gray-200 gap-x-3"
             >
               <button
+                v-if="permissions.includes('CAN_UPDATE_ZONES')"
                 @click="actions[0].doit(item)"
                 class="text-xs active:scale-95 px-1 py-1 rounded-full"
               >
                 Edit
               </button>
               <button
+                v-if="permissions.includes('CAN_DELETE_ZONES')"
                 @click="actions[1].doit(item)"
                 class="text-xs active:scale-95 px-1 py-1 rounded-full"
               >
@@ -145,7 +143,7 @@ onMounted(() => {
 });
 const { dispatch, state } = useStore();
 const router = useRouter();
-
+const permissions = computed(() => state.auth.permissions);
 const zones = computed(() => state.zone.zones);
 const total = computed(() => state.zone.total);
 const getZonesTotalLoading = computed(() => state.zone.getZonesTotalLoading);

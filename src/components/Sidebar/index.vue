@@ -119,8 +119,8 @@ export default defineComponent({
         .filter((i) => permissions.value.includes(i.roles) || !i.roles);
       newItems = filteredItems;
       if (
-        permissions.value.includes("CAN_VIEW_ALL_ZONES_CIH_MANAGEMENT") &&
-        permissions.value.includes("CAN_VIEW_ALL_CENTERS_CIH_MANAGEMENT")
+        permissions.value.includes("CAN_VIEW_ALL_ZONES") &&
+        permissions.value.includes("CAN_VIEW_ALL_CENTERS")
       ) {
         newItems = filteredItems.map((i) => {
           if (i.title.toLowerCase() === "cih management") {
@@ -135,8 +135,8 @@ export default defineComponent({
         });
         return [menuItems[0], ...newItems];
       } else if (
-        permissions.value.includes("CAN_VIEW_ALL_CENTERS_CIH_MANAGEMENT") &&
-        permissions.value.includes("CAN_VIEW_ZONE_CIH_MANAGEMENT")
+        permissions.value.includes("CAN_VIEW_ALL_CENTERS") &&
+        permissions.value.includes("CAN_VIEW_ZONES")
       ) {
         newItems = filteredItems.map((i) => {
           if (i.title.toLowerCase() === "cih management") {
@@ -150,7 +150,7 @@ export default defineComponent({
           return i;
         });
         return [menuItems[0], ...newItems];
-      } else if (permissions.value.includes("CAN_VIEW_CENTER_CIH_MANAGEMENT")) {
+      } else if (permissions.value.includes("CAN_VIEW_CENTERS")) {
         newItems = filteredItems.map((i) => {
           if (i.title.toLowerCase() === "cih management") {
             i.child = i.child.filter(

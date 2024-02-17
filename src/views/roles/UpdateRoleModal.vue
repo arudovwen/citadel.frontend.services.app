@@ -233,15 +233,10 @@ const otherPermissions = {
   Events: ["can_approve_reject_event"],
   Department: ["can_approve_reject_department_request", "can_view_all"],
   Appoitment: ["can_approve_reject_appointment"],
-  "CIH Management": [
-    "can_view_all_zones",
-    "can_view_zone",
-    "can_view_all_centers",
-    "can_view_center",
-    "can_view_all_center_reports",
-    "can_view_center_reports",
-  ],
+  "CIH Management": ["can_view_all_center_reports", "can_view_center_reports"],
   Members: ["can_update_church_affiliation"],
+  Zones: ["can_view_all"],
+  Centers: ["can_view_all"],
 };
 watchEffect(() => {
   if (modulesList.value?.length > 0 && permissionsList.value?.length > 0) {
