@@ -198,7 +198,7 @@ const routes = [
         name: "accessories",
         component: AccessoriesIndex,
         meta: {
-          roles: "CAN_VIEW_ACCESSORIES",
+          roles: "CAN_CREATE_VENUES",
           subroles: [],
         },
         children: [
