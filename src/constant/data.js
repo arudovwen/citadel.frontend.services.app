@@ -191,7 +191,7 @@ export const menuItems = [
     title: "Requests",
     icon: "fluent-mdl2:message-friend-request",
     link: "/requests/zone",
-    roles: "CAN_VIEW_REQUESTS",
+    roles: "",
     subroles: [],
   },
   {

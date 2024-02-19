@@ -534,13 +534,13 @@ const routes = [
         component: () => import("@/views/dashboard/requests/index.vue"),
         children: [
           {
-            path: ":name",
+            path: "",
             name: "Requests",
             component: () =>
               import("@/components/Pages/Dashboard/Requests/table"),
             meta: {
               activeName: "requests",
-              roles: "CAN_VIEW_REQUESTS",
+              // roles: "CAN_VIEW_REQUESTS",
             },
           },
           // {
