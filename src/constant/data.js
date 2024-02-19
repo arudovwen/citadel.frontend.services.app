@@ -190,7 +190,7 @@ export const menuItems = [
   {
     title: "Requests",
     icon: "fluent-mdl2:message-friend-request",
-    link: "/requests/zone",
+    link: "/requests",
     roles: "",
     subroles: [],
   },
