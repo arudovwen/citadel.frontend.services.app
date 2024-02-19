@@ -477,11 +477,13 @@ export default {
         this.reasonErr = "Reason is a required field";
         return;
       }
-      this.$store.dispatch("removeMemberFromDepartment", {
-        reason: this.reason,
+
+      this.$store.dispatch("delistMemberFromDepartment", {
+        Reason: this.reason,
         userId: this.id,
         hodUserId: this.$store.state.auth.userData.id,
-        departmentId: this.$route.params.id,
+        DepartmentId: this.$route.params.id,
+        ActionId: 40,
       });
     },
   },

@@ -339,6 +339,21 @@ export default {
         commit("deleteErr", err);
       }
     },
+    async delistMemberFromDepartment({ commit }, data) {
+      try {
+        commit("deleteBegin");
+        const response = await DataService.put(
+          `${urls.DELIST_MEMBER_FROM_DEPT}?${new URLSearchParams(data)}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("deleteSuccess");
+        }
+      } catch (err) {
+        commit("deleteErr", err);
+      }
+    },
+
     async editDepartment({ commit }, data) {
       try {
         commit("updateBegin");

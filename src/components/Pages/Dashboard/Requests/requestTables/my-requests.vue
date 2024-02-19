@@ -211,8 +211,21 @@
       </div>
     </template>
   </Modal>
+  <ModalCrud
+    :activeModal="requestModal"
+    @close="toggleRequestmodal"
+    centered
+    :title="type === 'venue' ? 'Request Venue' : 'Request Event'"
+    labelClass="btn-outline-dark"
+    sizeClass="max-w-md"
+  >
+    <RequestVenue v-if="type === 'venue'" :toggleView="toggleRequestmodal" />
+    <RequestVenue v-if="type === 'event'" />
+  </ModalCrud>
 </template>
 <script setup>
+import ModalCrud from "@/components/Modal";
+import RequestVenue from "@/components/Pages/Dashboard/Requests/make-requests/request-venue.vue";
 import AddRequestButton from "./AddRequestButton";
 import { useToast } from "vue-toastification";
 import ViewRecord from "./preview";
@@ -235,6 +248,10 @@ const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
+const requestModal = ref(false);
+const toggleRequestmodal = () => {
+  requestModal.value = !requestModal.value;
+};
 // const authUserRoles = computed(() =>
 //   state?.role?.authUserRoles
 //     ?.map((i) => {
@@ -264,14 +281,16 @@ const requestTypes = [
     label: "Venue",
     icon: "heroicons-outline:user",
     link: () => {
-      alert("Action");
+      type.value = "venue";
+      toggleRequestmodal();
     },
   },
   {
     label: "Event",
     icon: "heroicons-outline:user",
     link: () => {
-      alert("Action");
+      type.value = "event";
+      toggleRequestmodal();
     },
   },
 ];
