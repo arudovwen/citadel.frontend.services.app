@@ -238,7 +238,7 @@
         : 'View Venue'
     "
     labelClass="btn-outline-dark"
-    sizeClass="max-w-3xl"
+    :sizeClass="`${type === 'set status' ? 'max-w-md' : 'max-w-3xl'} `"
   >
     <AddVenue v-if="type === 'add'" />
     <EditVenue v-else-if="type === 'edit'" />
