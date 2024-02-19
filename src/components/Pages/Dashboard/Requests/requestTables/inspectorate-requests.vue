@@ -305,29 +305,19 @@ const columns = [
 ];
 
 function handleRequest() {
-  dispatch(
-    state.auth.userData.userRole.toLowerCase() === "hod"
-      ? "approveCOD"
-      : "approveCOZ",
-    {
-      approveUserId: state.auth.userData.id,
-      reqUserId: detail.value.userId,
-      actionId: detail.value.id,
-      Comments: comment.value,
-      status: type.value === "approve" ? true : false,
-    }
-  );
+  dispatch("approveCOZ", {
+    approveUserId: state.auth.userData.id,
+    reqUserId: detail.value.userId,
+    actionId: detail.value.id,
+    Comments: comment.value,
+    status: type.value === "approve" ? true : false,
+  });
 }
 
 onMounted(() => {
   console.log("🚀 ~ onMounted ~ authUserRoles:", state.role.authUserRoles);
 
-  if (state.auth.userData.userRole.toLowerCase() === "hod") {
-    dispatch("getAllHodRequests", query);
-  }
-  if (state.auth.userData.userRole.toLowerCase() === "inspectorate") {
-    dispatch("getAllInspectorateRequests", query);
-  }
+  dispatch("getAllInspectorateRequests", query);
 });
 
 function perPage({ currentPerPage }) {
@@ -352,17 +342,12 @@ const success = computed(() => state.request.approvesuccess);
 // Define a debounce delay (e.g., 500 milliseconds)
 const debounceDelay = 800;
 const debouncedSearch = debounce((searchValue) => {
-  dispatch("getAllHodRequests", { ...query, name: searchValue });
+  dispatch("getAllInspectorateRequests", { ...query, name: searchValue });
 }, debounceDelay);
 
 watch(success, () => {
   if (success.value) {
-    dispatch(
-      state.auth.userData.userRole.toLowerCase() === "hod"
-        ? "getAllHodRequests"
-        : "getAllInspectorateRequests",
-      query
-    );
+    dispatch("getAllInspectorateRequests", query);
     modalChange.value.closeModal();
     modal.value.closeModal();
     if (type.value === "approve") {
@@ -383,7 +368,7 @@ watch(
 watch(
   () => [query.pageNumber, query.pageSize],
   () => {
-    dispatch("getAllHodRequests", query);
+    dispatch("getAllInspectorateRequests", query);
   }
 );
 </script>

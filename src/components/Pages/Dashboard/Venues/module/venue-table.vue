@@ -233,14 +233,18 @@
         ? 'Add Venue'
         : type === 'edit'
         ? 'Edit Venue'
+        : type === 'set status'
+        ? 'Set Status'
         : 'View Venue'
     "
     labelClass="btn-outline-dark"
     sizeClass="max-w-3xl"
   >
     <AddVenue v-if="type === 'add'" />
-    <EditVenue v-if="type === 'edit'" />
-    <ViewVenue v-if="type === 'view'" />
+    <EditVenue v-else-if="type === 'edit'" />
+
+    <VenueStatus v-else-if="type === 'set status'" />
+    <ViewVenue v-else />
   </ModalCrud>
 </template>
 <script>
@@ -257,6 +261,7 @@ import ModalCrud from "@/components/Modal";
 import Modal from "@/components/Modal/Modal";
 import AddVenue from "../venue-add.vue";
 import EditVenue from "../venue-edit.vue";
+import VenueStatus from "../venue-status.vue";
 import ViewVenue from "../venue-preview.vue";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
@@ -277,6 +282,7 @@ export default {
     Card,
     MenuItem,
     Button,
+    VenueStatus,
     // VueTailwindDatePicker,
   },
   setup() {
@@ -392,6 +398,15 @@ export default {
         {
           name: "edit",
           icon: "heroicons:pencil-square",
+          doit: (name, venue) => {
+            this.type = name;
+            this.$store.dispatch("openVenueModal", venue);
+            this.$store.dispatch("getVenueById", venue.id);
+          },
+        },
+        {
+          name: "set status",
+          icon: "heroicons:cog-8-tooth",
           doit: (name, venue) => {
             this.type = name;
             this.$store.dispatch("openVenueModal", venue);
