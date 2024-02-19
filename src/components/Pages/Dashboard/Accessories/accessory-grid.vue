@@ -1,80 +1,59 @@
 <template>
-  <div class="">
+  <div class="mx-6">
     <div v-if="getAccessoriesLoading && accessories?.length == 0" class="">
       <EmptyGrid />
     </div>
     <div v-else>
       <div v-if="accessories.length">
-        <div class="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5 mb-2">
-          <Card bodyClass="" v-for="(item, i) in accessories" :key="i">
-            <div
-              class="px-6 pt-6 cursor-pointer"
-              @click="() => router.push(`#`)"
-            >
-              <!-- header -->
-              <header class="flex justify-between items-end mb-6">
-                <div class="flex space-x-4 items-center">
-                  <div class="flex-none">
-                    <div
-                      class="h-10 w-10 rounded-md text-lg bg-slate-100 text-slate-900 dark:bg-slate-600 dark:text-slate-200 flex flex-col items-center justify-center font-normal uppercase"
-                    >
-                      {{
-                        item.accessoryName.charAt(0) +
-                        item.accessoryName.charAt(1)
-                      }}
-                    </div>
-                  </div>
-                  <div class="font-medium text-lg leading-6">
-                    <div class="dark:text-slate-200 text-slate-900">
-                      {{ item.accessoryName }}
-                    </div>
-                  </div>
-                </div>
-              </header>
-              <div
-                class="text-slate-600 dark:text-slate-400 text-xs font-medium mb-2"
-              >
-                <span>Description</span>:
-                <span class="font-medium capitalize">{{
-                  item.description || "none"
-                }}</span>
-              </div>
-            </div>
-            <div
-              v-if="
-                state.auth.userData.userRole.toLowerCase() === 'administrator'
-              "
-              class="flex justify-end px-4 py-2 mt-6 border-t border-gray-200 gap-x-3"
-            >
-              <button
-                @click="actions[0].doit(item)"
-                class="text-xs active:scale-95 px-1 py-1 rounded-full"
-              >
-                Edit
-              </button>
-              <button
-                @click="actions[1].doit(item)"
-                class="text-xs active:scale-95 px-1 py-1 rounded-full"
-              >
-                Delete
-              </button>
-            </div>
-          </Card>
-        </div>
-        <div class="py-4">
-          <Pagination
-            :total="total"
-            :current="query.pageNumber"
-            :per-page="query.pageSize"
-            :pageRange="5"
-            :perPageChanged="perPage"
-            @page-changed="query.pageNumber = $event"
-            enableSearch
-            enableSelect
-            :options="options"
+        <div class="-mx-6">
+          <vue-good-table
+            :columns="columns"
+            mode="remote"
+            styleClass="vgt-table"
+            :isLoading="loading"
+            :rows="accessories || []"
+            :sort-options="{
+              enabled: false,
+            }"
+            :pagination-options="{
+              enabled: true,
+              perPage: query.pageSize,
+            }"
           >
-            >
-          </Pagination>
+            <template v-slot:table-row="props">
+              <span v-if="props.column.field == 'action'" class="flex gap-x-2">
+                <span
+                  class="cursor-pointer text-lg p-1"
+                  @click="actions[0].doit(props.row)"
+                >
+                  <Icon icon="fa-solid:edit"
+                /></span>
+                <span
+                  class="cursor-pointer text-lg p-1"
+                  @click="actions[1].doit(props.row)"
+                >
+                  <Icon icon="heroicons-outline:trash"
+                /></span>
+              </span>
+            </template>
+            <template #pagination-bottom>
+              <div class="py-4 px-3">
+                <Pagination
+                  :total="total"
+                  :current="query.pageNumber"
+                  :per-page="query.pageSize"
+                  :pageRange="5"
+                  :perPageChanged="perPage"
+                  @page-changed="query.pageNumber = $event"
+                  enableSearch
+                  enableSelect
+                  :options="options"
+                >
+                  >
+                </Pagination>
+              </div>
+            </template>
+          </vue-good-table>
         </div>
       </div>
       <Empty v-else />
@@ -115,14 +94,14 @@ import Pagination from "@/components/Pagination";
 import EmptyGrid from "@/components/Skeleton/Project-grid.vue";
 import Empty from "@/components/Empty";
 import Button from "@/components/Button";
-import Card from "@/components/Card";
+// import Card from "@/components/Card";
 // import Dropdown from "@/components/Dropdown";
-// import Icon from "@/components/Icon";
+import Icon from "@/components/Icon";
 // import { MenuItem } from "@headlessui/vue";
 import Modal from "@/components/Modal/Modal";
 import { computed, onMounted, ref, watch, inject } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
 onMounted(() => {
@@ -134,7 +113,7 @@ onMounted(() => {
   // });
 });
 const { dispatch, state } = useStore();
-const router = useRouter();
+// const router = useRouter();
 
 const accessories = computed(() => state.accessory.accessories);
 const total = computed(() => state.accessory.total);
@@ -174,6 +153,28 @@ const actions = ref([
     },
   },
 ]);
+
+const columns = [
+  {
+    label: "Name",
+    field: "accessoryName",
+  },
+
+  // {
+  //   label: "Type",
+  //   field: "type",
+  // },
+
+  {
+    label: "Description",
+    field: "description",
+  },
+
+  {
+    label: "Action",
+    field: "action",
+  },
+];
 
 const options = [
   {

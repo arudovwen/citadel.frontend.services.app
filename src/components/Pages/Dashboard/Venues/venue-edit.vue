@@ -75,6 +75,7 @@
         </div>
 
         <Textarea
+          class="hidden"
           label="Description"
           type="text"
           placeholder="Type your description"

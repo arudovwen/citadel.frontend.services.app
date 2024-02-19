@@ -2,37 +2,6 @@
   <div>
     <div class="lg:flex justify-between flex-wrap items-center">
       <Breadcrumb />
-      <!-- {{ venue }} -->
-      <!-- <div class="flex lg:justify-end items-center flex-wrap">
-        <button
-          class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-        >
-          <span class="text-lg"><Icon icon="heroicons:pencil-square" /></span>
-          <span>Edit</span>
-        </button>
-        <button
-          type="button"
-          @click="print"
-          class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-        >
-          <span class="text-lg"><Icon icon="heroicons:printer" /></span>
-          <span>Print</span>
-        </button>
-        <button
-          class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-        >
-          <span class="text-lg"><Icon icon="heroicons:arrow-down-tray" /></span>
-          <span>Download</span>
-        </button>
-        <button
-          class="invocie-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-        >
-          <span class="text-lg transform -rotate-45"
-            ><Icon icon="heroicons:paper-airplane"
-          /></span>
-          <span>Send invoice</span>
-        </button>
-      </div> -->
     </div>
     <Card bodyClass="p-0">
       <div
@@ -44,12 +13,12 @@
             venue.venueName
           }}</span>
         </p>
-        <p>
+        <!-- <p>
           Description:
           <span class="ml-2 text-slate-500 text-base">{{
             venue.description
           }}</span>
-        </p>
+        </p> -->
         <p>
           Capacity:
           <span class="ml-2 text-slate-500 text-base">{{
