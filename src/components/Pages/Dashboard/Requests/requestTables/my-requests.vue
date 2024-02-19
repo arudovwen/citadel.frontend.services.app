@@ -1,6 +1,9 @@
 <!-- eslint-disable vue/no-use-v-if-with-v-for -->
 <template>
   <div>
+    <div class="flex items-center justify-end w-full mb-6">
+      <AddRequestButton :menu="requestTypes" :buttonText="'Add Request'" />
+    </div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div class="flex gap-x-3 md:mb-0 mb-3 text-sm">
@@ -210,6 +213,7 @@
   </Modal>
 </template>
 <script setup>
+import AddRequestButton from "./AddRequestButton";
 import { useToast } from "vue-toastification";
 import ViewRecord from "./preview";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
@@ -254,6 +258,23 @@ const formatter = {
   date: "DD MMM YYYY",
   month: "MMM",
 };
+
+const requestTypes = [
+  {
+    label: "Venue",
+    icon: "heroicons-outline:user",
+    link: () => {
+      alert("Action");
+    },
+  },
+  {
+    label: "Event",
+    icon: "heroicons-outline:user",
+    link: () => {
+      alert("Action");
+    },
+  },
+];
 const actions = [
   {
     name: "view",
