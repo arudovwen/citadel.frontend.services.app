@@ -227,17 +227,15 @@ import { debounce } from "lodash";
 import moment from "moment";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
+onMounted(() => {
+  dispatch("getAllHodRequests", query);
+});
+
 const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
-// const authUserRoles = computed(() =>
-//   state?.role?.authUserRoles
-//     ?.map((i) => {
-//       return i;
-//     })
-//     .join(", ")
-// );
+
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
@@ -305,30 +303,14 @@ const columns = [
 ];
 
 function handleRequest() {
-  dispatch(
-    state.auth.userData.userRole.toLowerCase() === "hod"
-      ? "approveCOD"
-      : "approveCOZ",
-    {
-      approveUserId: state.auth.userData.id,
-      reqUserId: detail.value.userId,
-      actionId: detail.value.id,
-      Comments: comment.value,
-      status: type.value === "approve" ? true : false,
-    }
-  );
+  dispatch("approveCOD", {
+    approveUserId: state.auth.userData.id,
+    reqUserId: detail.value.userId,
+    actionId: detail.value.id,
+    Comments: comment.value,
+    status: type.value === "approve" ? true : false,
+  });
 }
-
-onMounted(() => {
-  console.log("🚀 ~ onMounted ~ authUserRoles:", state.role.authUserRoles);
-
-  if (state.auth.userData.userRole.toLowerCase() === "hod") {
-    dispatch("getAllHodRequests", query);
-  }
-  if (state.auth.userData.userRole.toLowerCase() === "inspectorate") {
-    dispatch("getAllInspectorateRequests", query);
-  }
-});
 
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
@@ -357,12 +339,7 @@ const debouncedSearch = debounce((searchValue) => {
 
 watch(success, () => {
   if (success.value) {
-    dispatch(
-      state.auth.userData.userRole.toLowerCase() === "hod"
-        ? "getAllHodRequests"
-        : "getAllInspectorateRequests",
-      query
-    );
+    dispatch("getAllHodRequests", query);
     modalChange.value.closeModal();
     modal.value.closeModal();
     if (type.value === "approve") {

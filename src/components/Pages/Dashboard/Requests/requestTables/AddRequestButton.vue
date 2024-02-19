@@ -2,7 +2,7 @@
   <div>
     <Dropdown classMenuItems=" w-[180px] top-[40px]">
       <Button
-        icon="ri:user-add-line"
+        icon="heroicons-outline:plus-sm"
         :text="buttonText"
         btnClass=" btn-primary
       font-normal btn-sm "
