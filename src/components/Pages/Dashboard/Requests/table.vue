@@ -7,7 +7,7 @@
     ></div>
     <div v-else class="flex flex-col w-full gap-8">
       <div
-        className="flex items-center  gap-[6px] overflow-x-auto border-b-[1px] border-b-[#DDDDDD] "
+        className="flex items-center  overflow-x-auto border-b-[1px] border-b-[#DDDDDD] "
       >
         <div v-for="nav in navs" class="max-w-max" :key="nav">
           <div
@@ -15,8 +15,8 @@
             @click="currentNav = nav"
             :class="`${
               currentNav?.name?.toLowerCase() == nav?.name?.toLowerCase()
-                ? '!border-slate-900 !text-slate-900'
-                : 'border-transparent text-[#727272] '
+                ? '!border-slate-900 !text-slate-900 mr-6 '
+                : 'border-transparent text-[#727272] mr-6 '
             },
           'flex cursor-pointer flex-col items-center justify-center text-nowrap border-b-[2px] pb-4 pt-6 font-semibold'`"
           >

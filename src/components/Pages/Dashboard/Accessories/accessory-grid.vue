@@ -165,10 +165,10 @@ const columns = [
   //   field: "type",
   // },
 
-  {
-    label: "Description",
-    field: "description",
-  },
+  // {
+  //   label: "Description",
+  //   field: "description",
+  // },
 
   {
     label: "Action",
