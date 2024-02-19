@@ -76,6 +76,7 @@
         </div>
 
         <Textarea
+          class="hidden"
           label="Description"
           type="text"
           placeholder="Type your description"
@@ -85,7 +86,7 @@
           classInput="h-[40px]"
         />
 
-        <div class="flex gap-4 items-center">
+        <div class="flex gap-4 items-center hidden">
           <SwitchGroup as="div" class="flex items-center gap-4">
             <SwitchLabel as="span" class="text-sm">
               <span class="input-label">Is Online</span>
@@ -150,7 +151,7 @@ import { useToast } from "vue-toastification";
 
 const { state, dispatch } = useStore();
 const toast = useToast();
-const isOnline = ref(false);
+const isOnline = ref(true);
 const accessory = ref(null);
 const success = computed(() => state.venue.addVenueSuccess);
 const loading = computed(() => state.venue.addVenueLoading);

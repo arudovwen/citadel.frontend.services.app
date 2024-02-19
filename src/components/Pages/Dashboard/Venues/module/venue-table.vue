@@ -436,10 +436,10 @@ export default {
           label: "Capacity",
           field: "capacity",
         },
-        {
-          label: "Description",
-          field: "description",
-        },
+        // {
+        //   label: "Description",
+        //   field: "description",
+        // },
 
         // {
         //   label: "Accessories",
