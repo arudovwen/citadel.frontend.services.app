@@ -477,13 +477,6 @@ export default {
         this.reasonErr = "Reason is a required field";
         return;
       }
-      // this.$store.dispatch("removeMemberFromDepartment", {
-      //   reason: this.reason,
-      //   userId: this.id,
-      //   hodUserId: this.$store.state.auth.userData.id,
-      //   departmentId: this.$route.params.id,
-      //   actionId: "delist",
-      // });
 
       this.$store.dispatch("delistMemberFromDepartment", {
         Reason: this.reason,
@@ -492,14 +485,6 @@ export default {
         DepartmentId: this.$route.params.id,
         ActionId: 40,
       });
-
-      // console.log("DelistPayload: ", {
-      //   reason: this.reason,
-      //   userId: this.id,
-      //   hodUserId: this.$store.state.auth.userData.id,
-      //   departmentId: this.$route.params.id,
-      //   actionId: "delist",
-      // });
     },
   },
   computed: {
