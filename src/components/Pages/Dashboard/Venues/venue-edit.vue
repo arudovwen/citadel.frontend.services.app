@@ -85,7 +85,7 @@
           classInput="h-[40px]"
         />
 
-        <div class="flex gap-4 items-center">
+        <div class="flex gap-4 items-center hidden">
           <SwitchGroup as="div" class="flex items-center gap-4">
             <SwitchLabel as="span" class="text-sm">
               <span class="input-label">Is Online</span>
