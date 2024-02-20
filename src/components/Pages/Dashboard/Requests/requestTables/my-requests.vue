@@ -47,32 +47,14 @@
         >
           <template v-slot:table-row="props">
             <span
-              v-if="props.column.field == 'fullName'"
-              class="flex items-center"
-            >
-              <span
-                class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium hover:underline cursor-pointer"
-                ><router-link :to="`/profile/${props.row.userId}`">{{
-                  props.row.fullName
-                }}</router-link></span
-              >
-            </span>
-            <span v-if="props.column.field == 'order'" class="font-medium">
-              {{ "#" + props.row.order }}
-            </span>
-            <span
               v-if="props.column.field == 'date'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ props.row.date }}
+              {{ props.row.eventDate }}
+              <!-- {{ moment(props.row.eventDate).format("lll") }} -->
             </span>
-            <span
-              v-if="props.column.field == 'email'"
-              class="font-medium lowercase"
-            >
-              {{ props.row.email }}
-            </span>
-            <span v-if="props.column.field == 'status'" class="block w-full">
+
+            <!-- <span v-if="props.column.field == 'status'" class="block w-full">
               <span
                 class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
                 :class="`${
@@ -90,6 +72,28 @@
              `"
               >
                 {{ props.row.status }}
+              </span>
+            </span> -->
+            <span v-if="props.column.field == 'status'" class="block w-full">
+              <span
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                :class="`${
+                  props.row.status === true
+                    ? 'text-success-500 bg-success-500'
+                    : ''
+                } 
+            ${props.row.status === false ? 'text-red-500 bg-red-500' : ''}
+            ${props.row.status === null ? 'text-blue-500 bg-blue-500' : ''}
+            
+             `"
+              >
+                {{
+                  props.row.status === null
+                    ? "Pending"
+                    : props.row.status === false
+                    ? "declined"
+                    : "Approved"
+                }}
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
@@ -186,7 +190,7 @@
     sizeClass="max-w-[32rem]"
   >
     <ViewRecord :detail="detail" />
-    <template v-slot:footer>
+    <!-- <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
           text="Reject"
@@ -209,7 +213,7 @@
           "
         />
       </div>
-    </template>
+    </template> -->
   </Modal>
   <ModalCrud
     :activeModal="requestModal"
@@ -228,7 +232,7 @@ import ModalCrud from "@/components/Modal";
 import RequestVenue from "@/components/Pages/Dashboard/Requests/make-requests/request-venue.vue";
 import RequestEvent from "@/components/Pages/Dashboard/Requests/make-requests/request-event.vue";
 import AddRequestButton from "./AddRequestButton";
-import { useToast } from "vue-toastification";
+// import { useToast } from "vue-toastification";
 import ViewRecord from "./preview";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
@@ -245,7 +249,11 @@ import { debounce } from "lodash";
 import moment from "moment";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
-const toast = useToast();
+onMounted(() => {
+  dispatch("getUserRequests", query);
+});
+
+// const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
@@ -268,6 +276,7 @@ const query = reactive({
   searchParameter: "",
   userId: userId.value,
 });
+
 const type = ref("");
 const detail = ref(null);
 const dateValue = ref(null);
@@ -327,62 +336,43 @@ const options = [
 const columns = [
   {
     label: "Request",
-    field: "actionDescription",
+    field: "eventType",
   },
 
-  // {
-  //   label: "Type",
-  //   field: "type",
-  // },
+  {
+    label: "Type",
+    field: "requestType",
+  },
 
   {
     label: "Date",
-    field: "date",
+    field: "eventDate",
   },
 
   {
-    label: "Action",
-    field: "action",
+    label: "Status",
+    field: "status",
   },
+
+  // {
+  //   label: "Action",
+  //   field: "action",
+  // },
 ];
 
-function handleRequest() {
-  dispatch(
-    state.auth.userData.userRole.toLowerCase() === "hod"
-      ? "approveCOD"
-      : "approveCOZ",
-    {
-      approveUserId: state.auth.userData.id,
-      reqUserId: detail.value.userId,
-      actionId: detail.value.id,
-      Comments: comment.value,
-      status: type.value === "approve" ? true : false,
-    }
-  );
-}
-
-onMounted(() => {
-  console.log("🚀 ~ onMounted ~ authUserRoles:", state.role.authUserRoles);
-
-  if (state.auth.userData.userRole.toLowerCase() === "hod") {
-    dispatch("getAllHodRequests", query);
-  }
-  if (state.auth.userData.userRole.toLowerCase() === "inspectorate") {
-    dispatch("getAllInspectorateRequests", query);
-  }
-});
+function handleRequest() {}
 
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
   query.pageSize = currentPerPage;
 }
 
-const loading = computed(() => state.request.loading);
+const loading = computed(() => state.request.getLoading);
 const requests = computed(() =>
-  state?.request?.data?.data?.map((i) => {
+  state?.request?.userRequests?.data?.map((i) => {
     return {
       ...i,
-      date: moment(i.actionDate).format("lll"),
+      eventDate: moment(i.eventDate).format("lll"),
     };
   })
 );
@@ -394,24 +384,19 @@ const success = computed(() => state.request.approvesuccess);
 // Define a debounce delay (e.g., 500 milliseconds)
 const debounceDelay = 800;
 const debouncedSearch = debounce((searchValue) => {
-  dispatch("getAllHodRequests", { ...query, name: searchValue });
+  dispatch("getUserRequests", { ...query, name: searchValue });
 }, debounceDelay);
 
 watch(success, () => {
   if (success.value) {
-    dispatch(
-      state.auth.userData.userRole.toLowerCase() === "hod"
-        ? "getAllHodRequests"
-        : "getAllInspectorateRequests",
-      query
-    );
-    modalChange.value.closeModal();
-    modal.value.closeModal();
-    if (type.value === "approve") {
-      toast.success("Approve Successfully");
-    } else {
-      toast.success("Request Rejected");
-    }
+    dispatch("getUserRequests", query);
+    // modalChange.value.closeModal();
+    // modal.value.closeModal();
+    // if (type.value === "approve") {
+    //   toast.success("Approve Successfully");
+    // } else {
+    //   toast.success("Request Rejected");
+    // }
   }
 });
 
@@ -425,7 +410,7 @@ watch(
 watch(
   () => [query.pageNumber, query.pageSize],
   () => {
-    dispatch("getAllHodRequests", query);
+    dispatch("getUserRequests", query);
   }
 );
 </script>

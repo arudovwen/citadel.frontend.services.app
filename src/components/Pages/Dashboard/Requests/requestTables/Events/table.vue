@@ -26,7 +26,7 @@
               name="filterType"
             />
             <VueSelect
-              v-if="permissions.includes('CAN_VIEW_ALL_ZONES')"
+             
               class="min-w-[300px] w-full md:w-auto"
               v-model="selectedZone"
               :options="zoneOptions"
