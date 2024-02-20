@@ -653,24 +653,24 @@ const routes = [
           subroles: [],
         },
       },
-      {
-        path: "/events",
-        name: "events",
-        component: () => import("@/views/dashboard/events/index.vue"),
-        children: [
-          {
-            path: "",
-            name: "events",
-            component: () => import("@/components/Pages/Dashboard/Events"),
-            meta: {
-              activeName: "events",
-            },
-          },
-        ],
-        meta: {
-          roles: "CAN_VIEW_EVENTS",
-        },
-      },
+      // {
+      //   path: "/events",
+      //   name: "events",
+      //   component: () => import("@/views/dashboard/events/index.vue"),
+      //   children: [
+      //     {
+      //       path: "",
+      //       name: "events",
+      //       component: () => import("@/components/Pages/Dashboard/Events"),
+      //       meta: {
+      //         activeName: "events",
+      //       },
+      //     },
+      //   ],
+      //   meta: {
+      //     roles: "CAN_VIEW_EVENTS",
+      //   },
+      // },
       {
         path: "/notifications",
         name: "notifications",

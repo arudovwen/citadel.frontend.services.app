@@ -91,6 +91,7 @@ export const urls = {
     "/ChurchAffiliation/RequestChangeOfAffinityGroup",
   GET_HOD_REQUESTS: "/ChurchAffiliation/GetHodRequests",
   GET_INSPECTORATE_REQUESTS: "/ChurchAffiliation/GetInspectorateRequests",
+  GET_USER_REQUESTS: "/ChurchAffiliation/GetUserRequestLog",
   APPROVE_CHANGE_OF_ZONE: "/ChurchAffiliation/ApproveChangeOfCIHZone",
   APPROVE_CHANGE_OF_DEPARTMENT: "/ChurchAffiliation/ApproveChangeOfDepartment",
   GET_APPROVED_DEPARTMENT_MEMBERS:

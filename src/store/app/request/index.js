@@ -5,16 +5,38 @@ import { cleanObject } from "@/util/cleanObject";
 export default {
   state: {
     data: [],
+    userRequests: [],
+    userRequestsTotal: 0,
     total: 0,
     getallloading: false,
     getallsuccess: false,
     getallerror: null,
+    getLoading: false,
+    getSuccess: false,
+    getError: null,
     approveloading: false,
     approvesuccess: false,
     approveerror: null,
   },
   getters: {},
   mutations: {
+    getBegin(state) {
+      state.getLoading = true;
+      state.getSuccess = false;
+      state.getError = null;
+    },
+    getSuccess(state, { data, totalCount }) {
+      state.getLoading = false;
+      state.getSuccess = true;
+      state.getError = null;
+      state.userRequests = data;
+      state.userRequestsTotal = totalCount;
+    },
+    getError(state, err) {
+      state.getLoading = false;
+      state.getSuccess = false;
+      state.getError = err;
+    },
     getAllBegin(state) {
       state.getallloading = true;
       state.getallsuccess = false;
@@ -64,6 +86,19 @@ export default {
     },
   },
   actions: {
+    async getUserRequests({ commit }, data) {
+      try {
+        commit("getBegin");
+        const response = await DataService.get(
+          `${urls.GET_USER_REQUESTS}?${new URLSearchParams(cleanObject(data))}`
+        );
+        if (response.status === 200) {
+          commit("getSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getErr", err);
+      }
+    },
     async getAllHodRequests({ commit }, data) {
       try {
         commit("getAllBegin");
