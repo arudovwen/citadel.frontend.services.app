@@ -52,6 +52,8 @@ const props = defineProps(["toggleView"]);
 
 const { state, dispatch } = useStore();
 const success = computed(() => state.event.addsuccess);
+const error = computed(() => state.event.error);
+
 const loading = computed(() => state.event.loading);
 const eventsOption = [
   {
@@ -124,6 +126,12 @@ const onSubmit = handleSubmit((values) => {
 watch(success, () => {
   success.value && toast.success("Request sent");
   props.toggleView();
+});
+watch(error, () => {
+  // error.value && toast.success("Request sent");
+  if (error.value) {
+    props.toggleView();
+  }
 });
 </script>
 <style lang=""></style>
