@@ -77,13 +77,13 @@ export const menuItems = [
   //   icon: "heroicons-outline:user",
   //   link: "issue-management",
   // },
-  {
-    title: "Events",
-    icon: "bx:server",
-    link: "/events",
-    roles: "CAN_VIEW_EVENTS",
-    subroles: [],
-  },
+  // {
+  //   title: "Events",
+  //   icon: "bx:server",
+  //   link: "/events",
+  //   roles: "CAN_VIEW_EVENTS",
+  //   subroles: [],
+  // },
   // {
   //   title: "Notifications",
   //   icon: "heroicons-outline:speakerphone",
