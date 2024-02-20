@@ -89,13 +89,13 @@ export const menuItems = [
   //   icon: "heroicons-outline:speakerphone",
   //   link: "/notifications",
   // },
-  {
-    title: "Appointments",
-    icon: "bx:calendar-plus",
-    link: "/appointments",
-    roles: "CAN_VIEW_APPOITMENT",
-    subroles: [],
-  },
+  // {
+  //   title: "Appointments",
+  //   icon: "bx:calendar-plus",
+  //   link: "/appointments",
+  //   roles: "CAN_VIEW_APPOITMENT",
+  //   subroles: [],
+  // },
   {
     title: "Accessories",
     icon: "heroicons-outline:table-cells",
@@ -164,21 +164,21 @@ export const menuItems = [
   //   roles: ["administrator"],
   //   subroles: [],
   // },
-  {
-    title: "Units",
-    icon: "heroicons-outline:rectangle-group",
-    link: "/units",
-    roles: "CAN_VIEW_UNITS",
-    subroles: [],
-  },
+  // {
+  //   title: "Units",
+  //   icon: "heroicons-outline:rectangle-group",
+  //   link: "/units",
+  //   roles: "CAN_VIEW_UNITS",
+  //   subroles: [],
+  // },
 
-  {
-    title: "Special Units",
-    icon: "heroicons-outline:squares-2x2",
-    link: "/special-unit",
-    roles: "CAN_VIEW_UNITS",
-    subroles: [],
-  },
+  // {
+  //   title: "Special Units",
+  //   icon: "heroicons-outline:squares-2x2",
+  //   link: "/special-unit",
+  //   roles: "CAN_VIEW_UNITS",
+  //   subroles: [],
+  // },
   // {
   //   title: "Mountain Of Influence",
   //   icon: "heroicons-outline:globe-europe-africa",
