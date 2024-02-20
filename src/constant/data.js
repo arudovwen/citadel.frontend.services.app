@@ -65,13 +65,13 @@ export const menuItems = [
     subroles: [],
   },
   // { title: "Goals", icon: "bx:football", link: "/goals" },
-  {
-    title: "Meetings",
-    icon: "bx:merge",
-    link: "/meetings",
-    roles: "CAN_VIEW_MEETINGS",
-    subroles: [],
-  },
+  // {
+  //   title: "Meetings",
+  //   icon: "bx:merge",
+  //   link: "/meetings",
+  //   roles: "CAN_VIEW_MEETINGS",
+  //   subroles: [],
+  // },
   // {
   //   title: "Issue Management",
   //   icon: "heroicons-outline:user",

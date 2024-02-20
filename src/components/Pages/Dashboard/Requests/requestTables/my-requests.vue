@@ -220,12 +220,13 @@
     sizeClass="max-w-md"
   >
     <RequestVenue v-if="type === 'venue'" :toggleView="toggleRequestmodal" />
-    <RequestVenue v-if="type === 'event'" />
+    <RequestEvent v-if="type === 'event'" :toggleView="toggleRequestmodal" />
   </ModalCrud>
 </template>
 <script setup>
 import ModalCrud from "@/components/Modal";
 import RequestVenue from "@/components/Pages/Dashboard/Requests/make-requests/request-venue.vue";
+import RequestEvent from "@/components/Pages/Dashboard/Requests/make-requests/request-event.vue";
 import AddRequestButton from "./AddRequestButton";
 import { useToast } from "vue-toastification";
 import ViewRecord from "./preview";
@@ -249,6 +250,7 @@ const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
 const requestModal = ref(false);
+const userId = computed(() => state.auth.userData.id);
 const toggleRequestmodal = () => {
   requestModal.value = !requestModal.value;
 };
@@ -264,7 +266,7 @@ const query = reactive({
   pageSize: 25,
   sortOrder: "",
   searchParameter: "",
-  userId: state.auth.userData.id,
+  userId: userId.value,
 });
 const type = ref("");
 const detail = ref(null);
@@ -377,7 +379,7 @@ function perPage({ currentPerPage }) {
 
 const loading = computed(() => state.request.loading);
 const requests = computed(() =>
-  state.request.data.map((i) => {
+  state?.request?.data?.data?.map((i) => {
     return {
       ...i,
       date: moment(i.actionDate).format("lll"),
