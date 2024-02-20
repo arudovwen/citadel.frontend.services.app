@@ -379,18 +379,21 @@ export default {
   methods: {
     handleAction(status) {
       let newaction = this.actions;
-      if (this.$store.state.auth.userData.userRole.toLowerCase() === "member") {
-        newaction = this.actions.filter(
-          (i) => i.name !== "approve" && i.name !== "decline"
-        );
+      // if (this.$store.state.auth.userData.userRole.toLowerCase() === "member") {
+      //   newaction = this.actions.filter(
+      //     (i) => i.name !== "approve" && i.name !== "decline"
+      //   );
+      // }
+      // if (this.$store.state.auth.userData.userRole.toLowerCase() !== "member") {
+      //   newaction = this.actions.filter(
+      //     (i) => i.name == "approve" && i.name == "decline"
+      //   );
+      // }
+      if (status === true) {
+        return newaction.filter((i) => i.name == "decline");
       }
-      if (this.$store.state.auth.userData.userRole.toLowerCase() !== "member") {
-        newaction = this.actions.filter(
-          (i) => i.name == "approve" && i.name == "decline"
-        );
-      }
-      if (status === true || status === false) {
-        return newaction.filter((i) => i.name === "view");
+      if (status === false) {
+        return newaction.filter((i) => i.name === "approve");
       }
       return newaction;
     },
@@ -422,7 +425,7 @@ export default {
         },
         approve: {
           name: "approve",
-          icon: "heroicons:pencil-square",
+          icon: "ph:check",
           doit: (data, detail) => {
             this.type = data;
             this.detail = detail;
@@ -440,7 +443,7 @@ export default {
         },
         decline: {
           name: "decline",
-          icon: "heroicons:pencil-square",
+          icon: "ph:x-light",
           doit: (data, detail) => {
             this.type = data;
             this.detail = detail;

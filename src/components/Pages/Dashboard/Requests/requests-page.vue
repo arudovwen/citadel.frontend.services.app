@@ -90,12 +90,12 @@ const navs = computed(() => [
   //   activeName: "departments",
   // },
   {
-    name: "Events",
+    name: "Event Requests",
     isVisible: isInspectorate.value,
     activeName: "event requests",
   },
   {
-    name: "Venues",
+    name: "Venue Requests",
     isVisible: isVenueManager.value,
     activeName: "venue requests",
   },
