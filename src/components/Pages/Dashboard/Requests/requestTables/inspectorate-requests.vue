@@ -327,7 +327,7 @@ function perPage({ currentPerPage }) {
 
 const loading = computed(() => state.request.loading);
 const requests = computed(() =>
-  state.request.data.map((i) => {
+  state?.request?.data?.data?.map((i) => {
     return {
       ...i,
       date: moment(i.actionDate).format("lll"),

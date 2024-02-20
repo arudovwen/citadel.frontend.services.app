@@ -537,7 +537,7 @@ const routes = [
             path: "",
             name: "Requests",
             component: () =>
-              import("@/components/Pages/Dashboard/Requests/table"),
+              import("@/components/Pages/Dashboard/Requests/requests-page"),
             meta: {
               activeName: "requests",
               // roles: "CAN_VIEW_REQUESTS",

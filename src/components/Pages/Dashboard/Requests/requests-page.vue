@@ -25,15 +25,12 @@
         </div>
       </div>
 
-      <!-- <div class="">{{ navs }}</div> -->
-      <HODRequests
+      <!-- <HODRequests
         v-if="currentNav.activeName.toLowerCase() == 'departments'"
-      />
-      <InspectorateRequests
-        v-if="currentNav.activeName.toLowerCase() == 'events'"
-      />
+      /> -->
+      <Events v-if="currentNav.activeName.toLowerCase() == 'event requests'" />
       <VenueManagerRequests
-        v-if="currentNav.activeName.toLowerCase() == 'venues'"
+        v-if="currentNav.activeName.toLowerCase() == 'venue requests'"
       />
       <MyRequests v-if="currentNav.activeName.toLowerCase() == 'my requests'" />
     </div>
@@ -46,10 +43,10 @@ import { useStore } from "vuex";
 import { ref, computed, onMounted } from "vue";
 
 import {
-  HODRequests,
-  InspectorateRequests,
+  // InspectorateRequests,
   VenueManagerRequests,
   MyRequests,
+  Events,
 } from "./requestTables";
 
 // const toast = useToast();
@@ -74,9 +71,9 @@ const authUserRoles = computed(() =>
 const isVenueManager = computed(() =>
   authUserRoles?.value?.toLowerCase()?.includes("venue manager")
 );
-const isHOD = computed(() =>
-  authUserRoles?.value?.toLowerCase()?.includes("hod")
-);
+// const isHOD = computed(() =>
+//   authUserRoles?.value?.toLowerCase()?.includes("hod")
+// );
 
 const isInspectorate = computed(() =>
   authUserRoles?.value?.toLowerCase()?.includes("inspectorate")
@@ -87,20 +84,20 @@ const navs = computed(() => [
     isVisible: true,
     activeName: "my requests",
   },
+  // {
+  //   name: "Departments",
+  //   isVisible: isHOD.value,
+  //   activeName: "departments",
+  // },
   {
-    name: "Departments",
-    isVisible: isHOD.value,
-    activeName: "departments",
-  },
-  {
-    name: "Events",
+    name: "Event Requests",
     isVisible: isInspectorate.value,
-    activeName: "events",
+    activeName: "event requests",
   },
   {
-    name: "Venues",
+    name: "Venue Requests",
     isVisible: isVenueManager.value,
-    activeName: "venues",
+    activeName: "venue requests",
   },
 ]);
 
