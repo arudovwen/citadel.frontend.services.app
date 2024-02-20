@@ -26,7 +26,6 @@
               name="filterType"
             />
             <VueSelect
-             
               class="min-w-[300px] w-full md:w-auto"
               v-model="selectedZone"
               :options="zoneOptions"
