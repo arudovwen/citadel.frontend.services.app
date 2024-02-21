@@ -123,7 +123,6 @@ export const menuItems = [
         for: "",
         childlink: "/cih/zones",
       },
-
       {
         childtitle: "Centers",
         for: "",
@@ -135,12 +134,12 @@ export const menuItems = [
         childlink: "/cih/center",
       },
       {
-        childtitle: "Reports",
+        childtitle: "Center Reports",
         for: "ordinary",
         childlink: "/cih/reports/centers",
       },
       {
-        childtitle: "Reports",
+        childtitle: "Zone Reports",
         for: "admin",
         childlink: "/cih/reports/zones",
       },
@@ -148,6 +147,51 @@ export const menuItems = [
       //   childtitle: "Events",
       //   childlink: "/cih/events",
       // },
+    ],
+    inspectorateRoutes: [
+      {
+        childtitle: "Zones",
+        for: "",
+        childlink: "/cih/zones",
+      },
+
+      {
+        childtitle: "Centers",
+        for: "",
+        childlink: "/cih/centers",
+      },
+
+      {
+        childtitle: "Reports",
+        for: "admin",
+        childlink: "/cih/reports/zones",
+      },
+    ],
+    coordinatorRoutes: [
+      {
+        childtitle: "Zones",
+        for: "",
+        childlink: "/cih/zones",
+      },
+
+      {
+        childtitle: " Reports",
+        for: "admin",
+        childlink: "/cih/reports/zones",
+      },
+    ],
+    cihPastorRoutes: [
+      {
+        childtitle: "Centers",
+        for: "",
+        childlink: "/cih/centers",
+      },
+
+      {
+        childtitle: " Reports",
+        for: "admin",
+        childlink: "/cih/reports/zones",
+      },
     ],
   },
   // {
