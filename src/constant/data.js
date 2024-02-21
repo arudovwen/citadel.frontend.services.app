@@ -128,11 +128,11 @@ export const menuItems = [
         for: "",
         childlink: "/cih/centers",
       },
-      {
-        childtitle: "Center",
-        for: "",
-        childlink: "/cih/center",
-      },
+      // {
+      //   childtitle: "Center",
+      //   for: "",
+      //   childlink: "/cih/center",
+      // },
       {
         childtitle: "Center Reports",
         for: "ordinary",
@@ -162,9 +162,14 @@ export const menuItems = [
       },
 
       {
-        childtitle: "Reports",
+        childtitle: "Zone Reports",
         for: "admin",
         childlink: "/cih/reports/zones",
+      },
+      {
+        childtitle: "Center Reports",
+        for: "ordinary",
+        childlink: "/cih/reports/centers",
       },
     ],
     coordinatorRoutes: [
