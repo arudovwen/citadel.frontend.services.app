@@ -77,6 +77,7 @@
           }
         "
       >
+        <!-- <span>insp: {{ permissions }}</span> -->
         <Navmenu :items="menuLink" />
       </SimpleBar>
     </div>
@@ -111,59 +112,58 @@ export default defineComponent({
     const shadowbase = ref(false);
     const simplebarInstance = ref(null);
     const permissions = computed(() => state.auth.permissions);
+    const likelyInspectorate = computed(() =>
+      permissions.value.includes("CAN_VIEW_ALL_ZONES")
+    );
+
+    const likelyCoordinator = computed(
+      () =>
+        !likelyInspectorate.value &&
+        permissions.value.includes("CAN_VIEW_ZONES")
+    );
+
+    const likelyCihPastor = computed(() =>
+      permissions.value.includes("CAN_VIEW_CENTERS")
+    );
+
     const menuLink = computed(() => {
       // eslint-disable-next-line no-unused-vars
       let newItems;
       const filteredItems = menuItems
         .slice(1)
         .filter((i) => permissions.value.includes(i.roles) || !i.roles);
+      //filter menuitems and put it into new items
       newItems = filteredItems;
-      if (
-        permissions.value.includes("CAN_VIEW_ALL_ZONES") &&
-        permissions.value.includes("CAN_VIEW_ALL_CENTERS")
-      ) {
+      if (likelyInspectorate.value) {
+        // check if user can view all zones and centers
+        //if yes map through and if cih management filter down to elements that pass the test
         newItems = filteredItems.map((i) => {
           if (i.title.toLowerCase() === "cih management") {
-            i.child = i.child.filter(
-              (j) =>
-                j.childtitle.toLowerCase() !== "centers" &&
-                j.childtitle.toLowerCase() !== "center" &&
-                j.for?.toLowerCase() !== "ordinary"
-            );
-          }
-          return i;
-        });
-        return [menuItems[0], ...newItems];
-      } else if (
-        permissions.value.includes("CAN_VIEW_ALL_CENTERS") &&
-        permissions.value.includes("CAN_VIEW_ZONES")
-      ) {
-        newItems = filteredItems.map((i) => {
-          if (i.title.toLowerCase() === "cih management") {
-            i.child = i.child.filter(
-              (j) =>
-                j.childtitle.toLowerCase() !== "centers" &&
-                j.childtitle.toLowerCase() !== "center" &&
-                j.for?.toLowerCase() !== "ordinary"
-            );
-          }
-          return i;
-        });
-        return [menuItems[0], ...newItems];
-      } else if (permissions.value.includes("CAN_VIEW_CENTERS")) {
-        newItems = filteredItems.map((i) => {
-          if (i.title.toLowerCase() === "cih management") {
-            i.child = i.child.filter(
-              (j) =>
-                j.childtitle.toLowerCase() !== "zones" &&
-                j.childtitle.toLowerCase() !== "centers" &&
-                j.for?.toLowerCase() !== "admin"
-            );
+            i.child = i.inspectorateRoutes;
           }
           return i;
         });
         return [menuItems[0], ...newItems];
       }
+      if (likelyCoordinator.value) {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.coordinatorRoutes;
+          }
+          return i;
+        });
+        return [menuItems[0], ...newItems];
+      }
+      if (likelyCihPastor.value) {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.cihPastorRoutes;
+          }
+          return i;
+        });
+        return [menuItems[0], ...newItems];
+      }
+
       return [menuItems[0], ...newItems];
     });
     onMounted(() => {
@@ -203,6 +203,9 @@ export default defineComponent({
       leaveWidget,
       simplebarInstance,
       shadowbase,
+      likelyInspectorate,
+      likelyCoordinator,
+      permissions,
     };
   },
 });
