@@ -204,7 +204,6 @@
     </div>
     <div v-if="type.toLowerCase() === 'reject'">
       <textarea
-        required
         resize="none"
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
         rows="4"
@@ -280,6 +279,8 @@
   </Modal>
 </template>
 <script>
+import { eventsOptions } from "@/constant/data";
+
 import { onMounted, reactive, watch, computed, ref } from "vue";
 import { useStore } from "vuex";
 import VueSelect from "@/components/Select/VueSelect";
@@ -506,26 +507,7 @@ export default {
         value: "",
         label: "All",
       },
-      {
-        value: "babyChristening",
-        label: "Baby Christening",
-      },
-      {
-        value: "babyDedication",
-        label: "Baby Dedication",
-      },
-      {
-        value: "houseWarming",
-        label: "House Warming",
-      },
-      {
-        value: "specialThanksgiving",
-        label: "Special Thanksgiving",
-      },
-      {
-        value: "burialCeremony",
-        label: "Burial Ceremony",
-      },
+      ...eventsOptions,
     ];
     const eventType = ref("");
     const query = reactive({
