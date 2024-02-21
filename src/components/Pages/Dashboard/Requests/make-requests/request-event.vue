@@ -5,7 +5,7 @@
         <Select
           placeholder="Select type"
           v-model="requestType"
-          :options="eventsOption"
+          :options="eventsOptions"
         />
       </FormGroup>
 
@@ -33,6 +33,7 @@
 </template>
 <script setup>
 // import VueSelect from "@/components/Select/VueSelect";
+import { eventsOptions } from "@/constant/data";
 import { reactive, computed, watch, defineProps } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
@@ -48,35 +49,14 @@ import moment from "moment";
 const toast = useToast();
 // eslint-disable-next-line no-unused-vars
 
-const props = defineProps(["toggleView"]);
+const props = defineProps(["toggleView", "refetch"]);
 
 const { state, dispatch } = useStore();
 const success = computed(() => state.event.addsuccess);
 const error = computed(() => state.event.error);
 
 const loading = computed(() => state.event.loading);
-const eventsOption = [
-  {
-    value: "babyChristening",
-    label: "Baby Christening",
-  },
-  {
-    value: "babyDedication",
-    label: "Baby Dedication",
-  },
-  {
-    value: "houseWarming",
-    label: "House Warming",
-  },
-  {
-    value: "specialThanksgiving",
-    label: "Special Thanksgiving",
-  },
-  {
-    value: "burialCeremony",
-    label: "Burial Ceremony",
-  },
-];
+
 // const membersOptions = computed(() =>
 //   state?.member?.data?.map((i) => {
 //     return {
@@ -103,7 +83,7 @@ const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
-const config = { enableTime: true };
+const config = { enableTime: false, minDate: "today" };
 // const { value: name, errorMessage: nameError } = useField("name");
 
 const { value: dateOfRequestedEvent, errorMessage: dateError } = useField(
@@ -117,7 +97,7 @@ const onSubmit = handleSubmit((values) => {
   dispatch("addEvent", {
     requestType: values.requestType,
     dateOfRequestedEvent: moment(values.dateOfRequestedEvent).format(
-      "YYYY-MM-DDTHH:mm:ss"
+      "YYYY-MM-DD"
     ),
     userId: state.auth.userData.id,
   });
@@ -125,6 +105,7 @@ const onSubmit = handleSubmit((values) => {
 
 watch(success, () => {
   success.value && toast.success("Request sent");
+  props.refetch();
   props.toggleView();
 });
 watch(error, () => {

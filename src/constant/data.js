@@ -260,6 +260,28 @@ export const ProfileMenu = [
   },
 ];
 export const notifications = [];
+export const eventsOptions = [
+  {
+    value: "babyChristening",
+    label: "Baby Christening",
+  },
+  {
+    value: "babyDedication",
+    label: "Baby Dedication",
+  },
+  {
+    value: "houseWarming",
+    label: "House Warming",
+  },
+  {
+    value: "specialThanksgiving",
+    label: "Special Thanksgiving",
+  },
+  {
+    value: "burialCeremony",
+    label: "Burial Ceremony",
+  },
+];
 export const ministries = [
   {
     id: 11,

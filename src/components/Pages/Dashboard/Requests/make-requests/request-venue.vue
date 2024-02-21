@@ -31,7 +31,7 @@ import * as yup from "yup";
 import Button from "@/components/Button";
 import { useStore } from "vuex";
 // import Textinput from "@/components/Textinput";
-const props = defineProps(["toggleView"]);
+const props = defineProps(["toggleView", "refetch"]);
 onMounted(() => {
   getVenues();
 });

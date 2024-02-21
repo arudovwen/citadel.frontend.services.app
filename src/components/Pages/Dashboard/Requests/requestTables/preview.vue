@@ -3,24 +3,24 @@
     <Card noborder className="border-none shadow-none" bodyClass="">
       <div class="mx-auto my-6 rounded-md overflow-x-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
+          <!-- <div>
             <h6 class="text-xs font-semibold text-slate-400">Member name</h6>
             <p class="text-base font-semibold text-slate-900">
               {{ user?.firstName || "-" }} {{ user?.surName || "-" }}
             </p>
-          </div>
+          </div> -->
 
           <div class="col-span-1 md:col-span-2">
             <h6 class="text-xs font-semibold text-slate-400">Request</h6>
             <p class="text-base font-semibold text-slate-900">
-              {{ detail?.actionDescription || "-" }}
+              {{ detail?.eventType || "-" }}
             </p>
           </div>
 
           <div class="col-span-1 md:col-span-2">
             <h6 class="text-xs font-semibold text-slate-400">Date</h6>
             <p class="text-base font-semibold text-slate-900 capitalize">
-              {{ moment(detail?.date).format("lll") }}
+              {{ moment(detail?.eventDate).format("ll") }}
             </p>
           </div>
 
@@ -104,10 +104,10 @@
               {{ detail?.newAffinityGroup }}
             </p>
           </div>
-          <div v-if="detail?.reason" class="col-span-1 md:col-span-2">
-            <h6 class="text-xs font-semibold text-slate-400">reason</h6>
+          <div class="col-span-1 md:col-span-2">
+            <h6 class="text-xs font-semibold text-slate-400">Reason</h6>
             <p class="text-base font-semibold text-slate-900 capitalize">
-              {{ detail?.reason }}
+              {{ detail?.reason || "-" }}
             </p>
           </div>
         </div>
@@ -116,14 +116,14 @@
   </div>
 </template>
 <script setup>
-import { defineProps, onMounted, computed } from "vue";
+import { defineProps, onMounted } from "vue";
 import { useStore } from "vuex";
 import moment from "moment";
 import Card from "@/components/Card";
 
 const props = defineProps(["detail"]);
-const { state, dispatch } = useStore();
-const user = computed(() => state.profile.biodata);
+const { dispatch } = useStore();
+// const user = computed(() => state.profile.biodata);
 console.log("🚀 ~ file: preview.vue:65 ~ user:", props.detail.userId);
 onMounted(() => {
   dispatch("getBiodataByUserId", props.detail.userId);
