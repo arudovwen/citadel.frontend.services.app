@@ -140,7 +140,11 @@
             name="state"
           />
         </FormGroup>
-        <FormGroup label="Lga" :error="lgaError">
+        <FormGroup
+          v-if="values?.country?.value?.toLowerCase() == 'nigeria'"
+          label="Lga"
+          :error="lgaError"
+        >
           <VueSelect
             class="w-full"
             v-model.value="lga"
@@ -150,6 +154,8 @@
           />
         </FormGroup>
       </div>
+
+      <!-- <div>{{ values }}</div> -->
 
       <div class="text-right space-x-3 mt-8">
         <Button
@@ -216,7 +222,7 @@ const formData = reactive({
   nearestBusStop: "",
   lga: "",
   state: "",
-  country: "",
+  country: { label: "Nigeria", value: "Nigeria" },
   purposeOfVisit: "",
   placeOfVisit: "",
   inviterName: "",
@@ -270,7 +276,7 @@ const placeOptions = [
   { value: "cih", label: "CIH" },
 ];
 
-const { handleSubmit } = useForm({
+const { handleSubmit, values } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
