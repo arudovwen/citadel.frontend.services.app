@@ -110,6 +110,8 @@
         </FormGroup>
       </div>
 
+      <!-- <div>{{ values }}</div> -->
+
       <div class="text-right space-x-3 mt-8">
         <Button
           :isLoading="loading"
@@ -174,7 +176,7 @@ const formData = reactive({
   nearestBusStop: "",
   lga: "",
   state: "",
-  country: "",
+  country: { label: "Nigeria", value: "Nigeria" },
   purposeOfVisit: "",
   placeOfVisit: "",
 });
