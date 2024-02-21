@@ -140,7 +140,11 @@
             name="state"
           />
         </FormGroup>
-        <FormGroup label="Lga" :error="lgaError">
+        <FormGroup
+          v-if="values?.country?.value?.toLowerCase() == 'nigeria'"
+          label="Lga"
+          :error="lgaError"
+        >
           <VueSelect
             class="w-full"
             v-model.value="lga"
@@ -260,7 +264,7 @@ const placeOptions = [
   { value: "cih", label: "CIH" },
 ];
 
-const { handleSubmit } = useForm({
+const { handleSubmit, values } = useForm({
   validationSchema: formDataSchema,
   initialValues: {
     ...formData,
