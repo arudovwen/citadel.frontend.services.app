@@ -66,23 +66,23 @@ const success = computed(() => state.event.addsuccess);
 const loading = computed(() => state.event.loading);
 const eventsOption = [
   {
-    value: "babyChristening",
+    value: "Baby Christening",
     label: "Baby Christening",
   },
   {
-    value: "babyDedication",
+    value: "Baby Dedication",
     label: "Baby Dedication",
   },
   {
-    value: "houseWarming",
+    value: "House Warming",
     label: "House Warming",
   },
   {
-    value: "specialThanksgiving",
+    value: "Special Thanksgiving",
     label: "Special Thanksgiving",
   },
   {
-    value: "burialCeremony",
+    value: "Burial Ceremony",
     label: "Burial Ceremony",
   },
 ];

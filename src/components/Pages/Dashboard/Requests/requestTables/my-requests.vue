@@ -97,30 +97,12 @@
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
-              <Dropdown classMenuItems=" w-[140px]">
-                <span class="text-xl"
-                  ><Icon icon="heroicons-outline:dots-vertical"
-                /></span>
-                <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in actions" :key="i">
-                    <div
-                      @click="item.doit(item.name, props.row)"
-                      :class="{
-                        'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
-                          item.name === 'delete',
-                        'hover:bg-slate-900 hover:text-white':
-                          item.name !== 'delete',
-                      }"
-                      class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
-                    >
-                      <span class="text-base">
-                        <Icon :icon="item.icon" />
-                      </span>
-                      <span>{{ item.name }}</span>
-                    </div>
-                  </MenuItem>
-                </template>
-              </Dropdown>
+              <span
+                @click="viewReason(props.row)"
+                v-if="props.row.status === false"
+                class="cursor-pointer text-xs"
+                >view reason</span
+              >
             </span>
           </template>
           <template #pagination-bottom>
@@ -190,59 +172,44 @@
     sizeClass="max-w-[32rem]"
   >
     <ViewRecord :detail="detail" />
-    <!-- <template v-slot:footer>
-      <div class="flex gap-x-5">
-        <Button
-          text="Reject"
-          btnClass="btn-outline-secondary btn-sm "
-          @click="
-            () => {
-              type = 'reject';
-              $refs.modal.openModal();
-            }
-          "
-        />
-        <Button
-          text="Approve"
-          btnClass="btn-dark btn-sm"
-          @click="
-            () => {
-              type = 'approve';
-              $refs.modal.openModal();
-            }
-          "
-        />
-      </div>
-    </template> -->
   </Modal>
-  <ModalCrud
-    :activeModal="requestModal"
-    @close="toggleRequestmodal"
-    centered
+
+  <Modal
     :title="type === 'venue' ? 'Request Venue' : 'Request Event'"
     labelClass="btn-outline-dark"
+    ref="requestModal"
     sizeClass="max-w-md"
   >
-    <RequestVenue v-if="type === 'venue'" :toggleView="toggleRequestmodal" />
-    <RequestEvent v-if="type === 'event'" :toggleView="toggleRequestmodal" />
-  </ModalCrud>
+    <RequestVenue
+      v-if="type === 'venue'"
+      :toggleView="closeRequestmodal"
+      :refetch="getRequests"
+    />
+    <RequestEvent
+      v-if="type === 'event'"
+      :toggleView="closeRequestmodal"
+      :refetch="getRequests"
+    />
+  </Modal>
 </template>
 <script setup>
-import ModalCrud from "@/components/Modal";
+import { eventsOptions } from "@/constant/data";
+
+// import ModalCrud from "@/components/Modal";
 import RequestVenue from "@/components/Pages/Dashboard/Requests/make-requests/request-venue.vue";
 import RequestEvent from "@/components/Pages/Dashboard/Requests/make-requests/request-event.vue";
 import AddRequestButton from "./AddRequestButton";
 // import { useToast } from "vue-toastification";
 import ViewRecord from "./preview";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
-import Dropdown from "@/components/Dropdown";
+// import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
-import Icon from "@/components/Icon";
+// import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
-import { MenuItem } from "@headlessui/vue";
+// import { MenuItem } from "@headlessui/vue";
 import window from "@/mixins/window";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
@@ -250,18 +217,19 @@ import moment from "moment";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
 onMounted(() => {
-  dispatch("getUserRequests", query);
+  getRequests();
 });
 
 // const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
-const requestModal = ref(false);
+const requestModal = ref(null);
 const userId = computed(() => state.auth.userData.id);
-const toggleRequestmodal = () => {
-  requestModal.value = !requestModal.value;
+const closeRequestmodal = () => {
+  requestModal.value.closeModal();
 };
+
 // const authUserRoles = computed(() =>
 //   state?.role?.authUserRoles
 //     ?.map((i) => {
@@ -282,9 +250,18 @@ const detail = ref(null);
 const dateValue = ref(null);
 const comment = ref("");
 
+const getRequests = () => {
+  dispatch("getUserRequests", query);
+};
+
 const formatter = {
   date: "DD MMM YYYY",
   month: "MMM",
+};
+
+const viewReason = (data) => {
+  detail.value = data;
+  modalChange.value.openModal();
 };
 
 const requestTypes = [
@@ -293,7 +270,7 @@ const requestTypes = [
     icon: "heroicons-outline:user",
     link: () => {
       type.value = "venue";
-      toggleRequestmodal();
+      requestModal.value.openModal();
     },
   },
   {
@@ -301,20 +278,20 @@ const requestTypes = [
     icon: "heroicons-outline:user",
     link: () => {
       type.value = "event";
-      toggleRequestmodal();
+      requestModal.value.openModal();
     },
   },
 ];
-const actions = [
-  {
-    name: "view",
-    icon: "heroicons-outline:eye",
-    doit: (name, data) => {
-      detail.value = data;
-      modalChange.value.openModal();
-    },
-  },
-];
+// const actions = [
+//   {
+//     name: "view",
+//     icon: "heroicons-outline:eye",
+//     doit: (data) => {
+//       detail.value = data;
+//       modalChange.value.openModal();
+//     },
+//   },
+// ];
 const options = [
   {
     value: "25",
@@ -339,10 +316,10 @@ const columns = [
     field: "eventType",
   },
 
-  {
-    label: "Type",
-    field: "requestType",
-  },
+  // {
+  //   label: "Type",
+  //   field: "requestType",
+  // },
 
   {
     label: "Date",
@@ -354,10 +331,10 @@ const columns = [
     field: "status",
   },
 
-  // {
-  //   label: "Action",
-  //   field: "action",
-  // },
+  {
+    label: "",
+    field: "action",
+  },
 ];
 
 function handleRequest() {}
@@ -372,7 +349,9 @@ const requests = computed(() =>
   state?.request?.userRequests?.data?.map((i) => {
     return {
       ...i,
-      eventDate: moment(i.eventDate).format("lll"),
+      eventDate: moment(i.eventDate).format("ll"),
+      eventType: eventsOptions.find((event) => event.value == i.eventType)
+        .label,
     };
   })
 );

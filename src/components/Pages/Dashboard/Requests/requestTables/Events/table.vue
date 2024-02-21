@@ -95,7 +95,7 @@
               v-if="props.column.field == 'eventDate'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ moment(props.row.eventDate).format("lll") }}
+              {{ moment(props.row.eventDate).format("ll") }}
             </span>
             <span
               v-if="props.column.field == 'requesterName'"
@@ -202,7 +202,7 @@
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to {{ type.toLowerCase() }} this request?
     </div>
-    <div v-if="type.toLowerCase() === 'decline'">
+    <div v-if="type.toLowerCase() === 'reject'">
       <textarea
         resize="none"
         class="px-3 py-3 border border-gray-200 rounded-lg w-full"
@@ -279,6 +279,8 @@
   </Modal>
 </template>
 <script>
+import { eventsOptions } from "@/constant/data";
+
 import { onMounted, reactive, watch, computed, ref } from "vue";
 import { useStore } from "vuex";
 import VueSelect from "@/components/Select/VueSelect";
@@ -345,14 +347,7 @@ export default {
           name: "approve",
         },
         {
-          name: "decline",
-        },
-        {
-          name: "edit",
-        },
-
-        {
-          name: "delete",
+          name: "reject",
         },
       ],
       options: [
@@ -378,18 +373,9 @@ export default {
   methods: {
     handleAction(status) {
       let newaction = this.actions;
-      // if (this.$store.state.auth.userData.userRole.toLowerCase() === "member") {
-      //   newaction = this.actions.filter(
-      //     (i) => i.name !== "approve" && i.name !== "decline"
-      //   );
-      // }
-      // if (this.$store.state.auth.userData.userRole.toLowerCase() !== "member") {
-      //   newaction = this.actions.filter(
-      //     (i) => i.name == "approve" && i.name == "decline"
-      //   );
-      // }
+
       if (status === true) {
-        return newaction.filter((i) => i.name == "decline");
+        return newaction.filter((i) => i.name == "reject");
       }
       if (status === false) {
         return newaction.filter((i) => i.name === "approve");
@@ -415,13 +401,13 @@ export default {
       this.id = id;
 
       const actions = {
-        view: {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: () => {
-            this.$refs.modalChange.openModal();
-          },
-        },
+        // view: {
+        //   name: "view",
+        //   icon: "heroicons-outline:eye",
+        //   doit: () => {
+        //     this.$refs.modalChange.openModal();
+        //   },
+        // },
         approve: {
           name: "approve",
           icon: "ph:check",
@@ -431,17 +417,17 @@ export default {
             this.$refs.modalStatus.openModal();
           },
         },
-        edit: {
-          name: "edit",
-          icon: "heroicons:pencil-square",
-          doit: (data, detail) => {
-            this.type = data;
-            this.detail = detail;
-            this.$refs.modalChange.openModal();
-          },
-        },
-        decline: {
-          name: "decline",
+        // edit: {
+        //   name: "edit",
+        //   icon: "heroicons:pencil-square",
+        //   doit: (data, detail) => {
+        //     this.type = data;
+        //     this.detail = detail;
+        //     this.$refs.modalChange.openModal();
+        //   },
+        // },
+        reject: {
+          name: "reject",
           icon: "ph:x-light",
           doit: (data, detail) => {
             this.type = data;
@@ -480,25 +466,26 @@ export default {
     const deleteloading = computed(() => state.event.deleteloading);
     const deletesuccess = computed(() => state.event.deletesuccess);
     const columns = [
-      {
-        label: "Zone",
-        field: "zone",
-      },
-      {
-        label: "Center",
-        field: "center",
-      },
+      // {
+      //   label: "Zone",
+      //   field: "zone",
+      // },
+      // {
+      //   label: "Center",
+      //   field: "center",
+      // },
       {
         label: "Request Date",
         field: "createdAt",
       },
-      {
-        label: "Requester Name",
-        field: "requesterName",
-      },
+
       {
         label: "Event Type",
         field: "eventType",
+      },
+      {
+        label: "Requester Name",
+        field: "requesterName",
       },
 
       {
@@ -520,26 +507,7 @@ export default {
         value: "",
         label: "All",
       },
-      {
-        value: "babyChristening",
-        label: "Baby Christening",
-      },
-      {
-        value: "babyDedication",
-        label: "Baby Dedication",
-      },
-      {
-        value: "houseWarming",
-        label: "House Warming",
-      },
-      {
-        value: "specialThanksgiving",
-        label: "Special Thanksgiving",
-      },
-      {
-        value: "burialCeremony",
-        label: "Burial Ceremony",
-      },
+      ...eventsOptions,
     ];
     const eventType = ref("");
     const query = reactive({
