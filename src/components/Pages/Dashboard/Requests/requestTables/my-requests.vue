@@ -351,7 +351,7 @@ const requests = computed(() =>
       ...i,
       eventDate: moment(i.eventDate).format("ll"),
       eventType: eventsOptions.find((event) => event.value == i.eventType)
-        .label,
+        ?.label,
     };
   })
 );
