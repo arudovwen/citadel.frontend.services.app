@@ -155,7 +155,7 @@
               v-if="props.column.field == 'activityDate'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ moment(props.row.activityDate).format("lll") }}
+              {{ moment(props.row.activityDate).format("ll") }}
             </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
@@ -405,10 +405,10 @@ export default {
           field: "totalAttendee",
         },
 
-        {
-          label: "State of flock",
-          field: "stateOfTheFlock",
-        },
+        // {
+        //   label: "State of flock",
+        //   field: "stateOfTheFlock",
+        // },
 
         {
           label: "Action",
@@ -474,6 +474,11 @@ export default {
     },
   },
   setup() {
+    onMounted(() => {
+      dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
+
+      dispatch("getChurchAffiliationsById", state.auth.userData?.id);
+    });
     const sortFilters = [
       {
         label: "Default",
@@ -541,11 +546,6 @@ export default {
     const detail = computed(() => state.profile.churchAffiliationsData);
     const active = ref("activity");
 
-    onMounted(() => {
-      dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
-
-      dispatch("getChurchAffiliationsById", state.auth.userData?.id);
-    });
     function handleReports() {
       console.log(
         "🚀 ~ file: centers.vue:415 ~ handleReports ~ handleReports:"
@@ -559,7 +559,8 @@ export default {
       if (getChurchAffiliationsDatasuccess.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value?.cihAddress,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
         });
       }
     });
@@ -568,7 +569,8 @@ export default {
       if (success.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value?.cihAddress,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
         });
         toast.success("Report added");
         modalChange.value.closeModal();
@@ -578,7 +580,8 @@ export default {
       if (updatereportsuccess.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value?.cihAddress,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
         });
         toast.success("Report updated");
         modalChange.value.closeModal();
@@ -589,7 +592,8 @@ export default {
       if (deletereportsuccess.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value?.cihAddress,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
         });
         toast.success("Report deleted");
         modal.value.closeModal();
