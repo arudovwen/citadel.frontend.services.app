@@ -162,7 +162,7 @@
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { reactive, computed, ref, inject, watch } from "vue";
+import { reactive, computed, ref, inject, watch, onMounted } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
 import Button from "@/components/Button";
@@ -175,8 +175,12 @@ import VueSelect from "@/components/Select/VueSelect";
 // import moment from "moment";
 
 // const config = { enableTime: true };
+onMounted(() => {
+  dispatch("getCenter", { id: affiliation?.value?.centerId });
+});
 const { state, dispatch } = useStore();
 const loading = computed(() => state.report.loading);
+const centerData = computed(() => state.center.center);
 const editor = ClassicEditor;
 const editorConfig = {
   toolbar: {
@@ -281,7 +285,7 @@ const formDataSchema = Yup.object().shape({
   }),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setValues, values } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
@@ -334,8 +338,13 @@ const onSubmit = handleSubmit((values) => {
   dispatch("addActivityReport", data);
 });
 
-watch(zone, () => {
-  dispatch("getAllCenters", { zoneId: zone.value.zoneId });
+// watch(zone, () => {
+//   dispatch("getAllCenters", { zoneId: zone.value.zoneId });
+// });
+
+watch(centerData, () => {
+  console.log(centerData);
+  values.activityVenue = centerData?.value?.description;
 });
 </script>
 <style lang=""></style>
