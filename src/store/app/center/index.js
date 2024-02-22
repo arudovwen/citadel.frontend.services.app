@@ -27,6 +27,9 @@ export default {
     getcentersloading: false,
     getcenterssuccess: false,
     getcenterserror: null,
+    getCenterLoading: false,
+    getCenterSuccess: false,
+    getCenterError: null,
     updateCenterLoading: false,
     updateCenterSuccess: false,
     updateCenterError: null,
@@ -35,6 +38,7 @@ export default {
     deleteCenterError: null,
     total: 0,
     centers: [],
+    center: null,
   },
   getters: {
     centers: (state) => state.centers,
@@ -69,6 +73,22 @@ export default {
       state.addCenterLoading = false;
       state.addCenterSuccess = false;
       state.addCenterError = err;
+    },
+    getCenterBegin(state) {
+      state.getCenterLoading = true;
+      state.getCenterSuccess = false;
+      state.getCenterError = null;
+    },
+    getCenterSuccess(state, { data }) {
+      state.getCenterLoading = false;
+      state.getCenterSuccess = true;
+      state.getCenterError = null;
+      state.center = data;
+    },
+    getCenterError(state, err) {
+      state.getCenterLoading = false;
+      state.getCenterSuccess = false;
+      state.getCenterError = err;
     },
 
     getCentersBegin(state) {
@@ -192,6 +212,21 @@ export default {
         }
       } catch (err) {
         commit("getCentersError", err);
+      }
+    },
+    async getCenter({ commit }, data) {
+      try {
+        commit("getCenterBegin");
+
+        const response = await DataService.get(
+          `${urls.GET_CENTER_BY_ID}?${new URLSearchParams(cleanObject(data))}`
+        );
+
+        if (response.status === 200) {
+          commit("getCenterSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getCenterError", err);
       }
     },
     async getAllCentersTotal({ commit }, data) {

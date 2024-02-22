@@ -105,7 +105,7 @@
           </div>
         </div>
         <FormGroup
-          label="Provide a summaryOfEvent"
+          label="Provide a summary of Event"
           name="summaryOfEvent"
           :error="summaryOfEventError"
         >

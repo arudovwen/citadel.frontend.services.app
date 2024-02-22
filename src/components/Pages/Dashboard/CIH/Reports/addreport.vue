@@ -1,9 +1,12 @@
 <template>
   <form @submit.prevent="onSubmit">
     <Card title="">
+      <!-- {{ affiliation }}
+      ss -->
       <div class="grid gap-5">
         <!-- <span>{{ zone }}</span> -->
         <VueSelect
+          disabled
           label="Zone"
           class="min-w-[200px] w-full md:w-auto"
           v-model.value="zone"
@@ -15,7 +18,7 @@
 
         <div>
           <CustomVueSelect
-            :disabled="centersLoading"
+            :disabled="true"
             :menuLoading="centersLoading"
             label="Center Address"
             class="min-w-[200px] w-full md:w-auto"
@@ -159,7 +162,7 @@
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { reactive, computed, ref, inject, watch } from "vue";
+import { reactive, computed, ref, inject, watch, onMounted } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
 import Button from "@/components/Button";
@@ -172,8 +175,12 @@ import VueSelect from "@/components/Select/VueSelect";
 // import moment from "moment";
 
 // const config = { enableTime: true };
+onMounted(() => {
+  dispatch("getCenter", { id: affiliation?.value?.centerId });
+});
 const { state, dispatch } = useStore();
 const loading = computed(() => state.report.loading);
+const centerData = computed(() => state.center.center);
 const editor = ClassicEditor;
 const editorConfig = {
   toolbar: {
@@ -199,9 +206,10 @@ const editorConfig = {
   },
 };
 const zoneOptions = inject("zoneOptions");
+const affiliation = inject("detail");
 const zone = ref({
-  label: "",
-  zoneId: "",
+  label: affiliation?.value?.cihZone,
+  zoneId: affiliation?.value?.zoneId,
 });
 const centersLoading = computed(() => state.center.getcentersloading);
 
@@ -214,8 +222,8 @@ const centerOptions = computed(() =>
   })
 );
 const centerObj = ref({
-  label: "",
-  centerId: "",
+  label: affiliation?.value?.cihAddress,
+  centerId: affiliation?.value?.centerId,
 });
 const formData = reactive({
   activityName: "",
@@ -277,7 +285,7 @@ const formDataSchema = Yup.object().shape({
   }),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setValues, values } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
@@ -330,8 +338,13 @@ const onSubmit = handleSubmit((values) => {
   dispatch("addActivityReport", data);
 });
 
-watch(zone, () => {
-  dispatch("getAllCenters", { zoneId: zone.value.zoneId });
+// watch(zone, () => {
+//   dispatch("getAllCenters", { zoneId: zone.value.zoneId });
+// });
+
+watch(centerData, () => {
+  console.log(centerData);
+  values.activityVenue = centerData?.value?.description;
 });
 </script>
 <style lang=""></style>
