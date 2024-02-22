@@ -11,6 +11,10 @@ export default {
     addLoading: false,
     addSuccess: false,
     addError: null,
+
+    getCIHStatsLoading: false,
+    getCIHStatsSuccess: false,
+    getCIHStatsError: null,
     // for edit
     editModal: false,
     editName: "",
@@ -88,6 +92,7 @@ export default {
         ],
       },
     ],
+    CIHStats: null,
   },
   getters: {
     attendances: (state) => state.attendances,
@@ -108,6 +113,24 @@ export default {
       state.addLoading = false;
       state.addSuccess = false;
       state.addError = err;
+    },
+
+    getCIHStatsBegin(state) {
+      state.getCIHStatsLoading = true;
+      state.getCIHStatsSuccess = false;
+      state.getCIHStatsError = null;
+    },
+
+    getCIHStatsSuccess(state, data) {
+      state.getCIHStatsLoading = false;
+      state.getCIHStatsSuccess = true;
+      state.CIHStats = data?.data;
+    },
+
+    getCIHStatsError(state, err) {
+      state.getCIHStatsLoading = false;
+      state.getCIHStatsSuccess = false;
+      state.getCIHStatsError = err;
     },
 
     //
@@ -185,6 +208,20 @@ export default {
         }
       } catch (err) {
         commit("addError", err);
+      }
+    },
+    async getCIHStats({ commit }, centerId) {
+      try {
+        commit("getCIHStatsBegin");
+        const response = await DataService.get(
+          `${urls.GET_CIH_STATS}?CenterId=${centerId}`
+        );
+
+        if (response.status === 200) {
+          commit("getCIHStatsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getCIHStatsError", err);
       }
     },
     addAttendance({ commit }, data) {
