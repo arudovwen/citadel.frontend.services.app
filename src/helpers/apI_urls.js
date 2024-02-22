@@ -216,6 +216,13 @@ export const urls = {
   GET_ACTIVITY_REPORTS: "/GetAllCIHActivity",
   GET_ACTIVITY_REPORT: "/GetCIHActivityById",
   DELETE_ACTIVITY_REPORT: "/DeleteCIHActivity",
+
+  //cihinspection
+  CREATE_INSPECTION_REPORT: "/CreateCIHInspection",
+  UPDATE_INSPECTION_REPORT: "/UpdateCIHInspection",
+  GET_INSPECTION_REPORTS: "/GetAllCIHInspection",
+  GET_INSPECTION_REPORT: "/GetCIHInspectionById",
+  DELETE_INSPECTION_REPORT: "/DeleteCIHInspection",
 };
 
 // open delete modal

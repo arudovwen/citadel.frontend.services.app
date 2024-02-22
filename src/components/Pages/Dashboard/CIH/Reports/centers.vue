@@ -87,7 +87,7 @@
           "
           mode="remote"
           styleClass=" vgt-table  centered "
-          :rows="reports"
+          :rows="active === 'inspection' ? inspectionsData : reports"
           :sort-options="{
             enabled: false,
           }"
@@ -156,6 +156,12 @@
               class="text-slate-500 dark:text-slate-400"
             >
               {{ moment(props.row.activityDate).format("ll") }}
+            </span>
+            <span
+              v-if="props.column.field == 'dateOfInspection'"
+              class="text-slate-500 dark:text-slate-400"
+            >
+              {{ moment(props.row.dateOfInspection).format("ll") }}
             </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
@@ -418,15 +424,15 @@ export default {
       inspectionColumns: [
         {
           label: "Date of Inspection",
-          field: "date",
+          field: "dateOfInspection",
         },
         {
           label: "Inspecting Officer",
-          field: "zone",
+          field: "inspectionOfficer",
         },
         {
           label: "Center",
-          field: "center",
+          field: "centerName",
         },
 
         {
@@ -542,8 +548,12 @@ export default {
     const deletereportsuccess = computed(
       () => state.report.deletereportsuccess
     );
+    const addAllInspectionSuccess = computed(
+      () => state.report.addAllInspectionSuccess
+    );
     const reports = computed(() => state.report.data);
     const detail = computed(() => state.profile.churchAffiliationsData);
+    const inspectionsData = computed(() => state.report.inspectionsData);
     const active = ref("activity");
 
     function handleReports() {
@@ -562,6 +572,11 @@ export default {
           CenterName: detail.value?.cihAddress,
           ZoneName: detail?.value?.cihZone,
         });
+      }
+    });
+    watch(active, () => {
+      if (active.value == "inspection") {
+        dispatch("getInspectionReports", query);
       }
     });
 
@@ -599,6 +614,14 @@ export default {
         modal.value.closeModal();
       }
     });
+
+    watch(addAllInspectionSuccess, () => {
+      if (active.value == "inspection") {
+        dispatch("getInspectionReports", query);
+        toast.success("Report updated");
+        modalChange.value.closeModal();
+      }
+    });
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
@@ -618,6 +641,7 @@ export default {
     );
 
     provide("zoneOptions", zoneOptions);
+    provide("detail", detail);
     return {
       state,
       handleReports,
@@ -627,6 +651,7 @@ export default {
       perPage,
       modalChange,
       reports,
+      inspectionsData,
       moment,
       deletereportloading,
       modal,

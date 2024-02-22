@@ -38,16 +38,22 @@
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Submit" btnClass="btn-dark" />
+        <Button
+          :disabled="submitLoading"
+          :isLoading="submitLoading"
+          type="submit"
+          text="Submit"
+          btnClass="btn-dark"
+        />
       </div>
     </Card>
   </form>
 </template>
 <script setup>
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { reactive, computed } from "vue";
+import { reactive, computed, inject } from "vue";
 import { useField, useForm } from "vee-validate";
-import { useRoute } from "vue-router";
+// import { useRoute } from "vue-router";
 import * as Yup from "yup";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
@@ -80,8 +86,10 @@ const editorConfig = {
   },
 };
 const { state, dispatch } = useStore();
-const route = useRoute();
-dispatch("getAllCenters", { zoneId: route?.params?.zoneId });
+const detail = inject("detail");
+const userName = computed(() => state.auth.userData.fullName);
+// const route = useRoute();
+dispatch("getAllCenters", { zoneId: detail?.value?.zoneId });
 const centerOptions = computed(() =>
   state?.center?.centers.map((i) => {
     return {
@@ -91,7 +99,7 @@ const centerOptions = computed(() =>
   })
 );
 const centersLoading = computed(() => state.center.getcentersloading);
-
+const submitLoading = computed(() => state.report.addAllInspectionLoading);
 const formData = reactive({
   date: "",
   type: "",
@@ -122,6 +130,17 @@ const { value: center, errorMessage: centerError } = useField("center");
 
 const onSubmit = handleSubmit((values) => {
   console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
+
+  const data = {
+    dateOfInspection: values.date,
+    inspectionOfficer: userName.value,
+    zoneId: detail?.value?.zoneId,
+    centerId: values.center.centerId,
+    centerName: values.center.label,
+    reportDetails: values.summary,
+  };
+  // console.log(JSON.stringify(data));
+  dispatch("addInspectionReport", data);
 });
 </script>
 <style></style>
