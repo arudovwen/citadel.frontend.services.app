@@ -1,10 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
 import { useToast } from "vue-toastification";
+import { DataService } from "@/config/dataService/dataService";
+import { urls } from "@/helpers/apI_urls";
+// import { cleanObject } from "@/util/cleanObject";
 const toast = useToast();
 export default {
   state: {
     addmodal: false,
     isLoading: null,
+    addLoading: false,
+    addSuccess: false,
+    addError: null,
     // for edit
     editModal: false,
     editName: "",
@@ -87,20 +93,38 @@ export default {
     attendances: (state) => state.attendances,
   },
   mutations: {
-    //
-    addAttendance(state, data) {
-      state.isLoading = true;
-
-      setTimeout(() => {
-        state.attendances.unshift(data);
-        state.isLoading = false;
-        toast.success -
-          500("Attendance added", {
-            timeout: 2000,
-          });
-      }, 1500);
-      state.addmodal = false;
+    addBegin(state) {
+      state.addLoading = true;
+      state.addSuccess = false;
+      state.addError = null;
     },
+
+    addSuccess(state) {
+      state.addLoading = false;
+      state.addSuccess = true;
+    },
+
+    addError(state, err) {
+      state.addLoading = false;
+      state.addSuccess = false;
+      state.addError = err;
+    },
+
+    //
+
+    // addAttendance(state, data) {
+    //   state.isLoading = true;
+
+    //   setTimeout(() => {
+    //     state.attendances.unshift(data);
+    //     state.isLoading = false;
+    //     toast.success -
+    //       500("Attendance added", {
+    //         timeout: 2000,
+    //       });
+    //   }, 1500);
+    //   state.addmodal = false;
+    // },
     // removeAttendance
     removeAttendance(state, data) {
       state.attendances = state.attendances.filter(
@@ -148,6 +172,21 @@ export default {
     },
   },
   actions: {
+    async createAttendance({ commit }, data) {
+      try {
+        commit("addBegin");
+        const response = await DataService.post(
+          urls.CREATE_AFFINITY_GROUP,
+          data
+        );
+
+        if (response.status === 200) {
+          commit("addSuccess");
+        }
+      } catch (err) {
+        commit("addError", err);
+      }
+    },
     addAttendance({ commit }, data) {
       commit("addAttendance", data);
     },

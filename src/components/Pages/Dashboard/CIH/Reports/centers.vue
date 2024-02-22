@@ -42,8 +42,9 @@
               }
             "
           />
+          <!-- v-if="state.auth.userData?.cihRole?.toLowerCase() === 'cihpastor'" -->
           <Button
-            v-if="state.auth.userData?.cihRole?.toLowerCase() === 'cihpastor'"
+            v-if="active !== 'inspection'"
             icon="heroicons-outline:plus-sm"
             text="Add Report"
             btnClass=" btn-primary font-normal btn-sm "
@@ -280,7 +281,7 @@
 <script>
 import Select from "@/components/Select";
 import { useStore } from "vuex";
-import { computed, ref, reactive, watch, onMounted } from "vue";
+import { computed, ref, reactive, watch, onMounted, provide } from "vue";
 import moment from "moment";
 import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
@@ -510,6 +511,15 @@ export default {
       searchParameter: "",
       sortOrder: "",
     });
+
+    const zoneOptions = computed(() =>
+      state?.zone?.zones.map((i) => {
+        return {
+          label: i.zoneName,
+          zoneId: i.id,
+        };
+      })
+    );
     const toast = useToast();
     const { state, dispatch } = useStore();
     const success = computed(() => state.report.addsuccess);
@@ -532,6 +542,8 @@ export default {
     const active = ref("activity");
 
     onMounted(() => {
+      dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
+
       dispatch("getChurchAffiliationsById", state.auth.userData?.id);
     });
     function handleReports() {
@@ -547,7 +559,7 @@ export default {
       if (getChurchAffiliationsDatasuccess.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value.cihAddress,
+          centerName: detail.value?.cihAddress,
         });
       }
     });
@@ -556,7 +568,7 @@ export default {
       if (success.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value.cihAddress,
+          centerName: detail.value?.cihAddress,
         });
         toast.success("Report added");
         modalChange.value.closeModal();
@@ -566,7 +578,7 @@ export default {
       if (updatereportsuccess.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value.cihAddress,
+          centerName: detail.value?.cihAddress,
         });
         toast.success("Report updated");
         modalChange.value.closeModal();
@@ -577,7 +589,7 @@ export default {
       if (deletereportsuccess.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value.cihAddress,
+          centerName: detail.value?.cihAddress,
         });
         toast.success("Report deleted");
         modal.value.closeModal();
@@ -600,6 +612,8 @@ export default {
         dispatch("getAllCentersTotal", query);
       }
     );
+
+    provide("zoneOptions", zoneOptions);
     return {
       state,
       handleReports,
@@ -614,6 +628,7 @@ export default {
       modal,
       sortFilters,
       total,
+      zoneOptions,
     };
   },
 };
