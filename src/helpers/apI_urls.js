@@ -36,6 +36,14 @@ export const urls = {
   GET_AFFINITY_GROUP_BY_ID: "/AffinityGroup/GetAffinityGroupById",
   GET_AFFINITY_GROUP_BY_USERID: "/AffinityGroup/GetAffinityGroupByUserId",
 
+  //Attendance
+  CREATE_CIH_ATTENDANCE: "/CreateCIHAttendance",
+  UPDATE_CIH_ATTENDANCE: "/UpdateCIHAttendance",
+  GET_CIH_ATTENDANCE_BY_ID: "/GetCIHAttendanceById",
+  GET_METRIC_OF_MEMBERS_BY_ATTENDANCE_ID:
+    "/GetMetricOfMembersByCIHAttendanceId",
+  GET_CIH_STATS: "/GetCIHStats",
+
   // Auth
   LOGIN: "/Auth/Login",
   CHANGE_PASSWORD_INITIATE: "/Auth/ChangePasswordInitiate",

@@ -2,6 +2,31 @@
   <form @submit.prevent="onSubmit">
     <Card title="">
       <div class="grid gap-5">
+        <!-- <span>{{ zone }}</span> -->
+        <VueSelect
+          label="Zone"
+          class="min-w-[200px] w-full md:w-auto"
+          v-model.value="zone"
+          :options="zoneOptions"
+          placeholder="Select zone"
+          name="zone"
+          :error="''"
+        />
+
+        <div>
+          <CustomVueSelect
+            :disabled="centersLoading"
+            :menuLoading="centersLoading"
+            label="Center Address"
+            class="min-w-[200px] w-full md:w-auto"
+            v-model.value="centerObj"
+            :modelValue="centerObj"
+            :error="''"
+            :options="centerOptions"
+            placeholder="Select center"
+            name="CIH Address"
+          />
+        </div>
         <div class="">
           <Textinput
             label="Activity Name"
@@ -131,8 +156,10 @@
   </form>
 </template>
 <script setup>
+import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
+
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { reactive, computed } from "vue";
+import { reactive, computed, ref, inject, watch } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
 import Button from "@/components/Button";
@@ -140,6 +167,8 @@ import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import { useStore } from "vuex";
+import VueSelect from "@/components/Select/VueSelect";
+
 // import moment from "moment";
 
 // const config = { enableTime: true };
@@ -169,15 +198,40 @@ const editorConfig = {
     ],
   },
 };
+const zoneOptions = inject("zoneOptions");
+const zone = ref({
+  label: "",
+  zoneId: "",
+});
+const centersLoading = computed(() => state.center.getcentersloading);
+
+const centerOptions = computed(() =>
+  state?.center?.centers.map((i) => {
+    return {
+      label: i.centerName,
+      centerId: i.id,
+    };
+  })
+);
+const centerObj = ref({
+  label: "",
+  centerId: "",
+});
 const formData = reactive({
-  activityDate: "",
-  activityType: "",
+  activityName: "",
   activityVenue: "",
+  summaryOfEvent: "",
+  stateOfTheFlock: "",
+  activityType: "",
+  activityDate: "",
+
+  // zoneName: "string",
+  // centerName: "string",
+  // zoneId: 0,
+  // centerId: 0,
   center: "",
   zone: "",
-  stateOfTheFlock: "",
-  summaryOfEvent: "",
-  activityName: "",
+
   attendance: {
     adult: null,
     youth: null,
@@ -268,8 +322,16 @@ const onSubmit = handleSubmit((values) => {
     // activityDate: moment(values.activityDate).format("YYYY-MM-DD HH:mm:ss.SSS"),
     cihAttendances: [values.attendance],
     totalAttendee: sum,
+    zoneName: zone.value.label,
+    centerName: centerObj.value.label,
+    zoneId: zone.value.zoneId,
+    centerId: centerObj.value.centerId,
   };
   dispatch("addActivityReport", data);
+});
+
+watch(zone, () => {
+  dispatch("getAllCenters", { zoneId: zone.value.zoneId });
 });
 </script>
 <style lang=""></style>
