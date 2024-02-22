@@ -222,6 +222,22 @@ export default {
         commit("getAllInspectionError", err);
       }
     },
+    async getInspectionReport({ commit }, data) {
+      try {
+        commit("getReportBegin");
+        const response = await DataService.get(
+          `${urls.GET_INSPECTION_REPORT}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("getReportSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("getReportErr", err);
+      }
+    },
+
     async updateActivityReport({ commit }, data) {
       try {
         commit("updateReportBegin");

@@ -280,11 +280,13 @@
   >
     <AddReport v-if="type === 'add' && active === 'activity'" />
     <AddInspectionReport v-if="type === 'add' && active === 'inspection'" />
-    <EditReport v-if="type === 'edit'" :id="id" />
+    <EditReport v-if="type === 'edit' && active === 'activity'" :id="id" />
+    <EditInspectionReport v-if="type === 'edit' && active === 'inspection'" />
     <ViewReport v-if="type === 'view'" :id="id" />
   </Modal>
 </template>
 <script>
+import EditInspectionReport from "@/components/Pages/Dashboard/CIH/Reports/editInspectionReport";
 import Select from "@/components/Select";
 import { useStore } from "vuex";
 import { computed, ref, reactive, watch, onMounted, provide } from "vue";
@@ -313,6 +315,7 @@ export default {
   components: {
     AddReport,
     AddInspectionReport,
+    EditInspectionReport,
     EditReport,
     ViewReport,
     Pagination,

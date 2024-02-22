@@ -51,7 +51,7 @@
 </template>
 <script setup>
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { reactive, computed, inject } from "vue";
+import { reactive, computed, inject, onMounted } from "vue";
 import { useField, useForm } from "vee-validate";
 import { useRoute } from "vue-router";
 import * as Yup from "yup";
@@ -60,7 +60,9 @@ import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useStore } from "vuex";
-
+onMounted(() => {
+  // dispatch('getReportBegin')
+});
 const editor = ClassicEditor;
 const editorConfig = {
   toolbar: {
