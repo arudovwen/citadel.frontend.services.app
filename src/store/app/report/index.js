@@ -5,6 +5,7 @@ import { cleanObject } from "@/util/cleanObject";
 export default {
   state: {
     data: [],
+    inspectionsData: [],
     total: 0,
     reports: [],
     detail: null,
@@ -14,6 +15,12 @@ export default {
     getallloading: false,
     getallsuccess: false,
     getallerror: null,
+    getAllInspectionLoading: false,
+    getAllInspectionSuccess: false,
+    getAllInspectionError: null,
+    addAllInspectionLoading: false,
+    addAllInspectionSuccess: false,
+    addAllInspectionError: null,
     approveloading: false,
     approvesuccess: false,
     approveerror: null,
@@ -60,6 +67,38 @@ export default {
       state.getallloading = false;
       state.getallsuccess = false;
       state.getallerror = err;
+    },
+    getAllInspectionBegin(state) {
+      state.getAllInspectionLoading = true;
+      state.getAllInspectionSuccess = false;
+      state.getAllInspectionError = null;
+    },
+    getAllInspectionSuccess(state, { data, totalCount }) {
+      state.getAllInspectionLoading = false;
+      state.getAllInspectionSuccess = true;
+      state.getAllInspectionError = null;
+      state.inspectionsData = data;
+      state.total = totalCount;
+    },
+    getAllInspectionError(state, err) {
+      state.getAllInspectionLoading = false;
+      state.getAllInspectionSuccess = false;
+      state.getAllInspectionError = err;
+    },
+    addAllInspectionBegin(state) {
+      state.addAllInspectionLoading = true;
+      state.addAllInspectionSuccess = false;
+      state.addAllInspectionError = null;
+    },
+    addAllInspectionSuccess(state) {
+      state.addAllInspectionLoading = false;
+      state.addAllInspectionSuccess = true;
+      state.addAllInspectionError = null;
+    },
+    addAllInspectionError(state, err) {
+      state.addAllInspectionLoading = false;
+      state.addAllInspectionSuccess = false;
+      state.addAllInspectionError = err;
     },
     approveBegin(state) {
       state.approveloading = true;
@@ -154,6 +193,51 @@ export default {
         commit("addErr", err);
       }
     },
+    async addInspectionReport({ commit }, data) {
+      try {
+        commit("addAllInspectionBegin");
+        const response = await DataService.post(
+          `${urls.CREATE_INSPECTION_REPORT}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("addAllInspectionSuccess");
+        }
+      } catch (err) {
+        commit("addAllInspectionError", err);
+      }
+    },
+    async getInspectionReports({ commit }, data) {
+      try {
+        commit("getAllInspectionBegin");
+        const response = await DataService.get(
+          `${urls.GET_INSPECTION_REPORTS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("getAllInspectionSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getAllInspectionError", err);
+      }
+    },
+    async getInspectionReport({ commit }, data) {
+      try {
+        commit("getReportBegin");
+        const response = await DataService.get(
+          `${urls.GET_INSPECTION_REPORT}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("getReportSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("getReportErr", err);
+      }
+    },
+
     async updateActivityReport({ commit }, data) {
       try {
         commit("updateReportBegin");

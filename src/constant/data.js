@@ -57,13 +57,13 @@ export const menuItems = [
     roles: "CAN_VIEW_OUTREACH",
     subroles: [],
   },
-  {
-    title: "Attendance",
-    icon: "heroicons-outline:clipboard-check",
-    link: "/attendance",
-    roles: "CAN_VIEW_ATTENDANCE",
-    subroles: [],
-  },
+  // {
+  //   title: "Attendance",
+  //   icon: "heroicons-outline:clipboard-check",
+  //   link: "/attendance",
+  //   roles: "CAN_VIEW_ATTENDANCE",
+  //   subroles: [],
+  // },
   // { title: "Goals", icon: "bx:football", link: "/goals" },
   // {
   //   title: "Meetings",

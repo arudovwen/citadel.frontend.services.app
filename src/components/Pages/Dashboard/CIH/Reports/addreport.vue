@@ -229,8 +229,8 @@ const formData = reactive({
   // centerName: "string",
   // zoneId: 0,
   // centerId: 0,
-  center: "",
-  zone: "",
+  // center: "",
+  // zone: "",
 
   attendance: {
     adult: null,

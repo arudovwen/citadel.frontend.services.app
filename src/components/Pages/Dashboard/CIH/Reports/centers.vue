@@ -87,7 +87,7 @@
           "
           mode="remote"
           styleClass=" vgt-table  centered "
-          :rows="reports"
+          :rows="active === 'inspection' ? inspectionsData : reports"
           :sort-options="{
             enabled: false,
           }"
@@ -155,7 +155,13 @@
               v-if="props.column.field == 'activityDate'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ moment(props.row.activityDate).format("lll") }}
+              {{ moment(props.row.activityDate).format("ll") }}
+            </span>
+            <span
+              v-if="props.column.field == 'dateOfInspection'"
+              class="text-slate-500 dark:text-slate-400"
+            >
+              {{ moment(props.row.dateOfInspection).format("ll") }}
             </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
@@ -274,11 +280,13 @@
   >
     <AddReport v-if="type === 'add' && active === 'activity'" />
     <AddInspectionReport v-if="type === 'add' && active === 'inspection'" />
-    <EditReport v-if="type === 'edit'" :id="id" />
+    <EditReport v-if="type === 'edit' && active === 'activity'" :id="id" />
+    <EditInspectionReport v-if="type === 'edit' && active === 'inspection'" />
     <ViewReport v-if="type === 'view'" :id="id" />
   </Modal>
 </template>
 <script>
+import EditInspectionReport from "@/components/Pages/Dashboard/CIH/Reports/editInspectionReport";
 import Select from "@/components/Select";
 import { useStore } from "vuex";
 import { computed, ref, reactive, watch, onMounted, provide } from "vue";
@@ -307,6 +315,7 @@ export default {
   components: {
     AddReport,
     AddInspectionReport,
+    EditInspectionReport,
     EditReport,
     ViewReport,
     Pagination,
@@ -405,10 +414,10 @@ export default {
           field: "totalAttendee",
         },
 
-        {
-          label: "State of flock",
-          field: "stateOfTheFlock",
-        },
+        // {
+        //   label: "State of flock",
+        //   field: "stateOfTheFlock",
+        // },
 
         {
           label: "Action",
@@ -418,15 +427,15 @@ export default {
       inspectionColumns: [
         {
           label: "Date of Inspection",
-          field: "date",
+          field: "dateOfInspection",
         },
         {
           label: "Inspecting Officer",
-          field: "zone",
+          field: "inspectionOfficer",
         },
         {
           label: "Center",
-          field: "center",
+          field: "centerName",
         },
 
         {
@@ -474,6 +483,11 @@ export default {
     },
   },
   setup() {
+    onMounted(() => {
+      dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
+
+      dispatch("getChurchAffiliationsById", state.auth.userData?.id);
+    });
     const sortFilters = [
       {
         label: "Default",
@@ -537,15 +551,14 @@ export default {
     const deletereportsuccess = computed(
       () => state.report.deletereportsuccess
     );
+    const addAllInspectionSuccess = computed(
+      () => state.report.addAllInspectionSuccess
+    );
     const reports = computed(() => state.report.data);
     const detail = computed(() => state.profile.churchAffiliationsData);
+    const inspectionsData = computed(() => state.report.inspectionsData);
     const active = ref("activity");
 
-    onMounted(() => {
-      dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
-
-      dispatch("getChurchAffiliationsById", state.auth.userData?.id);
-    });
     function handleReports() {
       console.log(
         "🚀 ~ file: centers.vue:415 ~ handleReports ~ handleReports:"
@@ -559,8 +572,14 @@ export default {
       if (getChurchAffiliationsDatasuccess.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value?.cihAddress,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
         });
+      }
+    });
+    watch(active, () => {
+      if (active.value == "inspection") {
+        dispatch("getInspectionReports", query);
       }
     });
 
@@ -568,7 +587,8 @@ export default {
       if (success.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value?.cihAddress,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
         });
         toast.success("Report added");
         modalChange.value.closeModal();
@@ -578,7 +598,8 @@ export default {
       if (updatereportsuccess.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value?.cihAddress,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
         });
         toast.success("Report updated");
         modalChange.value.closeModal();
@@ -589,10 +610,19 @@ export default {
       if (deletereportsuccess.value) {
         dispatch("getActivityReports", {
           ...query,
-          centerName: detail.value?.cihAddress,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
         });
         toast.success("Report deleted");
         modal.value.closeModal();
+      }
+    });
+
+    watch(addAllInspectionSuccess, () => {
+      if (active.value == "inspection") {
+        dispatch("getInspectionReports", query);
+        toast.success("Report updated");
+        modalChange.value.closeModal();
       }
     });
     // Define a debounce delay (e.g., 500 milliseconds)
@@ -614,6 +644,7 @@ export default {
     );
 
     provide("zoneOptions", zoneOptions);
+    provide("detail", detail);
     return {
       state,
       handleReports,
@@ -623,6 +654,7 @@ export default {
       perPage,
       modalChange,
       reports,
+      inspectionsData,
       moment,
       deletereportloading,
       modal,
