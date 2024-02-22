@@ -1,9 +1,12 @@
 <template>
   <form @submit.prevent="onSubmit">
     <Card title="">
+      <!-- {{ affiliation }}
+      ss -->
       <div class="grid gap-5">
         <!-- <span>{{ zone }}</span> -->
         <VueSelect
+          disabled
           label="Zone"
           class="min-w-[200px] w-full md:w-auto"
           v-model.value="zone"
@@ -15,7 +18,7 @@
 
         <div>
           <CustomVueSelect
-            :disabled="centersLoading"
+            :disabled="true"
             :menuLoading="centersLoading"
             label="Center Address"
             class="min-w-[200px] w-full md:w-auto"
@@ -199,9 +202,10 @@ const editorConfig = {
   },
 };
 const zoneOptions = inject("zoneOptions");
+const affiliation = inject("detail");
 const zone = ref({
-  label: "",
-  zoneId: "",
+  label: affiliation?.value?.cihZone,
+  zoneId: affiliation?.value?.zoneId,
 });
 const centersLoading = computed(() => state.center.getcentersloading);
 
@@ -214,8 +218,8 @@ const centerOptions = computed(() =>
   })
 );
 const centerObj = ref({
-  label: "",
-  centerId: "",
+  label: affiliation?.value?.cihAddress,
+  centerId: affiliation?.value?.centerId,
 });
 const formData = reactive({
   activityName: "",
