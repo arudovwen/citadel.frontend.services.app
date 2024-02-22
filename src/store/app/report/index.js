@@ -9,6 +9,7 @@ export default {
     total: 0,
     reports: [],
     detail: null,
+    inspectionReport: null,
     loading: false,
     addsuccess: false,
     error: null,
@@ -207,6 +208,20 @@ export default {
         commit("addAllInspectionError", err);
       }
     },
+    async updateInspectionReport({ commit }, data) {
+      try {
+        commit("updateReportBegin");
+        const response = await DataService.put(
+          `${urls.UPDATE_INSPECTION_REPORT}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("updateReportSuccess");
+        }
+      } catch (err) {
+        commit("updateReportErr", err);
+      }
+    },
     async getInspectionReports({ commit }, data) {
       try {
         commit("getAllInspectionBegin");
@@ -231,6 +246,7 @@ export default {
           )}`
         );
         if (response.status === 200) {
+          // alert(String(response.data.data));
           commit("getReportSuccess", response.data.data);
         }
       } catch (err) {
