@@ -1,6 +1,9 @@
 <template>
   <form @submit.prevent="onSubmit">
     <Card title="">
+      <!-- <span>Values: {{ values }}</span> -->
+      <!-- <span>Values: {{ reportData }}</span> -->
+
       <div class="grid gap-5">
         <FormGroup label="Inspection Date" name="date" :error="dateError">
           <flat-pickr
@@ -51,7 +54,7 @@
 </template>
 <script setup>
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { reactive, computed, inject, onMounted } from "vue";
+import { reactive, computed, inject, onMounted, defineProps, watch } from "vue";
 import { useField, useForm } from "vee-validate";
 import { useRoute } from "vue-router";
 import * as Yup from "yup";
@@ -60,8 +63,10 @@ import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 import { useStore } from "vuex";
+
+const props = defineProps(["id"]);
 onMounted(() => {
-  // dispatch('getReportBegin')
+  dispatch("getInspectionReport", { id: props.id });
 });
 const editor = ClassicEditor;
 const editorConfig = {
@@ -89,6 +94,8 @@ const editorConfig = {
 };
 const { state, dispatch } = useStore();
 const detail = inject("detail");
+const reportData = computed(() => state.report.detail);
+
 const userName = computed(() => state.auth.userData.fullName);
 const route = useRoute();
 dispatch("getAllCenters", {
@@ -103,7 +110,7 @@ const centerOptions = computed(() =>
   })
 );
 const centersLoading = computed(() => state.center.getcentersloading);
-const submitLoading = computed(() => state.report.addAllInspectionLoading);
+const submitLoading = computed(() => state.report.updatereportloading);
 const formData = reactive({
   date: "",
   type: "",
@@ -123,7 +130,7 @@ const formDataSchema = Yup.object().shape({
   summary: Yup.string().required("Summary is required"),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setValues } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
@@ -138,13 +145,40 @@ const onSubmit = handleSubmit((values) => {
   const data = {
     dateOfInspection: values.date,
     inspectionOfficer: userName.value,
-    zoneId: detail?.value?.zoneId,
+    zoneId: values.zoneId,
     centerId: values.center.centerId,
     centerName: values.center.label,
     reportDetails: values.summary,
+    id: values.id,
   };
   // console.log(JSON.stringify(data));
-  dispatch("addInspectionReport", data);
+  dispatch("updateInspectionReport", data);
+});
+
+watch(reportData, () => {
+  console.log("changed report");
+  //   const data = {
+  //     date: reportData?.value?.dateOfInspection,
+
+  //     center: {
+  //       centerId: reportData?.value?.centerId,
+  //       label: reportData?.value?.label,
+  //     },
+
+  //     summary: reportData?.value?.reportDetails,
+  //   };
+  if (reportData.value) {
+    setValues({
+      id: props.id,
+      ...reportData.value,
+      date: reportData?.value?.dateOfInspection,
+      center: {
+        centerId: reportData?.value?.centerId,
+        label: reportData?.value?.centerName,
+      },
+      summary: reportData?.value?.reportDetails,
+    });
+  }
 });
 </script>
 <style></style>

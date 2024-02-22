@@ -8,7 +8,7 @@
         {{ detail?.centerName }}
       </div> -->
     </div>
-    <Card bodyClass="p-6">
+    <Card v-if="active == 'activity'" bodyClass="p-6">
       <div class="max-w-[980px] mx-auto my-6 rounded-md overflow-x-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
           <div>
@@ -32,7 +32,7 @@
           <div>
             <h6 class="text-xs font-semibold text-slate-400">Activity date</h6>
             <p class="text-base font-semibold text-slate-900">
-              {{ moment(detail?.activityDate).format("lll") }}
+              {{ moment(detail?.activityDate).format("ll") }}
             </p>
           </div>
           <div>
@@ -155,6 +155,32 @@
         </div>
       </div>
     </Card>
+    <Card v-if="active == 'inspection'" bodyClass="p-6">
+      <div class="max-w-[980px] mx-auto my-6 rounded-md overflow-x-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">Inspector name</h6>
+            <p class="text-base font-semibold text-slate-900">
+              {{ detail?.inspectionOfficer }}
+            </p>
+          </div>
+          <div>
+            <h6 class="text-xs font-semibold text-slate-400">Date</h6>
+            <p class="text-base font-semibold text-slate-900">
+              {{ moment(detail?.dateOfInspection).format("ll") }}
+            </p>
+          </div>
+
+          <div class="col-span-1 md:col-span-2">
+            <h6 class="text-xs font-semibold text-slate-400">Summary</h6>
+            <p
+              class="text-base font-semibold text-slate-900"
+              v-html="detail?.reportDetails"
+            ></p>
+          </div>
+        </div>
+      </div>
+    </Card>
   </div>
 </template>
 <script setup>
@@ -163,12 +189,16 @@ import { useStore } from "vuex";
 import { computed, defineProps, onMounted } from "vue";
 import moment from "moment";
 
-const props = defineProps(["id"]);
+const props = defineProps(["id", "active"]);
 
 const { state, dispatch } = useStore();
 const detail = computed(() => state.report.detail);
 onMounted(() => {
-  dispatch("getActivityReport", { id: props.id });
+  if (props.active == "activity") {
+    dispatch("getActivityReport", { id: props.id });
+  } else {
+    dispatch("getInspectionReport", { id: props.id });
+  }
 });
 </script>
 <style lang="scss">

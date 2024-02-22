@@ -281,8 +281,11 @@
     <AddReport v-if="type === 'add' && active === 'activity'" />
     <AddInspectionReport v-if="type === 'add' && active === 'inspection'" />
     <EditReport v-if="type === 'edit' && active === 'activity'" :id="id" />
-    <EditInspectionReport v-if="type === 'edit' && active === 'inspection'" />
-    <ViewReport v-if="type === 'view'" :id="id" />
+    <EditInspectionReport
+      v-if="type === 'edit' && active === 'inspection'"
+      :id="id"
+    />
+    <ViewReport v-if="type === 'view'" :active="active" :id="id" />
   </Modal>
 </template>
 <script>
@@ -596,11 +599,16 @@ export default {
     });
     watch(updatereportsuccess, () => {
       if (updatereportsuccess.value) {
-        dispatch("getActivityReports", {
-          ...query,
-          CenterName: detail.value?.cihAddress,
-          ZoneName: detail?.value?.cihZone,
-        });
+        if (active.value.toLowerCase() == "activity") {
+          dispatch("getActivityReports", {
+            ...query,
+            CenterName: detail.value?.cihAddress,
+            ZoneName: detail?.value?.cihZone,
+          });
+        }
+        if (active.value.toLowerCase() == "inspection") {
+          dispatch("getInspectionReports", query);
+        }
         toast.success("Report updated");
         modalChange.value.closeModal();
       }
