@@ -285,7 +285,7 @@
       v-if="type === 'edit' && active === 'inspection'"
       :id="id"
     />
-    <ViewReport v-if="type === 'view'" :id="id" />
+    <ViewReport v-if="type === 'view'" :active="active" :id="id" />
   </Modal>
 </template>
 <script>
