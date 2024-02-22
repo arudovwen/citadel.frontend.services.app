@@ -340,6 +340,24 @@ export default {
         commit("getAllErr", err);
       }
     },
+    async deleteCIHReport({ commit }, { type, id }) {
+      try {
+        commit("deleteReportBegin");
+        const response = await DataService.delete(
+          `${
+            type == "activity"
+              ? urls.DELETE_ACTIVITY_REPORT
+              : urls.DELETE_INSPECTION_REPORT
+          }?id=${id}`
+        );
+
+        if (response.status === 200) {
+          commit("deleteReportSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("deleteReportError", err);
+      }
+    },
     // async approveCOD({ commit }, data) {
     //   try {
     //     commit("approveBegin");

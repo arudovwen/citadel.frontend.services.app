@@ -450,7 +450,10 @@ export default {
   },
   methods: {
     handleDelete() {
-      this.$store.dispatch("deleteActivityReport", this.id);
+      this.$store.dispatch("deleteCIHReport", {
+        type: this.active,
+        id: this.id,
+      });
     },
     generateAction(name, id) {
       this.id = id;
@@ -583,6 +586,12 @@ export default {
     watch(active, () => {
       if (active.value == "inspection") {
         dispatch("getInspectionReports", query);
+      } else {
+        dispatch("getActivityReports", {
+          ...query,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
+        });
       }
     });
 
@@ -616,11 +625,16 @@ export default {
 
     watch(deletereportsuccess, () => {
       if (deletereportsuccess.value) {
-        dispatch("getActivityReports", {
-          ...query,
-          CenterName: detail.value?.cihAddress,
-          ZoneName: detail?.value?.cihZone,
-        });
+        if (active.value.toLowerCase() == "activity") {
+          dispatch("getActivityReports", {
+            ...query,
+            CenterName: detail.value?.cihAddress,
+            ZoneName: detail?.value?.cihZone,
+          });
+        }
+        if (active.value.toLowerCase() == "inspection") {
+          dispatch("getInspectionReports", query);
+        }
         toast.success("Report deleted");
         modal.value.closeModal();
       }

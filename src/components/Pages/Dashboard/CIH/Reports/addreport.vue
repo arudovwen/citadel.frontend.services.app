@@ -285,7 +285,7 @@ const formDataSchema = Yup.object().shape({
   }),
 });
 
-const { handleSubmit, setValues, values } = useForm({
+const { handleSubmit, values } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
