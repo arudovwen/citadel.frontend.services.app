@@ -5,7 +5,7 @@
       <div class="grid grid-cols-12 gap-5">
         <div class="lg:col-span-8 col-span-12 space-y-5">
           <Card>
-            <div class="grid xl:grid-cols-4 lg:grid-cols-2 col-span-1 gap-3">
+            <div class="grid xl:grid-cols-3 lg:grid-cols-2 col-span-1 gap-3">
               <div
                 v-for="(item, i) in statistics"
                 :key="i"
@@ -28,7 +28,7 @@
                   class="block mb- text-2xl text-slate-900 dark:text-white font-medium mb-6"
                   >{{ item.count }}</span
                 >
-                <div class="flex space-x-2">
+                <!-- <div class="flex space-x-2">
                   <div class="flex-none text-xl" :class="item.text">
                     <Icon :icon="item.icon" />
                   </div>
@@ -40,121 +40,34 @@
                       >From last week</span
                     >
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </Card>
-          <Card>
-            <header class="md:flex md:space-y-0 space-y-4">
-              <h6 class="flex-1 text-slate-900 dark:text-white capitalize">
-                Members distribution by venue
-              </h6>
-              <div class="flex-none">
-                <FormGroup>
-                  <flat-pickr
-                    class="form-control bg-white"
-                    placeholder="Select date range"
-                    v-model="rangeDate"
-                    :config="{ mode: 'range' }"
-                  />
-                </FormGroup>
-              </div>
-            </header>
 
-            <div class="legend-ring">
-              <apexchart
-                type="bar"
-                height="410"
-                :options="
-                  this.$store.state.isDark
-                    ? stackedDark.chartOptions
-                    : stacked.chartOptions
-                "
-                :series="stacked.series"
-              />
-            </div>
-          </Card>
-          <Card title="Departments Overview" noborder>
+          <Card title="Recent Reports" noborder>
             <template #header>
-              <DropEvent />
+              <!-- <DropEvent /> -->
+              <span class="cursor-pointer text-xs">View more</span>
             </template>
             <div class="-mx-6">
-              <CrmTable />
+              <RecentReportsTable />
             </div>
           </Card>
-        </div>
-        <div class="flex flex-col lg:col-span-4 col-span-12 space-y-5">
-          <Card title="Goals">
+          <Card title="Recent Events" noborder>
             <template #header>
-              <DropEvent />
+              <!-- <DropEvent /> -->
+              <span class="cursor-pointer text-xs">View more</span>
             </template>
-            <div class="grid grid-cols-1 gap-y-6">
-              <div v-for="(item, i) in progressBackground" :key="i">
-                <p class="text-sm mb-1">Goal Title</p>
-                <ProgressBar
-                  :value="item.value"
-                  :barColor="item.barColor"
-                  showValue
-                  height="h-3"
-                />
-              </div>
+            <div class="-mx-6">
+              <RecentEventsTable />
             </div>
-          </Card>
-          <Card title="Appointments">
-            <template #header>
-              <button type="button" class="btn btn-dark btn-sm">
-                Add More
-              </button>
-            </template>
-            <div class="-mx-6 custom-calender">
-              <v-calendar
-                is-expanded
-                :attributes="attributes"
-                :is-dark="this.$store.state.isDark"
-              />
-            </div>
-            <ul class="divide-y divide-slate-100 dark:divide-slate-700">
-              <li v-for="(item, i) in meets" :key="i" class="block py-[10px]">
-                <div class="flex space-x-2">
-                  <div class="flex-1 flex space-x-2">
-                    <div class="flex-none">
-                      <div class="h-8 w-8">
-                        <img
-                          :src="item.img"
-                          alt=""
-                          class="block w-full h-full object-cover rounded-full border hover:border-white border-transparent"
-                        />
-                      </div>
-                    </div>
-                    <div class="flex-1">
-                      <span
-                        class="block text-slate-600 text-sm dark:text-slate-300 mb-1 font-medium"
-                        >{{ item.title }}</span
-                      >
-                      <span
-                        class="flex font-normal text-xs dark:text-slate-400 text-slate-500"
-                      >
-                        <span class="text-base inline-block mr-1"
-                          ><Icon icon="heroicons-outline:video-camera"
-                        /></span>
-                        {{ item.meet }}
-                      </span>
-                    </div>
-                  </div>
-                  <div class="flex-none">
-                    <span
-                      class="block text-xs text-slate-600 dark:text-slate-400"
-                      >{{ item.date }}</span
-                    >
-                  </div>
-                </div>
-              </li>
-            </ul>
           </Card>
 
-          <Card title="Events">
+          <!-- <Card title="Recent Events">
             <template #header>
-              <DropEvent />
+          
+              <span class="cursor-pointer text-xs">View more</span>
             </template>
             <ul class="relative pl-2">
               <li
@@ -167,18 +80,43 @@
                 "
                 class="border-l-2 border-slate-100 dark:border-slate-700 pb-4 last:border-none pl-[22px] relative before:absolute before:left-[-8px] before:top-[0px] before:rounded-full before:w-4 before:h-4 before:bg-slate-900 dark:before:bg-slate-600 before:leading-[2px] before:content-[url('@/assets/images/all-img/ck.svg')]"
               >
-                <div class="p-[10px] relative top-[-20px]">
-                  <h2
-                    class="text-sm font-medium dark:text-slate-400-900 mb-1 text-slate-600"
+                <div class="flex items-center justify-between">
+                  <div class="p-[10px] relative top-[-20px]">
+                    <h2
+                      class="text-sm font-medium dark:text-slate-400-900 mb-1 text-slate-600"
+                    >
+                      {{ item.title }}
+                    </h2>
+                    <p class="text-xs capitalize dark:text-slate-400">
+                      {{ item.date }}
+                    </p>
+                  </div>
+                  <span
+                    v-if="item?.status"
+                    class="text-[#75C599] bg-[#DCF0E5] capitalize rounded-[40px] px-4 py-2 text-sm"
+                    >{{ item.status }}</span
                   >
-                    {{ item.title }}
-                  </h2>
-                  <p class="text-xs capitalize dark:text-slate-400">
-                    {{ item.date }}
-                  </p>
                 </div>
               </li>
             </ul>
+          </Card> -->
+        </div>
+        <div class="flex flex-col lg:col-span-4 col-span-12 space-y-5">
+          <Card title="Members Distribution">
+            <template #header>
+              <DistributionType />
+            </template>
+            <div class="grid grid-cols-1 gap-y-6">
+              <div v-for="(item, i) in distributionByAge" :key="i">
+                <p class="text-sm mb-1">{{ item.title }}</p>
+                <ProgressBar
+                  :value="item.value"
+                  :barColor="item.barColor"
+                  showValue
+                  height="h-3"
+                />
+              </div>
+            </div>
           </Card>
         </div>
       </div>
@@ -186,11 +124,12 @@
   </div>
 </template>
 <script>
+import DistributionType from "@/views/home/Analytics-Component/DistributionType";
 import Breadcrumb from "./Analytics-Component/Breadcrumbs";
 import Card from "@/components/Card";
-import FormGroup from "@/components/FormGroup";
-import Icon from "@/components/Icon";
-import CrmTable from "./Analytics-Component/CrmTable";
+// import FormGroup from "@/components/FormGroup";
+// import Icon from "@/components/Icon";
+// import CrmTable from "./Analytics-Component/CrmTable";
 import ProgressBar from "@/components/ProgressBar";
 
 import {
@@ -199,16 +138,21 @@ import {
   stacked,
   stackedDark,
 } from "./Analytics-Component/data";
-import DropEvent from "./Analytics-Component/DropEvent";
+// import DropEvent from "./Analytics-Component/DropEvent";
 import { trackingParcel } from "../../constant/data";
+import RecentReportsTable from "@/views/home/Analytics-Component/RecentReportsTable";
+import RecentEventsTable from "@/views/home/Analytics-Component/RecentEventsTable";
 
 export default {
   components: {
     Card,
-    Icon,
-    CrmTable,
-    DropEvent,
-    FormGroup,
+    // Icon,
+    // CrmTable,
+    // DropEvent,
+    DistributionType,
+    RecentReportsTable,
+    RecentEventsTable,
+    // FormGroup,
     Breadcrumb,
     ProgressBar,
   },
@@ -232,8 +176,8 @@ export default {
           percentClass: "text-primary-500",
         },
         {
-          title: "Venues ",
-          count: "$86,954",
+          title: "Zones",
+          count: "14",
 
           bg: "bg-info-500",
           text: "text-primary-500",
@@ -243,8 +187,8 @@ export default {
           percentClass: "text-primary-500",
         },
         {
-          title: "Outreaches",
-          count: "15%",
+          title: "Centers",
+          count: "54",
           bg: "bg-primary-500",
           text: "text-danger-500",
           percent: "1.67%  ",
@@ -252,16 +196,16 @@ export default {
           img: require("@/assets/images/all-img/shade-3.png"),
           percentClass: "text-danger-500",
         },
-        {
-          title: "Events",
-          count: "654",
-          bg: "bg-success-500",
-          text: "text-primary-500",
-          percent: "11.67%  ",
-          icon: "heroicons:arrow-trending-up",
-          img: require("@/assets/images/all-img/shade-4.png"),
-          percentClass: "text-primary-500",
-        },
+        // {
+        //   title: "Events",
+        //   count: "654",
+        //   bg: "bg-success-500",
+        //   text: "text-primary-500",
+        //   percent: "11.67%  ",
+        //   icon: "heroicons:arrow-trending-up",
+        //   img: require("@/assets/images/all-img/shade-4.png"),
+        //   percentClass: "text-primary-500",
+        // },
       ],
       Campaigns: [
         {
@@ -296,20 +240,29 @@ export default {
           value: 80,
         },
       ],
-      progressBackground: [
+      distributionByAge: [
         {
+          title: "Men",
           value: 50,
           barColor: "bg-primary-500",
         },
         {
+          title: "Women",
           value: 70,
           barColor: "bg-success-500",
         },
         {
+          title: "Teenagers",
+          value: 30,
+          barColor: "bg-blue-500",
+        },
+        {
+          title: "Children",
           value: 80,
           barColor: "bg-info-500",
         },
       ],
+
       progressHeight: [
         {
           value: 50,
@@ -326,7 +279,7 @@ export default {
         {
           value: 80,
           title: "Progress lg",
-          barColor: "bg-warning-500",
+          barColor: "bg-blue-500",
           height: "h-[10px]",
         },
 

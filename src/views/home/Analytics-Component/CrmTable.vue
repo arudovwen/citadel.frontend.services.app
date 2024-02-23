@@ -146,27 +146,27 @@ export default {
       ],
       columns: [
         {
-          label: "Department name",
-          field: "name",
+          label: "Date of Inspection",
+          field: "date",
         },
         {
-          label: "Hod",
+          label: "Inspection officer",
           field: "hod",
         },
         {
-          label: "Total members",
-          field: "members",
-        },
-
-        {
-          label: "Date created",
-          field: "date",
+          label: "Center",
+          field: "center",
         },
 
         // {
-        //   label: "Action",
-        //   field: "action",
+        //   label: "Date created",
+        //   field: "date",
         // },
+
+        {
+          label: "Action",
+          field: "action",
+        },
       ],
       advancedTable: [
         {
@@ -176,6 +176,7 @@ export default {
           date: "3/26/2022",
           hod: "John Woo",
           members: "53",
+          center: "Radiant",
           action: null,
         },
         {
@@ -185,6 +186,7 @@ export default {
           date: "3/26/2022",
           hod: "Chris Kyle",
           members: "53",
+          center: "Radiant",
           action: null,
         },
         {
@@ -194,6 +196,7 @@ export default {
           date: "3/26/2022",
           hod: "Janne joane",
           members: "53",
+          center: "Radiant",
           action: null,
         },
       ],

@@ -2,7 +2,7 @@
   <div class="flex justify-between flex-wrap items-center">
     <Breadcrumb />
     <div
-      class="flex sm:space-x-4 space-x-2 sm:justify-end items-center md:mb-6 mb-4"
+      class="hidden flex sm:space-x-4 space-x-2 sm:justify-end items-center md:mb-6 mb-4"
     >
       <VueTailwindDatePicker v-model="dateValue" v-slot="{ clear }">
         <div>
