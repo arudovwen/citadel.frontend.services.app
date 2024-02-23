@@ -146,9 +146,10 @@ import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-import { inject, computed, ref, watch } from "vue";
+import { inject, computed, ref, watch, defineProps } from "vue";
 import { Switch, SwitchGroup, SwitchLabel } from "@headlessui/vue";
 
+const props = defineProps(["closeVenueModal"]);
 const { state, dispatch } = useStore();
 const toast = useToast();
 
@@ -254,7 +255,8 @@ const onSubmit = handleSubmit((values) => {
 });
 
 const closeModal = () => {
-  dispatch("closeVenueModal");
+  // dispatch("closeVenueModal");
+  props.closeVenueModal();
 
   isOnline.value = false;
 };

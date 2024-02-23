@@ -59,10 +59,10 @@
                 {{ "#" + props.row.order }}
               </span>
               <span
-                v-if="props.column.field == 'date'"
+                v-if="props.column.field == 'usageDate'"
                 class="text-slate-500 dark:text-slate-400"
               >
-                {{ props.row.date }}
+                {{ moment(props.row.usageDate).format("ll") }}
               </span>
               <span
                 v-if="props.column.field == 'email'"
@@ -214,7 +214,7 @@
 <script setup>
 import { useToast } from "vue-toastification";
 import Button from "@/components/Button";
-import ViewRecord from "./preview";
+import ViewRecord from "./VenuePreview";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Card from "@/components/Card";
@@ -229,10 +229,15 @@ import { debounce } from "lodash";
 import moment from "moment";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
+onMounted(() => {
+  dispatch("getVenueRequests", { UserId: userId.value });
+});
 const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
+const requests = computed(() => state.venue.venueRequests);
+const userId = computed(() => state.auth.userData.id);
 // const authUserRoles = computed(() =>
 //   state?.role?.authUserRoles
 //     ?.map((i) => {
@@ -262,6 +267,7 @@ const actions = [
     icon: "heroicons-outline:eye",
     doit: (name, data) => {
       detail.value = data;
+
       modalChange.value.openModal();
     },
   },
@@ -286,8 +292,8 @@ const options = [
 ];
 const columns = [
   {
-    label: "Request",
-    field: "actionDescription",
+    label: "Venue Name",
+    field: "venueName",
   },
 
   // {
@@ -297,7 +303,7 @@ const columns = [
 
   {
     label: "Date",
-    field: "date",
+    field: "usageDate",
   },
 
   {
@@ -321,33 +327,22 @@ function handleRequest() {
   );
 }
 
-onMounted(() => {
-  console.log("🚀 ~ onMounted ~ authUserRoles:", state.role.authUserRoles);
-
-  if (state.auth.userData.userRole.toLowerCase() === "hod") {
-    dispatch("getAllHodRequests", query);
-  }
-  if (state.auth.userData.userRole.toLowerCase() === "inspectorate") {
-    dispatch("getAllInspectorateRequests", query);
-  }
-});
-
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
   query.pageSize = currentPerPage;
 }
 
 const loading = computed(() => state.request.loading);
-const requests = computed(() =>
-  state?.request?.data?.data?.map((i) => {
-    return {
-      ...i,
-      date: moment(i.actionDate).format("lll"),
-    };
-  })
-);
+// const requests = computed(() =>
+//   state?.request?.data?.data?.map((i) => {
+//     return {
+//       ...i,
+//       date: moment(i.actionDate).format("lll"),
+//     };
+//   })
+// );
 
-const total = computed(() => state.profile.total);
+const total = computed(() => state.venue.totalRequestCount);
 
 const success = computed(() => state.request.approvesuccess);
 

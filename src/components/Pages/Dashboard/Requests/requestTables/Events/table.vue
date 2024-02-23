@@ -448,6 +448,12 @@ export default {
     },
   },
   setup() {
+    onMounted(() => {
+      dispatch("getAffiliationByMemberQuery", memberQuery);
+      dispatch("getZones", memberQuery);
+      getData();
+    });
+
     const modal = ref(null);
     const modalStatus = ref(null);
     const modalChange = ref(null);
@@ -533,11 +539,7 @@ export default {
         query
       );
     }
-    onMounted(() => {
-      dispatch("getAffiliationByMemberQuery", memberQuery);
-      dispatch("getZones", memberQuery);
-      getData();
-    });
+
     const zoneOptions = computed(() =>
       state?.zone?.zones?.map((i) => {
         return {

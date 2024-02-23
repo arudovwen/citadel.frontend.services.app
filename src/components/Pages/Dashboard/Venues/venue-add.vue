@@ -2,6 +2,7 @@
   <div>
     <form @submit.prevent="onSubmit" class="space-y-4 max-w-[700px]">
       <!-- {{ values }} -->
+      <!-- <span> SetValues: {{ values }}</span> -->
       <div class="grid grid-cols-1 gap-4">
         <Textinput
           label="Name"
@@ -145,9 +146,11 @@ import VueSelect from "@/components/Select/VueSelect";
 import FormGroup from "@/components/FormGroup";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import { inject, ref, computed, watch } from "vue";
+import { inject, ref, computed, watch, defineProps } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
+
+const props = defineProps(["closeVenueModal"]);
 
 const { state, dispatch } = useStore();
 const toast = useToast();
@@ -231,7 +234,8 @@ const onSubmit = handleSubmit((values) => {
 });
 
 const closeModal = () => {
-  dispatch("closeVenueModal");
+  props.closeVenueModal();
+
   resetForm();
   isOnline.value = false;
 };

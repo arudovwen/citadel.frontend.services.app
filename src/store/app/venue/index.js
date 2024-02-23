@@ -25,6 +25,9 @@ export default {
     getVenuesLoading: false,
     getVenuesSuccess: false,
     getVenuesError: null,
+    getVenueRequestsLoading: false,
+    getVenueRequestsSuccess: false,
+    getVenueRequestsError: null,
     getVenueByIdLoading: false,
     getVenueByIdSuccess: false,
     getVenueByIdError: null,
@@ -35,7 +38,9 @@ export default {
     venue: null,
 
     venues: [],
+    venueRequests: [],
     total: 0,
+    totalRequestCount: 0,
   },
   getters: {},
   mutations: {
@@ -70,6 +75,23 @@ export default {
       state.addVenueLoading = false;
       state.addVenueSuccess = false;
       state.addVenueError = err;
+    },
+    getVenueRequestsBegin(state) {
+      state.getVenueRequestsLoading = true;
+      state.getVenueRequestsSuccess = false;
+      state.getVenueRequestsError = null;
+    },
+    getVenueRequestsSuccess(state, { data, totalCount }) {
+      state.getVenueRequestsLoading = false;
+      state.getVenueRequestsSuccess = true;
+      state.getVenueRequestsError = null;
+      state.venueRequests = data;
+      state.totalRequestCount = totalCount;
+    },
+    getVenueRequestsError(state, err) {
+      state.getVenueRequestsLoading = false;
+      state.getVenueRequestsSuccess = false;
+      state.getVenueRequestsError = err;
     },
 
     getVenuesBegin(state) {
@@ -159,6 +181,22 @@ export default {
     },
   },
   actions: {
+    async getVenueRequests({ commit }, data) {
+      try {
+        commit("getVenueRequestsBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_VENUE_REQUESTS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+
+        if (response.status === 200) {
+          commit("getVenueRequestsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getVenueRequestsError", err);
+      }
+    },
     async requestVenue({ commit }, data) {
       try {
         commit("requestVenueBegin");

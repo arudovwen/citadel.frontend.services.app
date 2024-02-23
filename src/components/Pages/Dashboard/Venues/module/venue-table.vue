@@ -36,7 +36,7 @@
             @click="
               () => {
                 type = 'add';
-                $store.dispatch('openVenueModal');
+                $refs.venueModal.openModal();
               }
             "
           />
@@ -224,7 +224,7 @@
       </div>
     </template>
   </Modal>
-  <ModalCrud
+  <!-- <ModalCrud
     :activeModal="$store.state.venue.modal"
     @close="$store.dispatch('closeVenueModal')"
     centered
@@ -245,7 +245,32 @@
 
     <VenueStatus v-else-if="type === 'set status'" />
     <ViewVenue v-else />
-  </ModalCrud>
+  </ModalCrud> -->
+  <Modal
+    :activeModal="$store.state.venue.modal"
+    ref="venueModal"
+    centered
+    :title="
+      type === 'add'
+        ? 'Add Venue'
+        : type === 'edit'
+        ? 'Edit Venue'
+        : type === 'set status'
+        ? 'Set Status'
+        : 'View Venue'
+    "
+    labelClass="btn-outline-dark"
+    :sizeClass="`${type === 'set status' ? 'max-w-md' : 'max-w-3xl'} `"
+  >
+    <AddVenue v-if="type === 'add'" :closeVenueModal="closeVenueModal" />
+    <EditVenue v-else-if="type === 'edit'" :closeVenueModal="closeVenueModal" />
+
+    <VenueStatus
+      v-else-if="type === 'set status'"
+      :closeVenueModal="closeVenueModal"
+    />
+    <ViewVenue v-else />
+  </Modal>
 </template>
 <script>
 // import VueTailwindDatePicker from "vue-tailwind-datepicker";
@@ -257,7 +282,7 @@ import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
 import window from "@/mixins/window";
-import ModalCrud from "@/components/Modal";
+// import ModalCrud from "@/components/Modal";
 import Modal from "@/components/Modal/Modal";
 import AddVenue from "../venue-add.vue";
 import EditVenue from "../venue-edit.vue";
@@ -270,7 +295,7 @@ import { provide, computed, reactive, onMounted, watch, ref } from "vue";
 export default {
   mixins: [window],
   components: {
-    ModalCrud,
+    // ModalCrud,
     AddVenue,
     EditVenue,
     ViewVenue,
@@ -299,6 +324,10 @@ export default {
     const deleteVenueLoading = computed(() => state.venue.deleteVenueLoading);
     const deleteVenueSuccess = computed(() => state.venue.deleteVenueSuccess);
     const modal = ref();
+    const venueModal = ref(null);
+    const closeVenueModal = () => {
+      venueModal?.value?.closeModal();
+    };
     const query = reactive({
       pageNumber: 1,
       pageSize: 25,
@@ -368,6 +397,8 @@ export default {
       handleDelete,
       modal,
       deleteVenueLoading,
+      venueModal,
+      closeVenueModal,
     };
   },
 
@@ -391,6 +422,7 @@ export default {
           icon: "heroicons-outline:eye",
           doit: (name, venue) => {
             this.type = name;
+            this.$refs.venueModal.openModal();
             this.$store.dispatch("openVenueModal", venue);
             this.$store.dispatch("getVenueById", venue.id);
           },
@@ -400,6 +432,7 @@ export default {
           icon: "heroicons:pencil-square",
           doit: (name, venue) => {
             this.type = name;
+            this.$refs.venueModal.openModal();
             this.$store.dispatch("openVenueModal", venue);
             this.$store.dispatch("getVenueById", venue.id);
           },
@@ -409,6 +442,7 @@ export default {
           icon: "heroicons:cog-8-tooth",
           doit: (name, venue) => {
             this.type = name;
+            this.$refs.venueModal.openModal();
             this.$store.dispatch("openVenueModal", venue);
             this.$store.dispatch("getVenueById", venue.id);
           },
