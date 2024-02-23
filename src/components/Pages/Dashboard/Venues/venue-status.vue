@@ -36,13 +36,18 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
+    <div class="flex items-center gap-4 pt-6">
       <!-- <div class="hidden sm:block"></div> -->
-      <Button
+      <!-- <Button
         text="Cancel"
         btnClass="btn-outline-secondary btn-sm "
         @click="closeModal()"
-      />
+      /> -->
+      <span
+        @click="closeModal()"
+        class="text-xs border py-[8px] px-8 rounded-md max-w-max"
+        >Cancel</span
+      >
       <Button
         :isLoading="loading"
         :disabled="loading"
@@ -64,8 +69,9 @@ import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-import { inject, computed, ref, watch } from "vue";
+import { inject, computed, ref, watch, defineProps } from "vue";
 import { Switch, SwitchGroup, SwitchLabel } from "@headlessui/vue";
+const props = defineProps(["closeVenueModal"]);
 
 const { state, dispatch } = useStore();
 const toast = useToast();
@@ -73,7 +79,7 @@ const toast = useToast();
 const success = computed(() => state.venue.updateVenueSuccess);
 const loading = computed(() => state.venue.updateVenueLoading);
 const venue = computed(() => state.venue.venue);
-const isOnline = ref(venue.value.isOnline);
+const isOnline = ref(venue.value?.isOnline);
 const userId = inject("userId");
 const query = inject("query");
 
@@ -130,7 +136,7 @@ const onSubmit = handleSubmit((values) => {
 });
 
 const closeModal = () => {
-  dispatch("closeVenueModal");
+  props.closeVenueModal();
 
   isOnline.value = false;
 };

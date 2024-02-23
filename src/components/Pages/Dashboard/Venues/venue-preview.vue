@@ -60,7 +60,7 @@
 </template>
 <script setup>
 import Card from "@/components/Card";
-import Breadcrumb from "@/components/Breadcrumbs";
+// import Breadcrumb from "@/components/Breadcrumbs";
 // import Icon from "@/components/Icon";
 import TotalTable from "./module/TotalTable.vue";
 import { useStore } from "vuex";

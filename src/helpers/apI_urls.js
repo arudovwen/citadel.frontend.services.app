@@ -192,6 +192,7 @@ export const urls = {
   GET_ALL_VENUES: "/Venue/GetAllVenue",
   DELETE_VENUE: "/Venue/DeleteVenue",
   REQUEST_FOR_VENUE: "/Venue/RequestForVenue",
+  GET_ALL_VENUE_REQUESTS: "/Venue/GetAllVenueRequests",
 
   REQUEST_OTP: "/auth/requestotp",
 
