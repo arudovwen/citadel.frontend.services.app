@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="lg:flex justify-between flex-wrap items-center">
+    <!-- <div class="lg:flex justify-between flex-wrap items-center">
       <Breadcrumb />
-    </div>
+    </div> -->
     <Card bodyClass="p-0">
       <div
         class="text-slate-900 dark:text-slate-300 font-medium leading-5 text-lg flex flex-col space-y-4 px-6 pt-6 bg-slate-50 dark:bg-slate-800 pb-6 rounded-t-md"
