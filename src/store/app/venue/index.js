@@ -12,6 +12,9 @@ export default {
     addVenueLoading: false,
     addVenueSuccess: false,
     addVenueError: null,
+    requestVenueLoading: false,
+    requestVenueSuccess: false,
+    requestVenueError: null,
 
     //edit
     editModal: false,
@@ -36,6 +39,22 @@ export default {
   },
   getters: {},
   mutations: {
+    requestVenueBegin(state) {
+      state.requestVenueLoading = true;
+      state.requestVenueSuccess = false;
+      state.requestVenueError = null;
+    },
+
+    requestVenueSuccess(state) {
+      state.requestVenueLoading = false;
+      state.requestVenueSuccess = true;
+    },
+
+    requestVenueError(state, err) {
+      state.requestVenueLoading = false;
+      state.requestVenueSuccess = false;
+      state.requestVenueError = err;
+    },
     addVenueBegin(state) {
       state.addVenueLoading = true;
       state.addVenueSuccess = false;
@@ -140,6 +159,20 @@ export default {
     },
   },
   actions: {
+    async requestVenue({ commit }, data) {
+      try {
+        commit("requestVenueBegin");
+        const response = await DataService.put(
+          `${urls.REQUEST_FOR_VENUE}?${new URLSearchParams(cleanObject(data))}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("requestVenueSuccess");
+        }
+      } catch (err) {
+        commit("requestVenueError", err);
+      }
+    },
     async addVenue({ commit }, data) {
       try {
         commit("addVenueBegin");

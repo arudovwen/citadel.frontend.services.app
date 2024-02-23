@@ -447,7 +447,8 @@ export default {
       try {
         commit("convertBegin");
         const response = await DataService.put(
-          `${urls.CONVERT_FIRST_TO_MEMBER}?id=${data}`
+          `${urls.CONVERT_FIRST_TO_MEMBER}?Id=${data}`,
+          {}
         );
         if (response.status === 200) {
           commit("convertSuccess");

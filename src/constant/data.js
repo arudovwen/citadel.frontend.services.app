@@ -50,13 +50,13 @@ export const menuItems = [
     subroles: [],
   },
 
-  {
-    title: "Outreach",
-    icon: "bx:donate-heart",
-    link: "/outreach",
-    roles: "CAN_VIEW_OUTREACH",
-    subroles: [],
-  },
+  // {
+  //   title: "Outreach",
+  //   icon: "bx:donate-heart",
+  //   link: "/outreach",
+  //   roles: "CAN_VIEW_OUTREACH",
+  //   subroles: [],
+  // },
   // {
   //   title: "Attendance",
   //   icon: "heroicons-outline:clipboard-check",
@@ -587,25 +587,25 @@ export const alertType6 = [
 
 export const trackingParcel = [
   {
-    title: "Project start date",
+    title: "Naming Ceremony",
     desc: "This parcel is paid for by the customer. Please contact the customer for any further information.",
     date: "Sep 20, 2021 ",
     time: "12:32 AM",
-    status: "ok",
+    status: "approved",
   },
   {
-    title: "Project start date",
+    title: "Baby Christening",
     date: "Sep 20, 2021 ",
     desc: "This parcel is paid for by the customer. Please contact the customer for any further information.",
     time: "12:32 AM",
-    status: "ok",
+    status: "approved",
   },
   {
-    title: "Project start date",
+    title: "Baby Christening",
     date: "Sep 20, 2021 ",
     desc: "This parcel is paid for by the customer. Please contact the customer for any further information.",
     time: "12:32 AM",
-    status: "ok",
+    status: "approved",
   },
   {
     title: "Project start date",

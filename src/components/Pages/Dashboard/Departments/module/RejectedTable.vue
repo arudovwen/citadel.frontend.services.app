@@ -89,10 +89,10 @@
                       }"
                       class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
                     >
-                      <span class="text-base">
+                      <!-- <span class="text-base">
                         <Icon :icon="item.icon" />
-                      </span>
-                      <span>{{ item.name }}</span>
+                      </span> -->
+                      <span>{{ item.alias }}</span>
                     </div>
                   </MenuItem>
                 </template>
@@ -122,9 +122,34 @@
         </vue-good-table>
       </div>
     </div>
+
+    <Modal
+      title="View Reason"
+      label="Small modal"
+      labelClass="btn-outline-primary"
+      ref="reasonModal"
+      sizeClass="max-w-md"
+      themeClass="bg-primary-500"
+    >
+      <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+        {{ reason }}
+      </div>
+
+      <template v-slot:footer>
+        <div class="flex gap-x-5">
+          <Button
+            text="Close"
+            btnClass="btn-primary btn-sm"
+            @click="$refs.reasonModal.closeModal()"
+          />
+        </div>
+      </template>
+    </Modal>
   </div>
 </template>
 <script>
+import Modal from "@/components/Modal/Modal";
+
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
@@ -155,7 +180,7 @@ export default {
     // eslint-disable-next-line vue/no-unused-components
     InputGroup,
     Select,
-
+    Modal,
     Dropdown,
     Icon,
     MenuItem,
@@ -172,7 +197,7 @@ export default {
     });
     const { state, dispatch } = useStore();
     const toast = useToast();
-
+    const reasonModal = ref(null);
     // const id = ref(null);
     const modal = ref(null);
     const modalChange = ref(null);
@@ -282,12 +307,14 @@ export default {
       delistLoading,
       delistSuccess,
       moment,
+      reasonModal,
     };
   },
 
   data() {
     return {
       type: "",
+      reason: "",
       id: null,
       activeFilter: "all",
       dateValue: null,
@@ -299,10 +326,13 @@ export default {
       actions: [
         {
           name: "view",
+          alias: "view reason",
           icon: "heroicons-outline:eye",
-          doit: (name, { userId }) => {
+          doit: (name, { reason }) => {
             this.type = name;
-            this.$router.push("/profile/" + userId);
+            this.reason = reason;
+            this.$refs.reasonModal.openModal();
+            // this.$router.push("/profile/" + userId);
           },
         },
       ],
@@ -344,10 +374,10 @@ export default {
           label: "Status",
           field: "status",
         },
-        {
-          label: "Reason",
-          field: "reason",
-        },
+        // {
+        //   label: "Reason",
+        //   field: "reason",
+        // },
         {
           label: "Date",
           field: "actionDate",
