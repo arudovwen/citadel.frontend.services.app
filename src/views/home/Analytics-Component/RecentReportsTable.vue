@@ -15,7 +15,7 @@
       <template v-slot:table-row="props">
         <span
           v-if="props.column.field == 'activityDate'"
-          class="text-slate-500 dark:text-slate-400"
+          class="text-slate-500 dark:text-slate-400 whitespace-nowrap"
         >
           {{ moment(props.row.activityDate).format("ll") }}
         </span>
