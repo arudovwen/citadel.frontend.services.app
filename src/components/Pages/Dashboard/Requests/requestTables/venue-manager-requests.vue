@@ -34,7 +34,7 @@
             :columns="columns"
             styleClass="vgt-table"
             :isLoading="loading"
-            :rows="requests || []"
+            :rows="requests ? requests : [] || []"
             :sort-options="{
               enabled: false,
             }"
@@ -230,6 +230,7 @@ import moment from "moment";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
 onMounted(() => {
+  // dispatch("getVenueRequests", { UserId: userId.value });
   dispatch("getVenueRequests", { UserId: userId.value });
 });
 const toast = useToast();
