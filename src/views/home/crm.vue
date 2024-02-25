@@ -53,10 +53,9 @@
 
           <Card title="Recent Reports" noborder>
             <template #header>
-              <!-- <DropEvent /> -->
               <span
                 @click="$router.push('/cih/reports/centers')"
-                class="cursor-pointer text-xs"
+                class="!cursor-pointer text-xs"
                 >View more</span
               >
             </template>
@@ -66,10 +65,9 @@
           </Card>
           <Card title="Recent Events" noborder>
             <template #header>
-              <!-- <DropEvent /> -->
               <span
-                @click="$router.push('/cih/reports/centers')"
-                class="cursor-pointer text-xs"
+                @click="$router.push('/requests?tab=event')"
+                class="cursor-pointer text-xs z-50"
                 >View more</span
               >
             </template>
