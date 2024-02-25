@@ -11,7 +11,7 @@
         {{ detail?.centerName }}
       </div> -->
     </div>
-    <Card v-if="active == 'activity'" bodyClass="p-6">
+    <Card v-if="active == 'activity'" bodyClass="p-6 capitalize">
       <div class="max-w-[980px] mx-auto my-6 rounded-md overflow-x-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
           <div>
