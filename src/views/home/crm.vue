@@ -7,6 +7,7 @@
           <Card>
             <!-- <span>CIH: {{ CIHDashboardStats }}</span> -->
             <!-- <span>Aff: {{ authChurchAffiliation }}</span> -->
+            <!-- <span>{{ recentReports }}</span> -->
             <div
               :class="getCIHDashboardStatsLoading ? 'animate-pulse' : ''"
               class="grid xl:grid-cols-3 lg:grid-cols-2 col-span-1 gap-3"
@@ -127,7 +128,7 @@ import {
 import { trackingParcel } from "../../constant/data";
 import RecentReportsTable from "@/views/home/Analytics-Component/RecentReportsTable";
 import RecentEventsTable from "@/views/home/Analytics-Component/RecentEventsTable";
-import { onMounted, computed, inject } from "vue";
+import { onMounted, computed, inject, watch, provide } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -160,8 +161,15 @@ export default {
     );
 
     const getActivityReports = () => {
-      dispatch("getActivityReports", { pageNumber: 1, pageSize: 25 });
+      dispatch("getActivityReports", {
+        pageNumber: 1,
+        pageSize: 5,
+        CenterName: authChurchAffiliation.value?.cihAddress,
+        ZoneName: authChurchAffiliation?.value?.cihZone,
+      });
     };
+
+    const recentReports = computed(() => state.report.data);
     const statistics = computed(() => {
       const stats = [
         {
@@ -251,13 +259,18 @@ export default {
     const getCIHDashboardStats = () => {
       dispatch("getCIHDashboardStats");
     };
+    watch(authChurchAffiliation, () => {
+      getActivityReports();
+    });
 
+    provide("recentReports", recentReports);
     return {
       CIHDashboardStats,
       getCIHDashboardStatsLoading,
       statistics,
       distro,
       authChurchAffiliation,
+      recentReports,
     };
   },
   data() {

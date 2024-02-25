@@ -246,7 +246,6 @@ export default {
           )}`
         );
         if (response.status === 200) {
-          // alert(String(response.data.data));
           commit("getReportSuccess", response.data.data);
         }
       } catch (err) {
@@ -271,7 +270,6 @@ export default {
 
     async getActivityReports({ commit }, data) {
       try {
-        // alert("called:" + JSON.stringify(data));
         commit("getAllBegin");
         const response = await DataService.get(
           `${urls.GET_ACTIVITY_REPORTS}?${new URLSearchParams(

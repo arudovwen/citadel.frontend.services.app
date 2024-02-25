@@ -2,8 +2,9 @@
   <div>
     <vue-good-table
       :columns="columns"
+      :isLoading="$store.state?.report?.getallloading"
       styleClass=" vgt-table  lesspadding2 centered "
-      :rows="advancedTable"
+      :rows="recentReports || []"
       :pagination-options="{
         enabled: true,
         perPage: perpage,
@@ -56,7 +57,7 @@
           <div class="flex space-x-3 justify-start">
             <Tooltip placement="top" arrow theme="dark">
               <template #button>
-                <div class="action-btn">
+                <div @click="viewIt('view', props.row.id)" class="action-btn">
                   <Icon icon="heroicons:eye" />
                 </div>
               </template>
@@ -82,11 +83,35 @@
       </template>
     </vue-good-table>
   </div>
+  <Modal
+    :title="
+      type === 'add'
+        ? `Create ${active} report`
+        : type === 'edit'
+        ? 'Edit Report'
+        : 'View report'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-3xl"
+  >
+    <!-- <AddReport v-if="type === 'add' && active === 'activity'" />
+    <AddInspectionReport v-if="type === 'add' && active === 'inspection'" />
+    <EditReport v-if="type === 'edit' && active === 'activity'" :id="id" />
+    <EditInspectionReport
+      v-if="type === 'edit' && active === 'inspection'"
+      :id="id"
+    /> -->
+    <ViewReport v-if="type === 'view'" active="activity" :id="id" />
+  </Modal>
 </template>
 <script>
+import ViewReport from "@/components/reportPreview";
 import Icon from "@/components/Icon";
 import Tooltip from "@/components/Tooltip";
 import moment from "moment";
+import { inject, ref } from "vue";
+import Modal from "@/components/Modal/Modal";
 
 // import Pagination from "@/components/Pagination";
 export default {
@@ -94,6 +119,26 @@ export default {
     // Pagination,
     Icon,
     Tooltip,
+    ViewReport,
+    Modal,
+  },
+  setup() {
+    const recentReports = inject("recentReports");
+    const type = ref("view");
+    const id = ref(null);
+    const modalChange = ref(null);
+    const viewIt = (name, reportId) => {
+      type.value = name;
+      id.value = reportId;
+      modalChange.value.openModal();
+    };
+    return {
+      recentReports,
+      viewIt,
+      modalChange,
+      type,
+      id,
+    };
   },
 
   data() {
