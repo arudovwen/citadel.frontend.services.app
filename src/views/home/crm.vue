@@ -4,10 +4,13 @@
     <div class="card-auto space-y-5">
       <div class="grid grid-cols-12 gap-5">
         <div class="lg:col-span-8 col-span-12 space-y-5">
-          <Card :class="getCIHDashboardStatsLoading ? 'animate-pulse' : ''">
+          <Card>
             <!-- <span>CIH: {{ CIHDashboardStats }}</span> -->
-
-            <div class="grid xl:grid-cols-3 lg:grid-cols-2 col-span-1 gap-3">
+            <!-- <span>Aff: {{ authChurchAffiliation }}</span> -->
+            <div
+              :class="getCIHDashboardStatsLoading ? 'animate-pulse' : ''"
+              class="grid xl:grid-cols-3 lg:grid-cols-2 col-span-1 gap-3"
+            >
               <div
                 v-for="(item, i) in statistics"
                 :key="i"
@@ -50,7 +53,11 @@
           <Card title="Recent Reports" noborder>
             <template #header>
               <!-- <DropEvent /> -->
-              <span class="cursor-pointer text-xs">View more</span>
+              <span
+                @click="$router.push('/cih/reports/centers')"
+                class="cursor-pointer text-xs"
+                >View more</span
+              >
             </template>
             <div class="-mx-6">
               <RecentReportsTable />
@@ -59,62 +66,37 @@
           <Card title="Recent Events" noborder>
             <template #header>
               <!-- <DropEvent /> -->
-              <span class="cursor-pointer text-xs">View more</span>
+              <span
+                @click="$router.push('/cih/reports/centers')"
+                class="cursor-pointer text-xs"
+                >View more</span
+              >
             </template>
             <div class="-mx-6">
               <RecentEventsTable />
             </div>
           </Card>
-
-          <!-- <Card title="Recent Events">
-            <template #header>
-          
-              <span class="cursor-pointer text-xs">View more</span>
-            </template>
-            <ul class="relative pl-2">
-              <li
-                v-for="(item, i) in trackingParcel.slice(0, 5)"
-                :key="i"
-                :class="
-                  item.status === 'ok'
-                    ? 'before:opacity-100'
-                    : ' before:opacity-50'
-                "
-                class="border-l-2 border-slate-100 dark:border-slate-700 pb-4 last:border-none pl-[22px] relative before:absolute before:left-[-8px] before:top-[0px] before:rounded-full before:w-4 before:h-4 before:bg-slate-900 dark:before:bg-slate-600 before:leading-[2px] before:content-[url('@/assets/images/all-img/ck.svg')]"
-              >
-                <div class="flex items-center justify-between">
-                  <div class="p-[10px] relative top-[-20px]">
-                    <h2
-                      class="text-sm font-medium dark:text-slate-400-900 mb-1 text-slate-600"
-                    >
-                      {{ item.title }}
-                    </h2>
-                    <p class="text-xs capitalize dark:text-slate-400">
-                      {{ item.date }}
-                    </p>
-                  </div>
-                  <span
-                    v-if="item?.status"
-                    class="text-[#75C599] bg-[#DCF0E5] capitalize rounded-[40px] px-4 py-2 text-sm"
-                    >{{ item.status }}</span
-                  >
-                </div>
-              </li>
-            </ul>
-          </Card> -->
         </div>
 
         <div class="flex flex-col lg:col-span-4 col-span-12 space-y-5">
           <Card title="Members Distribution">
             <template #header>
-              <DistributionType class="hidden"/>
+              <DistributionType class="hidden" />
             </template>
             <div class="grid grid-cols-1 gap-y-6">
               <div v-for="(item, i) in distro" :key="i">
                 <p class="text-sm mb-1">{{ item.title }}</p>
                 <ProgressBar
-                  :value="item.value"
-                  :barColor="item.barColor"
+                  v-if="item?.value == 0"
+                  :value="item?.value"
+                  :barColor="item?.barColor"
+                  showValue
+                  height="h-3"
+                />
+                <ProgressBar
+                  v-else
+                  :value="item?.value"
+                  :barColor="item?.barColor"
                   showValue
                   height="h-3"
                 />
@@ -145,7 +127,7 @@ import {
 import { trackingParcel } from "../../constant/data";
 import RecentReportsTable from "@/views/home/Analytics-Component/RecentReportsTable";
 import RecentEventsTable from "@/views/home/Analytics-Component/RecentEventsTable";
-import { onMounted, computed } from "vue";
+import { onMounted, computed, inject } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -164,15 +146,22 @@ export default {
   setup() {
     onMounted(() => {
       getCIHDashboardStats();
+      getActivityReports();
     });
 
     const { state, dispatch } = useStore();
+    // const userId = computed(() => state.auth.userData?.id);
+    const authChurchAffiliation = inject("authChurchAffiliation");
     const CIHDashboardStats = computed(
       () => state?.attendance?.CIHDashboardStats
     );
     const getCIHDashboardStatsLoading = computed(
       () => state?.attendance?.getCIHDashboardStatsLoading
     );
+
+    const getActivityReports = () => {
+      dispatch("getActivityReports", { pageNumber: 1, pageSize: 25 });
+    };
     const statistics = computed(() => {
       const stats = [
         {
@@ -268,6 +257,7 @@ export default {
       getCIHDashboardStatsLoading,
       statistics,
       distro,
+      authChurchAffiliation,
     };
   },
   data() {

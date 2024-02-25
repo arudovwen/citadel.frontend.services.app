@@ -271,6 +271,7 @@ export default {
 
     async getActivityReports({ commit }, data) {
       try {
+        // alert("called:" + JSON.stringify(data));
         commit("getAllBegin");
         const response = await DataService.get(
           `${urls.GET_ACTIVITY_REPORTS}?${new URLSearchParams(
