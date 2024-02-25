@@ -4,7 +4,9 @@
     <div class="card-auto space-y-5">
       <div class="grid grid-cols-12 gap-5">
         <div class="lg:col-span-8 col-span-12 space-y-5">
-          <Card>
+          <Card :class="getCIHDashboardStatsLoading ? 'animate-pulse' : ''">
+            <!-- <span>CIH: {{ CIHDashboardStats }}</span> -->
+
             <div class="grid xl:grid-cols-3 lg:grid-cols-2 col-span-1 gap-3">
               <div
                 v-for="(item, i) in statistics"
@@ -101,13 +103,14 @@
             </ul>
           </Card> -->
         </div>
+
         <div class="flex flex-col lg:col-span-4 col-span-12 space-y-5">
           <Card title="Members Distribution">
             <template #header>
-              <DistributionType />
+              <DistributionType class="hidden"/>
             </template>
             <div class="grid grid-cols-1 gap-y-6">
-              <div v-for="(item, i) in distributionByAge" :key="i">
+              <div v-for="(item, i) in distro" :key="i">
                 <p class="text-sm mb-1">{{ item.title }}</p>
                 <ProgressBar
                   :value="item.value"
@@ -142,6 +145,8 @@ import {
 import { trackingParcel } from "../../constant/data";
 import RecentReportsTable from "@/views/home/Analytics-Component/RecentReportsTable";
 import RecentEventsTable from "@/views/home/Analytics-Component/RecentEventsTable";
+import { onMounted, computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
   components: {
@@ -156,18 +161,23 @@ export default {
     Breadcrumb,
     ProgressBar,
   },
-  data() {
-    return {
-      stacked,
-      stackedDark,
-      rangeDate: null,
-      pieChart,
-      pieChartDark,
-      trackingParcel,
-      statistics: [
+  setup() {
+    onMounted(() => {
+      getCIHDashboardStats();
+    });
+
+    const { state, dispatch } = useStore();
+    const CIHDashboardStats = computed(
+      () => state?.attendance?.CIHDashboardStats
+    );
+    const getCIHDashboardStatsLoading = computed(
+      () => state?.attendance?.getCIHDashboardStatsLoading
+    );
+    const statistics = computed(() => {
+      const stats = [
         {
           title: "Members",
-          count: "354",
+          count: CIHDashboardStats.value?.members || 0,
           bg: "bg-warning-500",
           text: "text-primary-500",
           percent: "25.67% ",
@@ -177,7 +187,7 @@ export default {
         },
         {
           title: "Zones",
-          count: "14",
+          count: CIHDashboardStats.value?.zones || 0,
 
           bg: "bg-info-500",
           text: "text-primary-500",
@@ -188,7 +198,7 @@ export default {
         },
         {
           title: "Centers",
-          count: "54",
+          count: CIHDashboardStats.value?.centers || 0,
           bg: "bg-primary-500",
           text: "text-danger-500",
           percent: "1.67%  ",
@@ -196,17 +206,121 @@ export default {
           img: require("@/assets/images/all-img/shade-3.png"),
           percentClass: "text-danger-500",
         },
-        // {
-        //   title: "Events",
-        //   count: "654",
-        //   bg: "bg-success-500",
-        //   text: "text-primary-500",
-        //   percent: "11.67%  ",
-        //   icon: "heroicons:arrow-trending-up",
-        //   img: require("@/assets/images/all-img/shade-4.png"),
-        //   percentClass: "text-primary-500",
-        // },
-      ],
+      ];
+      return stats;
+    });
+
+    function processArray(data) {
+      let men = 0;
+      let women = 0;
+      let teenagers = 0;
+      let children = 0;
+      let total = 0;
+
+      data?.forEach((entry) => {
+        if (entry.gender === "Adult" || entry.gender === "Youths") {
+          men += entry.male;
+          women += entry.female;
+        } else if (entry.gender === "Teenagers") {
+          teenagers += entry.total;
+        } else if (entry.gender === "Children") {
+          children += entry.total;
+        }
+        total += entry.total;
+      });
+
+      const distroArray = [
+        {
+          title: "Men",
+          value: (men / total) * 100 || 0,
+          barColor: "bg-primary-500",
+        },
+        {
+          title: "Women",
+          value: (women / total) * 100 || 0,
+          barColor: "bg-success-500",
+        },
+        {
+          title: "Teenagers",
+          value: (teenagers / total) * 100 || 0,
+          barColor: "bg-blue-500",
+        },
+        {
+          title: "Children",
+          value: (children / total) * 100 || 0,
+          barColor: "bg-info-500",
+        },
+      ];
+
+      return distroArray;
+    }
+
+    const distro = computed(() => {
+      return processArray(CIHDashboardStats.value?.distro);
+    });
+
+    const getCIHDashboardStats = () => {
+      dispatch("getCIHDashboardStats");
+    };
+
+    return {
+      CIHDashboardStats,
+      getCIHDashboardStatsLoading,
+      statistics,
+      distro,
+    };
+  },
+  data() {
+    return {
+      stacked,
+      stackedDark,
+      rangeDate: null,
+      pieChart,
+      pieChartDark,
+      trackingParcel,
+      // statistics: [
+      //   {
+      //     title: "Members",
+      //     count: "354",
+      //     bg: "bg-warning-500",
+      //     text: "text-primary-500",
+      //     percent: "25.67% ",
+      //     icon: "heroicons:arrow-trending-up",
+      //     img: require("@/assets/images/all-img/shade-1.png"),
+      //     percentClass: "text-primary-500",
+      //   },
+      //   {
+      //     title: "Zones",
+      //     count: "14",
+
+      //     bg: "bg-info-500",
+      //     text: "text-primary-500",
+      //     percent: "8.67%",
+      //     icon: "heroicons:arrow-trending-up",
+      //     img: require("@/assets/images/all-img/shade-2.png"),
+      //     percentClass: "text-primary-500",
+      //   },
+      //   {
+      //     title: "Centers",
+      //     count: "54",
+      //     bg: "bg-primary-500",
+      //     text: "text-danger-500",
+      //     percent: "1.67%  ",
+      //     icon: "heroicons:arrow-trending-down",
+      //     img: require("@/assets/images/all-img/shade-3.png"),
+      //     percentClass: "text-danger-500",
+      //   },
+      //   // {
+      //   //   title: "Events",
+      //   //   count: "654",
+      //   //   bg: "bg-success-500",
+      //   //   text: "text-primary-500",
+      //   //   percent: "11.67%  ",
+      //   //   icon: "heroicons:arrow-trending-up",
+      //   //   img: require("@/assets/images/all-img/shade-4.png"),
+      //   //   percentClass: "text-primary-500",
+      //   // },
+      // ],
       Campaigns: [
         {
           name: "Channel",
