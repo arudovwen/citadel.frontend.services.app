@@ -3,7 +3,7 @@
     <vue-good-table
       :columns="columns"
       :isLoading="$store.state?.report?.getallloading"
-      styleClass=" vgt-table  lesspadding2 centered "
+      styleClass=" vgt-table  lesspadding2 centered !pb-0 !mb-0"
       :rows="recentReports || []"
       :pagination-options="{
         enabled: true,
@@ -110,7 +110,7 @@ import ViewReport from "@/components/reportPreview";
 import Icon from "@/components/Icon";
 import Tooltip from "@/components/Tooltip";
 import moment from "moment";
-import { inject, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import Modal from "@/components/Modal/Modal";
 
 // import Pagination from "@/components/Pagination";
@@ -123,6 +123,19 @@ export default {
     Modal,
   },
   setup() {
+    onMounted(() => {
+      // Access the .vgt-responsive element
+      const responsiveElement = document.querySelector(
+        ".vgt-wrap .vgt-responsive"
+      );
+
+      // Check if responsiveElement exists
+      if (responsiveElement) {
+        // Modify the styles based on your condition
+        responsiveElement.style.paddingBottom = "10px";
+        responsiveElement.style.marginBottom = "-10px";
+      }
+    });
     const recentReports = inject("recentReports");
     const type = ref("view");
     const id = ref(null);
@@ -280,6 +293,17 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+// .vgt-responsive {
+//   padding-bottom: 10px !important;
+//   margin-bottom: -10px !important;
+// }
+// .vgt-wrap .vgt-responsive {
+//   padding-bottom: 10px !important;
+//   margin-bottom: -10px !important;
+
+//   margin-left: 1000px !important;
+// }
+
 .action-btn {
   @apply h-6 w-6 flex flex-col items-center justify-center border border-slate-200 dark:border-slate-700 rounded;
 }

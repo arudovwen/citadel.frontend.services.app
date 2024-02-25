@@ -28,6 +28,7 @@
       <!-- <HODRequests
         v-if="currentNav.activeName.toLowerCase() == 'departments'"
       /> -->
+
       <Events v-if="currentNav.activeName.toLowerCase() == 'event requests'" />
       <VenueManagerRequests
         v-if="currentNav.activeName.toLowerCase() == 'venue requests'"
@@ -48,6 +49,7 @@ import {
   MyRequests,
   Events,
 } from "./requestTables";
+import { useRoute } from "vue-router";
 
 // const toast = useToast();
 
@@ -56,6 +58,7 @@ onMounted(() => {
 });
 const { state, dispatch } = useStore();
 const userId = computed(() => state.auth.userData.id);
+const route = useRoute();
 const rolesLoading = computed(() => state.role.getAuthUserRolesLoading);
 const getAuthUsersRoles = () => {
   dispatch("getAuthUserRoles", userId.value);
@@ -101,7 +104,9 @@ const navs = computed(() => [
   },
 ]);
 
-const currentNav = ref(navs.value[0]);
+const currentNav = ref(
+  route.query.tab == "event" ? navs.value[1] : navs.value[0]
+);
 
 // watch(rolesLoading, () => {
 //   handleMenu();
