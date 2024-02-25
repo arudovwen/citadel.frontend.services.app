@@ -3,6 +3,7 @@
     <div
       class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:justify-between md:items-center mb-6 md:mb-4 w-full md:w-auto"
     >
+      <!-- {{ permissions }} -->
       <div
         class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:gap-x-4 items-center w-full md:w-auto"
       >
@@ -58,9 +59,14 @@ onMounted(() => {
     pageSize: 25000,
   });
 });
+onMounted(() => {
+  window.addEventListener("resize", handleResize);
+  handleResize();
+});
 const store = useStore();
 const { state, dispatch } = useStore();
 const permissions = computed(() => state.auth.permissions);
+
 const filters = [
   {
     label: "Name",
@@ -80,19 +86,15 @@ const width = ref(0);
 const handleResize = () => {
   width.value = window.innerWidth;
 };
-onMounted(() => {
-  window.addEventListener("resize", handleResize);
-  handleResize();
-});
+
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
-  userId:
-    state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
-      ? state.auth?.userData?.id
-      : "",
+  userId: permissions.value.includes("CAN_VIEW_ZONES")
+    ? state.auth?.userData?.id
+    : "",
 });
 const zones = computed(() => store.getters.zones);
 

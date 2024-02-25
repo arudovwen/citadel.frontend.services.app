@@ -61,7 +61,7 @@ export default {
       state.getallloading = false;
       state.getallsuccess = true;
       state.getallerror = null;
-      state.data = data;
+      state.data = data || [];
       state.total = totalCount;
     },
     getAllError(state, err) {
@@ -277,6 +277,9 @@ export default {
           )}`
         );
         if (response.status === 200) {
+          commit("getAllSuccess", response.data);
+        }
+        if (response.status === 204) {
           commit("getAllSuccess", response.data);
         }
       } catch (err) {
