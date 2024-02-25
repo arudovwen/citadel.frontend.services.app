@@ -3,7 +3,8 @@
     <vue-good-table
       :columns="columns"
       styleClass=" vgt-table  lesspadding2 centered "
-      :rows="advancedTable"
+      :rows="eventRequests || []"
+      :isLoading="$store.state?.event?.loading"
       :pagination-options="{
         enabled: true,
         perPage: perpage,
@@ -66,29 +67,32 @@
         </span>
         <span v-if="props.column.field == 'action'">
           <div class="flex space-x-3 justify-start">
-            <Tooltip placement="top" arrow theme="dark">
+            <!-- <Tooltip placement="top" arrow theme="dark">
               <template #button>
                 <div class="action-btn">
                   <Icon icon="heroicons:eye" />
                 </div>
               </template>
               <span> View</span>
+            </Tooltip> -->
+            <Tooltip placement="top" arrow theme="dark">
+              <template #button>
+                <div
+                  @click="approveIt('approve', props.row)"
+                  class="action-btn"
+                >
+                  <Icon icon="ph:check" />
+                </div>
+              </template>
+              <span> Approve</span>
             </Tooltip>
             <Tooltip placement="top" arrow theme="dark">
               <template #button>
-                <div class="action-btn">
-                  <Icon icon="heroicons:pencil-square" />
+                <div @click="approveIt('reject', props.row)" class="action-btn">
+                  <Icon icon="ph:x-light" />
                 </div>
               </template>
-              <span> Edit</span>
-            </Tooltip>
-            <Tooltip placement="top" arrow theme="danger-500">
-              <template #button>
-                <div class="action-btn">
-                  <Icon icon="heroicons:trash" />
-                </div>
-              </template>
-              <span>Delete</span>
+              <span> Reject</span>
             </Tooltip>
           </div>
         </span>
@@ -110,13 +114,68 @@
       </template>
     </vue-good-table>
   </div>
+  <Modal
+    title="Confirm action"
+    label="Small modal"
+    labelClass="btn-outline-dark"
+    ref="modalStatus"
+    sizeClass="max-w-md"
+    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure you want to {{ type.toLowerCase() }} this request?
+    </div>
+    <div v-if="type.toLowerCase() === 'reject'">
+      <textarea
+        resize="none"
+        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
+        rows="4"
+        placeholder="Provide reason"
+        v-model="comment"
+      ></textarea>
+    </div>
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          :disabled="updateloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm "
+          @click="$refs.modalStatus.closeModal()"
+        />
+        <Button
+          :disabled="updateloading"
+          :isLoading="updateloading"
+          text="Proceed"
+          :btnClass="` btn-sm ${
+            type === 'approve' ? 'btn-success' : 'btn-danger'
+          }`"
+          @click="handleStatus"
+        />
+      </div>
+    </template>
+  </Modal>
+  <Modal
+    :title="'View event'"
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-lg"
+  >
+    <ViewEvent />
+  </Modal>
 </template>
 <script>
 import Icon from "@/components/Icon";
+import Button from "@/components/Button";
+
 import { eventsOptions } from "@/constant/data";
 import moment from "moment";
-
+import { inject, ref, computed, watch } from "vue";
 import Tooltip from "@/components/Tooltip";
+import Modal from "@/components/Modal/Modal";
+import { useStore } from "vuex";
+import ViewEvent from "@/components/eventRequestPreview";
+import { useToast } from "vue-toastification";
+
 // import Pagination from "@/components/Pagination";
 export default {
   components: {
@@ -124,6 +183,78 @@ export default {
 
     Icon,
     Tooltip,
+    Modal,
+    ViewEvent,
+    Button,
+  },
+  setup() {
+    const { state, dispatch } = useStore();
+    const toast = useToast();
+
+    const eventRequests = inject("eventRequests");
+    const getAllEvents = inject("getAllEvents");
+    const comment = ref("");
+    const modalStatus = ref(null);
+    const modalChange = ref(null);
+    const detail = ref(null);
+    const type = ref(null);
+    const updateloading = computed(() => state.event.updateloading);
+    const updatesuccess = computed(() => state.event.updatesuccess);
+
+    const openModal = () => {
+      modalStatus.value.openModal();
+    };
+    const closeModal = () => {
+      modalStatus.value.closeModal();
+    };
+    const handleStatus = () => {
+      const data = {
+        approveUserId: state.auth.userData.id,
+        reqUserId: detail.value.userId,
+        actionId: detail.value.id,
+        Comments: comment.value,
+        status: type.value === "approve" ? true : false,
+      };
+
+      dispatch("updateEventStatus", data);
+    };
+    const viewIt = (name, request) => {
+      type.value = name;
+      detail.value = request;
+
+      modalChange.value.openModal();
+    };
+    const approveIt = (name, request) => {
+      type.value = name;
+      detail.value = request;
+      openModal();
+    };
+    const rejectIt = (name, request) => {
+      type.value = name;
+      detail.value = request;
+      openModal();
+    };
+    watch(updatesuccess, () => {
+      if (updatesuccess.value) {
+        getAllEvents();
+        closeModal();
+        toast.success("Request updated");
+      }
+    });
+    return {
+      eventRequests,
+      comment,
+      modalStatus,
+      openModal,
+      closeModal,
+      type,
+      viewIt,
+      handleStatus,
+      approveIt,
+      rejectIt,
+      modalChange,
+      updateloading,
+    };
   },
 
   data() {
