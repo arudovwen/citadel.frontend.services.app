@@ -28,7 +28,7 @@ export default {
         ),
       };
       state.churchAffiliationsData = affiliation;
-      localStorage.setItem("affiliationsData", affiliation);
+      // localStorage.setItem("affiliationsData", affiliation);
     },
 
     getChurchAffiliationsDataError(state, err) {

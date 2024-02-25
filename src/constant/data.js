@@ -187,9 +187,9 @@ export const menuItems = [
     ],
     cihPastorRoutes: [
       {
-        childtitle: "Centers",
+        childtitle: "Center",
         for: "",
-        childlink: "/cih/centers",
+        childlink: "/cih/center",
       },
 
       {

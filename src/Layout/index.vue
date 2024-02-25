@@ -79,8 +79,8 @@ export default {
     const { state, dispatch } = useStore();
     const userId = computed(() => state.auth.userData.id);
     const userRoles = ["roles"];
-    const authChurchAffiliation = computed(() =>
-      localStorage.getItem("affiliationsData")
+    const authChurchAffiliation = computed(
+      () => state?.authprofile?.churchAffiliationsData
     );
     // const authCihRole = computed(() =>
     //   JSON.parse(state?.authprofile?.churchAffiliationsData?.cihRole)
@@ -106,6 +106,9 @@ export default {
     watch(userId, () => {
       getUserAffiliation();
     });
+    // watch(authChurchAffiliation, () => {
+    //   console.log(authChurchAffiliation.value);
+    // });
 
     provide("userRoles", userRoles);
     provide("authChurchAffiliation", authChurchAffiliation);
