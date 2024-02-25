@@ -74,20 +74,22 @@
                 <span
                   class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
                   :class="`${
-                    props.row.status === 'active'
+                    props.row.status === true
                       ? 'text-success-500 bg-success-500'
                       : ''
                   } 
-            ${
-              props.row.status === 'inactive'
-                ? 'text-warning-500 bg-warning-500'
-                : ''
-            }
-            ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
+            ${props.row.status === false ? 'text-red-500 bg-red-500' : ''}
+            ${props.row.status === null ? 'text-blue-500 bg-blue-500' : ''}
             
              `"
                 >
-                  {{ props.row.status }}
+                  {{
+                    props.row.status === null
+                      ? "Pending"
+                      : props.row.status === false
+                      ? "declined"
+                      : "Approved"
+                  }}
                 </span>
               </span>
               <span v-if="props.column.field == 'action'">
@@ -231,27 +233,24 @@ import { computed, onMounted, watch, reactive, ref } from "vue";
 
 onMounted(() => {
   // dispatch("getVenueRequests", { UserId: userId.value });
-  dispatch("getVenueRequests", { UserId: userId.value });
+  dispatch("getVenueRequests", { ...query });
 });
 const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
-const requests = computed(() => state?.venue?.venueRequests);
+const requests = computed(() => state?.venue?.venueRequests?.data);
 const userId = computed(() => state?.auth?.userData?.id);
-// const authUserRoles = computed(() =>
-//   state?.role?.authUserRoles
-//     ?.map((i) => {
-//       return i;
-//     })
-//     .join(", ")
-// );
+
+const success = computed(
+  () => state?.venue?.approveOrRejectVenueRequestSuccess
+);
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
   sortOrder: "",
   searchParameter: "",
-  userId: state.auth.userData.id,
+  // userId: state.auth.userData.id,
 });
 const type = ref("");
 const detail = ref(null);
@@ -270,6 +269,26 @@ const actions = [
       detail.value = data;
 
       modalChange.value.openModal();
+    },
+  },
+  {
+    name: "approve",
+    icon: "heroicons-outline:eye",
+    doit: (name, data) => {
+      detail.value = data;
+      type.value = "approve";
+
+      modal.value.openModal();
+    },
+  },
+  {
+    name: "reject",
+    icon: "heroicons-outline:eye",
+    doit: (name, data) => {
+      detail.value = data;
+      type.value = "reject";
+
+      modal.value.openModal();
     },
   },
 ];
@@ -303,8 +322,12 @@ const columns = [
   // },
 
   {
-    label: "Date",
+    label: "Date Of Usage",
     field: "usageDate",
+  },
+  {
+    label: "Status",
+    field: "status",
   },
 
   {
@@ -314,18 +337,11 @@ const columns = [
 ];
 
 function handleRequest() {
-  dispatch(
-    state.auth.userData.userRole.toLowerCase() === "hod"
-      ? "approveCOD"
-      : "approveCOZ",
-    {
-      approveUserId: state.auth.userData.id,
-      reqUserId: detail.value.userId,
-      actionId: detail.value.id,
-      Comments: comment.value,
-      status: type.value === "approve" ? true : false,
-    }
-  );
+  dispatch("approveOrRejectVenue", {
+    managerId: userId.value,
+    venueLogId: detail.value.id,
+    status: type.value === "approve" ? true : false,
+  });
 }
 
 function perPage({ currentPerPage }) {
@@ -345,22 +361,15 @@ const loading = computed(() => state.request.loading);
 
 const total = computed(() => state.venue.totalRequestCount);
 
-const success = computed(() => state.request.approvesuccess);
-
 // Define a debounce delay (e.g., 500 milliseconds)
 const debounceDelay = 800;
 const debouncedSearch = debounce((searchValue) => {
-  dispatch("getAllHodRequests", { ...query, name: searchValue });
+  dispatch("getVenueRequests", { ...query, searchParamter: searchValue });
 }, debounceDelay);
 
 watch(success, () => {
   if (success.value) {
-    dispatch(
-      state.auth.userData.userRole.toLowerCase() === "hod"
-        ? "getAllHodRequests"
-        : "getAllInspectorateRequests",
-      query
-    );
+    dispatch("getVenueRequests", query);
     modalChange.value.closeModal();
     modal.value.closeModal();
     if (type.value === "approve") {

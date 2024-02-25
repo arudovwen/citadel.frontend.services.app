@@ -15,6 +15,9 @@ export default {
     requestVenueLoading: false,
     requestVenueSuccess: false,
     requestVenueError: null,
+    approveOrRejectVenueRequestLoading: false,
+    approveOrRejectVenueRequestSuccess: false,
+    approveOrRejectVenueRequestError: null,
 
     //edit
     editModal: false,
@@ -44,6 +47,22 @@ export default {
   },
   getters: {},
   mutations: {
+    approveOrRejectVenueRequestBegin(state) {
+      state.approveOrRejectVenueRequestLoading = true;
+      state.approveOrRejectVenueRequestSuccess = false;
+      state.approveOrRejectVenueRequestError = null;
+    },
+
+    approveOrRejectVenueRequestSuccess(state) {
+      state.approveOrRejectVenueRequestLoading = false;
+      state.approveOrRejectVenueRequestSuccess = true;
+    },
+
+    approveOrRejectVenueRequestError(state, err) {
+      state.approveOrRejectVenueRequestLoading = false;
+      state.approveOrRejectVenueRequestSuccess = false;
+      state.approveOrRejectVenueRequestError = err;
+    },
     requestVenueBegin(state) {
       state.requestVenueLoading = true;
       state.requestVenueSuccess = false;
@@ -181,6 +200,22 @@ export default {
     },
   },
   actions: {
+    async approveOrRejectVenue({ commit }, data) {
+      try {
+        commit("approveOrRejectVenueRequestBegin");
+        const response = await DataService.put(
+          `${urls.APPROVE_OR_REJECT_VENUE}?${new URLSearchParams(
+            cleanObject(data)
+          )}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("approveOrRejectVenueRequestSuccess");
+        }
+      } catch (err) {
+        commit("approveOrRejectVenueRequestError", err);
+      }
+    },
     async getVenueRequests({ commit }, data) {
       try {
         commit("getVenueRequestsBegin");
