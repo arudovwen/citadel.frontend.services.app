@@ -15,6 +15,10 @@ export default {
     getCIHStatsLoading: false,
     getCIHStatsSuccess: false,
     getCIHStatsError: null,
+    CIHDashboardStats: null,
+    getCIHDashboardStatsLoading: false,
+    getCIHDashboardStatsSuccess: false,
+    getCIHDashboardStatsError: null,
     // for edit
     editModal: false,
     editName: "",
@@ -132,6 +136,24 @@ export default {
       state.getCIHStatsSuccess = false;
       state.getCIHStatsError = err;
     },
+    getCIHDashboardStatsBegin(state) {
+      state.getCIHDashboardStatsLoading = true;
+      state.getCIHDashboardStatsSuccess = false;
+      state.getCIHDashboardStatsError = null;
+    },
+
+    getCIHDashboardStatsSuccess(state, data) {
+      state.getCIHDashboardStatsLoading = false;
+      state.getCIHDashboardStatsSuccess = true;
+
+      state.CIHDashboardStats = data?.data;
+    },
+
+    getCIHDashboardStatsError(state, err) {
+      state.getCIHDashboardStatsLoading = false;
+      state.getCIHDashboardStatsSuccess = false;
+      state.getCIHDashboardStatsError = err;
+    },
 
     //
 
@@ -222,6 +244,20 @@ export default {
         }
       } catch (err) {
         commit("getCIHStatsError", err);
+      }
+    },
+    async getCIHDashboardStats({ commit }) {
+      try {
+        commit("getCIHDashboardStatsBegin");
+        const response = await DataService.get(
+          `${urls.GET_CIH_DASHBOARD_STATS}`
+        );
+
+        if (response.status === 200) {
+          commit("getCIHDashboardStatsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getCIHDashboardStatsError", err);
       }
     },
     addAttendance({ commit }, data) {

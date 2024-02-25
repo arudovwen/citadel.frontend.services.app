@@ -43,6 +43,7 @@ export const urls = {
   GET_METRIC_OF_MEMBERS_BY_ATTENDANCE_ID:
     "/GetMetricOfMembersByCIHAttendanceId",
   GET_CIH_STATS: "/GetCIHStats",
+  GET_CIH_DASHBOARD_STATS: "/GetCIHDasboardStats",
 
   // Auth
   LOGIN: "/Auth/Login",
