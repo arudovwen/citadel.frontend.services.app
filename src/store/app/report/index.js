@@ -246,7 +246,6 @@ export default {
           )}`
         );
         if (response.status === 200) {
-          // alert(String(response.data.data));
           commit("getReportSuccess", response.data.data);
         }
       } catch (err) {
