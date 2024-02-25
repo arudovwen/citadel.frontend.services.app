@@ -98,7 +98,10 @@
                     ><Icon icon="heroicons-outline:dots-vertical"
                   /></span>
                   <template v-slot:menus>
-                    <MenuItem v-for="(item, i) in actions" :key="i">
+                    <MenuItem
+                      v-for="(item, i) in handleAction(props.row.status)"
+                      :key="i"
+                    >
                       <div
                         @click="item.doit(item.name, props.row)"
                         :class="{
@@ -171,6 +174,8 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
+          :disabled="isLoading"
+          :isLoading="isLoading"
           text="Proceed"
           :btnClass="
             type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
@@ -187,30 +192,34 @@
     sizeClass="max-w-[32rem]"
   >
     <ViewRecord :detail="detail" />
-    <template v-slot:footer>
+    <!-- <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
+          :disabled="isLoading"
+          :isLoading="isLoading"
           text="Reject"
           btnClass="btn-outline-secondary btn-sm "
           @click="
             () => {
               type = 'reject';
-              $refs.modal.openModal();
+              handleRequest();
             }
           "
         />
         <Button
+          :disabled="isLoading"
+          :isLoading="isLoading"
           text="Approve"
           btnClass="btn-dark btn-sm"
           @click="
             () => {
               type = 'approve';
-              $refs.modal.openModal();
+              handleRequest();
             }
           "
         />
       </div>
-    </template>
+    </template> -->
   </Modal>
 </template>
 <script setup>
@@ -245,6 +254,11 @@ const userId = computed(() => state?.auth?.userData?.id);
 const success = computed(
   () => state?.venue?.approveOrRejectVenueRequestSuccess
 );
+const loading = computed(() => state?.venue?.getVenueRequestsLoading);
+
+const isLoading = computed(
+  () => state?.venue?.approveOrRejectVenueRequestLoading
+);
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
@@ -273,7 +287,7 @@ const actions = [
   },
   {
     name: "approve",
-    icon: "heroicons-outline:eye",
+    icon: "ph:check",
     doit: (name, data) => {
       detail.value = data;
       type.value = "approve";
@@ -283,7 +297,7 @@ const actions = [
   },
   {
     name: "reject",
-    icon: "heroicons-outline:eye",
+    icon: "ph:x-light",
     doit: (name, data) => {
       detail.value = data;
       type.value = "reject";
@@ -292,6 +306,17 @@ const actions = [
     },
   },
 ];
+const handleAction = (status) => {
+  let newaction = actions;
+
+  if (status === true) {
+    return newaction.filter((i) => i.name !== "approve");
+  }
+  if (status === false) {
+    return newaction.filter((i) => i.name !== "reject");
+  }
+  return newaction;
+};
 const options = [
   {
     value: "25",
@@ -349,7 +374,6 @@ function perPage({ currentPerPage }) {
   query.pageSize = currentPerPage;
 }
 
-const loading = computed(() => state.request.loading);
 // const requests = computed(() =>
 //   state?.request?.data?.data?.map((i) => {
 //     return {
@@ -390,7 +414,7 @@ watch(
 watch(
   () => [query.pageNumber, query.pageSize],
   () => {
-    dispatch("getAllHodRequests", query);
+    dispatch("getVenueRequests", query);
   }
 );
 </script>
