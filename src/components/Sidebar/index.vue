@@ -78,6 +78,7 @@
         "
       >
         <!-- <span>insp: {{ permissions }}</span> -->
+        <!-- <span>{{ cihRole }}</span> -->
         <Navmenu :items="menuLink" />
       </SimpleBar>
     </div>
@@ -90,7 +91,7 @@ import { menuItems } from "../../constant/data";
 import Navmenu from "./Navmenu";
 import { gsap } from "gsap";
 import { SimpleBar } from "simplebar-vue3";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject, watch } from "vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
@@ -108,9 +109,30 @@ export default defineComponent({
   },
 
   setup() {
+    onMounted(() => {
+      simplebarInstance.value
+        .getScrollElement()
+        .addEventListener("scroll", () => {
+          if (simplebarInstance.value.getScrollElement().scrollTop > 50) {
+            simplebarInstance.value.getScrollElement().classList.add("scroll");
+            shadowbase.value = true;
+          } else {
+            simplebarInstance.value
+              .getScrollElement()
+              .classList.remove("scroll");
+            shadowbase.value = false;
+          }
+        });
+    });
+
     const { state } = useStore();
     const shadowbase = ref(false);
     const simplebarInstance = ref(null);
+    const authChurchAffiliation = inject("authChurchAffiliation");
+    const cihRole = computed(() => authChurchAffiliation.value?.cihRole);
+    const centerId = computed(() => authChurchAffiliation.value?.centerId);
+    const zoneId = computed(() => authChurchAffiliation.value?.zoneId);
+
     const permissions = computed(() => state.auth.permissions);
     const likelyInspectorate = computed(() =>
       permissions.value.includes("CAN_VIEW_ALL_ZONES")
@@ -119,11 +141,16 @@ export default defineComponent({
     const likelyCoordinator = computed(
       () =>
         !likelyInspectorate.value &&
-        permissions.value.includes("CAN_VIEW_ZONES")
+        permissions.value.includes("CAN_VIEW_ZONES") &&
+        cihRole.value?.toLowerCase() == "cihcoordinator" &&
+        zoneId.value
     );
 
-    const likelyCihPastor = computed(() =>
-      permissions.value.includes("CAN_VIEW_CENTERS")
+    const likelyCihPastor = computed(
+      () =>
+        permissions.value.includes("CAN_VIEW_CENTERS") &&
+        cihRole.value?.toLowerCase() == "cihpastor" &&
+        centerId.value
     );
 
     const menuLink = computed(() => {
@@ -166,21 +193,6 @@ export default defineComponent({
 
       return [menuItems[0], ...newItems];
     });
-    onMounted(() => {
-      simplebarInstance.value
-        .getScrollElement()
-        .addEventListener("scroll", () => {
-          if (simplebarInstance.value.getScrollElement().scrollTop > 50) {
-            simplebarInstance.value.getScrollElement().classList.add("scroll");
-            shadowbase.value = true;
-          } else {
-            simplebarInstance.value
-              .getScrollElement()
-              .classList.remove("scroll");
-            shadowbase.value = false;
-          }
-        });
-    });
 
     const enterWidget = (el) => {
       gsap.fromTo(
@@ -197,6 +209,12 @@ export default defineComponent({
       );
     };
 
+    watch(authChurchAffiliation, () => {
+      console.log(
+        "authChurchAffiliation: " + JSON.stringify(authChurchAffiliation.value)
+      );
+    });
+
     return {
       menuLink,
       enterWidget,
@@ -206,6 +224,7 @@ export default defineComponent({
       likelyInspectorate,
       likelyCoordinator,
       permissions,
+      cihRole,
     };
   },
 });

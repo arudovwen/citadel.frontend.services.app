@@ -34,7 +34,7 @@
             :columns="columns"
             styleClass="vgt-table"
             :isLoading="loading"
-            :rows="requests || []"
+            :rows="requests ? requests : [] || []"
             :sort-options="{
               enabled: false,
             }"
@@ -230,14 +230,15 @@ import moment from "moment";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
 onMounted(() => {
+  // dispatch("getVenueRequests", { UserId: userId.value });
   dispatch("getVenueRequests", { UserId: userId.value });
 });
 const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
-const requests = computed(() => state.venue.venueRequests);
-const userId = computed(() => state.auth.userData.id);
+const requests = computed(() => state?.venue?.venueRequests);
+const userId = computed(() => state?.auth?.userData?.id);
 // const authUserRoles = computed(() =>
 //   state?.role?.authUserRoles
 //     ?.map((i) => {

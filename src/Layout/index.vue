@@ -68,13 +68,50 @@ import Sidebar from "../components/Sidebar/";
 import window from "@/mixins/window";
 import MobileSidebar from "@/components/Sidebar/MobileSidebar.vue";
 import FooterMenu from "@/components/Footer/FooterMenu.vue";
-import { provide } from "vue";
+import { computed, provide, onMounted, watch } from "vue";
+import { useStore } from "vuex";
 
 export default {
   setup() {
+    onMounted(() => {
+      getUserAffiliation();
+    });
+    const { state, dispatch } = useStore();
+    const userId = computed(() => state.auth.userData.id);
     const userRoles = ["roles"];
+    const authChurchAffiliation = computed(
+      () => state?.authprofile?.churchAffiliationsData
+    );
+    // const authCihRole = computed(() =>
+    //   JSON.parse(state?.authprofile?.churchAffiliationsData?.cihRole)
+    // );
+    console.log(
+      "🚀 ~ setup ~ authChurchAffiliation:",
+      authChurchAffiliation?.value
+    );
+
+    const userData = computed(() => {
+      return state?.auth?.userData;
+    });
+    console.log("🚀 ~ userData ~ userData:", userData?.value);
+
+    const permissions = computed(() => {
+      return state?.auth?.permissions;
+    });
+    console.log("🚀 ~ permissions ~ permissions:", permissions?.value);
+    const getUserAffiliation = () => {
+      dispatch("getChurchAffiliationsByAuthUserId", userId.value);
+    };
+
+    watch(userId, () => {
+      getUserAffiliation();
+    });
+    // watch(authChurchAffiliation, () => {
+    //   console.log(authChurchAffiliation.value);
+    // });
 
     provide("userRoles", userRoles);
+    provide("authChurchAffiliation", authChurchAffiliation);
 
     return {
       userRoles,

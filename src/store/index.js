@@ -27,6 +27,7 @@ import specialUnit from "./app/special-unit";
 import moi from "./app/moi";
 import role from "./app/role";
 import affinityGroup from "./app/affinityGroup";
+import authprofile from "./app/authprofile";
 
 export default createStore({
   state: {
@@ -120,6 +121,7 @@ export default createStore({
     center,
     profile,
     affinityGroup,
+    authprofile,
     auth,
     request,
     report,

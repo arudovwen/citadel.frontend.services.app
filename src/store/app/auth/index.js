@@ -21,6 +21,7 @@ function getRedirectFrom(url) {
 }
 export default {
   state: {
+    fullUserData: null,
     logincheckdata: null,
     error: null,
     signupsuccess: false,
@@ -57,6 +58,7 @@ export default {
       state.login = data.accessToken;
       state.accessToken = data.accessToken;
       state.permissions = data.permissions;
+      state.fullUserData = data.fullUserData;
     },
     loginErr(state, err) {
       state.loading = false;
@@ -216,10 +218,12 @@ export default {
                   .toUpperCase()}`
             )
           );
+          const fullUserData = response.data;
           const userData = response.data.data.user;
           const userAffiliation = response.data.data.churchAffiliation;
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("permissions", permissions);
+          localStorage.setItem("fullUserData", fullUserData);
 
           localStorage.setItem(
             "userAffiliation",
@@ -232,7 +236,7 @@ export default {
               cihRole: userAffiliation?.cihRole?.toLowerCase(),
             })
           );
-          commit("loginSuccess", { accessToken, permissions });
+          commit("loginSuccess", { accessToken, permissions, fullUserData });
 
           // console.log('')
         }

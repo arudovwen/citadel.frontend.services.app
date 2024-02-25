@@ -114,6 +114,7 @@ const onSubmit = handleSubmit((values) => {
   const payload = {
     userId: userId.value,
     ...values,
+    venue: values.venue.label,
   };
   console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", payload);
   dispatch("requestVenue", payload);

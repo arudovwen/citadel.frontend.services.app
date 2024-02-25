@@ -108,6 +108,9 @@ export default {
   components: {
     Icon,
   },
+  setup() {
+    return {};
+  },
 
   data() {
     return {
