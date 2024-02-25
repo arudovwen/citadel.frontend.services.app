@@ -83,7 +83,7 @@ onMounted(() => {
 });
 const { dispatch, state } = useStore();
 const router = useRouter();
-
+const permissions = computed(() => state.auth.permissions);
 const zones = computed(() => state.zone.zones);
 const total = computed(() => state.zone.total);
 const getZonesTotalLoading = computed(() => state.zone.getZonesTotalLoading);
@@ -99,7 +99,8 @@ const query = reactive({
   sortOrder: null,
   searchParameter: null,
   userId:
-    state.auth?.userData?.cihRole?.toLowerCase() === "cihcoordinator"
+    permissions.value.includes("CAN_VIEW_ZONES") &&
+    !permissions.value.includes("CAN_VIEW_ALL_ZONES")
       ? state.auth?.userData?.id
       : "",
 });

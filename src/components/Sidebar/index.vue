@@ -130,27 +130,47 @@ export default defineComponent({
     const simplebarInstance = ref(null);
     const authChurchAffiliation = inject("authChurchAffiliation");
     const cihRole = computed(() => authChurchAffiliation.value?.cihRole);
-    const centerId = computed(() => authChurchAffiliation.value?.centerId);
-    const zoneId = computed(() => authChurchAffiliation.value?.zoneId);
+    // const centerId = computed(() => authChurchAffiliation.value?.centerId);
+    // const zoneId = computed(() => authChurchAffiliation.value?.zoneId);
 
     const permissions = computed(() => state.auth.permissions);
-    const likelyInspectorate = computed(() =>
-      permissions.value.includes("CAN_VIEW_ALL_ZONES")
-    );
+    // const likelyInspectorate = computed(() =>
+    //   permissions.value.includes("CAN_VIEW_ALL_ZONES")
+    // );
 
-    const likelyCoordinator = computed(
+    // const likelyCoordinator = computed(
+    //   () =>
+    //     !likelyInspectorate.value &&
+    //     permissions.value.includes("CAN_VIEW_ZONES") &&
+    //     cihRole.value?.toLowerCase() == "cihcoordinator" &&
+    //     zoneId.value
+    // );
+
+    // const likelyCihPastor = computed(
+    //   () =>
+    //     permissions.value.includes("CAN_VIEW_CENTERS") &&
+    //     cihRole.value?.toLowerCase() == "cihpastor" &&
+    //     centerId.value
+    // );
+    const canViewZone = computed(
       () =>
-        !likelyInspectorate.value &&
-        permissions.value.includes("CAN_VIEW_ZONES") &&
-        cihRole.value?.toLowerCase() == "cihcoordinator" &&
-        zoneId.value
+        permissions.value.includes("CAN_VIEW_ZONES") ||
+        permissions.value.includes("CAN_VIEW_ALL_ZONES")
     );
-
-    const likelyCihPastor = computed(
+    const canViewAllZones = computed(
+      () =>
+        permissions.value.includes("CAN_VIEW_ZONES") &&
+        permissions.value.includes("CAN_VIEW_ALL_ZONES")
+    );
+    const canViewMyZone = computed(
+      () =>
+        permissions.value.includes("CAN_VIEW_ZONES") &&
+        !permissions.value.includes("CAN_VIEW_ALL_ZONES")
+    );
+    const canViewOneCenter = computed(
       () =>
         permissions.value.includes("CAN_VIEW_CENTERS") &&
-        cihRole.value?.toLowerCase() == "cihpastor" &&
-        centerId.value
+        !permissions.value.includes("CAN_VIEW_ALL_CENTERS")
     );
 
     const menuLink = computed(() => {
@@ -161,35 +181,53 @@ export default defineComponent({
         .filter((i) => permissions.value.includes(i.roles) || !i.roles);
       //filter menuitems and put it into new items
       newItems = filteredItems;
-      if (likelyInspectorate.value) {
-        // check if user can view all zones and centers
-        //if yes map through and if cih management filter down to elements that pass the test
-        newItems = filteredItems.map((i) => {
-          if (i.title.toLowerCase() === "cih management") {
-            i.child = i.inspectorateRoutes;
+      // if (likelyInspectorate.value) {
+      newItems = filteredItems.map((i) => {
+        if (i.title.toLowerCase() === "cih management") {
+          let routes = [];
+          if (canViewZone.value) {
+            routes.push(i.zoneRoute);
+            routes.push(i.zoneReportRoutes);
           }
-          return i;
-        });
-        return [menuItems[0], ...newItems];
-      }
-      if (likelyCoordinator.value) {
-        newItems = filteredItems.map((i) => {
-          if (i.title.toLowerCase() === "cih management") {
-            i.child = i.coordinatorRoutes;
+          if (canViewOneCenter.value) {
+            routes.push(i.centerRoute);
           }
-          return i;
-        });
-        return [menuItems[0], ...newItems];
-      }
-      if (likelyCihPastor.value) {
-        newItems = filteredItems.map((i) => {
-          if (i.title.toLowerCase() === "cih management") {
-            i.child = i.cihPastorRoutes;
+
+          if (canViewAllZones.value) {
+            routes.push(i.centerRoutes);
           }
-          return i;
-        });
-        return [menuItems[0], ...newItems];
-      }
+
+          if (canViewMyZone.value || canViewOneCenter.value) {
+            routes.push(i.centerReportRoutes);
+          }
+          // if (canViewZone.value) {
+          //   routes.push(i.zoneRoute);
+          // }
+
+          i.child = routes;
+        }
+        return i;
+      });
+      // return [menuItems[0], ...newItems];
+      // }
+      // if (likelyCoordinator.value) {
+      //   newItems = filteredItems.map((i) => {
+      //     if (i.title.toLowerCase() === "cih management") {
+      //       i.child = i.coordinatorRoutes;
+      //     }
+      //     return i;
+      //   });
+      //   return [menuItems[0], ...newItems];
+      // }
+      // if (likelyCihPastor.value) {
+      //   newItems = filteredItems.map((i) => {
+      //     if (i.title.toLowerCase() === "cih management") {
+      //       i.child = i.cihPastorRoutes;
+      //     }
+      //     return i;
+      //   });
+      //   return [menuItems[0], ...newItems];
+      // }
 
       return [menuItems[0], ...newItems];
     });
@@ -221,8 +259,8 @@ export default defineComponent({
       leaveWidget,
       simplebarInstance,
       shadowbase,
-      likelyInspectorate,
-      likelyCoordinator,
+      // likelyInspectorate,
+      // likelyCoordinator,
       permissions,
       cihRole,
     };

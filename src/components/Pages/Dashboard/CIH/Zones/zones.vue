@@ -92,9 +92,11 @@ const query = reactive({
   pageSize: 25,
   sortOrder: null,
   searchParameter: null,
-  userId: permissions.value.includes("CAN_VIEW_ZONES")
-    ? state.auth?.userData?.id
-    : "",
+  userId:
+    permissions.value.includes("CAN_VIEW_ZONES") &&
+    !permissions.value.includes("CAN_VIEW_ALL_ZONES")
+      ? state.auth?.userData?.id
+      : "",
 });
 const zones = computed(() => store.getters.zones);
 
