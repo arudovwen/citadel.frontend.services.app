@@ -404,11 +404,12 @@ const getDepartments = () => {
 };
 
 const onSubmit = handleSubmit((values) => {
-  const hasDataError = churchAffiliationsData.value == null;
-  if (hasDataError) {
+  const shouldCreate =
+    churchAffiliationsData.value == null || !churchAffiliationsData?.value?.id;
+  if (shouldCreate) {
     store.dispatch("createChurchAffiliation", prepareDetails(values, "create"));
   }
-  if (!hasDataError) {
+  if (!shouldCreate) {
     store.dispatch("updateChurchAffiliation", prepareDetails(values, "edit"));
   }
 });

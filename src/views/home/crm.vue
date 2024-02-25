@@ -233,22 +233,22 @@ export default {
       const distroArray = [
         {
           title: "Men",
-          value: (men / total) * 100 || 0,
+          value: Math.round((men / total) * 100) || 0,
           barColor: "bg-primary-500",
         },
         {
           title: "Women",
-          value: (women / total) * 100 || 0,
+          value: Math.round((women / total) * 100) || 0,
           barColor: "bg-success-500",
         },
         {
           title: "Teenagers",
-          value: (teenagers / total) * 100 || 0,
+          value: Math.round((teenagers / total) * 100) || 0,
           barColor: "bg-blue-500",
         },
         {
           title: "Children",
-          value: (children / total) * 100 || 0,
+          value: Math.round((children / total) * 100) || 0,
           barColor: "bg-info-500",
         },
       ];

@@ -22,7 +22,7 @@
       <div class="assagin space-y-4">
         <Textarea
           label="Purpose Of Usage"
-          placeholder="purpose of visit"
+          placeholder=""
           v-model="purposeOfUsage"
           :error="purposeOfUsageError"
         />

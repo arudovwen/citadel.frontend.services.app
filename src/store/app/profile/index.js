@@ -928,8 +928,11 @@ export default {
         const response = await DataService.get(
           `${urls.GET_CHURCH_AFFILIATION_BY_USERID}?id=${id}`
         );
-        if (response.status === 200) {
+
+        if (response?.status === 200) {
           commit("getChurchAffiliationsDataSuccess", response.data.data);
+        } else {
+          commit("getChurchAffiliationsDataSuccess", null);
         }
       } catch (err) {
         commit("getChurchAffiliationsDataErr", err);
