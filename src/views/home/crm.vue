@@ -148,6 +148,7 @@ export default {
     onMounted(() => {
       getCIHDashboardStats();
       getActivityReports();
+      getAllEvents();
     });
 
     const { state, dispatch } = useStore();
@@ -159,6 +160,7 @@ export default {
     const getCIHDashboardStatsLoading = computed(
       () => state?.attendance?.getCIHDashboardStatsLoading
     );
+    const eventRequests = computed(() => state.event.events);
 
     const getActivityReports = () => {
       dispatch("getActivityReports", {
@@ -167,6 +169,10 @@ export default {
         CenterName: authChurchAffiliation.value?.cihAddress,
         ZoneName: authChurchAffiliation?.value?.cihZone,
       });
+    };
+
+    const getAllEvents = () => {
+      dispatch("getAllEvents", { pageNumber: 1, pageSize: 5 });
     };
 
     const recentReports = computed(() => state.report.data);
@@ -264,6 +270,8 @@ export default {
     });
 
     provide("recentReports", recentReports);
+    provide("eventRequests", eventRequests);
+    provide("getAllEvents", getAllEvents);
     return {
       CIHDashboardStats,
       getCIHDashboardStatsLoading,
