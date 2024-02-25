@@ -229,6 +229,16 @@ const userId = computed(() => state.auth.userData.id);
 const closeRequestmodal = () => {
   requestModal.value.closeModal();
 };
+const requests = computed(() =>
+  state?.request?.userRequests?.data?.map((i) => {
+    return {
+      ...i,
+      eventDate: moment(i.eventDate).format("ll"),
+      eventType: eventsOptions.find((event) => event.value == i.eventType)
+        ?.label,
+    };
+  })
+);
 
 // const authUserRoles = computed(() =>
 //   state?.role?.authUserRoles
@@ -345,16 +355,6 @@ function perPage({ currentPerPage }) {
 }
 
 const loading = computed(() => state.request.getLoading);
-const requests = computed(() =>
-  state?.request?.userRequests?.data?.map((i) => {
-    return {
-      ...i,
-      eventDate: moment(i.eventDate).format("ll"),
-      eventType: eventsOptions.find((event) => event.value == i.eventType)
-        ?.label,
-    };
-  })
-);
 
 const total = computed(() => state.profile.total);
 

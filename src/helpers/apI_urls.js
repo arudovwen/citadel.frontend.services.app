@@ -193,7 +193,7 @@ export const urls = {
   DELETE_VENUE: "/Venue/DeleteVenue",
   REQUEST_FOR_VENUE: "/Venue/RequestForVenue",
   GET_ALL_VENUE_REQUESTS: "/Venue/GetAllVenueRequests",
-
+  APPROVE_OR_REJECT_VENUE: "/Venue/ApproveOrRejectVenueRequest",
   REQUEST_OTP: "/auth/requestotp",
 
   //Zones

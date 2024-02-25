@@ -74,20 +74,22 @@
                 <span
                   class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
                   :class="`${
-                    props.row.status === 'active'
+                    props.row.status === true
                       ? 'text-success-500 bg-success-500'
                       : ''
                   } 
-            ${
-              props.row.status === 'inactive'
-                ? 'text-warning-500 bg-warning-500'
-                : ''
-            }
-            ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
+            ${props.row.status === false ? 'text-red-500 bg-red-500' : ''}
+            ${props.row.status === null ? 'text-blue-500 bg-blue-500' : ''}
             
              `"
                 >
-                  {{ props.row.status }}
+                  {{
+                    props.row.status === null
+                      ? "Pending"
+                      : props.row.status === false
+                      ? "declined"
+                      : "Approved"
+                  }}
                 </span>
               </span>
               <span v-if="props.column.field == 'action'">
@@ -96,7 +98,10 @@
                     ><Icon icon="heroicons-outline:dots-vertical"
                   /></span>
                   <template v-slot:menus>
-                    <MenuItem v-for="(item, i) in actions" :key="i">
+                    <MenuItem
+                      v-for="(item, i) in handleAction(props.row.status)"
+                      :key="i"
+                    >
                       <div
                         @click="item.doit(item.name, props.row)"
                         :class="{
@@ -169,6 +174,8 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
+          :disabled="isLoading"
+          :isLoading="isLoading"
           text="Proceed"
           :btnClass="
             type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
@@ -185,30 +192,34 @@
     sizeClass="max-w-[32rem]"
   >
     <ViewRecord :detail="detail" />
-    <template v-slot:footer>
+    <!-- <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button
+          :disabled="isLoading"
+          :isLoading="isLoading"
           text="Reject"
           btnClass="btn-outline-secondary btn-sm "
           @click="
             () => {
               type = 'reject';
-              $refs.modal.openModal();
+              handleRequest();
             }
           "
         />
         <Button
+          :disabled="isLoading"
+          :isLoading="isLoading"
           text="Approve"
           btnClass="btn-dark btn-sm"
           @click="
             () => {
               type = 'approve';
-              $refs.modal.openModal();
+              handleRequest();
             }
           "
         />
       </div>
-    </template>
+    </template> -->
   </Modal>
 </template>
 <script setup>
@@ -231,27 +242,29 @@ import { computed, onMounted, watch, reactive, ref } from "vue";
 
 onMounted(() => {
   // dispatch("getVenueRequests", { UserId: userId.value });
-  dispatch("getVenueRequests", { UserId: userId.value });
+  dispatch("getVenueRequests", { ...query });
 });
 const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
-const requests = computed(() => state?.venue?.venueRequests);
+const requests = computed(() => state?.venue?.venueRequests?.data);
 const userId = computed(() => state?.auth?.userData?.id);
-// const authUserRoles = computed(() =>
-//   state?.role?.authUserRoles
-//     ?.map((i) => {
-//       return i;
-//     })
-//     .join(", ")
-// );
+
+const success = computed(
+  () => state?.venue?.approveOrRejectVenueRequestSuccess
+);
+const loading = computed(() => state?.venue?.getVenueRequestsLoading);
+
+const isLoading = computed(
+  () => state?.venue?.approveOrRejectVenueRequestLoading
+);
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
   sortOrder: "",
   searchParameter: "",
-  userId: state.auth.userData.id,
+  // userId: state.auth.userData.id,
 });
 const type = ref("");
 const detail = ref(null);
@@ -272,7 +285,38 @@ const actions = [
       modalChange.value.openModal();
     },
   },
+  {
+    name: "approve",
+    icon: "ph:check",
+    doit: (name, data) => {
+      detail.value = data;
+      type.value = "approve";
+
+      modal.value.openModal();
+    },
+  },
+  {
+    name: "reject",
+    icon: "ph:x-light",
+    doit: (name, data) => {
+      detail.value = data;
+      type.value = "reject";
+
+      modal.value.openModal();
+    },
+  },
 ];
+const handleAction = (status) => {
+  let newaction = actions;
+
+  if (status === true) {
+    return newaction.filter((i) => i.name !== "approve");
+  }
+  if (status === false) {
+    return newaction.filter((i) => i.name !== "reject");
+  }
+  return newaction;
+};
 const options = [
   {
     value: "25",
@@ -303,8 +347,12 @@ const columns = [
   // },
 
   {
-    label: "Date",
+    label: "Date Of Usage",
     field: "usageDate",
+  },
+  {
+    label: "Status",
+    field: "status",
   },
 
   {
@@ -314,18 +362,11 @@ const columns = [
 ];
 
 function handleRequest() {
-  dispatch(
-    state.auth.userData.userRole.toLowerCase() === "hod"
-      ? "approveCOD"
-      : "approveCOZ",
-    {
-      approveUserId: state.auth.userData.id,
-      reqUserId: detail.value.userId,
-      actionId: detail.value.id,
-      Comments: comment.value,
-      status: type.value === "approve" ? true : false,
-    }
-  );
+  dispatch("approveOrRejectVenue", {
+    managerId: userId.value,
+    venueLogId: detail.value.id,
+    status: type.value === "approve" ? true : false,
+  });
 }
 
 function perPage({ currentPerPage }) {
@@ -333,7 +374,6 @@ function perPage({ currentPerPage }) {
   query.pageSize = currentPerPage;
 }
 
-const loading = computed(() => state.request.loading);
 // const requests = computed(() =>
 //   state?.request?.data?.data?.map((i) => {
 //     return {
@@ -345,22 +385,15 @@ const loading = computed(() => state.request.loading);
 
 const total = computed(() => state.venue.totalRequestCount);
 
-const success = computed(() => state.request.approvesuccess);
-
 // Define a debounce delay (e.g., 500 milliseconds)
 const debounceDelay = 800;
 const debouncedSearch = debounce((searchValue) => {
-  dispatch("getAllHodRequests", { ...query, name: searchValue });
+  dispatch("getVenueRequests", { ...query, searchParamter: searchValue });
 }, debounceDelay);
 
 watch(success, () => {
   if (success.value) {
-    dispatch(
-      state.auth.userData.userRole.toLowerCase() === "hod"
-        ? "getAllHodRequests"
-        : "getAllInspectorateRequests",
-      query
-    );
+    dispatch("getVenueRequests", query);
     modalChange.value.closeModal();
     modal.value.closeModal();
     if (type.value === "approve") {
@@ -381,7 +414,7 @@ watch(
 watch(
   () => [query.pageNumber, query.pageSize],
   () => {
-    dispatch("getAllHodRequests", query);
+    dispatch("getVenueRequests", query);
   }
 );
 </script>
