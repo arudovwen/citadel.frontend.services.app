@@ -26,6 +26,8 @@
           iconClass="text-lg"
         />
       </div>
+      <!-- <div class="flex w-full">{{ members }}</div>
+      <div class="flex w-full">{{ $store.state.department.departments }}</div> -->
       <div class="">
         <vue-good-table
           :columns="columns"
@@ -123,6 +125,28 @@
       </div>
     </div>
   </div>
+  <Modal
+    title="View Reason"
+    label="Small modal"
+    labelClass="btn-outline-primary"
+    ref="reasonModal"
+    sizeClass="max-w-md"
+    themeClass="bg-primary-500"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      {{ reason ? reason : "None" }}
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          text="Close"
+          btnClass="btn-primary btn-sm"
+          @click="$refs.reasonModal.closeModal()"
+        />
+      </div>
+    </template>
+  </Modal>
 </template>
 <script>
 import Dropdown from "@/components/Dropdown";
@@ -138,6 +162,7 @@ import { debounce } from "lodash";
 import moment from "moment";
 import { useRoute } from "vue-router";
 import { useToast } from "vue-toastification";
+import Modal from "@/components/Modal/Modal";
 
 import {
   computed,
@@ -152,6 +177,7 @@ export default {
   mixins: [window],
   components: {
     Pagination,
+    Modal,
     // eslint-disable-next-line vue/no-unused-components
     InputGroup,
     Select,
@@ -161,6 +187,11 @@ export default {
     Button,
   },
   setup() {
+    onMounted(() => {
+      dispatch("getDelistedDepartments", query);
+      dispatch("getRoles");
+      // id.value = getCurrentInstance().data.id;
+    });
     const route = useRoute();
     const query = reactive({
       pageNumber: 1,
@@ -169,6 +200,7 @@ export default {
       searchParameter: "",
       DepartmentName: route.params.name,
     });
+    const reasonModal = ref(null);
     const { state, dispatch } = useStore();
     const toast = useToast();
     // const id = ref(null);
@@ -187,11 +219,7 @@ export default {
       },
     ];
     // none, firstName, userId, surname, department, center, zone, role
-    onMounted(() => {
-      dispatch("getDelistedDepartments", query);
-      dispatch("getRoles");
-      // id.value = getCurrentInstance().data.id;
-    });
+
     function fetchRecords(page) {
       dispatch("getDelistedDepartments", { ...query, pageNumber: page });
     }
@@ -205,7 +233,7 @@ export default {
     const delistLoading = computed(() => state.department.loading);
     const delistSuccess = computed(() => state.department.deletesuccess);
     const members = computed(() => {
-      if (state?.member?.data) {
+      if (state.department.departments) {
         return state?.department?.departments?.map((item) => {
           item.fullName = `${item.firstName} ${item.lastName}`;
 
@@ -280,12 +308,14 @@ export default {
       delistLoading,
       delistSuccess,
       moment,
+      reasonModal,
     };
   },
 
   data() {
     return {
       type: "",
+      reason: "",
       id: null,
       activeFilter: "all",
       dateValue: null,
@@ -294,6 +324,19 @@ export default {
         date: "DD MMM YYYY",
         month: "MMM",
       },
+      actions: [
+        {
+          name: "view",
+          alias: "view reason",
+          icon: "heroicons-outline:eye",
+          doit: (name, { reason }) => {
+            this.type = name;
+            this.reason = reason;
+            this.$refs.reasonModal.openModal();
+            // this.$router.push("/profile/" + userId);
+          },
+        },
+      ],
 
       options: [
         {
@@ -332,10 +375,10 @@ export default {
           label: "Status",
           field: "status",
         },
-        {
-          label: "Reason",
-          field: "reason",
-        },
+        // {
+        //   label: "Reason",
+        //   field: "reason",
+        // },
 
         {
           label: "Date",
@@ -348,23 +391,7 @@ export default {
       ],
     };
   },
-  methods: {
-    generateAction(name, id) {
-      this.id = id;
-
-      const actions = {
-        view: {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: () => {
-            this.$router.push("/members-management/preview/" + id);
-          },
-        },
-      };
-
-      return actions[name] || null;
-    },
-  },
+  methods: {},
   computed: {
     filteredActions() {
       return this.$store.state.auth.userData.userRole !== "administrator" &&
