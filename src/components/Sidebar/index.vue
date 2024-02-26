@@ -130,7 +130,7 @@ export default defineComponent({
     const simplebarInstance = ref(null);
     const authChurchAffiliation = inject("authChurchAffiliation");
     const cihRole = computed(() => authChurchAffiliation.value?.cihRole);
-    // const centerId = computed(() => authChurchAffiliation.value?.centerId);
+    const centerId = computed(() => authChurchAffiliation.value?.centerId);
     // const zoneId = computed(() => authChurchAffiliation.value?.zoneId);
 
     const permissions = computed(() => state.auth.permissions);
@@ -146,12 +146,9 @@ export default defineComponent({
     //     zoneId.value
     // );
 
-    // const likelyCihPastor = computed(
-    //   () =>
-    //     permissions.value.includes("CAN_VIEW_CENTERS") &&
-    //     cihRole.value?.toLowerCase() == "cihpastor" &&
-    //     centerId.value
-    // );
+    const isCihPastor = computed(
+      () => cihRole.value?.toLowerCase() == "cihpastor" && centerId.value
+    );
     const canViewZone = computed(
       () =>
         permissions.value.includes("CAN_VIEW_ZONES") ||
@@ -189,12 +186,12 @@ export default defineComponent({
             routes.push(i.zoneRoute);
             routes.push(i.zoneReportRoutes);
           }
-          if (canViewOneCenter.value) {
+          if (canViewOneCenter.value || isCihPastor) {
             routes.push(i.centerRoute);
           }
 
           if (canViewAllZones.value) {
-            routes.push(i.centerRoutes);
+            routes.push(i.centersRoute);
           }
 
           if (canViewMyZone.value || canViewOneCenter.value) {
