@@ -77,8 +77,6 @@
           }
         "
       >
-        <!-- <span>insp: {{ permissions }}</span> -->
-        <!-- <span>{{ cihRole }}</span> -->
         <Navmenu :items="menuLink" />
       </SimpleBar>
     </div>
@@ -91,7 +89,7 @@ import { menuItems } from "../../constant/data";
 import Navmenu from "./Navmenu";
 import { gsap } from "gsap";
 import { SimpleBar } from "simplebar-vue3";
-import { ref, onMounted, inject, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
@@ -109,6 +107,76 @@ export default defineComponent({
   },
 
   setup() {
+    const { state } = useStore();
+    const shadowbase = ref(false);
+    const simplebarInstance = ref(null);
+    const permissions = computed(() => state.auth.permissions);
+    const menuLink = computed(() => {
+      // eslint-disable-next-line no-unused-vars
+      let newItems;
+      const filteredItems = menuItems
+        .slice(1)
+        .filter((i) => permissions.value.includes(i.roles) || !i.roles);
+      newItems = filteredItems;
+      if (
+        (!permissions.value.includes("CAN_VIEW_ALL_ZONES") &&
+          !permissions.value.includes("CAN_VIEW_ALL_CENTERS") &&
+          !permissions.value.includes("CAN_VIEW_ZONES") &&
+          !permissions.value.includes("CAN_VIEW_CENTERS")) ||
+        !permissions.value.includes("CAN_VIEW_CIH_MANAGEMENT")
+      ) {
+        newItems = filteredItems.filter(
+          (i) => i.title.toLowerCase() !== "cih management"
+        );
+        return [menuItems[0], ...newItems];
+      } else if (
+        permissions.value.includes("CAN_VIEW_ALL_ZONES") &&
+        permissions.value.includes("CAN_VIEW_ALL_CENTERS")
+      ) {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.child.filter(
+              (j) =>
+                j.childtitle.toLowerCase() !== "centers" &&
+                j.childtitle.toLowerCase() !== "center" &&
+                j.for?.toLowerCase() !== "ordinary"
+            );
+          }
+          return i;
+        });
+        return [menuItems[0], ...newItems];
+      } else if (
+        permissions.value.includes("CAN_VIEW_ALL_CENTERS") &&
+        permissions.value.includes("CAN_VIEW_ZONES")
+      ) {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.child.filter(
+              (j) =>
+                j.childtitle.toLowerCase() !== "centers" &&
+                j.childtitle.toLowerCase() !== "center" &&
+                j.for?.toLowerCase() !== "ordinary"
+            );
+          }
+          return i;
+        });
+        return [menuItems[0], ...newItems];
+      } else if (permissions.value.includes("CAN_VIEW_CENTERS")) {
+        newItems = filteredItems.map((i) => {
+          if (i.title.toLowerCase() === "cih management") {
+            i.child = i.child.filter(
+              (j) =>
+                j.childtitle.toLowerCase() !== "zones" &&
+                j.childtitle.toLowerCase() !== "centers" &&
+                j.for?.toLowerCase() !== "admin"
+            );
+          }
+          return i;
+        });
+        return [menuItems[0], ...newItems];
+      }
+      return [menuItems[0], ...newItems];
+    });
     onMounted(() => {
       simplebarInstance.value
         .getScrollElement()
@@ -123,110 +191,6 @@ export default defineComponent({
             shadowbase.value = false;
           }
         });
-    });
-
-    const { state } = useStore();
-    const shadowbase = ref(false);
-    const simplebarInstance = ref(null);
-    const authChurchAffiliation = inject("authChurchAffiliation");
-    const cihRole = computed(() => authChurchAffiliation.value?.cihRole);
-    const centerId = computed(() => authChurchAffiliation.value?.centerId);
-    // const zoneId = computed(() => authChurchAffiliation.value?.zoneId);
-
-    const permissions = computed(() => state.auth.permissions);
-    // const likelyInspectorate = computed(() =>
-    //   permissions.value.includes("CAN_VIEW_ALL_ZONES")
-    // );
-
-    // const likelyCoordinator = computed(
-    //   () =>
-    //     !likelyInspectorate.value &&
-    //     permissions.value.includes("CAN_VIEW_ZONES") &&
-    //     cihRole.value?.toLowerCase() == "cihcoordinator" &&
-    //     zoneId.value
-    // );
-
-    const isCihPastor = computed(
-      () => cihRole.value?.toLowerCase() == "cihpastor" && centerId.value
-    );
-    const canViewZone = computed(
-      () =>
-        permissions.value.includes("CAN_VIEW_ZONES") ||
-        permissions.value.includes("CAN_VIEW_ALL_ZONES")
-    );
-    const canViewAllZones = computed(
-      () =>
-        permissions.value.includes("CAN_VIEW_ZONES") &&
-        permissions.value.includes("CAN_VIEW_ALL_ZONES")
-    );
-    const canViewMyZone = computed(
-      () =>
-        permissions.value.includes("CAN_VIEW_ZONES") &&
-        !permissions.value.includes("CAN_VIEW_ALL_ZONES")
-    );
-    const canViewOneCenter = computed(
-      () =>
-        permissions.value.includes("CAN_VIEW_CENTERS") &&
-        !permissions.value.includes("CAN_VIEW_ALL_CENTERS")
-    );
-
-    const menuLink = computed(() => {
-      // eslint-disable-next-line no-unused-vars
-      let newItems;
-      const filteredItems = menuItems
-        .slice(1)
-        .filter((i) => permissions.value.includes(i.roles) || !i.roles);
-      //filter menuitems and put it into new items
-      newItems = filteredItems;
-      // if (likelyInspectorate.value) {
-      newItems = filteredItems.map((i) => {
-        if (i.title.toLowerCase() === "cih management") {
-          let routes = [];
-          if (canViewZone.value) {
-            routes.push(i.zoneRoute);
-            routes.push(i.zoneReportRoutes);
-          }
-          if (canViewOneCenter.value || isCihPastor) {
-            routes.push(i.centerRoute);
-          }
-
-          if (canViewAllZones.value) {
-            routes.push(i.centersRoute);
-          }
-
-          if (canViewMyZone.value || canViewOneCenter.value) {
-            routes.push(i.centerReportRoutes);
-          }
-          // if (canViewZone.value) {
-          //   routes.push(i.zoneRoute);
-          // }
-
-          i.child = routes;
-        }
-        return i;
-      });
-      // return [menuItems[0], ...newItems];
-      // }
-      // if (likelyCoordinator.value) {
-      //   newItems = filteredItems.map((i) => {
-      //     if (i.title.toLowerCase() === "cih management") {
-      //       i.child = i.coordinatorRoutes;
-      //     }
-      //     return i;
-      //   });
-      //   return [menuItems[0], ...newItems];
-      // }
-      // if (likelyCihPastor.value) {
-      //   newItems = filteredItems.map((i) => {
-      //     if (i.title.toLowerCase() === "cih management") {
-      //       i.child = i.cihPastorRoutes;
-      //     }
-      //     return i;
-      //   });
-      //   return [menuItems[0], ...newItems];
-      // }
-
-      return [menuItems[0], ...newItems];
     });
 
     const enterWidget = (el) => {
@@ -244,22 +208,12 @@ export default defineComponent({
       );
     };
 
-    watch(authChurchAffiliation, () => {
-      console.log(
-        "authChurchAffiliation: " + JSON.stringify(authChurchAffiliation.value)
-      );
-    });
-
     return {
       menuLink,
       enterWidget,
       leaveWidget,
       simplebarInstance,
       shadowbase,
-      // likelyInspectorate,
-      // likelyCoordinator,
-      permissions,
-      cihRole,
     };
   },
 });

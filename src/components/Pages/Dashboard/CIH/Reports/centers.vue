@@ -650,7 +650,12 @@ export default {
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
-      dispatch("getAllCentersTotal", { ...query, name: searchValue });
+      dispatch("getActivityReports", {
+        ...query,
+        CenterName: detail.value?.cihAddress,
+        ZoneName: detail?.value?.cihZone,
+        name: searchValue,
+      });
     }, debounceDelay);
     watch(
       () => query.searchParameter,
@@ -661,7 +666,11 @@ export default {
     watch(
       () => [query.pageNumber, query.pageSize, query.sortOrder],
       () => {
-        dispatch("getAllCentersTotal", query);
+        dispatch("getActivityReports", {
+          ...query,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
+        });
       }
     );
 

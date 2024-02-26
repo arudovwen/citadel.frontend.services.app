@@ -128,18 +128,18 @@ export const menuItems = [
         for: "",
         childlink: "/cih/centers",
       },
-      // {
-      //   childtitle: "Center",
-      //   for: "",
-      //   childlink: "/cih/center",
-      // },
       {
-        childtitle: "Center Reports",
+        childtitle: "Center",
+        for: "",
+        childlink: "/cih/center",
+      },
+      {
+        childtitle: "Reports",
         for: "ordinary",
         childlink: "/cih/reports/centers",
       },
       {
-        childtitle: "Zone Reports",
+        childtitle: "Reports",
         for: "admin",
         childlink: "/cih/reports/zones",
       },
@@ -164,7 +164,7 @@ export const menuItems = [
       childlink: "/cih/centers",
     },
     zoneReportRoutes: {
-      childtitle: "Zone Reports",
+      childtitle: "Reports",
       for: "admin",
       childlink: "/cih/reports/zones",
     },
@@ -187,7 +187,7 @@ export const menuItems = [
       },
 
       {
-        childtitle: "Zone Reports",
+        childtitle: "Reports",
         for: "admin",
         childlink: "/cih/reports/zones",
       },
