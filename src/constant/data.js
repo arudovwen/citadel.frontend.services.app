@@ -158,7 +158,7 @@ export const menuItems = [
       for: "",
       childlink: "/cih/center",
     },
-    centerRoutes: {
+    centersRoute: {
       childtitle: "Centers",
       for: "",
       childlink: "/cih/centers",
