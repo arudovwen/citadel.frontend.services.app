@@ -63,7 +63,7 @@ export default {
     fetchSuccess(state, { data, totalCount }) {
       state.loading = false;
       state.success = true;
-      state.departments = data;
+      state.departments = data ? data : [];
       state.total = totalCount;
     },
     fetchErr(state, err) {

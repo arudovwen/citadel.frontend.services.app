@@ -209,6 +209,8 @@ import { computed, onMounted, watch, reactive, ref } from "vue";
 import window from "@/mixins/window";
 import { useToast } from "vue-toastification";
 import { roleFilters } from "@/constant/data";
+// import { excelParser } from "@/util/Util.js";
+
 // import store from "@/store";
 
 export default {
@@ -347,6 +349,9 @@ export default {
       }
       return value;
     },
+    // exportData() {
+    //   excelParser().exportDataFromJSON(this.listData, null, null);
+    // },
   },
   setup() {
     const modal = ref(null);
