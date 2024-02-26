@@ -60,19 +60,62 @@ import { ref, watch, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 import Textinput from "@/components/Textinput";
+onMounted(() => {
+  if (route.params?.type?.toLowerCase() === "otp") {
+    handleOtp();
+  }
+  watch(
+    resendDisabled,
+    (newValue) => {
+      if (newValue) {
+        const interval = setInterval(() => {
+          resendCountdown.value--;
+          if (resendCountdown.value <= 0) {
+            clearInterval(interval);
+            resendDisabled.value = false;
+          }
+        }, 1000);
+      }
+    },
+    { immediate: true }
+  );
+});
 
 const route = useRoute();
 const { state, dispatch } = useStore();
 const toast = useToast();
+const permissions = computed(() => state.auth.permissions);
+
+const canSeeOverview = computed(
+  () =>
+    permissions.value?.includes("CAN_VIEW_ADMIN_DASHBOARD") ||
+    permissions.value?.includes("CAN_VIEW_INSPECTORATE_DASHBOARD")
+);
+
+const canSeeHodDashboard = computed(() =>
+  permissions?.value?.includes("CAN_VIEW_HOD_DASHBOARD")
+);
+
+const canSeeCoordinatorZone = computed(() =>
+  permissions.value?.includes("CAN_VIEW_COORDINATOR_DASHBOARD")
+);
+
+const canSeePastorCenter = computed(
+  () =>
+    permissions.value?.includes("CAN_VIEW_CENTERS") &&
+    permissions.value?.includes("CAN_VIEW_CIH_MANAGEMENT")
+);
+const canSeeVenues = computed(
+  () =>
+    permissions.value?.includes("CAN_VIEW_VENUES") &&
+    permissions.value?.includes("CAN_VIEW_REQUESTS")
+);
+
 const isLoading = computed(() => state.auth.loading);
 const isOtpLoading = computed(() => state.auth.loading);
 const isSuccess = computed(() => state.auth.loginsuccess);
 const isOtpSuccess = computed(() => state.auth.requestsuccess);
-const isMember = computed(
-  () =>
-    JSON.parse(localStorage.getItem("userData"))?.userRole?.toLowerCase() ===
-    "member"
-);
+
 const userData = computed(() => JSON.parse(localStorage.getItem("userData")));
 const resendCountdown = ref(20);
 const resendDisabled = ref(true);
@@ -125,26 +168,35 @@ const onSubmit = handleSubmit((values) => {
 });
 
 // Automatically start the countdown on component mount
-onMounted(() => {
-  if (route.params?.type?.toLowerCase() === "otp") {
-    handleOtp();
+
+const handleNavigation = (userId) => {
+  if (canSeeOverview.value) {
+    window.location.replace("/overview");
+    return;
   }
-  watch(
-    resendDisabled,
-    (newValue) => {
-      if (newValue) {
-        const interval = setInterval(() => {
-          resendCountdown.value--;
-          if (resendCountdown.value <= 0) {
-            clearInterval(interval);
-            resendDisabled.value = false;
-          }
-        }, 1000);
-      }
-    },
-    { immediate: true }
-  );
-});
+  if (canSeeHodDashboard.value) {
+    window.location.replace("/departments");
+    return;
+  }
+
+  if (canSeeCoordinatorZone.value) {
+    window.location.replace("/cih/zones");
+    return;
+  }
+
+  if (canSeePastorCenter.value) {
+    window.location.replace("/cih/center");
+    return;
+  }
+
+  if (canSeeVenues.value) {
+    window.location.replace("/venue-management");
+    return;
+  }
+
+  window.location.replace(`/profile/${userId}`);
+  console.log("My permissions:" + JSON.stringify(permissions.value));
+};
 
 watch(isOtpSuccess, () => {
   if (isOtpSuccess.value) {
@@ -159,15 +211,17 @@ watch(isSuccess, () => {
   dispatch("getAuthUserRoles", userId);
   // dispatch("getRolesList");
 
-  if (route.query.redirect_from) {
-    window.location.replace(route.query.redirect_from);
-  } else {
-    if (isMember.value) {
-      window.location.replace(`/profile/${userId}`);
-    } else {
-      window.location.replace("/overview");
-    }
-  }
+  handleNavigation(userId);
+
+  // if (route.query.redirect_from) {
+  //   window.location.replace(route.query.redirect_from);
+  // } else {
+  //   if (isMember.value) {
+  //     window.location.replace(`/profile/${userId}`);
+  //   } else {
+  //     window.location.replace("/overview");
+  //   }
+  // }
 });
 </script>
 
