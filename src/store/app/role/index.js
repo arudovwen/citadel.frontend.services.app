@@ -417,7 +417,7 @@ export default {
     async removeRoleFromPermissions({ commit }, data) {
       try {
         commit("setPermissionsBegin");
-        const response = await DataService.post(
+        const response = await DataService.delete(
           `${urls.REMOVE_PERMISSION_FROM_USER}?RoleId=${data.roleId}&UserId=${data.userId}`,
           data
         );
