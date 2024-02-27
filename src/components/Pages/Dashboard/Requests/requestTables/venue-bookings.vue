@@ -1,130 +1,148 @@
 <!-- eslint-disable vue/no-use-v-if-with-v-for -->
 <template>
-  <div>
-    <div class="flex items-center justify-end w-full mb-6">
-      <AddRequestButton :menu="requestTypes" :buttonText="'Add Request'" />
-    </div>
-    <Card noborder>
-      <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex gap-x-3 md:mb-0 mb-3 text-sm">
-          <InputGroup
-            v-model="query.searchParameter"
-            placeholder="Search"
-            type="text"
-            prependIcon="heroicons-outline:search"
-            merged
-            classInput="min-w-[220px] !h-9"
-          />
-        </div>
-        <div
-          class="md:flex md:space-x-3 items-center flex-none justify-between"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
-          <VueTailwindDatePicker
-            v-model="dateValue"
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="Select date"
-            as-single
-          />
-        </div>
+  <div class="">
+    <div>
+      <Card noborder>
+        <div class="md:flex pb-6 items-center justify-between">
+          <div class="flex gap-x-3 md:mb-0 mb-3 text-sm">
+            <InputGroup
+              v-model="query.searchParameter"
+              placeholder="Search"
+              type="text"
+              prependIcon="heroicons-outline:search"
+              merged
+              classInput="min-w-[220px] !h-9"
+            />
+          </div>
+          <div
+            class="md:flex md:space-x-3 items-center flex-none justify-between"
+            :class="window.width < 768 ? 'space-x-rb' : ''"
+          >
+            <VueTailwindDatePicker
+              v-model="dateValue"
+              :formatter="formatter"
+              input-classes="form-control h-[36px]"
+              placeholder="Select date"
+              as-single
+            />
+          </div>
 
-        <!-- <div class="">authorities: {{ authUserRoles }}</div> -->
-      </div>
-      <div class="-mx-6">
-        <vue-good-table
-          :columns="columns"
-          styleClass="vgt-table"
-          :isLoading="loading"
-          :rows="requests || []"
-          :sort-options="{
-            enabled: false,
-          }"
-          :pagination-options="{
-            enabled: true,
-            perPage: query.pageSize,
-          }"
-        >
-          <template v-slot:table-row="props">
-            <span
-              v-if="props.column.field == 'date'"
-              class="text-slate-500 dark:text-slate-400"
-            >
-              {{ props.row.eventDate }}
-              <!-- {{ moment(props.row.eventDate).format("lll") }} -->
-            </span>
-
-            <!-- <span v-if="props.column.field == 'status'" class="block w-full">
+          <!-- <div class="">authorities: {{ authUserRoles }}</div> -->
+        </div>
+        <div class="-mx-6">
+          <vue-good-table
+            :columns="columns"
+            styleClass="vgt-table"
+            :isLoading="loading"
+            :rows="requests ? requests : [] || []"
+            :sort-options="{
+              enabled: false,
+            }"
+            :pagination-options="{
+              enabled: true,
+              perPage: query.pageSize,
+            }"
+          >
+            <template v-slot:table-row="props">
               <span
-                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                :class="`${
-                  props.row.status === 'active'
-                    ? 'text-success-500 bg-success-500'
-                    : ''
-                } 
-            ${
-              props.row.status === 'inactive'
-                ? 'text-warning-500 bg-warning-500'
-                : ''
-            }
-            ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
-            
-             `"
+                v-if="props.column.field == 'fullName'"
+                class="flex items-center"
               >
-                {{ props.row.status }}
+                <span
+                  class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium hover:underline cursor-pointer"
+                  ><router-link :to="`/profile/${props.row.userId}`">{{
+                    props.row.fullName
+                  }}</router-link></span
+                >
               </span>
-            </span> -->
-            <span v-if="props.column.field == 'status'" class="block w-full">
+              <span v-if="props.column.field == 'order'" class="font-medium">
+                {{ "#" + props.row.order }}
+              </span>
               <span
-                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                :class="`${
-                  props.row.status === true
-                    ? 'text-success-500 bg-success-500'
-                    : ''
-                } 
+                v-if="props.column.field == 'usageDate'"
+                class="text-slate-500 dark:text-slate-400"
+              >
+                {{ moment(props.row.usageDate).format("ll") }}
+              </span>
+              <span
+                v-if="props.column.field == 'email'"
+                class="font-medium lowercase"
+              >
+                {{ props.row.email }}
+              </span>
+              <span v-if="props.column.field == 'status'" class="block w-full">
+                <span
+                  class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                  :class="`${
+                    props.row.status === true
+                      ? 'text-success-500 bg-success-500'
+                      : ''
+                  } 
             ${props.row.status === false ? 'text-red-500 bg-red-500' : ''}
             ${props.row.status === null ? 'text-blue-500 bg-blue-500' : ''}
             
              `"
-              >
-                {{
-                  props.row.status === null
-                    ? "Pending"
-                    : props.row.status === false
-                    ? "declined"
-                    : "Approved"
-                }}
-              </span>
-            </span>
-            <span v-if="props.column.field == 'action'">
-              <span
-                @click="viewReason(props.row)"
-                v-if="props.row.status === false"
-                class="cursor-pointer text-xs"
-                >view reason</span
-              >
-            </span>
-          </template>
-          <template #pagination-bottom>
-            <div class="py-4 px-3">
-              <Pagination
-                :total="total"
-                :current="query.pageNumber"
-                :per-page="query.pageSize"
-                :pageRange="5"
-                @page-changed="query.pageNumber = $event"
-                :perPageChanged="perPage"
-                enableSearch
-                enableSelect
-                :options="options"
-              >
                 >
-              </Pagination>
-            </div>
-          </template>
-        </vue-good-table>
-      </div>
-    </Card>
+                  {{
+                    props.row.status === null
+                      ? "Pending"
+                      : props.row.status === false
+                      ? "declined"
+                      : "Approved"
+                  }}
+                </span>
+              </span>
+              <span v-if="props.column.field == 'action'">
+                <Dropdown classMenuItems=" w-[140px]">
+                  <span class="text-xl"
+                    ><Icon icon="heroicons-outline:dots-vertical"
+                  /></span>
+                  <template v-slot:menus>
+                    <MenuItem
+                      v-for="(item, i) in handleAction(props.row.status)"
+                      :key="i"
+                    >
+                      <div
+                        @click="item.doit(item.name, props.row)"
+                        :class="{
+                          'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
+                            item.name === 'delete',
+                          'hover:bg-slate-900 hover:text-white':
+                            item.name !== 'delete',
+                        }"
+                        class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
+                      >
+                        <span class="text-base">
+                          <Icon :icon="item.icon" />
+                        </span>
+                        <span>{{ item.name }}</span>
+                      </div>
+                    </MenuItem>
+                  </template>
+                </Dropdown>
+              </span>
+            </template>
+            <template #pagination-bottom>
+              <div class="py-4 px-3">
+                <Pagination
+                  :total="total"
+                  :current="query.pageNumber"
+                  :per-page="query.pageSize"
+                  :pageRange="5"
+                  @page-changed="query.pageNumber = $event"
+                  :perPageChanged="perPage"
+                  enableSearch
+                  enableSelect
+                  :options="options"
+                >
+                  >
+                </Pagination>
+              </div>
+            </template>
+          </vue-good-table>
+        </div>
+      </Card>
+    </div>
   </div>
   <Modal
     title="Confirm action"
@@ -156,6 +174,8 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
+          :disabled="isLoading"
+          :isLoading="isLoading"
           text="Proceed"
           :btnClass="
             type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
@@ -172,44 +192,48 @@
     sizeClass="max-w-[32rem]"
   >
     <ViewRecord :detail="detail" />
-  </Modal>
-
-  <Modal
-    :title="type === 'venue' ? 'Request Venue' : 'Request Event'"
-    labelClass="btn-outline-dark"
-    ref="requestModal"
-    sizeClass="max-w-md"
-  >
-    <RequestVenue
-      v-if="type === 'venue'"
-      :toggleView="closeRequestmodal"
-      :refetch="getRequests"
-    />
-    <RequestEvent
-      v-if="type === 'event'"
-      :toggleView="closeRequestmodal"
-      :refetch="getRequests"
-    />
+    <!-- <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          :disabled="isLoading"
+          :isLoading="isLoading"
+          text="Reject"
+          btnClass="btn-outline-secondary btn-sm "
+          @click="
+            () => {
+              type = 'reject';
+              handleRequest();
+            }
+          "
+        />
+        <Button
+          :disabled="isLoading"
+          :isLoading="isLoading"
+          text="Approve"
+          btnClass="btn-dark btn-sm"
+          @click="
+            () => {
+              type = 'approve';
+              handleRequest();
+            }
+          "
+        />
+      </div>
+    </template> -->
   </Modal>
 </template>
 <script setup>
-import { eventsOptions } from "@/constant/data";
-
-// import ModalCrud from "@/components/Modal";
-import RequestVenue from "@/components/Pages/Dashboard/Requests/make-requests/request-venue.vue";
-import RequestEvent from "@/components/Pages/Dashboard/Requests/make-requests/request-event.vue";
-import AddRequestButton from "./AddRequestButton";
-// import { useToast } from "vue-toastification";
-import ViewRecord from "./preview";
-import VueTailwindDatePicker from "vue-tailwind-datepicker";
-// import Dropdown from "@/components/Dropdown";
+import { useToast } from "vue-toastification";
 import Button from "@/components/Button";
+import ViewRecord from "./VenuePreview";
+import VueTailwindDatePicker from "vue-tailwind-datepicker";
+import Dropdown from "@/components/Dropdown";
 import Card from "@/components/Card";
-// import Icon from "@/components/Icon";
+import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
-// import { MenuItem } from "@headlessui/vue";
+import { MenuItem } from "@headlessui/vue";
 import window from "@/mixins/window";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
@@ -217,91 +241,82 @@ import moment from "moment";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
 onMounted(() => {
-  getRequests();
+  // dispatch("getVenueRequests", { UserId: userId.value });
+  dispatch("getVenueRequests", { ...query });
 });
-
-// const toast = useToast();
+const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
-const requestModal = ref(null);
-const userId = computed(() => state.auth.userData.id);
-const closeRequestmodal = () => {
-  requestModal.value.closeModal();
-};
-const requests = computed(() =>
-  state?.request?.userRequests?.data?.map((i) => {
-    return {
-      ...i,
-      eventDate: moment(i.eventDate).format("ll"),
-      eventType: eventsOptions.find((event) => event.value == i.eventType)
-        ?.label,
-    };
-  })
-);
+const requests = computed(() => state?.venue?.venueRequests?.data);
+const userId = computed(() => state?.auth?.userData?.id);
 
-// const authUserRoles = computed(() =>
-//   state?.role?.authUserRoles
-//     ?.map((i) => {
-//       return i;
-//     })
-//     .join(", ")
-// );
+const success = computed(
+  () => state?.venue?.approveOrRejectVenueRequestSuccess
+);
+const loading = computed(() => state?.venue?.getVenueRequestsLoading);
+
+const isLoading = computed(
+  () => state?.venue?.approveOrRejectVenueRequestLoading
+);
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
   sortOrder: "",
   searchParameter: "",
-  userId: userId.value,
+  userId: state.auth.userData.id,
 });
-
 const type = ref("");
 const detail = ref(null);
 const dateValue = ref(null);
 const comment = ref("");
 
-const getRequests = () => {
-  dispatch("getUserRequests", query);
-};
-
 const formatter = {
   date: "DD MMM YYYY",
   month: "MMM",
 };
-
-const viewReason = (data) => {
-  detail.value = data;
-  modalChange.value.openModal();
-};
-
-const requestTypes = [
+const actions = [
   {
-    label: "Venue",
-    icon: "heroicons-outline:user",
-    link: () => {
-      type.value = "venue";
-      requestModal.value.openModal();
+    name: "view",
+    icon: "heroicons-outline:eye",
+    doit: (name, data) => {
+      detail.value = data;
+
+      modalChange.value.openModal();
     },
   },
   {
-    label: "Event",
-    icon: "heroicons-outline:user",
-    link: () => {
-      type.value = "event";
-      requestModal.value.openModal();
+    name: "approve",
+    icon: "ph:check",
+    doit: (name, data) => {
+      detail.value = data;
+      type.value = "approve";
+
+      modal.value.openModal();
+    },
+  },
+  {
+    name: "reject",
+    icon: "ph:x-light",
+    doit: (name, data) => {
+      detail.value = data;
+      type.value = "reject";
+
+      modal.value.openModal();
     },
   },
 ];
-// const actions = [
-//   {
-//     name: "view",
-//     icon: "heroicons-outline:eye",
-//     doit: (data) => {
-//       detail.value = data;
-//       modalChange.value.openModal();
-//     },
-//   },
-// ];
+const handleAction = (status) => {
+  let newaction = actions;
+
+  if (status === true) {
+    return newaction.filter((i) => i.name !== "approve");
+  }
+  if (status === false) {
+    return newaction.filter((i) => i.name !== "reject");
+  }
+  return newaction;
+};
 const options = [
   {
     value: "25",
@@ -322,60 +337,70 @@ const options = [
 ];
 const columns = [
   {
-    label: "Request",
-    field: "eventType",
+    label: "Venue Name",
+    field: "venueName",
   },
 
   // {
   //   label: "Type",
-  //   field: "requestType",
+  //   field: "type",
   // },
 
   {
-    label: "Date",
-    field: "eventDate",
+    label: "Date Of Usage",
+    field: "usageDate",
   },
 
+  {
+    label: "Purpose Of Usage",
+    field: "purposeOfUsage",
+  },
   {
     label: "Status",
     field: "status",
   },
-
-  {
-    label: "",
-    field: "action",
-  },
 ];
 
-function handleRequest() {}
+function handleRequest() {
+  dispatch("approveOrRejectVenue", {
+    managerId: userId.value,
+    venueLogId: detail.value.id,
+    status: type.value === "approve" ? true : false,
+  });
+}
 
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
   query.pageSize = currentPerPage;
 }
 
-const loading = computed(() => state.request.getLoading);
+// const requests = computed(() =>
+//   state?.request?.data?.data?.map((i) => {
+//     return {
+//       ...i,
+//       date: moment(i.actionDate).format("lll"),
+//     };
+//   })
+// );
 
-const total = computed(() => state.profile.total);
-
-const success = computed(() => state.request.approvesuccess);
+const total = computed(() => state.venue.totalRequestCount);
 
 // Define a debounce delay (e.g., 500 milliseconds)
 const debounceDelay = 800;
 const debouncedSearch = debounce((searchValue) => {
-  dispatch("getUserRequests", { ...query, name: searchValue });
+  dispatch("getVenueRequests", { ...query, searchParamter: searchValue });
 }, debounceDelay);
 
 watch(success, () => {
   if (success.value) {
-    dispatch("getUserRequests", query);
-    // modalChange.value.closeModal();
-    // modal.value.closeModal();
-    // if (type.value === "approve") {
-    //   toast.success("Approve Successfully");
-    // } else {
-    //   toast.success("Request Rejected");
-    // }
+    dispatch("getVenueRequests", query);
+    modalChange.value.closeModal();
+    modal.value.closeModal();
+    if (type.value === "approve") {
+      toast.success("Approve Successfully");
+    } else {
+      toast.success("Request Rejected");
+    }
   }
 });
 
@@ -389,7 +414,7 @@ watch(
 watch(
   () => [query.pageNumber, query.pageSize],
   () => {
-    dispatch("getUserRequests", query);
+    dispatch("getVenueRequests", query);
   }
 );
 </script>

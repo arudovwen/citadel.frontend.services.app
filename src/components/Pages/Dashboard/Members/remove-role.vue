@@ -3,14 +3,14 @@
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to remove role from this user?
     </div>
-    <Select v-if="!isCIH" label="Role" :options="roles" v-model="role" />
+    <Select v-if="!isCIH" label="Role" :options="roleOptions" v-model="role" />
     <!-- <span>UserId: {{ userId }}</span> -->
     <div class="flex gap-x-5 justify-end mt-4">
       <Button
         :disabled="false"
         text="Cancel"
         btnClass="btn-outline-secondary btn-sm"
-        @click="modal.closeModal()"
+        @click="closeModal()"
       />
       <Button
         :disabled="removeLoading"
@@ -42,6 +42,7 @@ const toast = useToast();
 
 onMounted(() => {
   dispatch("getAuthUserRoles", props.userId);
+  dispatch("getRolesList");
 });
 
 const { dispatch, state } = useStore();
@@ -52,14 +53,22 @@ const removeLoading = computed(() => state.role.setPermissionsLoading);
 const removeSuccess = computed(() => state.role.setPermissionsSuccess);
 const removeError = computed(() => state.role.setPermissionsError);
 const role = ref("");
-const roles = computed(() =>
-  state?.role?.authUserRoles?.map((i) => {
-    return {
-      value: i,
-      label: i,
-    };
-  })
+const allroles = computed(() =>
+  state.role.roles
+    .filter((i) => i?.name?.toLowerCase() !== "firsttimers")
+    .map((i) => {
+      return {
+        value: i?.roleId,
+        label: i?.roleName,
+      };
+    })
 );
+const roles = computed(() => state?.role?.authUserRoles);
+
+const roleOptions = computed(() =>
+  allroles.value.filter((i) => roles.value.includes(i.label))
+);
+console.log("🚀 ~ roleOptions:", roleOptions.value);
 function removeRole() {
   if (props.isCIH) {
     dispatch("removeCIHRoleByInspectorate", {
