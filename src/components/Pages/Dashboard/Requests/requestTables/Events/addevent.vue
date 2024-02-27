@@ -17,7 +17,7 @@
           <Select
             placeholder="Select type"
             v-model="requestType"
-            :options="eventsOption"
+            :options="eventsOptions"
           />
         </FormGroup>
 
@@ -45,7 +45,7 @@
   </form>
 </template>
 <script setup>
-// import VueSelect from "@/components/Select/VueSelect";
+import { eventsOptions } from "@/constant/data";
 import { reactive, computed, watch } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
@@ -64,28 +64,7 @@ const toast = useToast();
 const { state, dispatch } = useStore();
 const success = computed(() => state.event.addsuccess);
 const loading = computed(() => state.event.loading);
-const eventsOption = [
-  {
-    value: "Baby Christening",
-    label: "Baby Christening",
-  },
-  {
-    value: "Baby Dedication",
-    label: "Baby Dedication",
-  },
-  {
-    value: "House Warming",
-    label: "House Warming",
-  },
-  {
-    value: "Special Thanksgiving",
-    label: "Special Thanksgiving",
-  },
-  {
-    value: "Burial Ceremony",
-    label: "Burial Ceremony",
-  },
-];
+
 // const membersOptions = computed(() =>
 //   state?.member?.data?.map((i) => {
 //     return {

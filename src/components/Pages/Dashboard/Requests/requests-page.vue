@@ -34,6 +34,12 @@
         v-if="currentNav.activeName.toLowerCase() == 'venue requests'"
       />
       <MyRequests v-if="currentNav.activeName.toLowerCase() == 'my requests'" />
+      <VenueBookings
+        v-if="currentNav.activeName.toLowerCase() == 'venue bookings'"
+      />
+      <EventBookings
+        v-if="currentNav.activeName.toLowerCase() == 'event bookings'"
+      />
     </div>
   </div>
 </template>
@@ -48,6 +54,8 @@ import {
   VenueManagerRequests,
   MyRequests,
   Events,
+  VenueBookings,
+  EventBookings,
 } from "./requestTables";
 import { useRoute } from "vue-router";
 
@@ -82,16 +90,21 @@ const isInspectorate = computed(() =>
   authUserRoles?.value?.toLowerCase()?.includes("inspectorate")
 );
 const navs = computed(() => [
-  {
-    name: "My Requests",
-    isVisible: true,
-    activeName: "my requests",
-  },
   // {
-  //   name: "Departments",
-  //   isVisible: isHOD.value,
-  //   activeName: "departments",
+  //   name: "My Requests",
+  //   isVisible: true,
+  //   activeName: "my requests",
   // },
+  {
+    name: "Event Bookings",
+    isVisible: true,
+    activeName: "event bookings",
+  },
+  {
+    name: "Venue Bookings",
+    isVisible: true,
+    activeName: "venue bookings",
+  },
   {
     name: "Event Requests",
     isVisible: isInspectorate.value,

@@ -1,0 +1,396 @@
+<!-- eslint-disable vue/no-use-v-if-with-v-for -->
+<template>
+  <div>
+    <div class="flex items-center justify-end w-full mb-6">
+      <AddRequestButton :menu="requestTypes" :buttonText="'Add Request'" />
+    </div>
+    <Card noborder>
+      <div class="md:flex pb-6 items-center justify-between">
+        <div class="flex gap-x-3 md:mb-0 mb-3 text-sm">
+          <InputGroup
+            v-model="query.searchParameter"
+            placeholder="Search"
+            type="text"
+            prependIcon="heroicons-outline:search"
+            merged
+            classInput="min-w-[220px] !h-9"
+          />
+        </div>
+        <div
+          class="md:flex md:space-x-3 items-center flex-none justify-between"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
+          <VueTailwindDatePicker
+            v-model="dateValue"
+            :formatter="formatter"
+            input-classes="form-control h-[36px]"
+            placeholder="Select date"
+            as-single
+          />
+        </div>
+
+        <!-- <div class="">authorities: {{ authUserRoles }}</div> -->
+      </div>
+      <div class="-mx-6">
+        <vue-good-table
+          :columns="columns"
+          styleClass="vgt-table"
+          :isLoading="loading"
+          :rows="requests || []"
+          :sort-options="{
+            enabled: false,
+          }"
+          :pagination-options="{
+            enabled: true,
+            perPage: query.pageSize,
+          }"
+        >
+          <template v-slot:table-row="props">
+            <span
+              v-if="props.column.field == 'date'"
+              class="text-slate-500 dark:text-slate-400"
+            >
+              {{ props.row.eventDate }}
+              <!-- {{ moment(props.row.eventDate).format("lll") }} -->
+            </span>
+
+            <!-- <span v-if="props.column.field == 'status'" class="block w-full">
+              <span
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                :class="`${
+                  props.row.status === 'active'
+                    ? 'text-success-500 bg-success-500'
+                    : ''
+                } 
+            ${
+              props.row.status === 'inactive'
+                ? 'text-warning-500 bg-warning-500'
+                : ''
+            }
+            ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
+            
+             `"
+              >
+                {{ props.row.status }}
+              </span>
+            </span> -->
+            <span v-if="props.column.field == 'status'" class="block w-full">
+              <span
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                :class="`${
+                  props.row.status === true
+                    ? 'text-success-500 bg-success-500'
+                    : ''
+                } 
+            ${props.row.status === false ? 'text-red-500 bg-red-500' : ''}
+            ${props.row.status === null ? 'text-blue-500 bg-blue-500' : ''}
+            
+             `"
+              >
+                {{
+                  props.row.status === null
+                    ? "Pending"
+                    : props.row.status === false
+                    ? "declined"
+                    : "Approved"
+                }}
+              </span>
+            </span>
+            <span v-if="props.column.field == 'action'">
+              <span
+                @click="viewReason(props.row)"
+                v-if="props.row.status === false"
+                class="cursor-pointer text-xs"
+                >view reason</span
+              >
+            </span>
+          </template>
+          <template #pagination-bottom>
+            <div class="py-4 px-3">
+              <Pagination
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="5"
+                @page-changed="query.pageNumber = $event"
+                :perPageChanged="perPage"
+                enableSearch
+                enableSelect
+                :options="options"
+              >
+                >
+              </Pagination>
+            </div>
+          </template>
+        </vue-good-table>
+      </div>
+    </Card>
+  </div>
+  <Modal
+    title="Confirm action"
+    label="Small modal"
+    :labelClass="
+      type === 'approve' ? 'btn-outline-success' : 'btn-outline-danger'
+    "
+    :themeClass="type === 'approve' ? 'bg-success-500' : 'bg-danger-500'"
+    ref="modal"
+    sizeClass="max-w-md"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure you want to {{ type }} this request?
+    </div>
+    <div v-if="type.toLowerCase() === 'reject'">
+      <textarea
+        resize="none"
+        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
+        rows="4"
+        placeholder="Provide reason"
+        v-model="comment"
+      ></textarea>
+    </div>
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm "
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Proceed"
+          :btnClass="
+            type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
+          "
+          @click="handleRequest"
+        />
+      </div>
+    </template>
+  </Modal>
+  <Modal
+    title="Request detail"
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-[32rem]"
+  >
+    <ViewRecord :detail="detail" />
+  </Modal>
+
+  <Modal
+    :title="type === 'venue' ? 'Request Venue' : 'Request Event'"
+    labelClass="btn-outline-dark"
+    ref="requestModal"
+    sizeClass="max-w-md"
+  >
+    <RequestVenue
+      v-if="type === 'venue'"
+      :toggleView="closeRequestmodal"
+      :refetch="getRequests"
+    />
+    <RequestEvent
+      v-if="type === 'event'"
+      :toggleView="closeRequestmodal"
+      :refetch="getRequests"
+    />
+  </Modal>
+</template>
+<script setup>
+import { eventsOptions } from "@/constant/data";
+
+// import ModalCrud from "@/components/Modal";
+import RequestVenue from "@/components/Pages/Dashboard/Requests/make-requests/request-venue.vue";
+import RequestEvent from "@/components/Pages/Dashboard/Requests/make-requests/request-event.vue";
+import AddRequestButton from "./AddRequestButton";
+// import { useToast } from "vue-toastification";
+import ViewRecord from "./preview";
+import VueTailwindDatePicker from "vue-tailwind-datepicker";
+// import Dropdown from "@/components/Dropdown";
+import Button from "@/components/Button";
+import Card from "@/components/Card";
+// import Icon from "@/components/Icon";
+import InputGroup from "@/components/InputGroup";
+import Pagination from "@/components/Pagination";
+import Modal from "@/components/Modal/Modal";
+// import { MenuItem } from "@headlessui/vue";
+import window from "@/mixins/window";
+import { useStore } from "vuex";
+import { debounce } from "lodash";
+import moment from "moment";
+import { computed, onMounted, watch, reactive, ref } from "vue";
+
+onMounted(() => {
+  getRequests();
+});
+
+// const toast = useToast();
+const { state, dispatch } = useStore();
+const modal = ref(null);
+const modalChange = ref(null);
+const requestModal = ref(null);
+const userId = computed(() => state.auth.userData.id);
+const closeRequestmodal = () => {
+  requestModal.value.closeModal();
+};
+const requests = computed(() =>
+  state?.request?.userRequests?.data?.map((i) => {
+    return {
+      ...i,
+      eventDate: moment(i.eventDate).format("ll"),
+      eventType: eventsOptions.find((event) => event.value == i.eventType)
+        ?.label,
+    };
+  })
+);
+
+// const authUserRoles = computed(() =>
+//   state?.role?.authUserRoles
+//     ?.map((i) => {
+//       return i;
+//     })
+//     .join(", ")
+// );
+const query = reactive({
+  pageNumber: 1,
+  pageSize: 25,
+  sortOrder: "",
+  searchParameter: "",
+  userId: userId.value,
+});
+
+const type = ref("");
+const detail = ref(null);
+const dateValue = ref(null);
+const comment = ref("");
+
+const getRequests = () => {
+  dispatch("getUserRequests", query);
+};
+
+const formatter = {
+  date: "DD MMM YYYY",
+  month: "MMM",
+};
+
+const viewReason = (data) => {
+  detail.value = data;
+  modalChange.value.openModal();
+};
+
+const requestTypes = [
+  {
+    label: "Venue",
+    icon: "heroicons-outline:user",
+    link: () => {
+      type.value = "venue";
+      requestModal.value.openModal();
+    },
+  },
+  {
+    label: "Event",
+    icon: "heroicons-outline:user",
+    link: () => {
+      type.value = "event";
+      requestModal.value.openModal();
+    },
+  },
+];
+// const actions = [
+//   {
+//     name: "view",
+//     icon: "heroicons-outline:eye",
+//     doit: (data) => {
+//       detail.value = data;
+//       modalChange.value.openModal();
+//     },
+//   },
+// ];
+const options = [
+  {
+    value: "25",
+    label: "25",
+  },
+  {
+    value: "50",
+    label: "50",
+  },
+  {
+    value: "75",
+    label: "75",
+  },
+  {
+    value: "100",
+    label: "100",
+  },
+];
+const columns = [
+  {
+    label: "Request",
+    field: "eventType",
+  },
+
+  // {
+  //   label: "Type",
+  //   field: "requestType",
+  // },
+
+  {
+    label: "Date",
+    field: "eventDate",
+  },
+
+  {
+    label: "Status",
+    field: "status",
+  },
+
+  {
+    label: "",
+    field: "action",
+  },
+];
+
+function handleRequest() {}
+
+function perPage({ currentPerPage }) {
+  query.pageNumber = 1;
+  query.pageSize = currentPerPage;
+}
+
+const loading = computed(() => state.request.getLoading);
+
+const total = computed(() => state.profile.total);
+
+const success = computed(() => state.request.approvesuccess);
+
+// Define a debounce delay (e.g., 500 milliseconds)
+const debounceDelay = 800;
+const debouncedSearch = debounce((searchValue) => {
+  dispatch("getUserRequests", { ...query, name: searchValue });
+}, debounceDelay);
+
+watch(success, () => {
+  if (success.value) {
+    dispatch("getUserRequests", query);
+    // modalChange.value.closeModal();
+    // modal.value.closeModal();
+    // if (type.value === "approve") {
+    //   toast.success("Approve Successfully");
+    // } else {
+    //   toast.success("Request Rejected");
+    // }
+  }
+});
+
+watch(
+  () => query.searchParameter,
+  () => {
+    debouncedSearch(query.searchParameter);
+  }
+);
+
+watch(
+  () => [query.pageNumber, query.pageSize],
+  () => {
+    dispatch("getUserRequests", query);
+  }
+);
+</script>
+<style lang="scss"></style>
