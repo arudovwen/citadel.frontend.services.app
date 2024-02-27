@@ -404,7 +404,7 @@ const StatusOptions = [
   },
   {
     label: "Rejected",
-    value: false
+    value: false,
   },
 ];
 // Define a debounce delay (e.g., 500 milliseconds)

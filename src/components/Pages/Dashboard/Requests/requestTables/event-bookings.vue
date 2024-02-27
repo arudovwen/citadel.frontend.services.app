@@ -35,7 +35,6 @@
           </div>
         </div>
         <div
-          v-if="permissions.includes('CAN_CREATE_EVENTS')"
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
