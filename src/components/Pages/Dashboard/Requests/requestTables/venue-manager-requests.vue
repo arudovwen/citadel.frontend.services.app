@@ -13,6 +13,13 @@
               merged
               classInput="min-w-[220px] !h-9"
             />
+            <Select
+              label="Select status"
+              :options="StatusOptions"
+              v-model="query.status"
+              placeholder="Sort by"
+              classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
+            />
           </div>
           <div
             class="md:flex md:space-x-3 items-center flex-none justify-between"
@@ -223,6 +230,7 @@
   </Modal>
 </template>
 <script setup>
+import Select from "@/components/Select";
 import { useToast } from "vue-toastification";
 import Button from "@/components/Button";
 import ViewRecord from "./VenuePreview";
@@ -264,6 +272,7 @@ const query = reactive({
   pageSize: 25,
   sortOrder: "",
   searchParameter: "",
+  status: "",
   // userId: state.auth.userData.id,
 });
 const type = ref("");
@@ -384,7 +393,20 @@ function perPage({ currentPerPage }) {
 // );
 
 const total = computed(() => state.venue.totalRequestCount);
-
+const StatusOptions = [
+  {
+    label: "Pending",
+    value: "",
+  },
+  {
+    label: "Approved",
+    value: true,
+  },
+  {
+    label: "Rejected",
+    value: false
+  },
+];
 // Define a debounce delay (e.g., 500 milliseconds)
 const debounceDelay = 800;
 const debouncedSearch = debounce((searchValue) => {
@@ -412,7 +434,7 @@ watch(
 );
 
 watch(
-  () => [query.pageNumber, query.pageSize],
+  () => [query.pageNumber, query.pageSize, query.status],
   () => {
     dispatch("getVenueRequests", query);
   }
