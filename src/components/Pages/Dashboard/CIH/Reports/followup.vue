@@ -33,8 +33,6 @@
               iconClass="text-lg"
             />
           </export-excel>
-
-      
         </div>
       </div>
       <div class="-mx-6">
@@ -171,14 +169,15 @@ import { useStore } from "vuex";
 import { debounce } from "lodash";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 import { roleFilters } from "@/constant/data";
+import { useRouter } from "vue-router";
 
 onMounted(() => {
   dispatch("getAllBiodata", query);
   dispatch("getRoles");
 });
 const { state, dispatch } = useStore();
-const permissions = computed(() => state.auth.permissions);
-
+// const permissions = computed(() => state.auth.permissions);
+const router = useRouter();
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
@@ -204,6 +203,7 @@ const actions = ref([
     doit: (name, data) => {
       type.value = name;
       detail.value = data;
+      router.push(`/cih/reports/followup/${detail?.value?.userId}`);
     },
   },
 ]);

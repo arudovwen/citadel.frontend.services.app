@@ -512,7 +512,7 @@ const routes = [
               },
               {
                 path: "followup",
-                name: "Followup Report",
+                name: "First timers list",
                 component: () =>
                   import("@/components/Pages/Dashboard/CIH/Reports/followup"),
                 meta: {
@@ -525,8 +525,8 @@ const routes = [
                 },
               },
               {
-                path: "firs-timer-report",
-                name: "First Timer Report",
+                path: "followup/:id",
+                name: "Followup Report",
                 component: () =>
                   import(
                     "@/components/Pages/Dashboard/CIH/Reports/first-timer-report"
@@ -536,7 +536,7 @@ const routes = [
                   roles: "",
                   groupParent: {
                     name: "Reports",
-                    url: "/cih/reports/first-timer-report",
+                    url: "/cih/reports/followup",
                   },
                 },
               },
