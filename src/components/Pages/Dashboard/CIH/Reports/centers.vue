@@ -30,7 +30,10 @@
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
           <Button
-            v-if="active === 'inspection'"
+            v-if="
+              active === 'inspection' &&
+              permissions.includes('CAN_CREATE_INSPECTION_REPORT')
+            "
             icon="heroicons-outline:plus-sm"
             text="Add Report"
             btnClass=" btn-primary font-normal btn-sm "
@@ -44,7 +47,10 @@
           />
           <!-- v-if="state.auth.userData?.cihRole?.toLowerCase() === 'cihpastor'" -->
           <Button
-            v-if="active !== 'inspection'"
+            v-if="
+              active !== 'inspection' &&
+              permissions.includes('CAN_CREATE_ACTIVITY_REPORT')
+            "
             icon="heroicons-outline:plus-sm"
             text="Add Report"
             btnClass=" btn-primary font-normal btn-sm "
@@ -59,11 +65,12 @@
           <div
             class="flex border border-gray-200 rounded"
             v-if="
-              state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
-              state.auth.userData.userRole.toLowerCase() === 'administrator'
+              permissions.includes('CAN_VIEW_INSPECTION_REPORT') ||
+              permissions.includes('CAN_VIEW_ACTIVITY_REPORT')
             "
           >
             <Button
+              v-if="permissions.includes('CAN_VIEW_ACTIVITY_REPORT')"
               text="Activity reports"
               @click="active = 'activity'"
               :btnClass="`border-r h-9 py-2 rounded-[0px] flex items-center ${
@@ -71,6 +78,7 @@
               }`"
             />
             <Button
+              v-if="permissions.includes('CAN_CREATE_INSPECTION_REPORT')"
               text="Inspection reports"
               @click="active = 'inspection'"
               :btnClass="`h-9 py-2 flex items-center ${
@@ -100,8 +108,7 @@
             externalQuery: searchParameter,
           }"
           :select-options="{
-            enabled:
-              state.auth.userData.userRole.toLowerCase() === 'cihcooordinator',
+            enabled: permissions.includes('CAN_CREATE_COORDINATOR_REPORT'),
             selectionInfoClass: 'top-select',
             selectionText:
               'reports selected, Do you wish to send these reports?',
@@ -294,6 +301,7 @@ import Select from "@/components/Select";
 import { useStore } from "vuex";
 import { computed, ref, reactive, watch, onMounted, provide } from "vue";
 import moment from "moment";
+import { useRoute } from "vue-router";
 import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import { useToast } from "vue-toastification";
@@ -489,11 +497,8 @@ export default {
     },
   },
   setup() {
-    onMounted(() => {
-      dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
+    const route = useRoute();
 
-      dispatch("getChurchAffiliationsById", state.auth.userData?.id);
-    });
     const sortFilters = [
       {
         label: "Default",
@@ -530,6 +535,7 @@ export default {
       pageSize: 25,
       searchParameter: "",
       sortOrder: "",
+      ZoneName: route.params.name,
     });
 
     const zoneOptions = computed(() =>
@@ -563,8 +569,31 @@ export default {
     const reports = computed(() => state.report.data);
     const detail = computed(() => state.profile.churchAffiliationsData);
     const inspectionsData = computed(() => state.report.inspectionsData);
+    const permissions = computed(() => state.auth.permissions);
     const active = ref("activity");
 
+    onMounted(() => {
+      dispatch("getZones", { pageNumber: 1, pageSize: 25000 });
+      !route.params.name &&
+        dispatch("getChurchAffiliationsById", state.auth.userData?.id);
+
+      getData();
+    });
+
+    function getData() {
+      if (route.params.name) {
+        dispatch("getActivityReports", {
+          ...query,
+          ZoneName: route.params.name,
+        });
+      } else {
+        dispatch("getActivityReports", {
+          ...query,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
+        });
+      }
+    }
     function handleReports() {
       console.log(
         "🚀 ~ file: centers.vue:415 ~ handleReports ~ handleReports:"
@@ -576,22 +605,14 @@ export default {
     }
     watch(getChurchAffiliationsDatasuccess, () => {
       if (getChurchAffiliationsDatasuccess.value) {
-        dispatch("getActivityReports", {
-          ...query,
-          CenterName: detail.value?.cihAddress,
-          ZoneName: detail?.value?.cihZone,
-        });
+        getData();
       }
     });
     watch(active, () => {
       if (active.value == "inspection") {
         dispatch("getInspectionReports", query);
       } else {
-        dispatch("getActivityReports", {
-          ...query,
-          CenterName: detail.value?.cihAddress,
-          ZoneName: detail?.value?.cihZone,
-        });
+        getData();
       }
     });
 
@@ -609,11 +630,7 @@ export default {
     watch(updatereportsuccess, () => {
       if (updatereportsuccess.value) {
         if (active.value.toLowerCase() == "activity") {
-          dispatch("getActivityReports", {
-            ...query,
-            CenterName: detail.value?.cihAddress,
-            ZoneName: detail?.value?.cihZone,
-          });
+          getData();
         }
         if (active.value.toLowerCase() == "inspection") {
           dispatch("getInspectionReports", query);
@@ -626,11 +643,7 @@ export default {
     watch(deletereportsuccess, () => {
       if (deletereportsuccess.value) {
         if (active.value.toLowerCase() == "activity") {
-          dispatch("getActivityReports", {
-            ...query,
-            CenterName: detail.value?.cihAddress,
-            ZoneName: detail?.value?.cihZone,
-          });
+          getData();
         }
         if (active.value.toLowerCase() == "inspection") {
           dispatch("getInspectionReports", query);
@@ -650,12 +663,20 @@ export default {
     // Define a debounce delay (e.g., 500 milliseconds)
     const debounceDelay = 800;
     const debouncedSearch = debounce((searchValue) => {
-      dispatch("getActivityReports", {
-        ...query,
-        CenterName: detail.value?.cihAddress,
-        ZoneName: detail?.value?.cihZone,
-        name: searchValue,
-      });
+      if (!route.params.name) {
+        dispatch("getActivityReports", {
+          ...query,
+
+          name: searchValue,
+        });
+      } else {
+        dispatch("getActivityReports", {
+          ...query,
+          CenterName: detail.value?.cihAddress,
+          ZoneName: detail?.value?.cihZone,
+          name: searchValue,
+        });
+      }
     }, debounceDelay);
     watch(
       () => query.searchParameter,
@@ -666,11 +687,7 @@ export default {
     watch(
       () => [query.pageNumber, query.pageSize, query.sortOrder],
       () => {
-        dispatch("getActivityReports", {
-          ...query,
-          CenterName: detail.value?.cihAddress,
-          ZoneName: detail?.value?.cihZone,
-        });
+        getData();
       }
     );
 
@@ -692,6 +709,7 @@ export default {
       sortFilters,
       total,
       zoneOptions,
+      permissions,
     };
   },
 };

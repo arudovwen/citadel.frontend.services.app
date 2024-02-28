@@ -484,15 +484,15 @@ const routes = [
                 },
               },
               {
-                path: "centers/:zoneId",
+                path: "centers/:zoneId/:name",
                 name: "Reports",
                 component: () =>
                   import("@/components/Pages/Dashboard/CIH/Reports/centers"),
                 meta: {
                   activeName: "reports",
                   groupParent: {
-                    name: "Center Reports",
-                    url: "/cih/reports",
+                    name: "Zones",
+                    url: "/cih/reports/zones",
                   },
                 },
               },

@@ -27,7 +27,6 @@
             class="form-control"
             id="d1"
             placeholder="Select date of event"
-            :config="config"
           />
         </FormGroup>
       </div>
@@ -112,7 +111,7 @@ const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
-const config = { enableTime: true };
+
 // const { value: name, errorMessage: nameError } = useField("name");
 
 const { value: dateOfRequestedEvent, errorMessage: dateError } = useField(
