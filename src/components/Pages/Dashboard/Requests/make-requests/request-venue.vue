@@ -16,6 +16,7 @@
           class="form-control"
           id="d1"
           placeholder="Select date of event"
+          :config="config"
         />
       </FormGroup>
       <div class="assagin space-y-4">
@@ -115,14 +116,15 @@ const onSubmit = handleSubmit((values) => {
     ...values,
     venue: values.venue.label,
   };
-  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", payload);
   dispatch("requestVenue", payload);
 });
 
 watch(success, () => {
-  success.value && toast.success("Request sent");
-  props.refetch();
-  props.toggleView();
+  if (success.value) {
+    toast.success("Request sent");
+    props.refetch();
+    props.toggleView();
+  }
 });
 watch(error, () => {
   // error.value && toast.success("Request sent");

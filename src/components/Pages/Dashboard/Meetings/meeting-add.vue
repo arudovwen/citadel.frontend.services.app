@@ -18,6 +18,7 @@
             id="d1"
             placeholder="yyyy, dd M"
             :error="dateOfMeetingError"
+            :config="{ minDate: 'today' }"
           />
         </FormGroup>
 

@@ -27,6 +27,7 @@
             class="form-control"
             id="d1"
             placeholder="Select date of event"
+            :config="{ minDate: 'today' }"
           />
         </FormGroup>
       </div>

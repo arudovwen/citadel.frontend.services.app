@@ -1,12 +1,6 @@
 <!-- eslint-disable vue/no-use-v-if-with-v-for -->
 <template>
   <div class="">
-    <div
-      v-if="permissions.includes('CAN_CREATE_EVENTS')"
-      class="flex items-center justify-end w-full mb-6"
-    >
-      <AddRequestButton :menu="requestTypes" :buttonText="'Add Request'" />
-    </div>
     <div>
       <Card noborder>
         <div class="md:flex pb-6 items-center justify-between">
@@ -19,20 +13,29 @@
               merged
               classInput="min-w-[220px] !h-9"
             />
-          </div>
-          <div
-            class="md:flex md:space-x-3 items-center flex-none justify-between"
-            :class="window.width < 768 ? 'space-x-rb' : ''"
-          >
-            <VueTailwindDatePicker
-              v-model="dateValue"
-              :formatter="formatter"
-              input-classes="form-control h-[36px]"
-              placeholder="Select date"
-              as-single
-            />
+            <div
+              class="md:flex md:space-x-3 items-center flex-none justify-between"
+              :class="window.width < 768 ? 'space-x-rb' : ''"
+            >
+              <VueTailwindDatePicker
+                v-model="dateValue"
+                :formatter="formatter"
+                input-classes="form-control h-[36px]"
+                placeholder="Select date"
+                as-single
+              />
+            </div>
           </div>
 
+          <div
+            v-if="permissions.includes('CAN_CREATE_EVENTS')"
+            class="flex items-center justify-end w-full mb-6"
+          >
+            <AddRequestButton
+              :menu="requestTypes"
+              :buttonText="'Add Request'"
+            />
+          </div>
           <!-- <div class="">authorities: {{ authUserRoles }}</div> -->
         </div>
         <div class="-mx-6">
@@ -227,8 +230,31 @@
       </div>
     </template> -->
   </Modal>
+  <Modal
+    title="Request detail"
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-[32rem]"
+  >
+    <ViewRecord :detail="detail" />
+  </Modal>
+
+  <Modal
+    :title="type === 'venue' ? 'Request Venue' : 'Request Event'"
+    labelClass="btn-outline-dark"
+    ref="requestModal"
+    sizeClass="max-w-md"
+  >
+    <RequestVenue
+      v-if="type === 'venue'"
+      :toggleView="closeRequestmodal"
+      :refetch="getRequests"
+    />
+  </Modal>
 </template>
 <script setup>
+import RequestVenue from "@/components/Pages/Dashboard/Requests/make-requests/request-venue.vue";
+
 import { useToast } from "vue-toastification";
 import Button from "@/components/Button";
 import ViewRecord from "./VenuePreview";
@@ -245,11 +271,12 @@ import { useStore } from "vuex";
 import { debounce } from "lodash";
 import moment from "moment";
 import { computed, onMounted, watch, reactive, ref } from "vue";
+import AddRequestButton from "./AddRequestButton";
 
 onMounted(() => {
-  // dispatch("getVenueRequests", { UserId: userId.value });
   dispatch("getVenueRequests", { ...query });
 });
+
 const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
@@ -262,7 +289,30 @@ const success = computed(
 );
 const loading = computed(() => state?.venue?.getVenueRequestsLoading);
 const permissions = computed(() => state.auth.permissions);
+const requestModal = ref(null);
 
+const closeRequestmodal = () => {
+  requestModal.value.closeModal();
+};
+
+const requestTypes = [
+  {
+    label: "Venue",
+    icon: "heroicons-outline:user",
+    link: () => {
+      type.value = "venue";
+      requestModal.value.openModal();
+    },
+  },
+  {
+    label: "Event",
+    icon: "heroicons-outline:user",
+    link: () => {
+      type.value = "event";
+      requestModal.value.openModal();
+    },
+  },
+];
 const isLoading = computed(
   () => state?.venue?.approveOrRejectVenueRequestLoading
 );
@@ -277,7 +327,9 @@ const type = ref("");
 const detail = ref(null);
 const dateValue = ref(null);
 const comment = ref("");
-
+const getRequests = () => {
+  dispatch("getVenueRequests", query);
+};
 const formatter = {
   date: "DD MMM YYYY",
   month: "MMM",

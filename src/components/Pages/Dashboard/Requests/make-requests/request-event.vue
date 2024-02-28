@@ -15,6 +15,7 @@
           class="form-control"
           id="d1"
           placeholder="Select date of event"
+          :config="config"
         />
       </FormGroup>
     </div>
