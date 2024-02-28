@@ -51,7 +51,7 @@
             perPage: query.pageSize,
           }"
           :select-options="{
-            enabled: true,
+            enabled: false,
             selectionInfoClass: 'top-select',
             selectionText:
               'first timers selected, Do you wish to upgrade all these first timers?',
@@ -198,7 +198,7 @@ const mytable = ref(null);
 // });
 const actions = ref([
   {
-    name: "view",
+    name: "view reports",
     icon: "heroicons-outline:eye",
     doit: (name, data) => {
       type.value = name;

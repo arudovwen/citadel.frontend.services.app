@@ -155,7 +155,9 @@
       ref="modal"
       sizeClass="max-w-lg"
     >
-      {{ report.report }}
+      <div class="w-full min-h-[200px]">
+        {{ report.report }}
+      </div>
     </Modal>
   </div>
 </template>
