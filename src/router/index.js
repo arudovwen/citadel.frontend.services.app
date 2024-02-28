@@ -510,6 +510,36 @@ const routes = [
                   },
                 },
               },
+              {
+                path: "followup",
+                name: "First timers list",
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Reports/followup"),
+                meta: {
+                  activeName: "reports",
+                  roles: "",
+                  groupParent: {
+                    name: "Reports",
+                    url: "/cih/reports/followup",
+                  },
+                },
+              },
+              {
+                path: "followup/:id",
+                name: "Followup Report",
+                component: () =>
+                  import(
+                    "@/components/Pages/Dashboard/CIH/Reports/first-timer-report"
+                  ),
+                meta: {
+                  activeName: "reports",
+                  roles: "",
+                  groupParent: {
+                    name: "Reports",
+                    url: "/cih/reports/followup",
+                  },
+                },
+              },
             ],
           },
           // {
