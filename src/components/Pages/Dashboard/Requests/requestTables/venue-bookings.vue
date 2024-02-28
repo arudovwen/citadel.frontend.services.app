@@ -29,11 +29,20 @@
 
           <div
             v-if="permissions.includes('CAN_CREATE_EVENTS')"
-            class="flex items-center justify-end w-full mb-6"
+            class="md:flex md:space-x-3 items-center flex-none"
+            :class="window.width < 768 ? 'space-x-rb' : ''"
           >
-            <AddRequestButton
-              :menu="requestTypes"
-              :buttonText="'Add Request'"
+            <Button
+              icon="heroicons-outline:plus-sm"
+              text="Request Venue"
+              btnClass=" btn-primary font-normal btn-sm "
+              iconClass="text-lg"
+              @click="
+                () => {
+                  type = 'add';
+                  $refs.requestModal.openModal();
+                }
+              "
             />
           </div>
           <!-- <div class="">authorities: {{ authUserRoles }}</div> -->
@@ -183,7 +192,7 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          :disabled="isLoading"
+          :disabled="isLoading || (!comment && type.toLowerCase() === 'reject')"
           :isLoading="isLoading"
           text="Proceed"
           :btnClass="
@@ -245,11 +254,7 @@
     ref="requestModal"
     sizeClass="max-w-md"
   >
-    <RequestVenue
-      v-if="type === 'venue'"
-      :toggleView="closeRequestmodal"
-      :refetch="getRequests"
-    />
+    <RequestVenue :toggleView="closeRequestmodal" :refetch="getRequests" />
   </Modal>
 </template>
 <script setup>
@@ -271,7 +276,6 @@ import { useStore } from "vuex";
 import { debounce } from "lodash";
 import moment from "moment";
 import { computed, onMounted, watch, reactive, ref } from "vue";
-import AddRequestButton from "./AddRequestButton";
 
 onMounted(() => {
   dispatch("getVenueRequests", { ...query });
@@ -295,24 +299,6 @@ const closeRequestmodal = () => {
   requestModal.value.closeModal();
 };
 
-const requestTypes = [
-  {
-    label: "Venue",
-    icon: "heroicons-outline:user",
-    link: () => {
-      type.value = "venue";
-      requestModal.value.openModal();
-    },
-  },
-  {
-    label: "Event",
-    icon: "heroicons-outline:user",
-    link: () => {
-      type.value = "event";
-      requestModal.value.openModal();
-    },
-  },
-];
 const isLoading = computed(
   () => state?.venue?.approveOrRejectVenueRequestLoading
 );

@@ -213,7 +213,9 @@
           @click="$refs.modalStatus.closeModal()"
         />
         <Button
-          :disabled="updateloading"
+          :disabled="
+            updateloading || (!comment && type.toLowerCase() === 'reject')
+          "
           :isLoading="updateloading"
           text="Proceed"
           :btnClass="` btn-sm ${

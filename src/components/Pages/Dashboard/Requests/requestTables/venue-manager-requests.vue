@@ -14,7 +14,7 @@
               classInput="min-w-[220px] !h-9"
             />
             <Select
-              label="Select status"
+              label=""
               :options="StatusOptions"
               v-model="query.status"
               placeholder="Sort by"
@@ -181,7 +181,7 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          :disabled="isLoading"
+          :disabled="isLoading || (!comment && type.toLowerCase() === 'reject')"
           :isLoading="isLoading"
           text="Proceed"
           :btnClass="

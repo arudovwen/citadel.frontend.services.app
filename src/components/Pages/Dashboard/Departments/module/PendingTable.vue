@@ -174,7 +174,9 @@
         />
         <Button
           :isLoading="approveloading"
-          :disabled="approveloading"
+          :disabled="
+            approveloading || (!comment && type.toLowerCase() === 'reject')
+          "
           text="Proceed"
           :btnClass="
             type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
