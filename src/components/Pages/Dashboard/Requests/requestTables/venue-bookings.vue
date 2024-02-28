@@ -1,6 +1,12 @@
 <!-- eslint-disable vue/no-use-v-if-with-v-for -->
 <template>
   <div class="">
+    <div
+      v-if="permissions.includes('CAN_CREATE_EVENTS')"
+      class="flex items-center justify-end w-full mb-6"
+    >
+      <AddRequestButton :menu="requestTypes" :buttonText="'Add Request'" />
+    </div>
     <div>
       <Card noborder>
         <div class="md:flex pb-6 items-center justify-between">
@@ -255,6 +261,7 @@ const success = computed(
   () => state?.venue?.approveOrRejectVenueRequestSuccess
 );
 const loading = computed(() => state?.venue?.getVenueRequestsLoading);
+const permissions = computed(() => state.auth.permissions);
 
 const isLoading = computed(
   () => state?.venue?.approveOrRejectVenueRequestLoading
