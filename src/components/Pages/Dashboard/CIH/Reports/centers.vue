@@ -78,7 +78,7 @@
               }`"
             />
             <Button
-              v-if="permissions.includes('CAN_CREATE_INSPECTION_REPORT')"
+              v-if="permissions.includes('CAN_VIEW_INSPECTION_REPORT')"
               text="Inspection reports"
               @click="active = 'inspection'"
               :btnClass="`h-9 py-2 flex items-center ${
