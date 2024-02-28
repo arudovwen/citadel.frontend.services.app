@@ -134,7 +134,7 @@
             </span>
 
             <span v-if="props.column.field == 'action'">
-              <Dropdown classMenuItems="w-[140px]">
+              <Dropdown classMenuItems="w-[170px]">
                 <span class="text-xl">
                   <Icon icon="heroicons-outline:dots-vertical" />
                 </span>
@@ -256,12 +256,17 @@
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" :detail="detail" />
     <ViewRecord v-if="type === 'view'" :detail="detail" />
+    <FollowupFirsttimer
+      v-if="type.toLowerCase() === 'follow up report'"
+      :detail="detail"
+    />
   </Modal>
 </template>
 
 <script setup>
 import Select from "@/components/Select";
 import { useToast } from "vue-toastification";
+import FollowupFirsttimer from "@/components/Pages/Dashboard/FirstTimers/followupFirsttimer";
 // import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
@@ -305,6 +310,15 @@ const actions = ref([
   {
     name: "edit",
     icon: "heroicons:pencil-square",
+    doit: (name, data) => {
+      type.value = name;
+      detail.value = data;
+      modalChange.value.openModal();
+    },
+  },
+  {
+    name: "Follow up report",
+    icon: "heroicons-outline:chat-bubble-left-ellipsis",
     doit: (name, data) => {
       type.value = name;
       detail.value = data;
@@ -436,7 +450,7 @@ const addsuccess = computed(() => state.profile.addsuccess);
 const deletesuccess = computed(() => state.profile.deletesuccess);
 const convertsuccess = computed(() => state.member.convertsuccess);
 const convertloading = computed(() => state.member.convertloading);
-
+const addFollowupSuccess = computed(() => state.report.addFollowupSuccess);
 function handleDelete() {
   dispatch("deleteBiodata", timerid.value);
 }
@@ -490,5 +504,10 @@ watch(
     dispatch("getAllBiodata", query);
   }
 );
+
+watch(addFollowupSuccess, () => {
+  toast.success("Report Sent");
+  modalChange.value.closeModal();
+});
 </script>
 <style lang="scss"></style>
