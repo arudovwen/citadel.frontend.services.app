@@ -430,7 +430,7 @@ export default {
       state.getAllOutreacherror = err;
       state.getAllOutreachsuccess = false;
     },
-    
+
     getAllOutreachSuccess(state, { data, totalCount }) {
       state.getAllOutreachloading = false;
       state.getAllOutreachsuccess = true;
@@ -463,8 +463,13 @@ export default {
 
     // addOutreachRequestRequest
     addOutreachRequestBegin(state) {
-      console.log("heyy")
       state.addOutreachRequestLoading = true;
+      state.addOutreachRequestSuccess = false;
+      state.addOutreachRequestError = null;
+    },
+
+    addOutreachRequestReset(state) {
+      state.addOutreachRequestLoading = false;
       state.addOutreachRequestSuccess = false;
       state.addOutreachRequestError = null;
     },
@@ -888,8 +893,8 @@ export default {
     },
 
     async addOutreachRequest({ commit }, data) {
-      commit("AddOutreachRequestBegin");
-      const response = await DataService.put(
+      commit("addOutreachRequestBegin");
+      await DataService.put(
         `${urls.ADD_OUTREACH_REQUEST}?${new URLSearchParams(cleanObject(data))}`,
         // data
       ).then((res) => {
