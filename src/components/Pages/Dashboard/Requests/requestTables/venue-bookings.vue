@@ -249,7 +249,7 @@
   </Modal>
 
   <Modal
-    :title="type === 'venue' ? 'Request Venue' : 'Request Event'"
+    title="Request Venue"
     labelClass="btn-outline-dark"
     ref="requestModal"
     sizeClass="max-w-md"
@@ -308,6 +308,7 @@ const query = reactive({
   sortOrder: "",
   searchParameter: "",
   userId: state.auth.userData.id,
+  status: "none",
 });
 const type = ref("");
 const detail = ref(null);

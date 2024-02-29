@@ -272,7 +272,7 @@ const query = reactive({
   pageSize: 25,
   sortOrder: "",
   searchParameter: "",
-  status: "",
+  status: "none",
   // userId: state.auth.userData.id,
 });
 const type = ref("");
@@ -395,16 +395,20 @@ function perPage({ currentPerPage }) {
 const total = computed(() => state.venue.totalRequestCount);
 const StatusOptions = [
   {
+    label: "Default",
+    value: "none",
+  },
+  {
     label: "Pending",
-    value: "",
+    value: "pending",
   },
   {
     label: "Approved",
-    value: true,
+    value: "approved",
   },
   {
     label: "Rejected",
-    value: false,
+    value: "rejected",
   },
 ];
 // Define a debounce delay (e.g., 500 milliseconds)
