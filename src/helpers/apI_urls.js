@@ -62,6 +62,10 @@ export const urls = {
   GET_ALL_BIODATA: "/Biodata/GetAllBiodata",
   DELETE_BIODATA: "/Biodata/DeleteBiodata",
 
+  // Outreach
+  GET_ALL_OUTREACH_REQUESTS: "GetAllOutreachRequests",
+  ADD_OUTREACH_REQUEST: "/RequestForOutreach",
+
   //Centers
   CREATE_CENTER: "/Center/CreateCenter",
   UPDATE_CENTER: "/Center/UpdateCenter",

@@ -50,13 +50,13 @@ export const menuItems = [
     subroles: [],
   },
 
-  // {
-  //   title: "Outreach",
-  //   icon: "bx:donate-heart",
-  //   link: "/outreach",
-  //   roles: "CAN_VIEW_OUTREACH",
-  //   subroles: [],
-  // },
+  {
+    title: "Outreach",
+    icon: "bx:donate-heart",
+    link: "/outreach",
+    roles: "CAN_VIEW_OUTREACH",
+    subroles: [],
+  },
   // {
   //   title: "Attendance",
   //   icon: "heroicons-outline:clipboard-check",

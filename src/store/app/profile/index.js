@@ -10,6 +10,8 @@ export default {
     total: 0,
     biodata: null,
     allbiodata: [],
+    allOutreach: [],
+    outreach: null,
     creatingProfile: false,
     profileCreated: false,
     createProfileError: null,
@@ -57,6 +59,10 @@ export default {
     requestToChangeZoneLoading: false,
     requestToChangeZoneSuccess: false,
     requestToChangeZoneError: null,
+
+    addOutreachRequestLoading: false,
+    addOutreachRequestSuccess: false,
+    addOutreachRequestError: null,
 
     requestToChangeGroupLoading: false,
     requestToChangeGroupSuccess: false,
@@ -366,6 +372,25 @@ export default {
       state.getAllBiodataerror = err;
       state.getAllBiodatasuccess = false;
     },
+
+    getAllBiodataBegin(state) {
+      state.getAllBiodataloading = true;
+      state.getAllBiodatasuccess = false;
+      state.getAllBiodataerror = null;
+    },
+
+    getAllBiodataSuccess(state, { data, totalCount }) {
+      state.getAllBiodataloading = false;
+      state.getAllBiodatasuccess = true;
+      state.allbiodata = data;
+      state.total = totalCount;
+    },
+
+    getAllBiodataErr(state, err) {
+      state.getAllBiodataloading = false;
+      state.getAllBiodataerror = err;
+      state.getAllBiodatasuccess = false;
+    },
     getBiodataBegin(state) {
       state.getBiodataloading = true;
       state.getBiodatasuccess = false;
@@ -382,6 +407,82 @@ export default {
       state.getBiodataloading = false;
       state.getBiodataerror = err;
       state.getBiodatasuccess = false;
+    },
+
+
+
+    // Outreach
+    getAllOutreachBegin(state) {
+      state.getAllOutreachloading = true;
+      state.getAllOutreachsuccess = false;
+      state.getAllOutreacherror = null;
+    },
+
+    getAllOutreachSuccess(state, { data, totalCount }) {
+      state.getAllOutreachloading = false;
+      state.getAllOutreachsuccess = true;
+      state.allOutreach = data;
+      state.total = totalCount;
+    },
+
+    getAllOutreachErr(state, err) {
+      state.getAllOutreachloading = false;
+      state.getAllOutreacherror = err;
+      state.getAllOutreachsuccess = false;
+    },
+
+    getAllOutreachSuccess(state, { data, totalCount }) {
+      state.getAllOutreachloading = false;
+      state.getAllOutreachsuccess = true;
+      state.allOutreach = data;
+      state.total = totalCount;
+    },
+
+    getAllOutreachErr(state, err) {
+      state.getAllOutreachloading = false;
+      state.getAllOutreacherror = err;
+      state.getAllOutreachsuccess = false;
+    },
+    getOutreachBegin(state) {
+      state.getOutreachloading = true;
+      state.getOutreachsuccess = false;
+      state.getOutreacherror = null;
+    },
+
+    getOutreachSuccess(state, data) {
+      state.getOutreachloading = false;
+      state.getOutreachsuccess = true;
+      state.Outreach = data;
+    },
+
+    getOutreachErr(state, err) {
+      state.getOutreachloading = false;
+      state.getOutreacherror = err;
+      state.getOutreachsuccess = false;
+    },
+
+    // addOutreachRequestRequest
+    addOutreachRequestBegin(state) {
+      state.addOutreachRequestLoading = true;
+      state.addOutreachRequestSuccess = false;
+      state.addOutreachRequestError = null;
+    },
+
+    addOutreachRequestReset(state) {
+      state.addOutreachRequestLoading = false;
+      state.addOutreachRequestSuccess = false;
+      state.addOutreachRequestError = null;
+    },
+
+    AddOutreachRequestSuccess(state) {
+      state.addOutreachRequestLoading = false;
+      state.addOutreachRequestSuccess = true;
+    },
+
+    addOutreachRequestErr(state, err) {
+      state.addOutreachRequestLoading = false;
+      state.addOutreachRequestError = err;
+      state.addOutreachRequestSuccess = false;
     },
 
     getChildrensDataBegin(state) {
@@ -757,6 +858,51 @@ export default {
         console.log("getAllBiodataErr", JSON.stringify(err));
         commit("getBiodataErr", err);
       }
+    },
+
+    async addOutreachRequestRequest({ commit }, data) {
+      try {
+        commit("getAllBiodataBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_BIODATA}?${new URLSearchParams(cleanObject(data))}`
+        );
+        if (response.status === 200) {
+          commit("getAllBiodataSuccess", response.data);
+        }
+      } catch (err) {
+        console.log("getAllBiodataErr", JSON.stringify(err));
+        commit("getBiodataErr", err);
+      }
+    },
+
+    //get
+    async getAllOutreach({ commit }, data) {
+      console.log("Getting all outreach")
+      try {
+        commit("getAllOutreachBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_OUTREACH_REQUESTS}?${new URLSearchParams(cleanObject(data))}`
+        );
+        if (response.status === 200) {
+          commit("getAllOutreachSuccess", response.data);
+        }
+      } catch (err) {
+        console.log("getAllOutreachErr", JSON.stringify(err));
+        commit("getOutreachErr", err);
+      }
+    },
+
+    async addOutreachRequest({ commit }, data) {
+      commit("addOutreachRequestBegin");
+      await DataService.put(
+        `${urls.ADD_OUTREACH_REQUEST}?${new URLSearchParams(cleanObject(data))}`,
+        // data
+      ).then((res) => {
+        console
+        commit("AddOutreachRequestSuccess");
+      }).catch(err => {
+        commit("addOutreachRequestErr", err);
+      })
     },
 
     async getBiodataByUserId({ commit }, id) {
