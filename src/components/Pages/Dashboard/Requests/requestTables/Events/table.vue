@@ -19,14 +19,14 @@
               placeholder="Filter date range"
             />
             <VueSelect
-              class="min-w-[200px] w-full md:w-auto"
+              class="min-w-[150px] w-full md:w-auto"
               v-model="eventType"
               :options="eventsOption"
               placeholder="Filter type"
               name="filterType"
             />
             <VueSelect
-              class="min-w-[300px] w-full md:w-auto"
+              class="min-w-[150px] w-full md:w-auto"
               v-model="selectedZone"
               :options="zoneOptions"
               placeholder="Filter zone"
@@ -41,7 +41,7 @@
           /> -->
           </div>
         </div>
-        <div
+        <!-- <div
           v-if="permissions.includes('CAN_CREATE_EVENTS')"
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
@@ -58,7 +58,7 @@
               }
             "
           />
-        </div>
+        </div> -->
       </div>
       <div class="-mx-6">
         <vue-good-table
