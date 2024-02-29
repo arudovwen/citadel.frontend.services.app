@@ -430,13 +430,7 @@ export default {
       state.getAllOutreacherror = err;
       state.getAllOutreachsuccess = false;
     },
-
-    getAllOutreachBegin(state) {
-      state.getAllOutreachloading = true;
-      state.getAllOutreachsuccess = false;
-      state.getAllOutreacherror = null;
-    },
-
+    
     getAllOutreachSuccess(state, { data, totalCount }) {
       state.getAllOutreachloading = false;
       state.getAllOutreachsuccess = true;

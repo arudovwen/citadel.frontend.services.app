@@ -21,15 +21,12 @@
         </div>
       </div>
       <div class="-mx-6">
-        <vue-good-table :columns="columns" mode="remote" styleClass=" vgt-table  centered " :rows="outreachs"
-          :sort-options="{
+        <vue-good-table :columns="columns" :isLoading="outreachListLoading" mode="remote" styleClass=" vgt-table  centered "
+          :rows="outreachs" :sort-options="{
             enabled: false,
           }" :pagination-options="{
   enabled: true,
   perPage: query.pageSize,
-}" :search-options="{
-  enabled: true,
-  externalQuery: query.searchTerm,
 }">
           <template v-slot:table-row="props">
             <span v-if="props.column.field == 'customer'" class="flex items-center">
@@ -52,11 +49,11 @@
                 ? 'text-success-500 bg-success-500'
                 : ''
                 } 
-                                                                                                                                                                                                  ${props.row.status === 'inactive'
+                                                                                                                                                                                                                                                                        ${props.row.status === 'inactive'
                   ? 'text-warning-500 bg-warning-500'
                   : ''
                 }
-                                                                                                                                                                                                  ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
+                                                                                                                                                                                                                                                                        ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
             
              `">
                 {{ props.row.status }}
@@ -89,9 +86,9 @@
           </template>
           <template #pagination-bottom="props">
             <div class="py-4 px-3">
-              <Pagination :total="50" :current="current" :per-page="perpage" :pageRange="pageRange"
-                @page-changed="current = $event" :pageChanged="props.pageChanged" :perPageChanged="props.perPageChanged"
-                enableSearch enableSelect :options="options">
+              <Pagination :total="total" :current="query.pageNumber" :per-page="query.pageSize" :pageRange="pageRange"
+                @page-changed="query.pageNumber = $event" :perPageChanged="perPage" enableSearch
+                enableSelect :options="options">
                 >
               </Pagination>
             </div>
@@ -182,7 +179,6 @@ export default {
     return {
       advancedTable,
       current: 1,
-      perpage: 10,
       pageRange: 5,
       isOpen: false,
       id: null,
@@ -297,7 +293,7 @@ export default {
       startDate: "",
       endDate: "",
       pageNumber: 1,
-      pageSize: 15,
+      pageSize: 5,
     });
 
     const modal = ref(null);
@@ -307,6 +303,7 @@ export default {
       dispatch("getRoles");
     });
 
+    const outreachListLoading = computed(() => state?.profile?.getAllOutreachloading);
     const outreachs = computed(() => {
       if (state?.profile?.allOutreach?.data) {
         return state?.profile?.allOutreach.data.map((item) => {
@@ -327,6 +324,10 @@ export default {
       dispatch("getAllOutreach", query);
     })
 
+    watch(outreachListLoading, () => {
+      console.log("outreachListLoadng == ", outreachListLoading.value)
+    })
+    const total = computed(() => state.profile.allOutreach?.totalCount);
     watch(addsuccess, () => {
       if (addsuccess.value === true) {
         modalChange.value.closeModal();
@@ -335,12 +336,26 @@ export default {
         toast.success("Outreach request added");
       }
     })
+    function perPage({ currentPerPage }) {
+      query.pageNumber = 1;
+      query.pageSize = currentPerPage;
+    }
+
+    watch(
+      query.pageSize,
+      () => {
+        console.log(query.pageSize)
+      }
+    );
     return {
       permissions,
       outreachs,
       modalChange,
       modal,
-      query
+      query,
+      outreachListLoading,
+      total,
+      perPage
     };
   },
 };
