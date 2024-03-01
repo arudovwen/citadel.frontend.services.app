@@ -107,6 +107,11 @@ export default {
     //edit modal
     editModal: false,
     deleteModal: false,
+
+    // approve/rejectOutreach
+    approveOrRejectOutreachLoading: false,
+    approveOrRejectOutreachSuccess: false,
+    approveOrRejectOutreachError: null,
   },
   getters: {
     creatingProfile(state) {
@@ -120,6 +125,25 @@ export default {
     },
   },
   mutations: {
+    approveOrRejectOutreachBegin(state) {
+      state.approveOrRejectOutreachLoading = true
+      state.approveOrRejectOutreachSuccess = false
+      state.approveOrRejectOutreachError = null
+    },
+
+    approveOrRejectOutreachSuccess(state) {
+      state.approveOrRejectOutreachLoading = false
+      state.approveOrRejectOutreachSuccess = true
+      state.approveOrRejectOutreachError = null
+    },
+
+    approveOrRejectOutreachFailure(state, err) {
+      state.approveOrRejectOutreachLoading = false
+      state.approveOrRejectOutreachSuccess = false
+      state.approveOrRejectOutreachError = err
+    },
+
+
     uploadFileBegin(state) {
       state.uploadFileLoading = true;
       state.uploadFileSuccess = false;
@@ -855,7 +879,6 @@ export default {
           commit("getAllBiodataSuccess", response.data);
         }
       } catch (err) {
-        console.log("getAllBiodataErr", JSON.stringify(err));
         commit("getBiodataErr", err);
       }
     },
@@ -870,7 +893,6 @@ export default {
           commit("getAllBiodataSuccess", response.data);
         }
       } catch (err) {
-        console.log("getAllBiodataErr", JSON.stringify(err));
         commit("getBiodataErr", err);
       }
     },
@@ -881,13 +903,12 @@ export default {
       try {
         commit("getAllOutreachBegin");
         const response = await DataService.get(
-          `${urls.GET_ALL_OUTREACH_REQUESTS}?${new URLSearchParams(cleanObject(data))}`
+          `${urls.GET_ALL_OUTREACH_REQUESTS}?${new URLSearchParams(cleanObject(data))}`, data
         );
         if (response.status === 200) {
           commit("getAllOutreachSuccess", response.data);
         }
       } catch (err) {
-        console.log("getAllOutreachErr", JSON.stringify(err));
         commit("getOutreachErr", err);
       }
     },
@@ -903,6 +924,20 @@ export default {
       }).catch(err => {
         commit("addOutreachRequestErr", err);
       })
+    },
+
+    async approveOrRejectOutreach({ commit }, data) {
+      commit("approveOrRejectOutreachBegin");
+      try {
+        const response = await DataService.put(
+          `${urls.APPROVE_OR_REJECT_OUTREACH}?${new URLSearchParams(cleanObject(data))}`
+        )
+        if (response.status === 200) {
+          commit("approveOrRejectOutreachSuccess", response.data);
+        }
+      } catch (err) {
+        commit("approveOrRejectOutreachFailure", err);
+      }
     },
 
     async getBiodataByUserId({ commit }, id) {

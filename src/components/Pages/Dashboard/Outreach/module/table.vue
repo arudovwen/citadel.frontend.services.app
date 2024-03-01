@@ -33,32 +33,33 @@
               {{ props.row.outreachName }}
             </span>
             <span v-if="props.column.field == 'status'" class="font-medium lowercase">
-              <div v-if="props.row.status === 'approved'">
+              <div v-if="props.row.status === true"
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500 bg-success-500">
                 approved
               </div>
-              <div v-if="props.row.status === 'rejected'">
+              <div v-if="props.row.status === false"
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-red-500 bg-red-500">
                 rejected
               </div>
-              <div v-if="!props.row.status">
+              <div v-if="props.row.status === null"
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-blue-500 bg-blue-500">
                 pending
               </div>
             </span>
-            
+
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
                 <span class="text-xl">
                   <Icon icon="heroicons-outline:dots-vertical" />
                 </span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in actions" :key="i">
-                  <div @click="item.doit(item)"
-                    :class="`
-                
-                  ${item.name === 'delete'
-                        ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
-                        : 'hover:bg-slate-900 hover:text-white'
-                      }
-                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `">
+                  <MenuItem v-for="(item, i) in filteredActions(actions, props.row)" :key="i">
+                  <div @click="item.doit(item, props.row)" :class="`
+                    ${item.name === 'delete'
+                      ? 'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white'
+                      : 'hover:bg-slate-900 hover:text-white'
+                    }${!props.row.status && ``} w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer
+                    first:rounded-t last:rounded-b flex space-x-2 items-center `">
                     <span class="text-base">
                       <Icon :icon="item.icon" />
                     </span>
@@ -83,18 +84,25 @@
     </Card>
   </div>
 
-  <Modal title="Confirm action" label="Small modal" labelClass="btn-outline-dark" ref="modal" sizeClass="max-w-md">
+  <Modal title="Confirm action" label="Small modal"
+    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" labelClass="btn-outline-dark" ref="modal"
+    sizeClass="max-w-md">
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure about this action?
+      Are you sure you want to {{ type === "approve" ? "approve" : "reject" }} this request?
     </div>
-    <div v-if="type.toLowerCase() === 'decline'">
-      <textarea resize="none" class="px-3 py-3 border border-gray-200 rounded-lg w-full" rows="4"
+    <!-- <div v-if="type.toLowerCase() === 'reject'">
+      <textarea resize="none" v-model="rejectReason" class="px-3 py-3 border border-gray-200 rounded-lg w-full" rows="4"
         placeholder="Provide reason"></textarea>
-    </div>
+    </div> -->
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button text="Cancel" btnClass="btn-outline-secondary btn-sm " @click="$refs.modal.closeModal()" />
-        <Button text="Proceed" btnClass="btn-dark btn-sm" @click="$refs.modal.closeModal()" />
+        <Button text="Cancel" btnClass="btn-outline-secondary btn-sm " />
+        <Button text="Proceed" :isLoading="approveOrRejectStatus.loading" :btnClass="`btn-dark btn-sm 
+          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="dispatch('approveOrRejectOutreach', {
+            inspectorateId: userId,
+            outreachLogId: selectedOutreachId,
+            status: type === 'approve',
+          })" />
       </div>
     </template>
   </Modal>
@@ -133,7 +141,7 @@ import { MenuItem } from "@headlessui/vue";
 import { useToast } from "vue-toastification";
 import { advancedTable } from "@/constant/basic-tablle-data";
 import window from "@/mixins/window";
-import { computed, onMounted, watch, reactive, ref } from "vue";
+import { computed, onMounted, watch, watchEffect, reactive, ref } from "vue";
 import { useStore } from "vuex"
 
 
@@ -168,55 +176,16 @@ export default {
       isOpen: false,
       id: null,
       confirmType: "",
-      type: "",
       dateValue: null,
       formatter: {
         date: "DD MMM YYYY",
         month: "MMM",
       },
-      actions: [
-        {
-          name: "view",
-          icon: "heroicons-outline:eye",
-          doit: (data) => {
-            this.type = data.name;
-            this.$refs.modalChange.openModal();
-          },
-        },
-        {
-          name: "edit",
-          icon: "heroicons:pencil-square",
-          doit: (data) => {
-            this.type = data.name;
-            this.$refs.modalChange.openModal();
-          },
-        },
-        {
-          name: "delete",
-          icon: "heroicons-outline:trash",
-          doit: (data) => {
-            this.type = data.name;
-            this.$refs.modal.openModal();
-          },
-        },
-        {
-          name: "approve",
-          icon: "heroicons-outline:trash",
-          doit: (data) => {
-            this.type = data.name;
-            this.$refs.modal.openModal();
-          },
-        },
-        {
-          name: "reject",
-          icon: "heroicons-outline:trash",
-          doit: (data) => {
-            this.type = data.name;
-            this.$refs.modal.openModal();
-          },
-        },
-      ],
       options: [
+        {
+          value: "10",
+          label: "10",
+        },
         {
           value: "25",
           label: "25",
@@ -259,7 +228,7 @@ export default {
         },
         {
           label: "Report Added",
-          field: "status",
+          field: "report_added",
         },
         {
           label: "Action",
@@ -277,7 +246,7 @@ export default {
         this.confirmType = type;
         this.$refs.modal.openModal();
       } else {
-        this.type = type;
+        type = type;
 
         this.$refs.modalChange.openModal();
       }
@@ -287,6 +256,7 @@ export default {
   setup() {
     const { state, dispatch } = useStore();
     const toast = useToast()
+    const rejectReason = ref("");
     const permissions = computed(() => state.auth.permissions);
     const addsuccess = computed(() => state.profile.addOutreachRequestSuccess)
     const query = reactive({
@@ -294,8 +264,61 @@ export default {
       startDate: "",
       endDate: "",
       pageNumber: 1,
-      pageSize: 5,
+      pageSize: 10,
     });
+    const type = ref("");
+
+    const userRole = computed(() => {
+      return state?.auth?.userData?.userRole;
+    });
+    const userId = computed(() => {
+      return state?.auth?.userData?.id;
+    });
+
+    const actions = [
+      {
+        name: "view",
+        icon: "heroicons-outline:eye",
+        doit: (data) => {
+          type.value = data.name;
+          modalChange.value.openModal();
+        },
+      },
+      {
+        name: "edit",
+        icon: "heroicons:pencil-square",
+        doit: (data) => {
+          type.value = data.name;
+          modalChange.value.openModal();
+        },
+      },
+      {
+        name: "approve",
+        icon: "iconamoon:check-duotone",
+        doit: (data, row) => {
+          selectedOutreachId.value = row.id
+          type.value = data.name;
+          modal.value.openModal();
+        },
+      },
+      {
+        name: "reject",
+        icon: "iconoir:cancel",
+        doit: (data, row) => {
+          selectedOutreachId.value = row.id;
+          type.value = data.name;
+          modal.value.openModal();
+        },
+      },
+      {
+        name: "delete",
+        icon: "heroicons-outline:trash",
+        doit: (data) => {
+          type.value = data.name;
+          modal.value.openModal();
+        },
+      },
+    ]
 
     const modal = ref(null);
     const modalChange = ref(null);
@@ -325,9 +348,6 @@ export default {
       dispatch("getAllOutreach", query);
     })
 
-    watch(outreachListLoading, () => {
-      console.log("outreachListLoadng == ", outreachListLoading.value)
-    })
     const total = computed(() => state.profile.allOutreach?.totalCount);
     watch(addsuccess, () => {
       if (addsuccess.value === true) {
@@ -342,12 +362,41 @@ export default {
       query.pageSize = currentPerPage;
     }
 
-    watch(
-      query.pageSize,
-      () => {
-        console.log(query.pageSize)
+    const selectedOutreachId = ref(null);
+
+    const filteredActions = (actions, row) => {
+      let actions2 = [...actions]
+      if (userRole.value !== "Inspectorate") {
+        actions2 = actions2.filter(i => i.name !== "approve" && i.name !== "reject");
       }
-    );
+
+      if (row.status === true)
+        actions2 = actions2.filter(i => i.name !== "approve");
+
+      if (row.status === false)
+        actions2 = actions2.filter(i => i.name !== "reject");
+
+      return actions2;
+    }
+
+    const approveOrRejectStatus = computed(() => ({
+      loading: state?.profile?.approveOrRejectOutreachLoading,
+      success: state?.profile?.approveOrRejectOutreachSuccess,
+      error: state?.profile?.approveOrRejectOutreachError
+    }))
+
+    watch(approveOrRejectStatus, () => {
+      if (approveOrRejectStatus.value.success) {
+        modal.value.closeModal();
+        toast.success(`Request ${type.value === "approve" ? 'approval' : 'rejection'} was successful`)
+        dispatch("getAllOutreach", query);
+        dispatch("getRoles");
+      }
+      if (approveOrRejectStatus.value.error) {
+        toast.error(`Request ${type.value === "approve" ? 'approval' : 'rejection'} failed`)
+      }
+    })
+
     return {
       permissions,
       outreachs,
@@ -356,7 +405,16 @@ export default {
       query,
       outreachListLoading,
       total,
-      perPage
+      perPage,
+      actions,
+      userRole,
+      filteredActions,
+      type,
+      rejectReason,
+      dispatch,
+      approveOrRejectStatus,
+      userId,
+      selectedOutreachId
     };
   },
 };
