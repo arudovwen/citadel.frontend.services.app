@@ -133,7 +133,7 @@
           </div>
         </div>
         <FormGroup
-          label="Provide a summaryOfEvent"
+          label="Provide a summary of event"
           name="summaryOfEvent"
           :error="summaryOfEventError"
         >
@@ -174,7 +174,7 @@ import VueSelect from "@/components/Select/VueSelect";
 
 // import moment from "moment";
 
-// const config = { enableTime: true };
+//
 onMounted(() => {
   dispatch("getCenter", { id: affiliation?.value?.centerId });
 });

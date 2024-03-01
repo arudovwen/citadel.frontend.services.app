@@ -34,9 +34,27 @@ export default {
     deletereportLoading: false,
     deletereportuccess: false,
     deletereportError: null,
+    addFollowupLoading: false,
+    addFollowupSuccess: false,
+    addFollowupError: null,
   },
   getters: {},
   mutations: {
+    addFollowupBegin(state) {
+      state.addFollowupLoading = true;
+      state.addFollowupError = null;
+      state.addFollowupSuccess = false;
+    },
+    addFollowupSuccess(state) {
+      state.addFollowupLoading = false;
+      state.addFollowupSuccess = true;
+      state.addFollowupError = null;
+    },
+    addFollowupError(state, err) {
+      state.addFollowupLoading = false;
+      state.addFollowupError = err;
+      state.addFollowupSuccess = false;
+    },
     addBegin(state) {
       state.loading = true;
       state.error = null;
@@ -180,6 +198,21 @@ export default {
     },
   },
   actions: {
+    async addFollowupReport({ commit }, data) {
+      try {
+        commit("addFollowupBegin");
+        console.log(JSON.stringify(data));
+        // const response = await DataService.post(
+        //   `${urls.CREATE_ACTIVITY_REPORT}`,
+        //   data
+        // );
+        // if (response.status === 200) {
+        commit("addFollowupSuccess");
+        // }
+      } catch (err) {
+        commit("addFollowupError", err);
+      }
+    },
     async addActivityReport({ commit }, data) {
       try {
         commit("addBegin");

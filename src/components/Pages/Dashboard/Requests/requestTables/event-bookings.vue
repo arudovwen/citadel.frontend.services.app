@@ -35,6 +35,7 @@
           </div>
         </div>
         <div
+          v-if="permissions.includes('CAN_CREATE_EVENTS')"
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
@@ -212,7 +213,9 @@
           @click="$refs.modalStatus.closeModal()"
         />
         <Button
-          :disabled="updateloading"
+          :disabled="
+            updateloading || (!comment && type.toLowerCase() === 'reject')
+          "
           :isLoading="updateloading"
           text="Proceed"
           :btnClass="` btn-sm ${

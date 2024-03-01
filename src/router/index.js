@@ -484,15 +484,15 @@ const routes = [
                 },
               },
               {
-                path: "centers/:zoneId",
+                path: "centers/:zoneId/:name",
                 name: "Reports",
                 component: () =>
                   import("@/components/Pages/Dashboard/CIH/Reports/centers"),
                 meta: {
                   activeName: "reports",
                   groupParent: {
-                    name: "Center Reports",
-                    url: "/cih/reports",
+                    name: "Zones",
+                    url: "/cih/reports/zones",
                   },
                 },
               },
@@ -507,6 +507,36 @@ const routes = [
                   groupParent: {
                     name: "Reports",
                     url: "/cih/reports/zones",
+                  },
+                },
+              },
+              {
+                path: "followup",
+                name: "First timers list",
+                component: () =>
+                  import("@/components/Pages/Dashboard/CIH/Reports/followup"),
+                meta: {
+                  activeName: "reports",
+                  roles: "",
+                  groupParent: {
+                    name: "Reports",
+                    url: "/cih/reports/followup",
+                  },
+                },
+              },
+              {
+                path: "followup/:id",
+                name: "Followup Report",
+                component: () =>
+                  import(
+                    "@/components/Pages/Dashboard/CIH/Reports/first-timer-report"
+                  ),
+                meta: {
+                  activeName: "reports",
+                  roles: "",
+                  groupParent: {
+                    name: "Reports",
+                    url: "/cih/reports/followup",
                   },
                 },
               },

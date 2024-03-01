@@ -27,6 +27,7 @@
             class="form-control"
             id="d1"
             placeholder="yyyy, dd M"
+            :config="{ minDate: 'today' }"
           />
         </FormGroup>
 

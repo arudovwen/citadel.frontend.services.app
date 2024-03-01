@@ -194,7 +194,7 @@
           @click="$refs.modalStatus.closeModal()"
         />
         <Button
-          :disabled="deleteloading"
+          :disabled="deleteloading || !reason"
           :isLoading="deleteloading"
           text="Proceed"
           :btnClass="` btn-sm ${

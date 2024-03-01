@@ -160,7 +160,7 @@
         />
         <Button
           :isLoading="delistLoading"
-          :disabled="delistLoading"
+          :disabled="delistLoading || !reason"
           text="Proceed"
           btnClass="btn-danger btn-sm"
           @click="handleDelist()"

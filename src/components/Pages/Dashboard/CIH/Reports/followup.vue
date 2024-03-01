@@ -19,13 +19,6 @@
             placeholder="Sort by"
             classInput="bg-white !h-9 min-w-[150px] !min-h-auto"
           />
-          <!-- <VueTailwindDatePicker
-            v-model="dateValue"
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="Select date"
-            as-single
-          /> -->
         </div>
         <div class="md:flex md:space-x-3 items-center flex-none">
           <export-excel
@@ -40,20 +33,6 @@
               iconClass="text-lg"
             />
           </export-excel>
-
-          <Button
-            v-if="permissions.includes('CAN_CREATE_FIRSTTIMERS')"
-            icon="ri:user-add-line"
-            text="Add First timer"
-            btnClass="btn-primary font-normal btn-sm"
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                modalChange.openModal();
-              }
-            "
-          />
         </div>
       </div>
       <div class="-mx-6">
@@ -72,7 +51,7 @@
             perPage: query.pageSize,
           }"
           :select-options="{
-            enabled: true,
+            enabled: false,
             selectionInfoClass: 'top-select',
             selectionText:
               'first timers selected, Do you wish to upgrade all these first timers?',
@@ -81,16 +60,6 @@
           }"
           @on-selected-rows-change="selectionChanged"
         >
-          <template #selected-row-actions>
-            <button
-              :disabled="convertloading"
-              :isLoading="convertloading"
-              @click="handleBulk"
-              class="text-[#232322] font-medium"
-            >
-              Upgrade all
-            </button>
-          </template>
           <template v-slot:table-row="props">
             <span
               v-if="props.column.field == 'fullName'"
@@ -182,112 +151,42 @@
       </div>
     </Card>
   </div>
-  <Modal
-    title="Delete First Timer"
-    label="Small modal"
-    labelClass="btn-outline-danger"
-    ref="modal"
-    sizeClass="max-w-md"
-    themeClass="bg-danger-500"
-  >
-    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to delete this first timer?
-    </div>
-
-    <template v-slot:footer>
-      <div class="flex gap-x-5">
-        <Button
-          text="Cancel"
-          btnClass="btn-outline-secondary btn-sm"
-          @click="modal.closeModal()"
-        />
-        <Button
-          text="Delete"
-          btnClass="btn-danger btn-sm"
-          @click="handleDelete"
-        />
-      </div>
-    </template>
-  </Modal>
-
-  <Modal
-    title="Upgrade First-Timer to Member"
-    label="Small modal"
-    labelClass="btn-primary-600"
-    ref="modalUpdate"
-    sizeClass="max-w-md"
-    themeClass="bg-primary-500"
-  >
-    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to upgrade this first timer?
-    </div>
-
-    <template v-slot:footer>
-      <div class="flex gap-x-5">
-        <Button
-          :disabled="convertloading"
-          text="Cancel"
-          btnClass="btn-outline-secondary btn-sm"
-          @click="modalUpdate.closeModal()"
-        />
-        <Button
-          :disabled="convertloading"
-          :isLoading="convertloading"
-          text="Upgrade"
-          btnClass="btn-primary btn-sm"
-          @click="handleUpgrade"
-        />
-      </div>
-    </template>
-  </Modal>
-
-  <Modal
-    :title="
-      type === 'add'
-        ? 'Add record'
-        : type === 'edit'
-        ? 'Edit Record'
-        : `${detail?.firstName} ${detail?.surName}`
-    "
-    labelClass="btn-outline-dark"
-    ref="modalChange"
-    :sizeClass="type === 'view' ? 'max-w-[32rem]' : 'max-w-3xl'"
-  >
-    <AddRecord v-if="type === 'add'" />
-    <EditRecord v-if="type === 'edit'" :detail="detail" />
-    <ViewRecord v-if="type === 'view'" :detail="detail" />
-    <FollowupFirsttimer
-      v-if="type.toLowerCase() === 'follow up report'"
-      :detail="detail"
-    />
-  </Modal>
 </template>
 
 <script setup>
 import Select from "@/components/Select";
-import { useToast } from "vue-toastification";
-import FollowupFirsttimer from "@/components/Pages/Dashboard/FirstTimers/followupFirsttimer";
 // import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
-import Modal from "@/components/Modal/Modal";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
-import AddRecord from "../member-add.vue";
-import EditRecord from "../member-edit.vue";
-import ViewRecord from "../member-preview.vue";
+
 import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 import { roleFilters } from "@/constant/data";
+import { useRouter } from "vue-router";
+
+onMounted(() => {
+  dispatch("getAllBiodata", query);
+  dispatch("getRoles");
+});
+const { state, dispatch } = useStore();
+// const permissions = computed(() => state.auth.permissions);
+const router = useRouter();
+const query = reactive({
+  pageNumber: 1,
+  pageSize: 25,
+  searchParameter: "",
+  sortOrder: "",
+  isFirstTimer: true,
+});
 
 const pageRange = ref(5);
-const modalUpdate = ref(null);
-const timerid = ref(null);
 const detail = ref(null);
 const type = ref("");
 const mytable = ref(null);
@@ -299,48 +198,12 @@ const mytable = ref(null);
 // });
 const actions = ref([
   {
-    name: "view",
+    name: "view reports",
     icon: "heroicons-outline:eye",
     doit: (name, data) => {
       type.value = name;
       detail.value = data;
-      modalChange.value.openModal();
-    },
-  },
-  {
-    name: "edit",
-    icon: "heroicons:pencil-square",
-    doit: (name, data) => {
-      type.value = name;
-      detail.value = data;
-      modalChange.value.openModal();
-    },
-  },
-  {
-    name: "Follow up report",
-    icon: "heroicons-outline:chat-bubble-left-ellipsis",
-    doit: (name, data) => {
-      type.value = name;
-      detail.value = data;
-      modalChange.value.openModal();
-    },
-  },
-  {
-    name: "upgrade",
-    icon: "game-icons:upgrade",
-    doit: (name, data) => {
-      type.value = name;
-      detail.value = data;
-      modalUpdate.value.openModal();
-    },
-  },
-  {
-    name: "delete",
-    icon: "heroicons-outline:trash",
-    doit: (name, { id }) => {
-      type.value = name;
-      timerid.value = id;
-      modal.value.openModal();
+      router.push(`/cih/reports/followup/${detail?.value?.userId}`);
     },
   },
 ]);
@@ -398,35 +261,10 @@ const columns = ref([
     field: "action",
   },
 ]);
-const toast = useToast();
-const modal = ref(null);
-const modalChange = ref(null);
-const query = reactive({
-  pageNumber: 1,
-  pageSize: 25,
-  searchParameter: "",
-  sortOrder: "",
-  isFirstTimer: true,
-});
-const permissions = computed(() => state.auth.permissions);
-const { state, dispatch } = useStore();
-const profileCreated = computed(() => state.profile.profileCreated);
 
 function selectionChanged(val) {
   console.log("🚀 ~ file: table.vue:385 ~ selectionChanged ~ val:", val);
 }
-
-function handleBulk() {
-  const bulkIds = mytable.value["selectedRows"].map((i) => i.id);
-  dispatch("multiUpgradeToMember", { userId: bulkIds });
-}
-onMounted(() => {
-  dispatch("getAllBiodata", query);
-  dispatch("getRoles");
-});
-// function fetchRecords(page) {
-//   dispatch("getAllBiodata", { ...query, pageNumber: page });
-// }
 
 const loading = computed(() => state.profile.loading);
 const members = computed(() => {
@@ -445,52 +283,16 @@ const members = computed(() => {
   return [];
 });
 const total = computed(() => state.profile.total);
-const addsuccess = computed(() => state.profile.addsuccess);
-// const deleteloading = computed(() => state.profile.deleteloading);
-const deletesuccess = computed(() => state.profile.deletesuccess);
-const convertsuccess = computed(() => state.member.convertsuccess);
-const convertloading = computed(() => state.member.convertloading);
-const addFollowupSuccess = computed(() => state.report.addFollowupSuccess);
-function handleDelete() {
-  dispatch("deleteBiodata", timerid.value);
-}
+
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
   query.pageSize = currentPerPage;
 }
-function handleUpgrade() {
-  dispatch("upgradeToMember", detail.value.id);
-}
-// Define a debounce delay (e.g., 500 milliseconds)
+
 const debounceDelay = 800;
 const debouncedSearch = debounce((searchValue) => {
   dispatch("getAllBiodata", { ...query, name: searchValue });
 }, debounceDelay);
-watch(addsuccess, () => {
-  addsuccess.value && dispatch("getAllBiodata", query);
-  modalChange.value.closeModal();
-});
-watch(convertsuccess, () => {
-  if (convertsuccess.value) {
-    dispatch("getAllBiodata", query);
-    modalUpdate.value.closeModal();
-    toast.success("Upgrade successful");
-  }
-});
-
-watch(profileCreated, () => {
-  if (profileCreated.value) {
-    dispatch("getAllBiodata", query);
-    modalChange.value.closeModal();
-  }
-});
-watch(deletesuccess, () => {
-  if (deletesuccess.value) {
-    toast.success("Firstimer deleted ");
-    dispatch("getAllBiodata", query);
-    modal.value.closeModal();
-  }
-});
 
 watch(
   () => query.searchParameter,
@@ -504,10 +306,5 @@ watch(
     dispatch("getAllBiodata", query);
   }
 );
-
-watch(addFollowupSuccess, () => {
-  toast.success("Report Sent");
-  modalChange.value.closeModal();
-});
 </script>
 <style lang="scss"></style>

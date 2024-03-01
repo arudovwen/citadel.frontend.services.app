@@ -105,7 +105,7 @@
           </div>
         </div>
         <FormGroup
-          label="Provide a summary of Event"
+          label="Provide a summary of event"
           name="summaryOfEvent"
           :error="summaryOfEventError"
         >
@@ -142,7 +142,7 @@ import Textinput from "@/components/Textinput";
 import { useStore } from "vuex";
 
 const props = defineProps(["id"]);
-// const config = { enableTime: true };
+//
 const { state, dispatch } = useStore();
 const detail = computed(() => state.report.detail);
 onMounted(() => {

@@ -13,20 +13,38 @@
               merged
               classInput="min-w-[220px] !h-9"
             />
-          </div>
-          <div
-            class="md:flex md:space-x-3 items-center flex-none justify-between"
-            :class="window.width < 768 ? 'space-x-rb' : ''"
-          >
-            <VueTailwindDatePicker
-              v-model="dateValue"
-              :formatter="formatter"
-              input-classes="form-control h-[36px]"
-              placeholder="Select date"
-              as-single
-            />
+            <div
+              class="md:flex md:space-x-3 items-center flex-none justify-between"
+              :class="window.width < 768 ? 'space-x-rb' : ''"
+            >
+              <VueTailwindDatePicker
+                v-model="dateValue"
+                :formatter="formatter"
+                input-classes="form-control h-[36px]"
+                placeholder="Select date"
+                as-single
+              />
+            </div>
           </div>
 
+          <div
+            v-if="permissions.includes('CAN_CREATE_EVENTS')"
+            class="md:flex md:space-x-3 items-center flex-none"
+            :class="window.width < 768 ? 'space-x-rb' : ''"
+          >
+            <Button
+              icon="heroicons-outline:plus-sm"
+              text="Request Venue"
+              btnClass=" btn-primary font-normal btn-sm "
+              iconClass="text-lg"
+              @click="
+                () => {
+                  type = 'add';
+                  $refs.requestModal.openModal();
+                }
+              "
+            />
+          </div>
           <!-- <div class="">authorities: {{ authUserRoles }}</div> -->
         </div>
         <div class="-mx-6">
@@ -174,7 +192,7 @@
           @click="$refs.modal.closeModal()"
         />
         <Button
-          :disabled="isLoading"
+          :disabled="isLoading || (!comment && type.toLowerCase() === 'reject')"
           :isLoading="isLoading"
           text="Proceed"
           :btnClass="
@@ -221,8 +239,27 @@
       </div>
     </template> -->
   </Modal>
+  <Modal
+    title="Request detail"
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-[32rem]"
+  >
+    <ViewRecord :detail="detail" />
+  </Modal>
+
+  <Modal
+    title="Request Venue"
+    labelClass="btn-outline-dark"
+    ref="requestModal"
+    sizeClass="max-w-md"
+  >
+    <RequestVenue :toggleView="closeRequestmodal" :refetch="getRequests" />
+  </Modal>
 </template>
 <script setup>
+import RequestVenue from "@/components/Pages/Dashboard/Requests/make-requests/request-venue.vue";
+
 import { useToast } from "vue-toastification";
 import Button from "@/components/Button";
 import ViewRecord from "./VenuePreview";
@@ -241,9 +278,9 @@ import moment from "moment";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 
 onMounted(() => {
-  // dispatch("getVenueRequests", { UserId: userId.value });
   dispatch("getVenueRequests", { ...query });
 });
+
 const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
@@ -255,6 +292,12 @@ const success = computed(
   () => state?.venue?.approveOrRejectVenueRequestSuccess
 );
 const loading = computed(() => state?.venue?.getVenueRequestsLoading);
+const permissions = computed(() => state.auth.permissions);
+const requestModal = ref(null);
+
+const closeRequestmodal = () => {
+  requestModal.value.closeModal();
+};
 
 const isLoading = computed(
   () => state?.venue?.approveOrRejectVenueRequestLoading
@@ -265,12 +308,15 @@ const query = reactive({
   sortOrder: "",
   searchParameter: "",
   userId: state.auth.userData.id,
+  status: "none",
 });
 const type = ref("");
 const detail = ref(null);
 const dateValue = ref(null);
 const comment = ref("");
-
+const getRequests = () => {
+  dispatch("getVenueRequests", query);
+};
 const formatter = {
   date: "DD MMM YYYY",
   month: "MMM",

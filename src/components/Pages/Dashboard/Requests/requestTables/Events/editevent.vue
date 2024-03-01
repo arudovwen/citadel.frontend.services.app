@@ -26,8 +26,8 @@
             v-model="dateOfRequestedEvent"
             class="form-control"
             id="d1"
-            :config="config"
             placeholder="Select date of event"
+            :config="{ minDate: 'today' }"
           />
         </FormGroup>
       </div>
@@ -112,7 +112,7 @@ const { value: dateOfRequestedEvent, errorMessage: dateError } = useField(
 
 const { value: eventType, errorMessage: eventTypeError } =
   useField("eventType");
-const config = { enableTime: true };
+
 onMounted(() => {
   setValues({
     ...props.detail,

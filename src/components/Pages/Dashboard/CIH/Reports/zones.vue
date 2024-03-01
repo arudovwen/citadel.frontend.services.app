@@ -12,7 +12,7 @@
               @click="
                 () =>
                   router.push(
-                    `/cih/reports/centers/${item.id}?name=${item.zoneName}`
+                    `/cih/reports/centers/${item.id}/${item.zoneName}`
                   )
               "
             >
