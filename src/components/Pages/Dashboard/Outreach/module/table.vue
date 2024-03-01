@@ -54,12 +54,12 @@
                 </span>
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in filteredActions(actions, props.row)" :key="i">
-                  <div @click="item.doit(item, props.row)" :class="`
+                  <div @click="item.doit(item, props.row)" :class="` hover:bg-slate-900
                     ${item.name === 'delete'
-                      ? 'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100'
-                      : 'hover:bg-slate-900'
+                      ? 'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white'
+                      : 'hover:bg-slate-900 hover:text-white'
                     }${!props.row.status && ``} w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer
-                    first:rounded-t last:rounded-b flex space-x-2 items-center hover:text-white`">
+                    first:rounded-t last:rounded-b flex space-x-2 items-center`">
                     <span class="text-base">
                       <Icon :icon="item.icon" />
                     </span>
