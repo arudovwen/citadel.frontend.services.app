@@ -220,13 +220,14 @@ const defaultPermissions = [
   "can_delete",
 ];
 const otherPermissions = {
-  Events: ["can_approve_reject_event"],
+  Events: ["can_approve_reject"],
   Department: ["can_approve_reject_department_request", "can_view_all"],
-  Appoitment: ["can_approve_reject_appointment"],
+  Appoitment: ["can_approve_reject"],
   "CIH Management": ["can_view_all_center_reports", "can_view_center_reports"],
   Members: ["can_update_church_affiliation"],
   Zones: ["can_view_all"],
   Centers: ["can_view_all"],
+  Outreach: ["can_approve_reject"],
 };
 watchEffect(() => {
   if (modulesList.value?.length > 0 && permissionsList.value?.length > 0) {
