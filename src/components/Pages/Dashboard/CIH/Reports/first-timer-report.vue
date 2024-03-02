@@ -158,9 +158,18 @@
       ref="modal"
       sizeClass="max-w-lg"
     >
-      <div class="w-full min-h-[200px]">
-        {{ report.report }}
-      </div>
+      <FormGroup
+        label="First timer report"
+        name="summary"
+        :error="summaryError"
+      >
+        <ckeditor
+          disabled
+          :editor="editor"
+          v-model="report.report"
+          :config="editorConfig"
+        ></ckeditor>
+      </FormGroup>
     </Modal>
   </div>
 </template>
@@ -182,6 +191,9 @@ import { useStore } from "vuex";
 import { debounce } from "lodash";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 import { roleFilters } from "@/constant/data";
+import FormGroup from "@/components/FormGroup";
+
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 onMounted(() => {
   // dispatch("getAllBiodata", query);
@@ -199,6 +211,36 @@ const query = reactive({
   sortOrder: "",
   isFirstTimer: true,
 });
+
+const formData = reactive({
+  summary: "",
+});
+
+const editor = ClassicEditor;
+
+const editorConfig = {
+  toolbar: {
+    items: [
+      "undo",
+      "redo",
+      "|",
+      "heading",
+      "|",
+      "bold",
+      "italic",
+      "|",
+      "link",
+
+      "insertTable",
+
+      "|",
+      "bulletedList",
+      "numberedList",
+      "outdent",
+      "indent",
+    ],
+  },
+};
 
 // const reportQuery = reactive({
 //   userId:
@@ -267,7 +309,11 @@ const columns = ref([
   },
   {
     label: "Report Sender",
-    field: "reportSender",
+    field: "createdBy",
+  },
+  {
+    label: "First Timer",
+    field: "fullName",
   },
 
   {
