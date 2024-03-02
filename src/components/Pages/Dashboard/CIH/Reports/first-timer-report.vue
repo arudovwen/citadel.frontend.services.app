@@ -35,6 +35,9 @@
           </export-excel>
         </div>
       </div>
+      <!-- <pre class="">
+        {{ reports }}
+      </pre> -->
       <div class="-mx-6">
         <vue-good-table
           ref="mytable"
@@ -150,7 +153,7 @@
       </div>
     </Card>
     <Modal
-      :title="`${report.firstTimer}'s Report`"
+      :title="`${report.fullName}'s Report`"
       labelClass="btn-outline-dark"
       ref="modal"
       sizeClass="max-w-lg"
@@ -181,12 +184,14 @@ import { computed, onMounted, watch, reactive, ref } from "vue";
 import { roleFilters } from "@/constant/data";
 
 onMounted(() => {
-  dispatch("getAllBiodata", query);
+  // dispatch("getAllBiodata", query);
+
+  dispatch("getAllFollowupReport", { userId: userId.value, ...query });
   dispatch("getRoles");
 });
 const { state, dispatch } = useStore();
 // const permissions = computed(() => state.auth.permissions);
-
+const userId = computed(() => state.auth.userData.id);
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
@@ -195,22 +200,27 @@ const query = reactive({
   isFirstTimer: true,
 });
 
+// const reportQuery = reactive({
+//   userId:
+// });
+
 const pageRange = ref(5);
 const detail = ref(null);
 const type = ref("");
 const modal = ref(null);
 const mytable = ref(null);
 const report = ref("");
-const loading = computed(() => false);
+const loading = computed(() => state?.report?.getallloading);
 const reports = computed(() => {
-  return [
-    {
-      reportDate: "2024-02-26T00:00:00",
-      reportSender: "Kaine Duru",
-      report: "He is doing well",
-      firstTimer: "Bolaji Akinfenwa",
-    },
-  ];
+  return state?.report?.data;
+  // return [
+  //   {
+  //     reportDate: "2024-02-26T00:00:00",
+  //     reportSender: "Kaine Duru",
+  //     report: "He is doing well",
+  //     firstTimer: "Bolaji Akinfenwa",
+  //   },
+  // ];
 });
 const total = computed(() => state.profile.total);
 const actions = ref([

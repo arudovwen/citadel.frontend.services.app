@@ -32,7 +32,6 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { reactive, computed, defineProps, onMounted } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
-import moment from "moment";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";

@@ -213,6 +213,22 @@ export default {
         commit("addFollowupError", err);
       }
     },
+
+    async getAllFollowupReport({ commit }, data) {
+      try {
+        commit("getAllBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_FOLLOW_UP_REPORT}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("getAllSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getAllError", err);
+      }
+    },
     async addActivityReport({ commit }, data) {
       try {
         commit("addBegin");
