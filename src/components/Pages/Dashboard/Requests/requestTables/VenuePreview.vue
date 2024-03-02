@@ -3,6 +3,18 @@
     <Card noborder className="border-none shadow-none" bodyClass="">
       <div class="mx-auto my-6 rounded-md overflow-x-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div v-if="detail.requesterName">
+            <h6 class="text-xs font-semibold text-slate-400">Requester name</h6>
+            <p class="text-base font-semibold text-slate-900">
+              {{ detail.requesterName }}
+            </p>
+          </div>
+          <div v-if="detail.requestDate" class="col-span-1 md:col-span-2">
+            <h6 class="text-xs font-semibold text-slate-400">Request date</h6>
+            <p class="text-base font-semibold text-slate-900">
+              {{ moment(detail.requestDate).format("ll") }}
+            </p>
+          </div>
           <div class="col-span-1 md:col-span-2">
             <h6 class="text-xs font-semibold text-slate-400">Venue Name</h6>
             <p class="text-base font-semibold text-slate-900">
@@ -28,7 +40,13 @@
           <div>
             <h6 class="text-xs font-semibold text-slate-400">Status</h6>
             <p class="text-base font-semibold text-slate-900 capitalize">
-              {{ detail?.status || "Pending" }}
+              {{
+                detail?.status === null
+                  ? "Pending"
+                  : detail?.status === false
+                  ? "Declined"
+                  : "Approved"
+              }}
             </p>
           </div>
           <div v-if="detail?.oldCIHCenter" class="">
@@ -76,7 +94,7 @@
               {{ detail?.currentDepartment }}
             </p>
           </div>
-          <div v-if="!detail?.status" class="col-span-1 md:col-span-2">
+          <div v-if="detail?.reason" class="col-span-1 md:col-span-2">
             <h6 class="text-xs font-semibold text-slate-400">Reason</h6>
             <p class="text-base font-semibold text-slate-900 capitalize">
               {{ detail?.reason || "-" }}

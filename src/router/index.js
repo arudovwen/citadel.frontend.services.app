@@ -291,7 +291,7 @@ const routes = [
             },
           },
           {
-            path: "view/:name/:id",
+            path: "view/:name/:id/:hodid",
             name: "department",
 
             component: () =>

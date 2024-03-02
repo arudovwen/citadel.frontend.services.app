@@ -481,7 +481,7 @@ export default {
       this.$store.dispatch("delistMemberFromDepartment", {
         Reason: this.reason,
         userId: this.id,
-        hodUserId: this.$store.state.auth.userData.id,
+        hodUserId: this.$route.params.hodid,
         DepartmentId: this.$route.params.id,
         ActionId: 40,
       });
