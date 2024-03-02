@@ -201,14 +201,14 @@ export default {
     async addFollowupReport({ commit }, data) {
       try {
         commit("addFollowupBegin");
-        console.log(JSON.stringify(data));
-        // const response = await DataService.post(
-        //   `${urls.CREATE_ACTIVITY_REPORT}`,
-        //   data
-        // );
-        // if (response.status === 200) {
-        commit("addFollowupSuccess");
-        // }
+        console.log("Payload: " + JSON.stringify(data));
+        const response = await DataService.post(
+          `${urls.CREATE_FOLLOW_UP_REPORT}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("addFollowupSuccess");
+        }
       } catch (err) {
         commit("addFollowupError", err);
       }
