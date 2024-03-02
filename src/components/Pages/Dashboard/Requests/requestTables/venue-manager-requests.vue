@@ -318,12 +318,10 @@ const actions = [
 const handleAction = (status) => {
   let newaction = actions;
 
-  if (status === true) {
-    return newaction.filter((i) => i.name !== "approve");
+  if (status === true || status === false) {
+    return newaction.filter((i) => i.name == "view");
   }
-  if (status === false) {
-    return newaction.filter((i) => i.name !== "reject");
-  }
+
   return newaction;
 };
 const options = [

@@ -88,6 +88,12 @@
               >
                 {{ props.row.email }}
               </span>
+              <span
+                v-if="props.column.field == 'reason'"
+                class="text-slate-500 dark:text-slate-400 max-w-[160px] truncate"
+              >
+                {{ props.row.reason || "-" }}
+              </span>
               <span v-if="props.column.field == 'status'" class="block w-full">
                 <span
                   class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
@@ -331,26 +337,6 @@ const actions = [
       modalChange.value.openModal();
     },
   },
-  {
-    name: "approve",
-    icon: "ph:check",
-    doit: (name, data) => {
-      detail.value = data;
-      type.value = "approve";
-
-      modal.value.openModal();
-    },
-  },
-  {
-    name: "reject",
-    icon: "ph:x-light",
-    doit: (name, data) => {
-      detail.value = data;
-      type.value = "reject";
-
-      modal.value.openModal();
-    },
-  },
 ];
 const handleAction = (status) => {
   let newaction = actions;
@@ -404,6 +390,14 @@ const columns = [
   {
     label: "Status",
     field: "status",
+  },
+  {
+    label: "Reason",
+    field: "reason",
+  },
+  {
+    label: "Action",
+    field: "action",
   },
 ];
 

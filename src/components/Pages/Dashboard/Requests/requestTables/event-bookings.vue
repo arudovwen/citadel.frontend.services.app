@@ -91,6 +91,12 @@
               {{ moment(props.row.eventDate).format("ll") }}
             </span>
             <span
+              v-if="props.column.field == 'reason'"
+              class="text-slate-500 dark:text-slate-400 max-w-[160px] truncate"
+            >
+              {{ props.row.reason || "-" }}
+            </span>
+            <span
               v-if="props.column.field == 'requesterName'"
               class="text-slate-500 dark:text-slate-400"
             >
@@ -270,7 +276,7 @@
   >
     <AddEvent v-if="type === 'add'" />
     <EditEvent v-if="type === 'edit'" :detail="detail" />
-    <ViewEvent v-if="type === 'view'" />
+    <ViewEvent v-if="type === 'view'" :detail="detail" />
   </Modal>
 </template>
 <script>
@@ -339,10 +345,13 @@ export default {
       },
       actions: [
         {
-          name: "approve",
+          name: "view",
         },
         {
-          name: "reject",
+          name: "edit",
+        },
+        {
+          name: "delete",
         },
       ],
       options: [
@@ -369,12 +378,10 @@ export default {
     handleAction(status) {
       let newaction = this.actions;
 
-      if (status === true) {
-        return newaction.filter((i) => i.name == "reject");
+      if (status === true || status === false) {
+        return newaction.filter((i) => i.name == "view");
       }
-      if (status === false) {
-        return newaction.filter((i) => i.name === "approve");
-      }
+
       return newaction;
     },
 
@@ -394,42 +401,27 @@ export default {
     },
     generateAction(name, id) {
       this.id = id;
-
+      this.type = name;
       const actions = {
-        // view: {
-        //   name: "view",
-        //   icon: "heroicons-outline:eye",
-        //   doit: () => {
-        //     this.$refs.modalChange.openModal();
-        //   },
-        // },
-        approve: {
-          name: "approve",
-          icon: "ph:check",
-          doit: (data, detail) => {
-            this.type = data;
-            this.detail = detail;
-            this.$refs.modalStatus.openModal();
+        view: {
+          name: "view",
+          icon: "heroicons-outline:eye",
+          doit: (name, value) => {
+            console.log("🚀 ~ generateAction ~ name:", name);
+            this.detail = value;
+            this.$refs.modalChange.openModal();
           },
         },
-        // edit: {
-        //   name: "edit",
-        //   icon: "heroicons:pencil-square",
-        //   doit: (data, detail) => {
-        //     this.type = data;
-        //     this.detail = detail;
-        //     this.$refs.modalChange.openModal();
-        //   },
-        // },
-        reject: {
-          name: "reject",
-          icon: "ph:x-light",
-          doit: (data, detail) => {
-            this.type = data;
-            this.detail = detail;
-            this.$refs.modalStatus.openModal();
+        edit: {
+          name: "edit",
+          icon: "heroicons-outline:edit",
+          doit: (name, value) => {
+            console.log("🚀 ~ generateAction ~ name:", name);
+            this.detail = value;
+            this.$refs.modalChange.openModal();
           },
         },
+
         delete: {
           name: "delete",
           icon: "heroicons-outline:trash",
@@ -497,6 +489,11 @@ export default {
       {
         label: "Reason",
         field: "reason",
+      },
+
+      {
+        label: "Action",
+        field: "action",
       },
     ];
     const eventsOption = [
