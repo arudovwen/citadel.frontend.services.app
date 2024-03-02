@@ -65,7 +65,10 @@ export const urls = {
   // Outreach
   GET_ALL_OUTREACH_REQUESTS: "GetAllOutreachRequests",
   ADD_OUTREACH_REQUEST: "/RequestForOutreach",
-  APPROVE_OR_REJECT_OUTREACH: "/ApproveOrRejectVenueRequest",
+  APPROVE_OR_REJECT_OUTREACH: "/ApproveOrRejectOutreachRequest",
+  ADD_OUTREACH_REPORT: "/CreateOutreachReport",
+  GET_ALL_OUTREACH_REPORTS: "/GetAllOutreachReports",
+  GET_OUTREACH_BY_ID: "/GetOutreachReportById",
 
   //Centers
   CREATE_CENTER: "/Center/CreateCenter",

@@ -3,47 +3,24 @@
     <Card title="">
       <div class="grid gap-5">
         <div class="">
-          <Textinput
-            label="Name"
-            v-model="name"
-            :error="nameError"
-            placeholder="Provide name for outreach"
-          />
+          <Textinput label="Name" v-model="name" :error="nameError" placeholder="Provide name for outreach" />
         </div>
-        <FormGroup
-          label="Date of outreach"
-          name="dateOfOutreach"
-          :error="dateOfOutreachError"
-        >
-          <flat-pickr
-            v-model="dateOfOutreach"
-            class="form-control"
-            id="d1"
-            placeholder="yyyy, dd M"
-          />
+        <FormGroup label="Date of outreach" name="dateOfOutreach" :error="dateOfOutreachError">
+          <flat-pickr v-model="dateOfOutreach" class="form-control" id="d1" placeholder="yyyy, dd M" />
         </FormGroup>
 
         <div class="">
-          <Textinput
-            label="Location"
-            v-model="location"
-            :error="locationError"
-            placeholder="Provide location for outreach"
-          />
+          <Textinput label="Location" v-model="location" :error="locationError"
+            placeholder="Provide location for outreach" />
         </div>
 
-        <Textarea
-          label="Description"
-          type="text"
-          :rows="4"
-          v-model="description"
-          :error="descriptionError"
-          placeholder="Provide a description"
-        />
+        <Textarea label="Description" type="text" :rows="4" v-model="description" :error="descriptionError"
+          placeholder="Provide a description" />
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button type="submit" text="Update info" btnClass="btn-dark" />
+
+        <Button :isLoading="state.profile.addOutreachRequestLoading" type="submit" text="Submit" btnClass="btn-dark" />
       </div>
     </Card>
   </form>
@@ -57,6 +34,9 @@ import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import Textarea from "@/components/Textarea";
+import { useStore } from "vuex";
+
+const { state, dispatch } = useStore();
 
 const formData = reactive({
   dateOfOutreach: "",
@@ -66,7 +46,7 @@ const formData = reactive({
 });
 const formDataSchema = yup.object().shape({
   name: yup
-    .date()
+    .string()
     .typeError("Please enter a valid date")
     .required("Please provie a name"),
 
@@ -79,9 +59,11 @@ const formDataSchema = yup.object().shape({
   description: yup.string().required("A short description is required"),
 });
 
+const props = defineProps(["data"])
+
 const { handleSubmit } = useForm({
   validationSchema: formDataSchema,
-  initialValues: formData,
+  initialValues: { ...props.data, name: props.data.outreachName, location: props.data.locationOfOutreach } || formData,
 });
 
 const { value: name, errorMessage: nameError } = useField("name");
@@ -93,7 +75,9 @@ const { value: dateOfOutreach, errorMessage: dateOfOutreachError } =
   useField("dateOfOutreach");
 
 const onSubmit = handleSubmit((values) => {
-  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
+  const userId = state?.auth?.userData?.id;
+  const data = { ...values, userId: userId }
+  dispatch("addOutreachRequest", data);
 });
 </script>
 <style lang=""></style>

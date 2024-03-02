@@ -11,6 +11,7 @@ export default {
     biodata: null,
     allbiodata: [],
     allOutreach: [],
+    outreachReport: null,
     outreach: null,
     creatingProfile: false,
     profileCreated: false,
@@ -43,6 +44,10 @@ export default {
     updateSpouseDataSuccess: false,
     updateSpouseDataerror: null,
 
+    getAllOutreachReportloading : false,
+    getAllOutreachReportsuccess : false,
+    getAllOutreachReporterror : null,
+
     updateChildrenDataloading: false,
     updateChildrenDataSuccess: false,
     updateChildrenDataerror: null,
@@ -63,6 +68,10 @@ export default {
     addOutreachRequestLoading: false,
     addOutreachRequestSuccess: false,
     addOutreachRequestError: null,
+    
+    createOutreachReportLoading: false,
+    createOutreachReportSuccess: false,
+    createOutreachReportError: null,
 
     requestToChangeGroupLoading: false,
     requestToChangeGroupSuccess: false,
@@ -455,18 +464,56 @@ export default {
       state.getAllOutreachsuccess = false;
     },
 
-    getAllOutreachSuccess(state, { data, totalCount }) {
-      state.getAllOutreachloading = false;
-      state.getAllOutreachsuccess = true;
+    getOutreachByIdBegin(state) {
+      state.getOutreachByIdloading = true;
+      state.getOutreachByIdsuccess = false;
+      state.getOutreachByIderror = null;
+    },
+
+    getOutreachByIdSuccess(state, { data, totalCount }) {
+      state.getOutreachByIdloading = false;
+      state.getOutreachByIdsuccess = true;
       state.allOutreach = data;
       state.total = totalCount;
     },
 
-    getAllOutreachErr(state, err) {
-      state.getAllOutreachloading = false;
-      state.getAllOutreacherror = err;
-      state.getAllOutreachsuccess = false;
+    getOutreachByIdErr(state, err) {
+      state.getOutreachByIdloading = false;
+      state.getOutreachByIderror = err;
+      state.getOutreachByIdsuccess = false;
     },
+
+    getAllOutreachReportBegin(state) {
+      state.getAllOutreachReportloading = true;
+      state.getAllOutreachReportsuccess = false;
+      state.getAllOutreachReporterror = null;
+    },
+
+    getAllOutreachReportSuccess(state, { data, totalCount }) {
+      state.getAllOutreachReportloading = false;
+      state.getAllOutreachReportsuccess = true;
+      state.allOutreachReport = data;
+      state.total = totalCount;
+    },
+
+    getAllOutreachReportErr(state, err) {
+      state.getAllOutreachReportloading = false;
+      state.getAllOutreachReporterror = err;
+      state.getAllOutreachReportsuccess = false;
+    },
+
+    // getAllOutreachSuccess(state, { data, totalCount }) {
+    //   state.getAllOutreachloading = false;
+    //   state.getAllOutreachsuccess = true;
+    //   state.allOutreach = data;
+    //   state.total = totalCount;
+    // },
+
+    // getAllOutreachErr(state, err) {
+    //   state.getAllOutreachloading = false;
+    //   state.getAllOutreacherror = err;
+    //   state.getAllOutreachsuccess = false;
+    // },
     getOutreachBegin(state) {
       state.getOutreachloading = true;
       state.getOutreachsuccess = false;
@@ -491,13 +538,7 @@ export default {
       state.addOutreachRequestSuccess = false;
       state.addOutreachRequestError = null;
     },
-
-    addOutreachRequestReset(state) {
-      state.addOutreachRequestLoading = false;
-      state.addOutreachRequestSuccess = false;
-      state.addOutreachRequestError = null;
-    },
-
+    
     AddOutreachRequestSuccess(state) {
       state.addOutreachRequestLoading = false;
       state.addOutreachRequestSuccess = true;
@@ -507,6 +548,24 @@ export default {
       state.addOutreachRequestLoading = false;
       state.addOutreachRequestError = err;
       state.addOutreachRequestSuccess = false;
+    },
+
+    // createOutreachReport
+    createOutreachReportBegin(state) {
+      state.createOutreachReportLoading = true;
+      state.createOutreachReportSuccess = false;
+      state.createOutreachReportError = null;
+    },
+
+    createOutreachReportSuccess(state) {
+      state.createOutreachReportLoading = false;
+      state.createOutreachReportSuccess = true;
+    },
+
+    createOutreachReportFailure(state, err) {
+      state.createOutreachReportLoading = false;
+      state.createOutreachReportError = err;
+      state.createOutreachReportSuccess = false;
     },
 
     getChildrensDataBegin(state) {
@@ -883,20 +942,6 @@ export default {
       }
     },
 
-    async addOutreachRequestRequest({ commit }, data) {
-      try {
-        commit("getAllBiodataBegin");
-        const response = await DataService.get(
-          `${urls.GET_ALL_BIODATA}?${new URLSearchParams(cleanObject(data))}`
-        );
-        if (response.status === 200) {
-          commit("getAllBiodataSuccess", response.data);
-        }
-      } catch (err) {
-        commit("getBiodataErr", err);
-      }
-    },
-
     //get
     async getAllOutreach({ commit }, data) {
       console.log("Getting all outreach")
@@ -907,6 +952,35 @@ export default {
         );
         if (response.status === 200) {
           commit("getAllOutreachSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getOutreachErr", err);
+      }
+    },
+    async getOutreachById({ commit }, data) {
+      console.log("Getting outreach")
+      try {
+        commit("getOutreachByIdBegin");
+        const response = await DataService.get(
+          `${urls.GET_OUTREACH_BY_ID}?${new URLSearchParams(cleanObject(data))}`, data
+        );
+        if (response.status === 200) {
+          commit("getOutreachByIdSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getOutreachByIdErr", err);
+      }
+    },
+
+    async getAllOutreachReport({ commit }, data) {
+      console.log("Getting all outreach")
+      try {
+        commit("getAllOutreachReportBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_OUTREACH_REPORTS}?${new URLSearchParams(cleanObject(data))}`, data
+        );
+        if (response.status === 200) {
+          commit("getAllOutreachReportSuccess", response.data);
         }
       } catch (err) {
         commit("getOutreachErr", err);
@@ -923,6 +997,19 @@ export default {
         commit("AddOutreachRequestSuccess");
       }).catch(err => {
         commit("addOutreachRequestErr", err);
+      })
+    },
+
+    async createOutreachReport({ commit }, data) {
+      commit("createOutreachReportBegin");
+      await DataService.post(
+        `${urls.ADD_OUTREACH_REPORT}?${new URLSearchParams(cleanObject(data))}`,
+        data
+      ).then((res) => {
+        console
+        commit("createOutreachReportSuccess");
+      }).catch(err => {
+        commit("createOutreachReportFailure", err);
       })
     },
 
@@ -1102,7 +1189,6 @@ export default {
     },
 
     //ChurchAffiliation
-
     async getChurchAffiliationsById({ commit }, id) {
       try {
         commit("getChurchAffiliationsDataBegin");

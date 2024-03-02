@@ -96,10 +96,11 @@
     </div> -->
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button text="Cancel" btnClass="btn-outline-secondary btn-sm " />
+        <Button text="Cancel" @click="$refs.modal.closeModal()" btnClass="btn-outline-secondary btn-sm " />
         <Button text="Proceed" :isLoading="approveOrRejectStatus.loading" :btnClass="`btn-dark btn-sm 
           ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="dispatch('approveOrRejectOutreach', {
             inspectorateId: userId,
+            reason: '',
             outreachLogId: selectedOutreachId,
             status: type === 'approve',
           })" />
@@ -116,14 +117,14 @@
           ? 'Edit Report'
           : 'View outreach information'
     " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-3xl">
+    <AddReport v-if="type === 'reportadd'" :data="selectedOutreachData" />
     <AddRecord v-if="type === 'add'" />
-    <EditRecord v-if="type === 'edit'" />
-    <ViewRecord v-if="type === 'view'" />
-    <AddReport v-if="type === 'reportadd'" />
+    <EditRecord v-if="type === 'edit'" :data="selectedOutreachData" />
+    <ViewRecord v-if="type === 'view'" :data="selectedOutreachData" />
     <EditReport v-if="type === 'reportedit'" />
   </Modal>
 </template>
-<script>
+<script setup>
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import Modal from "@/components/Modal/Modal";
 import AddRecord from "../member-add.vue";
@@ -141,282 +142,276 @@ import { MenuItem } from "@headlessui/vue";
 import { useToast } from "vue-toastification";
 import { advancedTable } from "@/constant/basic-tablle-data";
 import window from "@/mixins/window";
-import { computed, onMounted, watch, watchEffect, reactive, ref } from "vue";
+import { computed, onMounted, watch, watchEffect, reactive, ref, provide } from "vue";
 import { useStore } from "vuex"
 
-
-export default {
-  mixins: [window],
-  components: {
-    Pagination,
-    InputGroup,
-    Dropdown,
-    Icon,
-    Card,
-    MenuItem,
-    Button,
-    Modal,
-    AddRecord,
-    EditRecord,
-    ViewRecord,
-    AddReport,
-    EditReport,
-    VueTailwindDatePicker,
+const confirmType = ref("");
+const formatter = {
+  date: "DD MMM YYYY",
+  month: "MMM",
+}
+const options = [
+  {
+    value: "10",
+    label: "10",
   },
-  provide() {
-    return {
-      handleModal: this.handleModal,
-    };
+  {
+    value: "25",
+    label: "25",
   },
-  data() {
-    return {
-      advancedTable,
-      current: 1,
-      pageRange: 5,
-      isOpen: false,
-      id: null,
-      confirmType: "",
-      dateValue: null,
-      formatter: {
-        date: "DD MMM YYYY",
-        month: "MMM",
-      },
-      options: [
-        {
-          value: "10",
-          label: "10",
-        },
-        {
-          value: "25",
-          label: "25",
-        },
-        {
-          value: "50",
-          label: "50",
-        },
-        {
-          value: "75",
-          label: "75",
-        },
-        {
-          value: "100",
-          label: "100",
-        },
-      ],
-      columns: [
-        {
-          label: "Date",
-          field: "date",
-        },
-        {
-          label: "Name",
-          field: "outreachName",
-        },
-        {
-          label: "Location",
-          field: "locationOfOutreach",
-        },
-
-        {
-          label: "Description",
-          field: "description",
-        },
-
-        {
-          label: "Status",
-          field: "status",
-        },
-        {
-          label: "Report Added",
-          field: "report_added",
-        },
-        {
-          label: "Action",
-          field: "action",
-        },
-      ],
-    };
+  {
+    value: "50",
+    label: "50",
+  },
+  {
+    value: "75",
+    label: "75",
+  },
+  {
+    value: "100",
+    label: "100",
+  },
+]
+const columns = [
+  {
+    label: "Outreach Date",
+    field: "date",
+  },
+  {
+    label: "Name of Outreach",
+    field: "outreachName",
+  },
+  {
+    label: "Location",
+    field: "locationOfOutreach",
   },
 
-  methods: {
-    handleModal(type) {
-      this.$refs.modal.closeModal();
-      // this.$refs.modalChange.closeModal();
-      if (type === "decline" || type === "approve") {
-        this.confirmType = type;
-        this.$refs.modal.openModal();
-      } else {
-        type = type;
+  {
+    label: "Description",
+    field: "description",
+  },
 
-        this.$refs.modalChange.openModal();
-      }
+  {
+    label: "Status",
+    field: "status",
+  },
+  {
+    label: "Report Status",
+    field: "report_added",
+  },
+  {
+    label: "Action",
+    field: "action",
+  },
+]
+
+const handleModal = (type) => {
+  this.$refs.modal.closeModal();
+  // this.$refs.modalChange.closeModal();
+  if (type === "decline" || type === "approve") {
+    confirmType.value = type;
+    modal.value.openModal();
+  } else {
+    type = type;
+
+    this.$refs.modalChange.openModal();
+  }
+}
+
+
+
+const { state, dispatch } = useStore();
+const toast = useToast()
+const rejectReason = ref("");
+const permissions = computed(() => state.auth.permissions);
+const addsuccess = computed(() => state.profile.addOutreachRequestSuccess)
+
+const userRole = computed(() => {
+  return state?.auth?.userData?.userRole;
+});
+const userId = computed(() => {
+  return state?.auth?.userData?.id;
+});
+
+const query = reactive({
+  userId: !permissions?.value.includes("CAN_VIEW_OUTREACH") ? userId : null,
+  searchParameter: "",
+  startDate: "",
+  endDate: "",
+  pageNumber: 1,
+  pageSize: 10,
+});
+const type = ref("");
+
+
+const actions = [
+  {
+    name: "view",
+    icon: "heroicons-outline:eye",
+    doit: (data, row) => {
+      selectedOutreachId.value = row.id;
+      type.value = data.name;
+      modalChange.value.openModal();
     },
-
   },
-  setup() {
-    const { state, dispatch } = useStore();
-    const toast = useToast()
-    const rejectReason = ref("");
-    const permissions = computed(() => state.auth.permissions);
-    const addsuccess = computed(() => state.profile.addOutreachRequestSuccess)
-    const query = reactive({
-      searchParameter: "",
-      startDate: "",
-      endDate: "",
-      pageNumber: 1,
-      pageSize: 10,
-    });
-    const type = ref("");
-
-    const userRole = computed(() => {
-      return state?.auth?.userData?.userRole;
-    });
-    const userId = computed(() => {
-      return state?.auth?.userData?.id;
-    });
-
-    const actions = [
-      {
-        name: "view",
-        icon: "heroicons-outline:eye",
-        doit: (data) => {
-          type.value = data.name;
-          modalChange.value.openModal();
-        },
-      },
-      {
-        name: "edit",
-        icon: "heroicons:pencil-square",
-        doit: (data) => {
-          type.value = data.name;
-          modalChange.value.openModal();
-        },
-      },
-      {
-        name: "approve",
-        icon: "iconamoon:check-duotone",
-        doit: (data, row) => {
-          selectedOutreachId.value = row.id
-          type.value = data.name;
-          modal.value.openModal();
-        },
-      },
-      {
-        name: "reject",
-        icon: "iconoir:cancel",
-        doit: (data, row) => {
-          selectedOutreachId.value = row.id;
-          type.value = data.name;
-          modal.value.openModal();
-        },
-      },
-      {
-        name: "delete",
-        icon: "heroicons-outline:trash",
-        doit: (data) => {
-          type.value = data.name;
-          modal.value.openModal();
-        },
-      },
-    ]
-
-    const modal = ref(null);
-    const modalChange = ref(null);
-    onMounted(() => {
-      dispatch("getAllOutreach", query);
-      dispatch("getRoles");
-    });
-
-    const outreachListLoading = computed(() => state?.profile?.getAllOutreachloading);
-    const outreachs = computed(() => {
-      if (state?.profile?.allOutreach?.data) {
-        return state?.profile?.allOutreach.data.map((item) => {
-          // item.fullName = `${item.firstName}  ${item.surName}`;
-          // item.dateOfBirth = item?.dateOfBirth
-          //   ? moment(item?.dateOfBirth).format("ll")
-          //   : "-";
-          // item.department = item?.department ? item?.department : "-";
-          item.date = new Date(item?.dateOfOutreach).toLocaleDateString()
-          return item;
-        });
-      }
-      return [];
-    });
-
-
-    watch(query, () => {
-      dispatch("getAllOutreach", query);
-    })
-
-    const total = computed(() => state.profile.allOutreach?.totalCount);
-    watch(addsuccess, () => {
-      if (addsuccess.value === true) {
-        modalChange.value.closeModal();
-        dispatch("getAllOutreach", query);
-        dispatch("getRoles");
-        toast.success("Outreach request added");
-      }
-    })
-    function perPage({ currentPerPage }) {
-      query.pageNumber = 1;
-      query.pageSize = currentPerPage;
-    }
-
-    const selectedOutreachId = ref(null);
-
-    const filteredActions = (actions, row) => {
-      let actions2 = [...actions]
-      if (userRole.value !== "Inspectorate") {
-        actions2 = actions2.filter(i => i.name !== "approve" && i.name !== "reject");
-      }
-
-      if (row.status === true)
-        actions2 = actions2.filter(i => i.name !== "approve");
-
-      if (row.status === false)
-        actions2 = actions2.filter(i => i.name !== "reject");
-
-      return actions2;
-    }
-
-    const approveOrRejectStatus = computed(() => ({
-      loading: state?.profile?.approveOrRejectOutreachLoading,
-      success: state?.profile?.approveOrRejectOutreachSuccess,
-      error: state?.profile?.approveOrRejectOutreachError
-    }))
-
-    watch(approveOrRejectStatus, () => {
-      if (approveOrRejectStatus.value.success) {
-        modal.value.closeModal();
-        toast.success(`Request ${type.value === "approve" ? 'approval' : 'rejection'} was successful`)
-        dispatch("getAllOutreach", query);
-        dispatch("getRoles");
-      }
-      if (approveOrRejectStatus.value.error) {
-        toast.error(`Request ${type.value === "approve" ? 'approval' : 'rejection'} failed`)
-      }
-    })
-
-    return {
-      permissions,
-      outreachs,
-      modalChange,
-      modal,
-      query,
-      outreachListLoading,
-      total,
-      perPage,
-      actions,
-      userRole,
-      filteredActions,
-      type,
-      rejectReason,
-      dispatch,
-      approveOrRejectStatus,
-      userId,
-      selectedOutreachId
-    };
+  {
+    name: "edit",
+    icon: "heroicons:pencil-square",
+    doit: (data, row) => {
+      selectedOutreachId.value = row.id;
+      type.value = data.name;
+      modalChange.value.openModal();
+    },
   },
-};
+  {
+    name: "approve",
+    icon: "iconamoon:check-duotone",
+    doit: (data, row) => {
+      selectedOutreachId.value = row.id
+      type.value = data.name;
+      modal.value.openModal();
+    },
+  },
+  {
+    name: "reject",
+    icon: "iconoir:cancel",
+    doit: (data, row) => {
+      selectedOutreachId.value = row.id;
+      type.value = data.name;
+      modal.value.openModal();
+    },
+  },
+  {
+    name: "report",
+    icon: "heroicons-outline:plus-sm",
+    doit: (data, row) => {
+      selectedOutreachId.value = row.id;
+      type.value = "reportadd";
+      modalChange.value.openModal();
+    },
+  },
+  {
+    name: "delete",
+    icon: "heroicons-outline:trash",
+    doit: (data) => {
+      type.value = data.name;
+      modal.value.openModal();
+    },
+  },
+]
+
+const modal = ref(null);
+const modalChange = ref(null);
+onMounted(() => {
+  dispatch("getAllOutreach", query);
+  dispatch("getAllOutreachReport", query);
+  dispatch("getRoles");
+});
+
+const outreachListLoading = computed(() => state?.profile?.getAllOutreachloading);
+const outreachs = computed(() => {
+  if (state?.profile?.allOutreach?.data) {
+    return state?.profile?.allOutreach.data.map((item) => {
+      // item.fullName = `${item.firstName}  ${item.surName}`;
+      // item.dateOfBirth = item?.dateOfBirth
+      //   ? moment(item?.dateOfBirth).format("ll")
+      //   : "-";
+      // item.department = item?.department ? item?.department : "-";
+      item.date = new Date(item?.dateOfOutreach).toLocaleDateString()
+      return item;
+    });
+  }
+  return [];
+});
+
+
+watch(query, () => {
+  dispatch("getAllOutreach", query);
+})
+
+
+
+const total = computed(() => state.profile.allOutreach?.totalCount);
+watch(addsuccess, () => {
+  if (addsuccess.value === true) {
+    modalChange.value.closeModal();
+    dispatch("getAllOutreach", query);
+    dispatch("getRoles");
+    toast.success("Outreach request added");
+  }
+})
+function perPage({ currentPerPage }) {
+  query.pageNumber = 1;
+  query.pageSize = currentPerPage;
+}
+
+const selectedOutreachId = ref(null);
+
+const selectedOutreachData = computed(() => {
+  if (!selectedOutreachId.value) return null;
+  const value = outreachs.value.find(i => i.id === selectedOutreachId.value);
+  return value;
+});
+
+const filteredActions = (actions, row) => {
+  let actions2 = [...actions]
+  if (!permissions?.value.includes("CAN_VIEW_OUTREACH")) {
+    actions2 = actions2.filter(i => i.name !== "approve" && i.name !== "reject");
+  }
+
+  if (row.status !== null) {
+    actions2 = actions2.filter(i => i.name !== "edit");
+  }
+
+  if (row.status !== true) {
+    actions2 = actions2.filter(i => i.name !== "report");
+  }
+
+  if (row.status === true) {
+    actions2 = actions2.filter(i => i.name !== "approve");
+  }
+
+  if (row.status === false)
+    actions2 = actions2.filter(i => i.name !== "reject");
+
+  return actions2;
+}
+
+const approveOrRejectStatus = computed(() => ({
+  loading: state?.profile?.approveOrRejectOutreachLoading,
+  success: state?.profile?.approveOrRejectOutreachSuccess,
+  error: state?.profile?.approveOrRejectOutreachError
+}))
+
+const createOutreachReportStatus = computed(() => ({
+  loading: state?.profile?.createOutreachReportLoading,
+  success: state?.profile?.createOutreachReportSuccess,
+  error: state?.profile?.createOutreachReportError
+}))
+
+
+provide("handleModal", handleModal);
+provide("createOutreachReportStatus", createOutreachReportStatus)
+
+watch(selectedOutreachData, () => {
+  console.log(selectedOutreachData);
+})
+
+watch(approveOrRejectStatus, () => {
+  if (approveOrRejectStatus.value.success) {
+    modal.value.closeModal();
+    toast.success(`Request ${type.value === "approve" ? 'approval' : 'rejection'} was successful`)
+    dispatch("getAllOutreach", query);
+    dispatch("getRoles");
+  }
+  if (approveOrRejectStatus.value.error) {
+    toast.error(`Request ${type.value === "approve" ? 'approval' : 'rejection'} failed`)
+  }
+})
+
+watchEffect(selectedOutreachId, () => {
+  (selectedOutreachId.value);
+  dispatch("getOutreachById", { id: selectedOutreachId.value });
+})
 </script>
 <style lang="scss"></style>
