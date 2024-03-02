@@ -141,6 +141,13 @@ export const urls = {
   // Files
   UPLOAD_FILE: "/Files/uploadfile",
 
+  //Follow up first timer
+  CREATE_FOLLOW_UP_REPORT: "/CreateFollowupFirsttimerReport",
+  UPDATE_FOLLOW_UP_REPORT: "/UpdateFollowupFirsttimerReport",
+  GET_FOLLOW_UP_REPORT_BY_ID: "/GetFollowupFirsttimerReportById",
+  GET_ALL_FOLLOW_UP_REPORT: "/GetAllFollowupFirsttimerReport",
+  DELETE_FOLLOW_UP_REPORT: "/DeleteFollowupFirsttimerReport",
+
   //Ministries
   CREATE_MINISTRY: "/Ministry/CreateMinistry",
   UPDATE_MINISTRY: "/Ministry/UpdateMinistry",

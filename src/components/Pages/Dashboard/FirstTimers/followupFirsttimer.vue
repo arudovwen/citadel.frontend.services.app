@@ -29,15 +29,20 @@
 </template>
 <script setup>
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { reactive, computed, defineProps } from "vue";
+import { reactive, computed, defineProps, onMounted } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
+import moment from "moment";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FormGroup from "@/components/FormGroup";
 import { useStore } from "vuex";
-
+onMounted(() => {
+  console.log("Detail: " + JSON.stringify(props.detail));
+});
+const { state, dispatch } = useStore();
 const props = defineProps(["detail"]);
+const userId = computed(() => state?.auth?.userData?.id);
 const editor = ClassicEditor;
 const editorConfig = {
   toolbar: {
@@ -62,7 +67,6 @@ const editorConfig = {
     ],
   },
 };
-const { state, dispatch } = useStore();
 
 const submitLoading = computed(() => state.report.addFollowupLoading);
 const formData = reactive({
@@ -80,12 +84,18 @@ const { handleSubmit } = useForm({
 const { value: summary, errorMessage: summaryError } = useField("summary");
 
 const onSubmit = handleSubmit((values) => {
-  console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
-
+  // console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", values);
+  const today = new Date();
   const data = {
-    reportDetails: values.summary,
+    userId: userId.value,
+    biodataId: props?.detail?.id,
+    fullName: props?.detail?.fullName,
+    reportDate: today,
+    report: values.summary,
   };
-  console.log("Detail: " + JSON.stringify(props.detail));
+
+  // console.log(data);
+
   dispatch("addFollowupReport", data);
 });
 </script>
