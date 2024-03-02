@@ -6,7 +6,7 @@
     >
       <Card bodyClass="" v-for="(item, i) in departments" :key="i">
         <router-link
-          :to="`/departments/view/${item?.departmentName}/${item.id}`"
+          :to="`/departments/view/${item?.departmentName}/${item.id}/${item.userId}`"
           class="flex-1"
         >
           <div
