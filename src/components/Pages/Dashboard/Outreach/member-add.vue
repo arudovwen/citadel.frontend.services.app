@@ -3,24 +3,52 @@
     <Card title="">
       <div class="grid gap-5">
         <div class="">
-          <Textinput label="Name" v-model="name" :error="nameError" placeholder="Provide name for outreach" />
+          <Textinput
+            label="Name"
+            v-model="name"
+            :error="nameError"
+            placeholder="Provide name for outreach"
+          />
         </div>
-        <FormGroup label="Date of outreach" name="dateOfOutreach" :error="dateOfOutreachError">
-          <flat-pickr v-model="dateOfOutreach" class="form-control" id="d1" placeholder="yyyy, dd M" />
+        <FormGroup
+          label="Date of outreach"
+          name="dateOfOutreach"
+          :error="dateOfOutreachError"
+        >
+          <flat-pickr
+            v-model="dateOfOutreach"
+            class="form-control"
+            id="d1"
+            placeholder="yyyy, dd M"
+          />
         </FormGroup>
 
         <div class="">
-          <Textinput label="Location" v-model="location" :error="locationError"
-            placeholder="Provide location for outreach" />
+          <Textinput
+            label="Location"
+            v-model="location"
+            :error="locationError"
+            placeholder="Provide location for outreach"
+          />
         </div>
 
-        <Textarea label="Description" type="text" :rows="4" v-model="description" :error="descriptionError"
-          placeholder="Provide a description" />
+        <Textarea
+          label="Description"
+          type="text"
+          :rows="4"
+          v-model="description"
+          :error="descriptionError"
+          placeholder="Provide a description"
+        />
       </div>
 
       <div class="text-right space-x-3 mt-8">
-
-        <Button :isLoading="state.profile.addOutreachRequestLoading" type="submit" text="Submit" btnClass="btn-dark" />
+        <Button
+          :isLoading="state.profile.addOutreachRequestLoading"
+          type="submit"
+          text="Submit"
+          btnClass="btn-dark"
+        />
       </div>
     </Card>
   </form>
@@ -74,7 +102,7 @@ const { value: dateOfOutreach, errorMessage: dateOfOutreachError } =
 
 const onSubmit = handleSubmit((values) => {
   const userId = state?.auth?.userData?.id;
-  const data = { ...values, userId: userId }
+  const data = { ...values, userId: userId };
   dispatch("addOutreachRequest", data);
 });
 </script>

@@ -44,9 +44,9 @@ export default {
     updateSpouseDataSuccess: false,
     updateSpouseDataerror: null,
 
-    getAllOutreachReportloading : false,
-    getAllOutreachReportsuccess : false,
-    getAllOutreachReporterror : null,
+    getAllOutreachReportloading: false,
+    getAllOutreachReportsuccess: false,
+    getAllOutreachReporterror: null,
 
     updateChildrenDataloading: false,
     updateChildrenDataSuccess: false,
@@ -68,7 +68,7 @@ export default {
     addOutreachRequestLoading: false,
     addOutreachRequestSuccess: false,
     addOutreachRequestError: null,
-    
+
     createOutreachReportLoading: false,
     createOutreachReportSuccess: false,
     createOutreachReportError: null,
@@ -135,23 +135,22 @@ export default {
   },
   mutations: {
     approveOrRejectOutreachBegin(state) {
-      state.approveOrRejectOutreachLoading = true
-      state.approveOrRejectOutreachSuccess = false
-      state.approveOrRejectOutreachError = null
+      state.approveOrRejectOutreachLoading = true;
+      state.approveOrRejectOutreachSuccess = false;
+      state.approveOrRejectOutreachError = null;
     },
 
     approveOrRejectOutreachSuccess(state) {
-      state.approveOrRejectOutreachLoading = false
-      state.approveOrRejectOutreachSuccess = true
-      state.approveOrRejectOutreachError = null
+      state.approveOrRejectOutreachLoading = false;
+      state.approveOrRejectOutreachSuccess = true;
+      state.approveOrRejectOutreachError = null;
     },
 
     approveOrRejectOutreachFailure(state, err) {
-      state.approveOrRejectOutreachLoading = false
-      state.approveOrRejectOutreachSuccess = false
-      state.approveOrRejectOutreachError = err
+      state.approveOrRejectOutreachLoading = false;
+      state.approveOrRejectOutreachSuccess = false;
+      state.approveOrRejectOutreachError = err;
     },
-
 
     uploadFileBegin(state) {
       state.uploadFileLoading = true;
@@ -406,24 +405,6 @@ export default {
       state.getAllBiodatasuccess = false;
     },
 
-    getAllBiodataBegin(state) {
-      state.getAllBiodataloading = true;
-      state.getAllBiodatasuccess = false;
-      state.getAllBiodataerror = null;
-    },
-
-    getAllBiodataSuccess(state, { data, totalCount }) {
-      state.getAllBiodataloading = false;
-      state.getAllBiodatasuccess = true;
-      state.allbiodata = data;
-      state.total = totalCount;
-    },
-
-    getAllBiodataErr(state, err) {
-      state.getAllBiodataloading = false;
-      state.getAllBiodataerror = err;
-      state.getAllBiodatasuccess = false;
-    },
     getBiodataBegin(state) {
       state.getBiodataloading = true;
       state.getBiodatasuccess = false;
@@ -441,8 +422,6 @@ export default {
       state.getBiodataerror = err;
       state.getBiodatasuccess = false;
     },
-
-
 
     // Outreach
     getAllOutreachBegin(state) {
@@ -538,7 +517,7 @@ export default {
       state.addOutreachRequestSuccess = false;
       state.addOutreachRequestError = null;
     },
-    
+
     AddOutreachRequestSuccess(state) {
       state.addOutreachRequestLoading = false;
       state.addOutreachRequestSuccess = true;
@@ -944,11 +923,14 @@ export default {
 
     //get
     async getAllOutreach({ commit }, data) {
-      console.log("Getting all outreach")
+      console.log("Getting all outreach");
       try {
         commit("getAllOutreachBegin");
         const response = await DataService.get(
-          `${urls.GET_ALL_OUTREACH_REQUESTS}?${new URLSearchParams(cleanObject(data))}`, data
+          `${urls.GET_ALL_OUTREACH_REQUESTS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`,
+          data
         );
         if (response.status === 200) {
           commit("getAllOutreachSuccess", response.data);
@@ -958,11 +940,14 @@ export default {
       }
     },
     async getOutreachById({ commit }, data) {
-      console.log("Getting outreach")
+      console.log("Getting outreach");
       try {
         commit("getOutreachByIdBegin");
         const response = await DataService.get(
-          `${urls.GET_OUTREACH_BY_ID}?${new URLSearchParams(cleanObject(data))}`, data
+          `${urls.GET_OUTREACH_BY_ID}?${new URLSearchParams(
+            cleanObject(data)
+          )}`,
+          data
         );
         if (response.status === 200) {
           commit("getOutreachByIdSuccess", response.data);
@@ -973,11 +958,14 @@ export default {
     },
 
     async getAllOutreachReport({ commit }, data) {
-      console.log("Getting all outreach")
+      console.log("Getting all outreach");
       try {
         commit("getAllOutreachReportBegin");
         const response = await DataService.get(
-          `${urls.GET_ALL_OUTREACH_REPORTS}?${new URLSearchParams(cleanObject(data))}`, data
+          `${urls.GET_ALL_OUTREACH_REPORTS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`,
+          data
         );
         if (response.status === 200) {
           commit("getAllOutreachReportSuccess", response.data);
@@ -990,35 +978,38 @@ export default {
     async addOutreachRequest({ commit }, data) {
       commit("addOutreachRequestBegin");
       await DataService.put(
-        `${urls.ADD_OUTREACH_REQUEST}?${new URLSearchParams(cleanObject(data))}`,
+        `${urls.ADD_OUTREACH_REQUEST}?${new URLSearchParams(cleanObject(data))}`
         // data
-      ).then((res) => {
-        console
-        commit("AddOutreachRequestSuccess");
-      }).catch(err => {
-        commit("addOutreachRequestErr", err);
-      })
+      )
+        .then(() => {
+          console;
+          commit("AddOutreachRequestSuccess");
+        })
+        .catch((err) => {
+          commit("addOutreachRequestErr", err);
+        });
     },
 
     async createOutreachReport({ commit }, data) {
       commit("createOutreachReportBegin");
-      await DataService.post(
-        `${urls.ADD_OUTREACH_REPORT}?${new URLSearchParams(cleanObject(data))}`,
-        data
-      ).then((res) => {
-        console
-        commit("createOutreachReportSuccess");
-      }).catch(err => {
-        commit("createOutreachReportFailure", err);
-      })
+      await DataService.post(`${urls.ADD_OUTREACH_REPORT}`, data)
+        .then(() => {
+          console;
+          commit("createOutreachReportSuccess");
+        })
+        .catch((err) => {
+          commit("createOutreachReportFailure", err);
+        });
     },
 
     async approveOrRejectOutreach({ commit }, data) {
       commit("approveOrRejectOutreachBegin");
       try {
         const response = await DataService.put(
-          `${urls.APPROVE_OR_REJECT_OUTREACH}?${new URLSearchParams(cleanObject(data))}`
-        )
+          `${urls.APPROVE_OR_REJECT_OUTREACH}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
         if (response.status === 200) {
           commit("approveOrRejectOutreachSuccess", response.data);
         }

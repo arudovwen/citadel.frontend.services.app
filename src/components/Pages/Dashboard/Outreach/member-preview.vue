@@ -1,10 +1,14 @@
 <template>
   <div>
     <div class="lg:flex justify-between flex-wrap items-center mb-6">
-      <h1 class="text-slate-900 font-semibold text-lg">{{ props.data.outreachName }}</h1>
+      <h1 class="text-slate-900 font-semibold text-lg">
+        {{ props.data.outreachName }}
+      </h1>
       <div class="flex lg:justify-end items-center flex-wrap gap-x-3">
-        <button @click="handleModal('reportadd')"
-          class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
+        <button
+          @click="handleModal('reportadd')"
+          class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
+        >
           <span class="text-lg">
             <Icon icon="iconamoon:sign-plus-thin" />
           </span>
@@ -17,39 +21,60 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h6 class="text-xs font-semibold text-slate-400">Location</h6>
-            <p class="text-base font-semibold text-slate-900">{{ props.data.locationOfOutreach }}</p>
+            <p class="text-base font-semibold text-slate-900">
+              {{ props.data.locationOfOutreach }}
+            </p>
           </div>
           <div>
             <h6 class="text-xs font-semibold text-slate-400">Date</h6>
-            <p class="text-base font-semibold text-slate-900">{{ new Date(props.data?.dateOfOutreach).toLocaleDateString()
-            }}</p>
+            <p class="text-base font-semibold text-slate-900">
+              {{ new Date(props.data?.dateOfOutreach).toLocaleDateString() }}
+            </p>
           </div>
 
           <div class="col-span-2">
             <h6 class="text-xs font-semibold text-slate-400">Description</h6>
-            <p class="text-base font-semibold text-slate-900">{{ props.data.description }}</p>
+            <p class="text-base font-semibold text-slate-900">
+              {{ props.data.description }}
+            </p>
           </div>
 
           <div>
             <h6 class="text-xs font-semibold text-slate-400">Status</h6>
             <p class="text-base font-semibold text-slate-900">
-              {{ props.data.status === true ? "approved" : props.data.status === false ? "rejected" : "pending" }}
+              {{
+                props.data.status === true
+                  ? "approved"
+                  : props.data.status === false
+                  ? "rejected"
+                  : "pending"
+              }}
             </p>
           </div>
         </div>
       </div>
     </Card>
 
-    <div v-if="userRole === 'Inspectorate'" class="flex lg:justify-end items-center flex-wrap my-6 gap-x-3">
-      <button v-if="props.data.status !== true" type="button" @click="handleModal('approve')"
-        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
+    <div
+      v-if="userRole === 'Inspectorate'"
+      class="flex lg:justify-end items-center flex-wrap my-6 gap-x-3"
+    >
+      <button
+        v-if="props.data.status !== true"
+        type="button"
+        @click="handleModal('approve')"
+        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
+      >
         <span class="text-lg">
           <Icon icon="codicon:check-all" />
         </span>
         <span>Approve</span>
       </button>
-      <button v-if="props.data.status !== false" @click="handleModal('decline')"
-        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
+      <button
+        v-if="props.data.status !== false"
+        @click="handleModal('decline')"
+        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
+      >
         <span class="text-lg">
           <Icon icon="iconamoon:sign-times-thin" />
         </span>
@@ -57,16 +82,16 @@
       </button>
     </div>
 
-    <ViewReport v-if="props.data.status && props.data.report_status"/>
-    <ViewReport/>
+    <ViewReport v-if="props.data.status && props.data.report_status" />
+    <ViewReport />
   </div>
 </template>
 <script setup>
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import ViewReport from "./report-preview.vue";
-import { defineProps, watch, watchEffect, computed, inject } from "vue"
-import { useStore } from "vuex"
+import { defineProps, watch, watchEffect, computed, inject } from "vue";
+import { useStore } from "vuex";
 import store from "@/store";
 
 const { dispatch, state } = useStore();
@@ -88,15 +113,15 @@ const { dispatch, state } = useStore();
 //     },
 //   },
 
-const handleModal = inject("handleModal")
+const handleModal = inject("handleModal");
 
-const props = defineProps(['data'])
+const props = defineProps(["data"]);
 const userRole = computed(() => {
   return state?.auth?.userData?.userRole;
 });
 
 watchEffect(props, () => {
-  console.log(props)
+  console.log(props);
   // fetch("")
 });
 </script>

@@ -2,8 +2,10 @@
   <div class="mt-8">
     <div class="lg:flex justify-between flex-wrap items-center mb-6">
       <h1 class="text-slate-900 font-semibold text-lg">OUTREACH REPORT</h1>
-      <button @click="handleModal('reportedit')"
-        class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
+      <button
+        @click="handleModal('reportedit')"
+        class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
+      >
         <span class="text-lg">
           <Icon icon="ant-design:edit-outlined" />
         </span>
@@ -66,8 +68,7 @@
               <span class="min-w-[150px]">Teenagers</span>
 
               <div class="flex gap-x-5 items-center">
-                <span class="flex gap-x-3 items-center"><span>{{
-                }}</span></span>
+                <span class="flex gap-x-3 items-center"><span>{{}}</span></span>
                 <!-- <div class="border-l h-4"></div> -->
                 <!-- <span class="flex gap-x-3 items-center"
                     ><span>Males</span>-<span>4</span></span
@@ -82,8 +83,7 @@
               <span class="min-w-[150px]">Children</span>
 
               <div class="flex gap-x-5 items-center">
-                <span class="flex gap-x-3 items-center"><span>{{
-                }}</span></span>
+                <span class="flex gap-x-3 items-center"><span>{{}}</span></span>
                 <!-- <div class="border-l h-4"></div> -->
                 <!-- <span class="flex gap-x-3 items-center"
                     ><span>Males</span>-<span>4</span></span
