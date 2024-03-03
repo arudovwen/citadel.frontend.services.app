@@ -5,10 +5,8 @@
         {{ props.data.outreachName }}
       </h1>
       <div class="flex lg:justify-end items-center flex-wrap gap-x-3">
-        <button
-          @click="handleModal('reportadd')"
-          class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-        >
+        <button @click="handleModal('reportadd')"
+          class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
           <span class="text-lg">
             <Icon icon="iconamoon:sign-plus-thin" />
           </span>
@@ -43,38 +41,35 @@
             <h6 class="text-xs font-semibold text-slate-400">Status</h6>
             <p class="text-base font-semibold text-slate-900">
               {{
-                props.data.status === true
-                  ? "approved"
-                  : props.data.status === false
-                  ? "rejected"
-                  : "pending"
-              }}
+          props.data.status === true
+            ? "approved"
+            : props.data.status === false
+              ? "rejected"
+              : "pending"
+        }}
+            </p>
+          </div>
+          <div></div>
+          <div v-if="props.data.status === false">
+            <h6 class="text-xs font-semibold text-slate-400">Reason for rejection</h6>
+            <p class="text-base font-semibold text-slate-900">
+              {{ props.data.reason }}
             </p>
           </div>
         </div>
       </div>
     </Card>
 
-    <div
-      v-if="userRole === 'Inspectorate'"
-      class="flex lg:justify-end items-center flex-wrap my-6 gap-x-3"
-    >
-      <button
-        v-if="props.data.status !== true"
-        type="button"
-        @click="handleModal('approve')"
-        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-      >
+    <div v-if="userRole === 'Inspectorate'" class="flex lg:justify-end items-center flex-wrap my-6 gap-x-3">
+      <button v-if="props.data.status !== true" type="button" @click="handleModal('approve')"
+        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
         <span class="text-lg">
           <Icon icon="codicon:check-all" />
         </span>
         <span>Approve</span>
       </button>
-      <button
-        v-if="props.data.status !== false"
-        @click="handleModal('decline')"
-        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-      >
+      <button v-if="props.data.status !== false" @click="handleModal('reject')"
+        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
         <span class="text-lg">
           <Icon icon="iconamoon:sign-times-thin" />
         </span>
@@ -82,49 +77,69 @@
       </button>
     </div>
 
-    <ViewReport v-if="props.data.status && props.data.report_status" />
-    <ViewReport />
+    <ViewReport v-if="!state.profile.getOutreachByIdloading && (props.data.status && report)" :data="report"
+      :handleModal="handleModal" :openDeleteModal="openDeleteModal" />
+    <div v-if="!state.profile.getOutreachByIdloading && (props.data.status && !report)" class="lg:flex justify-between flex-wrap items-center mb-6">
+      <button @click="handleModal('reportadd')"
+        class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
+        <span class="text-lg">
+          <Icon icon="ant-design:edit-outlined" />
+        </span>
+        <span>Add Report</span>
+      </button>
+    </div>
   </div>
 </template>
+
 <script setup>
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import ViewReport from "./report-preview.vue";
-import { defineProps, watch, watchEffect, computed, inject } from "vue";
+import { defineProps, watch, watchEffect, computed, inject, provide } from "vue";
 import { useStore } from "vuex";
 import store from "@/store";
+import { onMounted } from "vue";
+import Modal from "@/components/Modal/Modal";
 
 const { dispatch, state } = useStore();
 
-// export default {
-//   components: {
-//     Card,
-//     Icon,
-//     ViewReport,
-//   },
-//   inject: {
-//     handleModal: {
-//       default: null, // You can specify a default value or set it to null
-//     },
-//   },
-//   methods: {
-//     print() {
-//       window.print();
-//     },
-//   },
+const deleteReportStatus = computed(() => ({
+  loading: state?.profile?.deleteOutreachReportLoading,
+  success: state?.profile?.deleteOutreachReportSuccess,
+  error: state?.profile?.deleteOutreachReportreachError,
+}))
 
 const handleModal = inject("handleModal");
+const openDeleteModal = inject("openDeleteModal");
+
+provide("handleModal", () => handleModal)
+provide("openDeleteModal", () => openDeleteModal)
 
 const props = defineProps(["data"]);
 const userRole = computed(() => {
   return state?.auth?.userData?.userRole;
 });
+const report = computed(() => state?.profile?.outreachReport);
+const reportLoading = computed(() => state?.profile?.getOutreachByIdloading);
 
 watchEffect(props, () => {
-  console.log(props);
-  // fetch("")
+  console.log("p", props);
 });
+
+watch(deleteReportStatus, () => {
+  if (deleteReportStatus.value.success) {
+    console.log("completed;")
+    dispatch("getOutreachById", { id: props.data.id });
+  }
+})
+
+onMounted(() => {
+  dispatch("getOutreachById", { id: props.data.id });
+})
+
+
 </script>
+
 <style lang="scss">
 .vgt-wrap__actions-footer {
   border: none !important;

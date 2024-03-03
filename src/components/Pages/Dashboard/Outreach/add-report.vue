@@ -231,7 +231,6 @@ const onSubmit = handleSubmit((values) => {
     userId: userData?.value?.id,
     outreachDate: props.data.dateOfOutreach,
     id: props.data.id,
-    outreachReportId: props.data.id,
   };
 
   (reqData.detailOfConverts[0].adult = parseInt(

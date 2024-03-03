@@ -69,9 +69,22 @@ export default {
     addOutreachRequestSuccess: false,
     addOutreachRequestError: null,
 
+
+    editOutreachRequestLoading: false,
+    editOutreachRequestSuccess: false,
+    editOutreachRequestError: null,
+
     createOutreachReportLoading: false,
     createOutreachReportSuccess: false,
     createOutreachReportError: null,
+
+    deleteOutreachReportLoading: false,
+    deleteOutreachReportSuccess: false,
+    deleteOutreachReportError: null,
+
+    editOutreachReportLoading: false,
+    editOutreachReportSuccess: false,
+    editOutreachReportError: null,
 
     requestToChangeGroupLoading: false,
     requestToChangeGroupSuccess: false,
@@ -452,14 +465,14 @@ export default {
     getOutreachByIdSuccess(state, { data, totalCount }) {
       state.getOutreachByIdloading = false;
       state.getOutreachByIdsuccess = true;
-      state.allOutreach = data;
-      state.total = totalCount;
+      state.outreachReport = data;
     },
-
+    
     getOutreachByIdErr(state, err) {
       state.getOutreachByIdloading = false;
       state.getOutreachByIderror = err;
       state.getOutreachByIdsuccess = false;
+      state.outreachReport = null;
     },
 
     getAllOutreachReportBegin(state) {
@@ -529,6 +542,23 @@ export default {
       state.addOutreachRequestSuccess = false;
     },
 
+    editOutreachRequestBegin(state) {
+      state.editOutreachRequestLoading = true;
+      state.editOutreachRequestSuccess = false;
+      state.editOutreachRequestError = null;
+    },
+
+    editOutreachRequestSuccess(state) {
+      state.editOutreachRequestLoading = false;
+      state.editOutreachRequestSuccess = true;
+    },
+
+    editOutreachRequestErr(state, err) {
+      state.editOutreachRequestLoading = false;
+      state.editOutreachRequestError = err;
+      state.editOutreachRequestSuccess = false;
+    },
+
     // createOutreachReport
     createOutreachReportBegin(state) {
       state.createOutreachReportLoading = true;
@@ -545,6 +575,40 @@ export default {
       state.createOutreachReportLoading = false;
       state.createOutreachReportError = err;
       state.createOutreachReportSuccess = false;
+    },
+
+    deleteOutreachReportBegin(state) {
+      state.deleteOutreachReportLoading = true;
+      state.deleteOutreachReportSuccess = false;
+      state.deleteOutreachReportError = null;
+    },
+
+    deleteOutreachReportSuccess(state) {
+      state.deleteOutreachReportLoading = false;
+      state.deleteOutreachReportSuccess = true;
+    },
+
+    deleteOutreachReportFailure(state, err) {
+      state.deleteOutreachReportLoading = false;
+      state.deleteOutreachReportError = err;
+      state.deleteOutreachReportSuccess = false;
+    },
+
+    editOutreachReportBegin(state) {
+      state.editOutreachReportLoading = true;
+      state.editOutreachReportSuccess = false;
+      state.editOutreachReportError = null;
+    },
+
+    editOutreachReportSuccess(state) {
+      state.editOutreachReportLoading = false;
+      state.editOutreachReportSuccess = true;
+    },
+
+    editOutreachReportFailure(state, err) {
+      state.editOutreachReportLoading = false;
+      state.editOutreachReportError = err;
+      state.editOutreachReportSuccess = false;
     },
 
     getChildrensDataBegin(state) {
@@ -977,7 +1041,7 @@ export default {
 
     async addOutreachRequest({ commit }, data) {
       commit("addOutreachRequestBegin");
-      await DataService.put(
+      await DataService.post(
         `${urls.ADD_OUTREACH_REQUEST}?${new URLSearchParams(cleanObject(data))}`
         // data
       )
@@ -990,6 +1054,22 @@ export default {
         });
     },
 
+    async editOutreachRequest({ commit }, data) {
+      commit("editOutreachRequestBegin");
+      await DataService.put(
+        `${urls.EDIT_OUTREACH_REQUEST}`
+        , data
+      )
+        .then(() => {
+          console;
+          commit("editOutreachRequestSuccess");
+          commit("AddOutreachRequestSuccess");
+        })
+        .catch((err) => {
+          commit("editOutreachRequestErr", err);
+        });
+    },
+
     async createOutreachReport({ commit }, data) {
       commit("createOutreachReportBegin");
       await DataService.post(`${urls.ADD_OUTREACH_REPORT}`, data)
@@ -999,6 +1079,36 @@ export default {
         })
         .catch((err) => {
           commit("createOutreachReportFailure", err);
+        });
+    },
+
+    async deleteOutreachReport({ commit }, data) {
+      commit("deleteOutreachReportBegin");
+      await DataService.delete
+      (`${urls.DELETE_OUTREACH_REPORT}?${new URLSearchParams(
+        cleanObject(data)
+      )}`, data)
+        .then(() => {
+          console;
+          commit("deleteOutreachReportSuccess");
+        })
+        .catch((err) => {
+          commit("deleteOutreachReportFailure", err);
+        });
+    },
+
+    async editOutreachReport({ commit }, data) {
+
+      commit("editOutreachReportBegin");
+      await DataService.put(`${urls.UPDATE_OUTREACH_REPORT}?${new URLSearchParams(
+        cleanObject(data)
+      )}`, data)
+        .then(() => {
+          console;
+          commit("editOutreachReportSuccess");
+        })
+        .catch((err) => {
+          commit("editOutreachReportFailure", err);
         });
     },
 

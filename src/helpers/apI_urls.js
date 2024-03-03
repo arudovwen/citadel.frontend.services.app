@@ -65,8 +65,12 @@ export const urls = {
   // Outreach
   GET_ALL_OUTREACH_REQUESTS: "GetAllOutreachRequests",
   ADD_OUTREACH_REQUEST: "/RequestForOutreach",
+  EDIT_OUTREACH_REQUEST: "/UpdateOutreachRequest",
+  UPDATE_OUTREACH_REQUEST: "/UpdateOutreachRequest",
+  UPDATE_OUTREACH_REPORT: "/UpdateOutreachReports",
   APPROVE_OR_REJECT_OUTREACH: "/ApproveOrRejectOutreachRequest",
   ADD_OUTREACH_REPORT: "/CreateOutreachReport",
+  DELETE_OUTREACH_REPORT: "/DeleteOutreachReport",
   GET_ALL_OUTREACH_REPORTS: "/GetAllOutreachReports",
   GET_OUTREACH_BY_ID: "/GetOutreachReportById",
 
