@@ -241,6 +241,7 @@ const onSubmit = handleSubmit((values) => {
     id: props.data.id,
     outreachOutcome: values.outreachOutcome,
     outreachDate: values.outreachDate,
+    outreachRequestId: props.data.id,
     detailOfConverts: {
       ...values.detailOfConverts[0],
       adult: parseInt(values.detailOfConverts[0]?.adult),
@@ -253,8 +254,6 @@ const onSubmit = handleSubmit((values) => {
       outreachDate: values.outreachDate,
     },
   };
-
-  console.log("data is ==", d);
 
   dispatch("editOutreachReport", d);
   // console.log("🚀 ~ file: member-add.vue:163 ~ onSubmit ~ values:", reqData);

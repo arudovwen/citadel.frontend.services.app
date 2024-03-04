@@ -99,6 +99,7 @@ client.interceptors.response.use(
           errMsg == "Employer not found!" ||
           errMsg == "Biodata not found!" ||
           errMsg == "Spouse Detail not found!" ||
+          errMsg == "Outreach Report not found!" ||
           errMsg == "Church Affiliation not found!"
         ) {
           return;

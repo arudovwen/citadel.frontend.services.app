@@ -5,13 +5,6 @@
         {{ props.data.outreachName }}
       </h1>
       <div class="flex lg:justify-end items-center flex-wrap gap-x-3">
-        <button @click="handleModal('reportadd')"
-          class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
-          <span class="text-lg">
-            <Icon icon="iconamoon:sign-plus-thin" />
-          </span>
-          <span>Add</span>
-        </button>
       </div>
     </div>
     <Card bodyClass="p-6">
@@ -68,7 +61,7 @@
         </span>
         <span>Approve</span>
       </button>
-      <button v-if="props.data.status !== false" @click="handleModal('reject')"
+      <button v-if="props.data.status !== false" @click="handleModal('decline')"
         class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
         <span class="text-lg">
           <Icon icon="iconamoon:sign-times-thin" />

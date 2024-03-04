@@ -122,9 +122,6 @@ const { state, dispatch } = useStore();
 const reqStatus = inject("createOutreachReportStatus");
 
 watch(reqStatus, () => console.log(reqStatus));
-onMounted(() => {
-  clck();
-});
 const formData = reactive({
   date: "",
   outreachOutcome: "",

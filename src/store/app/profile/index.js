@@ -81,6 +81,10 @@ export default {
     deleteOutreachReportSuccess: false,
     deleteOutreachReportError: null,
 
+    deleteOutreachRequestLoading: false,
+    deleteOutreachRequestSuccess: false,
+    deleteOutreachRequestError: null,
+
     editOutreachReportLoading: false,
     editOutreachReportSuccess: false,
     editOutreachReportError: null,
@@ -593,6 +597,23 @@ export default {
       state.deleteOutreachReportSuccess = false;
     },
 
+    deleteOutreachRequestBegin(state) {
+      state.deleteOutreachRequestLoading = true;
+      state.deleteOutreachRequestSuccess = false;
+      state.deleteOutreachRequestError = null;
+    },
+
+    deleteOutreachRequestSuccess(state) {
+      state.deleteOutreachRequestLoading = false;
+      state.deleteOutreachRequestSuccess = true;
+    },
+
+    deleteOutreachRequestFailure(state, err) {
+      state.deleteOutreachRequestLoading = false;
+      state.deleteOutreachRequestError = err;
+      state.deleteOutreachRequestSuccess = false;
+    },
+
     editOutreachReportBegin(state) {
       state.editOutreachReportLoading = true;
       state.editOutreachReportSuccess = false;
@@ -1057,9 +1078,7 @@ export default {
       commit("editOutreachRequestBegin");
       await DataService.put(`${urls.EDIT_OUTREACH_REQUEST}`, data)
         .then(() => {
-          console;
           commit("editOutreachRequestSuccess");
-          commit("AddOutreachRequestSuccess");
         })
         .catch((err) => {
           commit("editOutreachRequestErr", err);
@@ -1083,8 +1102,7 @@ export default {
       await DataService.delete(
         `${urls.DELETE_OUTREACH_REPORT}?${new URLSearchParams(
           cleanObject(data)
-        )}`,
-        data
+        )}`
       )
         .then(() => {
           console;
@@ -1095,12 +1113,28 @@ export default {
         });
     },
 
+    async deleteOutreachRequest({ commit }, data) {
+      commit("deleteOutreachRequestBegin");
+      await DataService.delete(
+        `${urls.DELETE_OUTREACH_REQUEST}?${new URLSearchParams(cleanObject(data))}`
+      )
+        .then(() => {
+          console;
+          commit("deleteOutreachRequestSuccess");
+        })
+        .catch((err) => {
+          commit("deleteOutreachRequestFailure", err);
+        });
+    },
+
     async editOutreachReport({ commit }, data) {
       commit("editOutreachReportBegin");
       await DataService.put(`${urls.UPDATE_OUTREACH_REPORT}`, data)
-        .then(() => {
-          console;
-          commit("editOutreachReportSuccess");
+        .then(async () => {
+          await DataService.put(`${urls.UPDATE_DETAIL_OF_CONVERTS}`, data?.detailOfConverts)
+            .then(() => {
+              commit("editOutreachReportSuccess");
+            })
         })
         .catch((err) => {
           commit("editOutreachReportFailure", err);

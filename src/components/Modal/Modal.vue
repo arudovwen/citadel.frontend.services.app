@@ -183,18 +183,19 @@ export default defineComponent({
     activeModal: {
       type: Boolean,
       default: false,
-    },
+    }
   },
 
   setup(props) {
     const isOpen = ref(props.activeModal);
-
+    
     // open
     const openModal = () => {
       isOpen.value = true;
     };
     // close
     const closeModal = () => {
+      // props.handleClose()
       isOpen.value = false;
     };
 
