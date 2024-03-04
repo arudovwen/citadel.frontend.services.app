@@ -1,13 +1,19 @@
 <template>
   <div>
-    <div v-if="isInspectorate" className="flex items-center  overflow-x-auto pb-6 ">
+    <div
+      v-if="isInspectorate"
+      className="flex items-center  overflow-x-auto pb-6 "
+    >
       <div v-for="tab in tabs" class="max-w-max" :key="tab">
-        <div @click="currentTab = tab"
-          :class="`${currentTab.toLowerCase() == tab.toLowerCase()
-            ? '!border-slate-900 !text-slate-900 mr-6 '
-            : 'border-transparent text-[#727272] mr-6 '
-            },
-          'flex cursor-pointer flex-col items-center justify-center text-nowrap border-b-[2px] pb-4 pt-6 font-semibold'`">
+        <div
+          @click="currentTab = tab"
+          :class="`${
+            currentTab.toLowerCase() == tab.toLowerCase()
+              ? '!border-slate-900 !text-slate-900 mr-6 '
+              : 'border-transparent text-[#727272] mr-6 '
+          },
+          'flex cursor-pointer flex-col items-center justify-center text-nowrap border-b-[2px] pb-4 pt-6 font-semibold'`"
+        >
           <span className="text-sm capitalize">{{ tab }} </span>
         </div>
       </div>
@@ -15,49 +21,95 @@
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div class="flex gap-x-4 items-center">
-          <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
-            prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9" />
+          <InputGroup
+            v-model="query.searchParameter"
+            placeholder="Search"
+            type="text"
+            prependIcon="heroicons-outline:search"
+            merged
+            classInput="min-w-[220px] !h-9"
+          />
 
-          <VueTailwindDatePicker v-model="query.startDate" :formatter="formatter" input-classes="form-control h-[36px]"
-            placeholder="Start date" as-single />
-          <VueTailwindDatePicker v-model="query.endDate" :formatter="formatter" input-classes="form-control h-[36px]"
-            placeholder="End date" as-single />
+          <VueTailwindDatePicker
+            v-model="query.startDate"
+            :formatter="formatter"
+            input-classes="form-control h-[36px]"
+            placeholder="Start date"
+            as-single
+          />
+          <VueTailwindDatePicker
+            v-model="query.endDate"
+            :formatter="formatter"
+            input-classes="form-control h-[36px]"
+            placeholder="End date"
+            as-single
+          />
         </div>
-        <div class="md:flex md:space-x-3 items-center flex-none" :class="window.width < 768 ? 'space-x-rb' : ''">
-          <Button v-if="permissions?.includes('CAN_CREATE_OUTREACH')" icon="heroicons-outline:plus-sm"
-            text="Create outreach" btnClass=" btn-primary font-normal btn-sm " iconClass="text-lg" @click="
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
+          <Button
+            v-if="permissions?.includes('CAN_CREATE_OUTREACH')"
+            icon="heroicons-outline:plus-sm"
+            text="Create outreach"
+            btnClass=" btn-primary font-normal btn-sm "
+            iconClass="text-lg"
+            @click="
               type = 'add';
-            $refs.modalChange.openModal();
-            " />
+              $refs.modalChange.openModal();
+            "
+          />
         </div>
       </div>
       <div class="-mx-6">
-        <vue-good-table :columns="currentTab === tabs[0] ? approvedRequestcolumns : columns"
-          :isLoading="outreachListLoading" mode="remote" styleClass=" vgt-table  centered " :rows="outreachs"
+        <vue-good-table
+          :columns="currentTab === tabs[0] ? approvedRequestcolumns : columns"
+          :isLoading="outreachListLoading"
+          mode="remote"
+          styleClass=" vgt-table  centered "
+          :rows="outreachs"
           :sort-options="{
             enabled: false,
-          }" :pagination-options="{
-  enabled: true,
-  perPage: query.pageSize,
-}">
+          }"
+          :pagination-options="{
+            enabled: true,
+            perPage: query.pageSize,
+          }"
+        >
           <template v-slot:table-row="props">
-            <span v-if="props.column.field == 'outreachName'" class="font-medium">
+            <span
+              v-if="props.column.field == 'outreachName'"
+              class="font-medium"
+            >
               {{ props.row.outreachName }}
             </span>
-            <span v-if="props.column.field == 'approval_date'" class="font-medium lowercase">
+            <span
+              v-if="props.column.field == 'approval_date'"
+              class="font-medium lowercase"
+            >
               {{ new Date(props.row?.approvedDate).toLocaleDateString() }}
             </span>
-            <span v-if="props.column.field == 'status'" class="font-medium capitalize">
-              <div v-if="props.row.status === true"
-                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500 bg-success-500">
+            <span
+              v-if="props.column.field == 'status'"
+              class="font-medium capitalize"
+            >
+              <div
+                v-if="props.row.status === true"
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500 bg-success-500"
+              >
                 Approved
               </div>
-              <div v-if="props.row.status === false"
-                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-red-500 bg-red-500">
+              <div
+                v-if="props.row.status === false"
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-red-500 bg-red-500"
+              >
                 Declined
               </div>
-              <div v-if="props.row.status === null"
-                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-blue-500 bg-blue-500">
+              <div
+                v-if="props.row.status === null"
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-blue-500 bg-blue-500"
+              >
                 Pending
               </div>
             </span>
@@ -67,19 +119,27 @@
                   <Icon icon="heroicons-outline:dots-vertical" />
                 </span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in filteredActions(actions, props.row)" :key="i">
-                  <div @click="item.doit(item, props.row)" :class="` hover:bg-slate-900
-                    ${item.name === 'delete'
-                      ? 'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white'
-                      : 'hover:bg-slate-900 hover:text-white'
-                    }${!props.row.status && ``
-                    } w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer
-                    first:rounded-t last:rounded-b flex space-x-2 items-center`">
-                    <span class="text-base">
-                      <Icon :icon="item.icon" />
-                    </span>
-                    <span>{{ item.name }}</span>
-                  </div>
+                  <MenuItem
+                    v-for="(item, i) in filteredActions(actions, props.row)"
+                    :key="i"
+                  >
+                    <div
+                      @click="item.doit(item, props.row)"
+                      :class="` hover:bg-slate-900
+                    ${
+                      item.name === 'delete'
+                        ? 'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white'
+                        : 'hover:bg-slate-900 hover:text-white'
+                    }${
+                        !props.row.status && ``
+                      } w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer
+                    first:rounded-t last:rounded-b flex space-x-2 items-center`"
+                    >
+                      <span class="text-base">
+                        <Icon :icon="item.icon" />
+                      </span>
+                      <span>{{ item.name }}</span>
+                    </div>
                   </MenuItem>
                 </template>
               </Dropdown>
@@ -87,9 +147,17 @@
           </template>
           <template #pagination-bottom="">
             <div class="py-4 px-3">
-              <Pagination :total="total" :current="query.pageNumber" :per-page="query.pageSize" :pageRange="pageRange"
-                @page-changed="query.pageNumber = $event" :perPageChanged="perPage" enableSearch enableSelect
-                :options="options">
+              <Pagination
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="pageRange"
+                @page-changed="query.pageNumber = $event"
+                :perPageChanged="perPage"
+                enableSearch
+                enableSelect
+                :options="options"
+              >
                 >
               </Pagination>
             </div>
@@ -99,10 +167,18 @@
     </Card>
   </div>
 
-  <Modal title="Confirm action" label="Small modal"
-    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" labelClass="btn-outline-dark" ref="modal"
-    sizeClass="max-w-md">
-    <div v-if="type === 'reportdelete'" class="text-base text-slate-600 dark:text-slate-300 mb-6">
+  <Modal
+    title="Confirm action"
+    label="Small modal"
+    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
+    labelClass="btn-outline-dark"
+    ref="modal"
+    sizeClass="max-w-md"
+  >
+    <div
+      v-if="type === 'reportdelete'"
+      class="text-base text-slate-600 dark:text-slate-300 mb-6"
+    >
       Are you sure you want to delete this report?
     </div>
     <div v-else class="text-base text-slate-600 dark:text-slate-300 mb-6">
@@ -110,43 +186,76 @@
       {{ type === "approve" ? "approve" : "reject" }} this request?
     </div>
     <div v-if="type.toLowerCase() === 'reject'">
-      <textarea resize="none" v-model="rejectReason" class="px-3 py-3 border border-gray-200 rounded-lg w-full" rows="4"
-        placeholder="Provide reason"></textarea>
+      <textarea
+        resize="none"
+        v-model="rejectReason"
+        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
+        rows="4"
+        placeholder="Provide reason"
+      ></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button text="Cancel" @click="$refs.modal.closeModal()" btnClass="btn-outline-secondary btn-sm " />
-        <Button v-if="type === 'reportdelete'" text="Delete" :isLoading="deleteReportStatus.loading" :btnClass="`btn-dark btn-sm 
-          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="
-            dispatch('deleteOutreachReport', { id: outreachreport?.detailOfConverts[0]?.outreachReportId })
-            " />
-        <Button v-else text="Proceed" :isLoading="approveOrRejectStatus.loading" :btnClass="`btn-dark btn-sm 
-          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="
+        <Button
+          text="Cancel"
+          @click="$refs.modal.closeModal()"
+          btnClass="btn-outline-secondary btn-sm "
+        />
+        <Button
+          v-if="type === 'reportdelete'"
+          text="Delete"
+          :isLoading="deleteReportStatus.loading"
+          :btnClass="`btn-dark btn-sm 
+          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
+          @click="
+            dispatch('deleteOutreachReport', {
+              id: outreachreport?.detailOfConverts[0]?.outreachReportId,
+            })
+          "
+        />
+        <Button
+          v-else
+          text="Proceed"
+          :isLoading="approveOrRejectStatus.loading"
+          :btnClass="`btn-dark btn-sm 
+          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
+          @click="
             dispatch('approveOrRejectOutreach', {
               inspectorateId: userId,
               reason: type === 'approve' ? null : rejectReason,
               outreachLogId: selectedOutreachId,
               status: type === 'approve',
             })
-            " />
+          "
+        />
       </div>
     </template>
   </Modal>
-  <Modal :title="type === 'add'
-    ? 'Create outreach'
-    : type === 'edit'
-      ? 'Edit outreach information'
-      : type === 'reportadd'
+  <Modal
+    :title="
+      type === 'add'
+        ? 'Create outreach'
+        : type === 'edit'
+        ? 'Edit outreach information'
+        : type === 'reportadd'
         ? 'Add Report'
         : type === 'reportedit'
-          ? 'Edit Report'
-          : 'View outreach information'
-    " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-3xl">
+        ? 'Edit Report'
+        : 'View outreach information'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-3xl"
+  >
     <AddReport v-if="type === 'reportadd'" :data="selectedOutreachData" />
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" :data="selectedOutreachData" />
     <ViewRecord v-if="type === 'view'" :data="selectedOutreachData" />
-    <EditReport v-if="type === 'reportedit'" :id="selectedOutreachId" :data="selectedOutreachData" />
+    <EditReport
+      v-if="type === 'reportedit'"
+      :id="selectedOutreachId"
+      :data="selectedOutreachData"
+    />
   </Modal>
 </template>
 <script setup>
@@ -179,7 +288,7 @@ import { useStore } from "vuex";
 
 const tabs = ["approved requests", "all requests", "pending requests"];
 
-const currentTab = ref(tabs[1])
+const currentTab = ref(tabs[1]);
 
 const confirmType = ref("");
 const formatter = {
@@ -188,8 +297,13 @@ const formatter = {
 };
 
 watch(currentTab, () => {
-  query.status = currentTab.value === tabs[0] ? "approved" : currentTab.value === tabs[1] ? null : "pending"
-})
+  query.status =
+    currentTab.value === tabs[0]
+      ? "approved"
+      : currentTab.value === tabs[1]
+      ? null
+      : "pending";
+});
 
 const options = [
   {
@@ -215,7 +329,6 @@ const options = [
 ];
 
 const approvedRequestcolumns = [
-
   {
     label: "Approval Date",
     field: "approval_date",
@@ -269,19 +382,18 @@ const columns = [
 ];
 
 const openDeleteModal = (typ) => {
-  type.value = typ
+  type.value = typ;
   modal.value.openModal();
-}
+};
 
-const handleModal = (typ, leaveModal) => {
+const handleModal = (typ) => {
   modal.value.closeModal();
   // this.$refs.modalChange.closeModal();
   if (typ === "decline" || typ === "approve") {
     confirmType.value = type;
     modal.value.openModal();
-  }
-  else {
-    console.log(typ)
+  } else {
+    console.log(typ);
     type.value = typ;
 
     modalChange.value.openModal();
@@ -372,10 +484,10 @@ const actions = [
 
 const modal = ref(null);
 const modalChange = ref(null);
-const deleteModal = ref(true);
+// const deleteModal = ref(true);
 onMounted(() => {
   dispatch("getAllOutreach", query);
-  dispatch("getAllOutreachReport", {query, pageSize: 30000});
+  dispatch("getAllOutreachReport", { query, pageSize: 30000 });
   dispatch("getRoles");
 });
 
@@ -406,13 +518,13 @@ const editStatus = computed(() => ({
   loading: state?.profile?.editOutreachReportLoading,
   success: state?.profile?.editOutreachReportSuccess,
   error: state?.profile?.editOutreachReportreachError,
-}))
+}));
 
 const deleteReportStatus = computed(() => ({
   loading: state?.profile?.deleteOutreachReportLoading,
   success: state?.profile?.deleteOutreachReportSuccess,
   error: state?.profile?.deleteOutreachReportreachError,
-}))
+}));
 watch(addsuccess, () => {
   if (addsuccess.value === true) {
     modalChange.value.closeModal();
@@ -459,15 +571,11 @@ const filteredActions = (actions, row) => {
   }
 
   if (row.status === true) {
-    actions2 = actions2.filter(
-      (i) => i.name !== "approve"
-    );
+    actions2 = actions2.filter((i) => i.name !== "approve");
   }
 
   if (row.status === false)
-    actions2 = actions2.filter(
-      (i) => i.name !== "reject"
-    );
+    actions2 = actions2.filter((i) => i.name !== "reject");
 
   return actions2;
 };
@@ -477,7 +585,6 @@ const approveOrRejectStatus = computed(() => ({
   success: state?.profile?.approveOrRejectOutreachSuccess,
   error: state?.profile?.approveOrRejectOutreachError,
 }));
-
 
 const createOutreachReportStatus = computed(() => ({
   loading: state?.profile?.createOutreachReportLoading,
@@ -497,7 +604,8 @@ watch([approveOrRejectStatus], () => {
   if (approveOrRejectStatus.value.success) {
     modal.value.closeModal();
     toast.success(
-      `Request ${type.value === "approve" ? "approval" : "rejection"
+      `Request ${
+        type.value === "approve" ? "approval" : "rejection"
       } was successful`
     );
     dispatch("getAllOutreach", query);
