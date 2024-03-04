@@ -269,7 +269,7 @@ const query = reactive({
   sortOrder: "",
   searchParameter: "",
   status: "none",
-  FromDate: "",
+  startDate: "",
   EndDate: "",
   // userId: state.auth.userData.id,
 });
@@ -429,15 +429,11 @@ watch(
   () => dateValue.value,
   () => {
     if (dateValue.value.length) {
-      query.EndDate = moment(dateValue.value[1]).format(
-        "YYYY-MM-DD HH:mm:ss.SSS"
-      );
-      query.FromDate = moment(dateValue.value[0]).format(
-        "YYYY-MM-DD HH:mm:ss.SSS"
-      );
+      query.EndDate = moment(dateValue.value[1]).format("YYYY-MM-DD");
+      query.startDate = moment(dateValue.value[0]).format("YYYY-MM-DD");
     } else {
       query.EndDate = "";
-      query.FromDate = "";
+      query.startDate = "";
     }
   }
 );
@@ -454,7 +450,7 @@ watch(
     query.pageSize,
     query.status,
     query.EndDate,
-    query.FromDate,
+    query.startDate,
   ],
   () => {
     dispatch("getVenueRequests", query);
