@@ -275,7 +275,7 @@ const query = reactive({
 });
 const type = ref("");
 const detail = ref(null);
-const dateValue = ref(null);
+const dateValue = ref([]);
 const comment = ref("");
 
 const formatter = {
