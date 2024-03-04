@@ -316,12 +316,12 @@ export const ProfileMenu = [
   //   icon: "heroicons-outline:chip",
   //   link: "todo",
   // },
-  {
-    label: "Settings",
-    icon: "heroicons-outline:cog",
-    link: "#",
-    roles: "",
-  },
+  // {
+  //   label: "Settings",
+  //   icon: "heroicons-outline:cog",
+  //   link: "#",
+  //   roles: "",
+  // },
   // {
   //   label: "Price",
   //   icon: "heroicons-outline:credit-card",

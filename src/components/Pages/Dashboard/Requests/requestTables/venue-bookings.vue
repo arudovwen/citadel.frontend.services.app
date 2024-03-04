@@ -315,7 +315,7 @@ const query = reactive({
   userId: state.auth.userData.id,
   status: "none",
   dateValue: [],
-  FromDate: "",
+  startDate: "",
   EndDate: "",
 });
 const type = ref("");
@@ -452,12 +452,12 @@ watch(
       query.EndDate = moment(query.dateValue[1]).format(
         "YYYY-MM-DD HH:mm:ss.SSS"
       );
-      query.FromDate = moment(query.dateValue[0]).format(
+      query.startDate = moment(query.dateValue[0]).format(
         "YYYY-MM-DD HH:mm:ss.SSS"
       );
     } else {
       query.EndDate = "";
-      query.FromDate = "";
+      query.startDate = "";
     }
   }
 );
@@ -469,7 +469,7 @@ watch(
 );
 
 watch(
-  () => [query.pageNumber, query.pageSize, query.EndDate, query.FromDate],
+  () => [query.pageNumber, query.pageSize, query.EndDate, query.startDate],
   () => {
     dispatch("getVenueRequests", query);
   }
