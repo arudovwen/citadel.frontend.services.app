@@ -1,75 +1,73 @@
 <template>
   <div>
-    <Card bodyClass="p-6">
-      <div class="max-w-[980px] mx-auto my-6 rounded-md overflow-x-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          <div>
-            <h6 class="text-xs font-semibold text-slate-400">Requester name</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{ detail.requesterName }}
-            </p>
-          </div>
-          <div>
-            <h6 class="text-xs font-semibold text-slate-400">Zone name</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{ detail.zone }}
-            </p>
-          </div>
-          <div>
-            <h6 class="text-xs font-semibold text-slate-400">Center name</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{ detail.center }}
-            </p>
-          </div>
+    <!-- <Card bodyClass="p-6"> -->
+    <div class="max-w-[980px] mx-auto my-6 rounded-md overflow-x-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <div>
+          <h6 class="text-xs font-semibold text-slate-400">Requester name</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{ detail.requesterName }}
+          </p>
+        </div>
+        <div>
+          <h6 class="text-xs font-semibold text-slate-400">Zone name</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{ detail.zone }}
+          </p>
+        </div>
+        <div>
+          <h6 class="text-xs font-semibold text-slate-400">Center name</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{ detail.center }}
+          </p>
+        </div>
 
-          <div>
-            <h6 class="text-xs font-semibold text-slate-400">Event type</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{
-                eventsOptions.find((i) => i.value == detail.eventType)?.label
-              }}
-            </p>
-          </div>
-          <div>
-            <h6 class="text-xs font-semibold text-slate-400">Event date</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{ moment(detail.eventDate).format("ll") }}
-            </p>
-          </div>
+        <div>
+          <h6 class="text-xs font-semibold text-slate-400">Event type</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{ eventsOptions.find((i) => i.value == detail.eventType)?.label }}
+          </p>
+        </div>
+        <div>
+          <h6 class="text-xs font-semibold text-slate-400">Event date</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{ moment(detail.eventDate).format("ll") }}
+          </p>
+        </div>
 
-          <div class="col-span-1 md:col-span-2">
-            <h6 class="text-xs font-semibold text-slate-400">Request date</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{ moment(detail.requestDate).format("ll") }}
-            </p>
-          </div>
+        <div class="col-span-1 md:col-span-2">
+          <h6 class="text-xs font-semibold text-slate-400">Request date</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{ moment(detail.requestDate).format("ll") }}
+          </p>
+        </div>
 
-          <div class="col-span-1 md:col-span-2">
-            <h6 class="text-xs font-semibold text-slate-400">Status</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{
-                detail?.status === null
-                  ? "Pending"
-                  : detail?.status === false
-                  ? "Declined"
-                  : "Approved"
-              }}
-            </p>
-          </div>
-          <div v-if="detail?.reason" class="col-span-1 md:col-span-2">
-            <h6 class="text-xs font-semibold text-slate-400">Reason</h6>
-            <p class="text-base font-semibold text-slate-900 capitalize">
-              {{ detail?.reason || "-" }}
-            </p>
-          </div>
+        <div class="col-span-1 md:col-span-2">
+          <h6 class="text-xs font-semibold text-slate-400">Status</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{
+              detail?.status === null
+                ? "Pending"
+                : detail?.status === false
+                ? "Declined"
+                : "Approved"
+            }}
+          </p>
+        </div>
+        <div v-if="detail?.reason" class="col-span-1 md:col-span-2">
+          <h6 class="text-xs font-semibold text-slate-400">Reason</h6>
+          <p class="text-base font-semibold text-slate-900 capitalize">
+            {{ detail?.reason || "-" }}
+          </p>
         </div>
       </div>
-    </Card>
+    </div>
+    <!-- </Card> -->
   </div>
 </template>
 <script setup>
 import { defineProps } from "vue";
-import Card from "@/components/Card";
+// import Card from "@/components/Card";
 import { eventsOptions } from "@/constant/data";
 import moment from "moment";
 

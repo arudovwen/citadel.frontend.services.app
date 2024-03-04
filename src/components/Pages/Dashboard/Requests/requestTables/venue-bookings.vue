@@ -261,6 +261,22 @@
   >
     <RequestVenue :toggleView="closeRequestmodal" :refetch="getRequests" />
   </Modal>
+
+  <Modal
+    :title="`Reason for decline`"
+    labelClass="btn-outline-dark"
+    ref="reasonModal"
+    sizeClass="max-w-lg"
+  >
+    <div class="flex items-start justify-start w-full">
+      <span v-if="!detail?.reason?.length" class="text-gray-400"
+        >None specified</span
+      >
+      <div v-else class="min-h-[300px]">
+        <div v-html="detail?.reason"></div>
+      </div>
+    </div>
+  </Modal>
 </template>
 <script setup>
 import RequestVenue from "@/components/Pages/Dashboard/Requests/make-requests/request-venue.vue";
@@ -290,6 +306,7 @@ const toast = useToast();
 const { state, dispatch } = useStore();
 const modal = ref(null);
 const modalChange = ref(null);
+const reasonModal = ref(null);
 const requests = computed(() => state?.venue?.venueRequests?.data);
 const userId = computed(() => state?.auth?.userData?.id);
 
@@ -339,12 +356,21 @@ const actions = [
       modalChange.value.openModal();
     },
   },
+  // {
+  //   name: "see reason",
+  //   icon: "heroicons-outline:eye",
+  //   doit: (name, value) => {
+  //     console.log("🚀 ~ generateAction ~ name:", name);
+  //     this.detail = value;
+  //     this.$refs.reasonModal.openModal();
+  //   },
+  // },
 ];
 const handleAction = (status) => {
   let newaction = actions;
 
   if (status === true) {
-    return newaction.filter((i) => i.name !== "approve");
+    return newaction.filter((i) => i.name == "view");
   }
   if (status === false) {
     return newaction.filter((i) => i.name !== "reject");
@@ -393,10 +419,10 @@ const columns = [
     label: "Status",
     field: "status",
   },
-  {
-    label: "Reason",
-    field: "reason",
-  },
+  // {
+  //   label: "Reason",
+  //   field: "reason",
+  // },
   {
     label: "Action",
     field: "action",

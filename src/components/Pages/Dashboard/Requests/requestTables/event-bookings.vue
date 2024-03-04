@@ -363,9 +363,9 @@ export default {
         {
           name: "view",
         },
-        {
-          name: "see report",
-        },
+        // {
+        //   name: "see reason",
+        // },
         {
           name: "edit",
         },
@@ -401,7 +401,7 @@ export default {
       if (status === false) {
         return newaction.filter(
           (i) =>
-            i.name == "see report" || i.name == "delete" || i.name == "view"
+            i.name == "see reason" || i.name == "delete" || i.name == "view"
         );
       }
 
@@ -446,15 +446,15 @@ export default {
             this.$refs.modalChange.openModal();
           },
         },
-        "see report": {
-          name: "see report",
-          icon: "heroicons-outline:eye",
-          doit: (name, value) => {
-            console.log("🚀 ~ generateAction ~ name:", name);
-            this.detail = value;
-            this.$refs.reasonModal.openModal();
-          },
-        },
+        // "see reason": {
+        //   name: "see reason",
+        //   icon: "heroicons-outline:eye",
+        //   doit: (name, value) => {
+        //     console.log("🚀 ~ generateAction ~ name:", name);
+        //     this.detail = value;
+        //     this.$refs.reasonModal.openModal();
+        //   },
+        // },
         edit: {
           name: "edit",
           icon: "heroicons-outline:edit",
