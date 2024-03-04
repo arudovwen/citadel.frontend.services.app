@@ -197,18 +197,20 @@ const onSubmit = handleSubmit((values) => {
     id: props.data.id,
   };
 
-  const d = {
-    id: values.detailOfConverts[0]?.outreachReportId,
+  const d = 
+  {
+    id: props.data.id,
     outreachOutcome: values.outreachOutcome,
     outreachDate: values.outreachDate,
-    detailOfConverts: [{
+    detailOfConverts: {
       adult: parseInt(values.detailOfConverts[0]?.adult),
       youth: parseInt(values.detailOfConverts[0]?.youth),
       teenager: parseInt(values.detailOfConverts[0]?.teenager),
       children: parseInt(values.detailOfConverts[0]?.children),
       male: parseInt(values.detailOfConverts[0]?.male),
       female: parseInt(values.detailOfConverts[0]?.female),
-    }]
+      id: report.value.detailOfConverts[0].id
+    }
   }
 
   console.log("data is ==", d);
