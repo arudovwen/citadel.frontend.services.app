@@ -24,6 +24,7 @@
     </Card>
   </form>
 </template>
+
 <script setup>
 import { reactive, defineProps } from "vue";
 import { useField, useForm } from "vee-validate";
@@ -34,6 +35,7 @@ import FormGroup from "@/components/FormGroup";
 import Textinput from "@/components/Textinput";
 import Textarea from "@/components/Textarea";
 import { useStore } from "vuex";
+import moment from "moment"
 
 const { state, dispatch } = useStore();
 
@@ -79,15 +81,16 @@ const { value: dateOfOutreach, errorMessage: dateOfOutreachError } =
   useField("dateOfOutreach");
 
 const onSubmit = handleSubmit((values) => {
-  const data = { ...values };
-  delete data.reason;
-  delete data.approvedBy;
-  delete data.approvedDate;
-  delete data.createdBy;
-  delete data.modifiedBy;
-  delete data.status;
-  delete data.reason;
+  const data = {
+    ...values,
+    outreachName: values.name,
+    dateOfOutreach: moment(values.date).format(
+      "YYYY-MM-DDTHH:mm:ss.SSSZ"
+    ),
+    locationOfOutreach: values.location
+  };
   dispatch("editOutreachRequest", data);
 });
 </script>
+
 <style lang=""></style>

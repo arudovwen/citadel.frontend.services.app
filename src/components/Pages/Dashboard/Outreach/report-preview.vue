@@ -131,7 +131,7 @@
         <div class="flex gap-x-5">
           <Button text="Cancel" @click="$refs.deleteModal.closeModal()" btnClass="btn-outline-secondary btn-sm " />
           <Button text="Delete" :isLoading="deleteReportStatus.loading" btnClass="btn-dark btn-sm bg-danger-500" @click="
-            dispatch('deleteOutreachReport', { id: props.data?.detailOfConverts[0]?.outreachReportId })
+            dispatch('deleteOutreachReport', { id: props.data?.detailOfConverts[0]?.outreachReportId || props.data?.detailOfConverts[0]?.id })
             " />
         </div>
       </template>
