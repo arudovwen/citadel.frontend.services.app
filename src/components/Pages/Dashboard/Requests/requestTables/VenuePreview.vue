@@ -94,7 +94,7 @@
               {{ detail?.currentDepartment }}
             </p>
           </div>
-          <div v-if="detail?.reason" class="col-span-1 md:col-span-2">
+          <div class="col-span-1 md:col-span-2">
             <h6 class="text-xs font-semibold text-slate-400">Reason</h6>
             <p class="text-base font-semibold text-slate-900 capitalize">
               {{ detail?.reason || "-" }}

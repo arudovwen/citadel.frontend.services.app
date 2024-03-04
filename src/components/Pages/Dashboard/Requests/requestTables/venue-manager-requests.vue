@@ -371,6 +371,7 @@ function handleRequest() {
     managerId: userId.value,
     venueLogId: detail.value.id,
     status: type.value === "approve" ? true : false,
+    reason: type.value === "reject" ? comment.value : null,
   });
 }
 
