@@ -158,7 +158,10 @@
       ref="modal"
       sizeClass="max-w-lg"
     >
-      <FormGroup
+      <div class="flex items-start justify-start w-full min-h-[300px]">
+        <div v-html="report.report"></div>
+      </div>
+      <!-- <FormGroup
         label="First timer report"
         name="summary"
         :error="summaryError"
@@ -169,7 +172,7 @@
           v-model="report.report"
           :config="editorConfig"
         ></ckeditor>
-      </FormGroup>
+      </FormGroup> -->
     </Modal>
   </div>
 </template>
@@ -191,9 +194,9 @@ import { useStore } from "vuex";
 import { debounce } from "lodash";
 import { computed, onMounted, watch, reactive, ref } from "vue";
 import { roleFilters } from "@/constant/data";
-import FormGroup from "@/components/FormGroup";
+// import FormGroup from "@/components/FormGroup";
 
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 onMounted(() => {
   // dispatch("getAllBiodata", query);
@@ -212,35 +215,31 @@ const query = reactive({
   isFirstTimer: true,
 });
 
-const formData = reactive({
-  summary: "",
-});
+// const editor = ClassicEditor;
 
-const editor = ClassicEditor;
+// const editorConfig = {
+//   toolbar: {
+//     items: [
+//       "undo",
+//       "redo",
+//       "|",
+//       "heading",
+//       "|",
+//       "bold",
+//       "italic",
+//       "|",
+//       "link",
 
-const editorConfig = {
-  toolbar: {
-    items: [
-      "undo",
-      "redo",
-      "|",
-      "heading",
-      "|",
-      "bold",
-      "italic",
-      "|",
-      "link",
+//       "insertTable",
 
-      "insertTable",
-
-      "|",
-      "bulletedList",
-      "numberedList",
-      "outdent",
-      "indent",
-    ],
-  },
-};
+//       "|",
+//       "bulletedList",
+//       "numberedList",
+//       "outdent",
+//       "indent",
+//     ],
+//   },
+// };
 
 // const reportQuery = reactive({
 //   userId:
