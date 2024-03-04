@@ -11,14 +11,6 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
-
-          <VueTailwindDatePicker
-            v-model="dateValue"
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="Select date"
-            as-single
-          />
         </div>
         <div
           class="md:flex md:space-x-3 items-center flex-none"
@@ -277,8 +269,6 @@
 </template>
 <script>
 import RolesModal from "@/views/roles/RolesModal";
-
-import VueTailwindDatePicker from "vue-tailwind-datepicker";
 import AssignRole from "@/components/Pages/Dashboard/Members/assign-role.vue";
 import RemoveRole from "@/components/Pages/Dashboard/Members/remove-role.vue";
 import Dropdown from "@/components/Dropdown";
@@ -324,7 +314,6 @@ export default {
     Card,
     MenuItem,
     Button,
-    VueTailwindDatePicker,
   },
 
   data() {

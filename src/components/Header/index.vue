@@ -47,7 +47,7 @@
           <!-- <SwitchDark /> -->
           <!-- <Message v-if="window.width > 768" /> -->
           <!-- <span>{{ $store.state.auth.userData.userRole }}</span> -->
-          <Notification v-if="window.width > 768" />
+          <!-- <Notification v-if="window.width > 768" /> -->
           <!-- {{ userRoles[0] }} -->
           <!-- <RoleSwitch /> -->
           <Profile v-if="window.width > 768" />
@@ -60,7 +60,7 @@
 <script>
 // import RoleSwitch from "@/components/Header/Navtools/RoleSwitch";
 import Profile from "./Navtools/Profile.vue";
-import Notification from "./Navtools/Notification.vue";
+// import Notification from "./Navtools/Notification.vue";
 // import Message from "./Navtools/Message.vue";
 // import SwitchDark from "./Navtools/SwitchDark.vue";
 import Mainnav from "./horizental-nav.vue";
@@ -83,7 +83,7 @@ export default {
   mixins: [window],
   components: {
     Profile,
-    Notification,
+    // Notification,
     // Message,
     // SwitchDark,
     Mainnav,
