@@ -69,7 +69,6 @@ export default {
     addOutreachRequestSuccess: false,
     addOutreachRequestError: null,
 
-
     editOutreachRequestLoading: false,
     editOutreachRequestSuccess: false,
     editOutreachRequestError: null,
@@ -467,7 +466,7 @@ export default {
       state.getOutreachByIdsuccess = true;
       state.outreachReport = data;
     },
-    
+
     getOutreachByIdErr(state, err) {
       state.getOutreachByIdloading = false;
       state.getOutreachByIderror = err;
@@ -1056,10 +1055,7 @@ export default {
 
     async editOutreachRequest({ commit }, data) {
       commit("editOutreachRequestBegin");
-      await DataService.put(
-        `${urls.EDIT_OUTREACH_REQUEST}`
-        , data
-      )
+      await DataService.put(`${urls.EDIT_OUTREACH_REQUEST}`, data)
         .then(() => {
           console;
           commit("editOutreachRequestSuccess");
@@ -1084,10 +1080,12 @@ export default {
 
     async deleteOutreachReport({ commit }, data) {
       commit("deleteOutreachReportBegin");
-      await DataService.delete
-      (`${urls.DELETE_OUTREACH_REPORT}?${new URLSearchParams(
-        cleanObject(data)
-      )}`, data)
+      await DataService.delete(
+        `${urls.DELETE_OUTREACH_REPORT}?${new URLSearchParams(
+          cleanObject(data)
+        )}`,
+        data
+      )
         .then(() => {
           console;
           commit("deleteOutreachReportSuccess");
@@ -1098,11 +1096,8 @@ export default {
     },
 
     async editOutreachReport({ commit }, data) {
-
       commit("editOutreachReportBegin");
-      await DataService.put(`${urls.UPDATE_OUTREACH_REPORT}?${new URLSearchParams(
-        cleanObject(data)
-      )}`, data)
+      await DataService.put(`${urls.UPDATE_OUTREACH_REPORT}`, data)
         .then(() => {
           console;
           commit("editOutreachReportSuccess");

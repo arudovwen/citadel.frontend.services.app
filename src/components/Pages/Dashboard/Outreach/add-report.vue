@@ -1,5 +1,5 @@
 <template>
-  <button @click="clck">Hyyy</button>
+  <!-- <button @click="clck">Hyyy</button> -->
   <form @submit.prevent="onSubmit">
     <Card title="">
       <div class="grid gap-5 mb-10">
@@ -104,7 +104,7 @@
   </form>
 </template>
 <script setup>
-import { reactive, computed, inject } from "vue";
+import { reactive, computed, inject, onMounted } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import Button from "@/components/Button";
@@ -122,7 +122,9 @@ const { state, dispatch } = useStore();
 const reqStatus = inject("createOutreachReportStatus");
 
 watch(reqStatus, () => console.log(reqStatus));
-
+onMounted(() => {
+  clck();
+});
 const formData = reactive({
   date: "",
   outreachOutcome: "",
@@ -222,7 +224,7 @@ watch(reqStatus, () => {
     toast.error(reqStatus.value.error);
   }
 });
-const clck = () => dispatch("getOutreachById", { id: props.data.id });
+// const clck = () => dispatch("getOutreachById", { id: props.data.id });
 
 const onSubmit = handleSubmit((values) => {
   console.log("d", userData?.value, values);
@@ -252,7 +254,7 @@ const onSubmit = handleSubmit((values) => {
     (reqData.detailOfConverts[0].female = parseInt(
       values.detailOfConverts[0].female
     )),
-    reqData.detailOfConverts[0].outreachReportId = props.data.id,
+    (reqData.detailOfConverts[0].outreachReportId = props.data.id),
     delete reqData.date;
 
   dispatch("createOutreachReport", reqData);
