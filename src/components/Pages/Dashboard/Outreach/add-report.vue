@@ -231,6 +231,7 @@ const onSubmit = handleSubmit((values) => {
     userId: userData?.value?.id,
     outreachDate: props.data.dateOfOutreach,
     id: props.data.id,
+    outreachrequestId: props.data.id,
   };
 
   (reqData.detailOfConverts[0].adult = parseInt(
@@ -251,6 +252,7 @@ const onSubmit = handleSubmit((values) => {
     (reqData.detailOfConverts[0].female = parseInt(
       values.detailOfConverts[0].female
     )),
+    reqData.detailOfConverts[0].outreachReportId = props.data.id,
     delete reqData.date;
 
   dispatch("createOutreachReport", reqData);

@@ -72,7 +72,7 @@ export const urls = {
   ADD_OUTREACH_REPORT: "/CreateOutreachReport",
   DELETE_OUTREACH_REPORT: "/DeleteOutreachReport",
   GET_ALL_OUTREACH_REPORTS: "/GetAllOutreachReports",
-  GET_OUTREACH_BY_ID: "/GetOutreachReportById",
+  GET_OUTREACH_BY_ID: "/GetOutreachReportByRequestId",
 
   //Centers
   CREATE_CENTER: "/Center/CreateCenter",
