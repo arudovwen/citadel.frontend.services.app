@@ -228,6 +228,7 @@ const otherPermissions = {
   Zones: ["can_view_all"],
   Centers: ["can_view_all"],
   Outreach: ["can_approve_reject"],
+  Venues: ["can_approve_reject"],
 };
 watchEffect(() => {
   if (modulesList.value?.length > 0 && permissionsList.value?.length > 0) {

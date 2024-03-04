@@ -518,6 +518,7 @@ export default {
       pageNumber: 1,
       pageSize: 2500000,
     });
+
     function getData() {
       dispatch("getEvents", query);
     }

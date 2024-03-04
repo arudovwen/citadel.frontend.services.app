@@ -20,19 +20,16 @@
               placeholder="Sort by"
               classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
             />
-          </div>
-          <div
-            class="md:flex md:space-x-3 items-center flex-none justify-between"
-            :class="window.width < 768 ? 'space-x-rb' : ''"
-          >
             <VueTailwindDatePicker
               v-model="dateValue"
               :formatter="formatter"
               input-classes="form-control h-[36px]"
               placeholder="Select date"
-              as-single
             />
           </div>
+          <div
+            class="md:flex md:space-x-3 items-center flex-none justify-between"
+          ></div>
 
           <!-- <div class="">authorities: {{ authUserRoles }}</div> -->
         </div>
@@ -242,7 +239,6 @@ import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
-import window from "@/mixins/window";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
 import moment from "moment";
@@ -273,6 +269,8 @@ const query = reactive({
   sortOrder: "",
   searchParameter: "",
   status: "none",
+  FromDate: "",
+  EndDate: "",
   // userId: state.auth.userData.id,
 });
 const type = ref("");
@@ -427,7 +425,22 @@ watch(success, () => {
     }
   }
 });
-
+watch(
+  () => dateValue.value,
+  () => {
+    if (dateValue.value.length) {
+      query.EndDate = moment(dateValue.value[1]).format(
+        "YYYY-MM-DD HH:mm:ss.SSS"
+      );
+      query.FromDate = moment(dateValue.value[0]).format(
+        "YYYY-MM-DD HH:mm:ss.SSS"
+      );
+    } else {
+      query.EndDate = "";
+      query.FromDate = "";
+    }
+  }
+);
 watch(
   () => query.searchParameter,
   () => {
@@ -436,7 +449,13 @@ watch(
 );
 
 watch(
-  () => [query.pageNumber, query.pageSize, query.status],
+  () => [
+    query.pageNumber,
+    query.pageSize,
+    query.status,
+    query.EndDate,
+    query.FromDate,
+  ],
   () => {
     dispatch("getVenueRequests", query);
   }

@@ -18,11 +18,10 @@
               :class="window.width < 768 ? 'space-x-rb' : ''"
             >
               <VueTailwindDatePicker
-                v-model="dateValue"
+                v-model="query.dateValue"
                 :formatter="formatter"
-                input-classes="form-control h-[36px]"
-                placeholder="Select date"
-                as-single
+                input-classes="form-control h-[36px] min-w-[250px]"
+                placeholder="Filter date range"
               />
             </div>
           </div>
@@ -315,14 +314,17 @@ const query = reactive({
   searchParameter: "",
   userId: state.auth.userData.id,
   status: "none",
+  dateValue: [],
+  FromDate: "",
+  EndDate: "",
 });
 const type = ref("");
 const detail = ref(null);
-const dateValue = ref(null);
 const comment = ref("");
 const getRequests = () => {
   dispatch("getVenueRequests", query);
 };
+
 const formatter = {
   date: "DD MMM YYYY",
   month: "MMM",
@@ -443,7 +445,22 @@ watch(success, () => {
     }
   }
 });
-
+watch(
+  () => query.dateValue,
+  () => {
+    if (query.dateValue.length) {
+      query.EndDate = moment(query.dateValue[1]).format(
+        "YYYY-MM-DD HH:mm:ss.SSS"
+      );
+      query.FromDate = moment(query.dateValue[0]).format(
+        "YYYY-MM-DD HH:mm:ss.SSS"
+      );
+    } else {
+      query.EndDate = "";
+      query.FromDate = "";
+    }
+  }
+);
 watch(
   () => query.searchParameter,
   () => {
@@ -452,7 +469,7 @@ watch(
 );
 
 watch(
-  () => [query.pageNumber, query.pageSize],
+  () => [query.pageNumber, query.pageSize, query.EndDate, query.FromDate],
   () => {
     dispatch("getVenueRequests", query);
   }

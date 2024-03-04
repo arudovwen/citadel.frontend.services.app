@@ -71,23 +71,17 @@ const rolesLoading = computed(() => state.role.getAuthUserRolesLoading);
 const getAuthUsersRoles = () => {
   dispatch("getAuthUserRoles", userId.value);
 };
-const authUserRoles = computed(() =>
-  state?.role?.authUserRoles
-    ?.map((i) => {
-      return i;
-    })
-    .join(", ")
-);
+const permissions = computed(() => state.auth.permissions);
 
 const isVenueManager = computed(() =>
-  authUserRoles?.value?.toLowerCase()?.includes("venue manager")
+  permissions.value?.includes("CAN_APPROVE_REJECT_VENUES")
 );
 // const isHOD = computed(() =>
 //   authUserRoles?.value?.toLowerCase()?.includes("hod")
 // );
 
 const isInspectorate = computed(() =>
-  authUserRoles?.value?.toLowerCase()?.includes("inspectorate")
+  permissions.value?.includes("CAN_APPROVE_REJECT_EVENTS")
 );
 const navs = computed(() => [
   // {
