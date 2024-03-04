@@ -278,6 +278,22 @@
     <EditEvent v-if="type === 'edit'" :detail="detail" />
     <ViewEvent v-if="type === 'view'" :detail="detail" />
   </Modal>
+
+  <Modal
+    :title="`Reason for decline`"
+    labelClass="btn-outline-dark"
+    ref="reasonModal"
+    sizeClass="max-w-lg"
+  >
+    <div class="flex items-start justify-start w-full">
+      <span v-if="!detail?.reason?.length" class="text-gray-400"
+        >None specified</span
+      >
+      <div v-else class="min-h-[300px]">
+        <div v-html="detail?.reason"></div>
+      </div>
+    </div>
+  </Modal>
 </template>
 <script>
 import { eventsOptions } from "@/constant/data";
@@ -348,6 +364,9 @@ export default {
           name: "view",
         },
         {
+          name: "see report",
+        },
+        {
           name: "edit",
         },
         {
@@ -378,8 +397,23 @@ export default {
     handleAction(status) {
       let newaction = this.actions;
 
-      if (status === true || status === false) {
-        return newaction.filter((i) => i.name == "view");
+      //handle declined
+      if (status === false) {
+        return newaction.filter(
+          (i) =>
+            i.name == "see report" || i.name == "delete" || i.name == "view"
+        );
+      }
+
+      // handle pending
+      if (status === null) {
+        return newaction.filter(
+          (i) => i.name == "view" || i.name == "edit" || i.name == "delete"
+        );
+      }
+      //handle approved
+      if (status === true) {
+        return newaction.filter((i) => i.name == "view" || i.name == "delete");
       }
 
       return newaction;
@@ -410,6 +444,15 @@ export default {
             console.log("🚀 ~ generateAction ~ name:", name);
             this.detail = value;
             this.$refs.modalChange.openModal();
+          },
+        },
+        "see report": {
+          name: "see report",
+          icon: "heroicons-outline:eye",
+          doit: (name, value) => {
+            console.log("🚀 ~ generateAction ~ name:", name);
+            this.detail = value;
+            this.$refs.reasonModal.openModal();
           },
         },
         edit: {
@@ -444,6 +487,7 @@ export default {
     const modal = ref(null);
     const modalStatus = ref(null);
     const modalChange = ref(null);
+    const reasonModal = ref(null);
     const selectedZone = ref(null);
     const toast = useToast();
     const { dispatch, state } = useStore();
@@ -486,10 +530,10 @@ export default {
         field: "status",
       },
 
-      {
-        label: "Reason",
-        field: "reason",
-      },
+      // {
+      //   label: "Reason",
+      //   field: "reason",
+      // },
 
       {
         label: "Action",
@@ -652,6 +696,7 @@ export default {
       selectedZone,
       columns,
       permissions,
+      reasonModal,
     };
   },
 };
