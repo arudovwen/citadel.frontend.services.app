@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="isInspectorate" className="flex items-center  overflow-x-auto pb-6 ">
+    <div v-if="isInspectorate" className="flex items-center border-b-[1px] border-b-[#DDDDDD] overflow-x-auto mb-6">
       <div v-for="tab in tabs" class="max-w-max" :key="tab">
         <div @click="currentTab = tab"
           :class="`${currentTab.toLowerCase() == tab.toLowerCase()
@@ -211,9 +211,9 @@ const addReportSuccess = computed(() => state.profile.createOutreachReportSucces
 const editsuccess = computed(() => state.profile.editOutreachRequestSuccess);
 const outreachreport = computed(() => state?.profile?.outreachReport);
 
-const tabs = ["approved requests", "all requests", "pending requests"];
+const tabs = ["all requests", "approved requests", "pending requests"];
 
-const currentTab = ref(tabs[1]);
+const currentTab = ref(tabs[0]);
 
 const confirmType = ref("");
 const formatter = {
@@ -224,11 +224,11 @@ const formatter = {
 watch(currentTab, () => {
   query.status =
     currentTab.value === tabs[0]
-      ? "approved"
-      : currentTab.value === tabs[1]
-        ? null
+    ? null
+    : currentTab.value === tabs[1]
+    ? "approved"
         : "pending";
-  query.dateFilter = currentTab.value === tabs[0] ? "dateOfOutreach" : null;
+  query.dateFilter = currentTab.value === tabs[1] ? "dateOfOutreach" : null;
 });
 
 watch(rejectReason, () => {
@@ -429,7 +429,8 @@ const outreachs = computed(() => {
       // item.department = item?.department ? item?.department : "-";
       item.date = moment(item?.dateOfOutreach).format("ll")
       return item;
-    });
+    })
+    // .filter(item => new Date(item?.dateOfOutreach) > Date.now())
   }
   return [];
 });
