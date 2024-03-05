@@ -53,7 +53,7 @@
       </div>
     </Card>
 
-    <div v-if="userRole === 'Inspectorate'" class="flex lg:justify-end items-center flex-wrap my-6 gap-x-3">
+    <div v-if="userRole === 'Inspectorate' && props.data.status === null" class="flex lg:justify-end items-center flex-wrap my-6 gap-x-3">
       <button v-if="props.data.status !== true" type="button" @click="handleModal('approve')"
         class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
         <span class="text-lg">
