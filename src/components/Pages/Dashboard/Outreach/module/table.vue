@@ -46,8 +46,8 @@
             <span v-if="props.column.field == 'outreachName'" class="font-medium">
               {{ props.row.outreachName }}
             </span>
-            <span v-if="props.column.field == 'approval_date'" class="font-medium lowercase">
-              {{ new Date(props.row?.approvedDate).toLocaleDateString() }}
+            <span v-if="props.column.field == 'approval_date'" class="font-medium">
+              {{ moment(item?.dateOfBirth).format("ll")}}
             </span>
             <span v-if="props.column.field == 'status'" class="font-medium capitalize">
               <div v-if="props.row.status === true"
@@ -189,6 +189,7 @@ import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
 import { useToast } from "vue-toastification";
 import window from "@/mixins/window";
+import moment from "moment"
 import {
   computed,
   onMounted,
@@ -426,7 +427,7 @@ const outreachs = computed(() => {
       //   ? moment(item?.dateOfBirth).format("ll")
       //   : "-";
       // item.department = item?.department ? item?.department : "-";
-      item.date = new Date(item?.dateOfOutreach).toLocaleDateString();
+      item.date = moment(item?.dateOfOutreach).format("ll")
       return item;
     });
   }
