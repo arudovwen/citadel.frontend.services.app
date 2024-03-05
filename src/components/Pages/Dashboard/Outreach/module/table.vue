@@ -119,24 +119,35 @@
       <textarea resize="none" v-model="rejectReason" class="px-3 py-3 border border-gray-200 rounded-lg w-full" rows="4"
         placeholder="Provide reason"></textarea>
     </div>
+    <span v-if="rejectReasonErr?.length > 0" class="mt-2 text-danger-500 text-xs">
+      <!-- <Icon icon="heroicons-outline:information-circle" /> -->
+      {{ rejectReasonErr }}
+    </span>
 
     <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button text="Cancel" @click="$refs.modal.closeModal()" btnClass="btn-outline-secondary btn-sm " />
-        <Button v-if="type === 'delete'" text="Delete" :isLoading="deleteReportStatus.loading" :btnClass="`btn-dark btn-sm 
+        <Button 
+        :disabled="rejectReason.length > 0 && rejectReason.trim().length()" v-if="type === 'delete'" text="Delete" :isLoading="deleteReportStatus.loading" :btnClass="`btn-dark btn-sm 
           ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="
       dispatch('deleteOutreachRequest', {
         id: selectedOutreachId,
       })
       " />
-        <Button v-else text="Proceed" :isLoading="approveOrRejectStatus.loading" :btnClass="`btn-dark btn-sm 
-          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="
+        <Button v-else :text="type === 'approve' ? 'Approve Request' : 'Reject Request'"
+          :isLoading="approveOrRejectStatus.loading" :btnClass="`btn-dark btn-sm 
+          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="() => {
+      if (rejectReason.length === 0 || rejectReason.trim().length === 0) {
+        rejectReasonErr = 'Reason cannot be empty';
+        return
+      }
       dispatch('approveOrRejectOutreach', {
         inspectorateId: userId,
         reason: type === 'approve' ? null : rejectReason,
         outreachLogId: selectedOutreachId,
         status: type === 'approve',
       })
+    }
       " />
       </div>
     </template>
@@ -189,6 +200,16 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 
+const { state, dispatch } = useStore();
+const toast = useToast();
+const rejectReason = ref("");
+const rejectReasonErr = ref("");
+const permissions = computed(() => state.auth.permissions);
+const addsuccess = computed(() => state.profile.addOutreachRequestSuccess);
+const addReportSuccess = computed(() => state.profile.createOutreachReportSuccess);
+const editsuccess = computed(() => state.profile.editOutreachRequestSuccess);
+const outreachreport = computed(() => state?.profile?.outreachReport);
+
 const tabs = ["approved requests", "all requests", "pending requests"];
 
 const currentTab = ref(tabs[1]);
@@ -208,6 +229,11 @@ watch(currentTab, () => {
         : "pending";
   query.dateFilter = currentTab.value === tabs[0] ? "dateOfOutreach" : null;
 });
+
+watch(rejectReason, () => {
+  if ((rejectReason.value.length > 0) && rejectReason.value.trim().length())
+    rejectReasonErr = ""
+})
 
 const options = [
   {
@@ -293,7 +319,7 @@ const openDeleteModal = (typ) => {
 const handleModal = (typ) => {
   modal.value.closeModal();
   // this.$refs.modalChange.closeModal();
-  if (typ === "decline" || typ === "approve") {
+  if (typ === "reject" || typ === "approve") {
     type.value = typ;
     modal.value.openModal();
   } else {
@@ -303,15 +329,6 @@ const handleModal = (typ) => {
     modalChange.value.openModal();
   }
 };
-
-const { state, dispatch } = useStore();
-const toast = useToast();
-const rejectReason = ref("");
-const permissions = computed(() => state.auth.permissions);
-const addsuccess = computed(() => state.profile.addOutreachRequestSuccess);
-const addReportSuccess = computed(() => state.profile.createOutreachReportSuccess);
-const editsuccess = computed(() => state.profile.editOutreachRequestSuccess);
-const outreachreport = computed(() => state?.profile?.outreachReport);
 
 const userId = computed(() => {
   return state?.auth?.userData?.id;
@@ -510,12 +527,8 @@ const filteredActions = (actions, row) => {
     actions2 = actions2.filter((i) => i.name !== "report");
   }
 
-  if (row.status === true) {
-    actions2 = actions2.filter((i) => i.name !== "approve");
-  }
-
-  if (row.status === false)
-    actions2 = actions2.filter((i) => i.name !== "reject");
+  if (row.status === true || row.status === false)
+    actions2 = actions2.filter((i) => i.name !== "reject" && i.name !== "approve");
 
   return actions2;
 };
@@ -541,6 +554,8 @@ watch(selectedOutreachData, () => {
 });
 
 watch([approveOrRejectStatus], () => {
+  rejectReason.value = "";
+  rejectReasonErr.value = "";
   if (approveOrRejectStatus.value.success) {
     modal.value.closeModal();
     modalChange.value.closeModal();
@@ -560,6 +575,8 @@ watch([approveOrRejectStatus], () => {
 
 watchEffect(selectedOutreachId, () => {
   selectedOutreachId.value;
+  rejectReason.value = "";
+  rejectReasonErr.value = "";
   dispatch("getOutreachById", { id: selectedOutreachId.value });
 });
 </script>

@@ -35,10 +35,10 @@
             <p class="text-base font-semibold text-slate-900">
               {{
           props.data.status === true
-            ? "approved"
+            ? "Approved"
             : props.data.status === false
-              ? "rejected"
-              : "pending"
+              ? "Rejected"
+              : "Pending"
         }}
             </p>
           </div>
@@ -61,12 +61,12 @@
         </span>
         <span>Approve</span>
       </button>
-      <button v-if="props.data.status !== false" @click="handleModal('decline')"
+      <button v-if="props.data.status !== false" @click="handleModal('reject')"
         class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
         <span class="text-lg">
           <Icon icon="iconamoon:sign-times-thin" />
         </span>
-        <span>Decline</span>
+        <span>Reject</span>
       </button>
     </div>
 
