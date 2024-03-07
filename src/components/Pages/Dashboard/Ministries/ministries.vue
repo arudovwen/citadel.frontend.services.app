@@ -24,10 +24,7 @@
       </div>
 
       <Button
-        v-if="
-          state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
-          state.auth.userData.userRole.toLowerCase() === 'administrator'
-        "
+        v-if="state.auth.permissions.includes('CAN_CREATE_MINISTRIES')"
         icon="heroicons-outline:plus"
         text="Add Ministry"
         btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal"

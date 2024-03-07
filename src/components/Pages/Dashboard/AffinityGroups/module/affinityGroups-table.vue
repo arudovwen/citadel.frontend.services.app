@@ -68,11 +68,7 @@
             </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown
-                v-if="
-                  state.auth.userData.userRole.toLowerCase() ===
-                    'administrator' ||
-                  state.auth.userData.userRole.toLowerCase() === 'inspectorate'
-                "
+                v-if="permissions.includes('CAN_UPDATE_AFFINITYGROUPS')"
                 classMenuItems=" w-[140px]"
               >
                 <span class="text-xl"

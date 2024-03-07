@@ -38,10 +38,7 @@
               </div>
             </div>
             <div
-              v-if="
-                state.auth.userData.userRole.toLowerCase() === 'inspectorate' ||
-                state.auth.userData.userRole.toLowerCase() === 'administrator'
-              "
+              v-if="state.auth.permissions.includes('CAN_UPDATE_UNITS')"
               class="flex justify-end px-4 py-2 mt-6 border-t border-gray-200 gap-x-3"
             >
               <button

@@ -576,14 +576,7 @@ export default {
       })
     );
     const filteredColumns = computed(() => {
-      return state.auth.userData.userRole.toLowerCase() === "member"
-        ? columns.filter(
-            (i) =>
-              i.field !== "requesterName" &&
-              i.field !== "zone" &&
-              i.field !== "center"
-          )
-        : columns;
+      return columns;
     });
     watch(success, () => {
       if (success.value) {

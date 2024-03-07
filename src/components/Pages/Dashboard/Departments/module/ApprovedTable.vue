@@ -362,6 +362,7 @@ export default {
     return {
       type: "",
       id: null,
+      actionId: null,
       activeFilter: "all",
       dateValue: null,
       pageRange: 5,
@@ -383,9 +384,10 @@ export default {
         {
           name: "delist",
           icon: "heroicons-outline:trash",
-          doit: ({ userId }) => {
+          doit: ({ userId, id }) => {
+            this.reason = "";
             this.id = userId;
-
+            this.actionId = id;
             this.$refs.modal.openModal();
           },
         },
@@ -483,14 +485,15 @@ export default {
         userId: this.id,
         hodUserId: this.$route.params.hodid,
         DepartmentId: this.$route.params.id,
-        ActionId: 40,
+        ActionId: this.actionId,
       });
     },
   },
   computed: {
     filteredActions() {
-      return this.$store.state.auth.userData.userRole !== "administrator" &&
-        this.$store.state.auth.userData.userRole !== "hod"
+      return !this.$store.state.auth.permissions.includes(
+        "CAN_UPDATE_DEPARTMENT"
+      )
         ? this.actions.filter((i) => i.name.toLowerCase() !== "delete")
         : this.actions;
     },

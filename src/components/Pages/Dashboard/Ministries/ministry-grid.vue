@@ -143,8 +143,8 @@ onMounted(() => {
 });
 const { dispatch, state } = useStore();
 const router = useRouter();
-const canEdit = computed(
-  () => state.auth.userData.userRole.toLowerCase() === "administrator"
+const canEdit = computed(() =>
+  state.auth.permissions.includes("CAN_UPDATE_MINISTRIES")
 );
 const ministries = computed(() => state.ministry.ministries);
 const total = computed(() => state.ministry.total);
