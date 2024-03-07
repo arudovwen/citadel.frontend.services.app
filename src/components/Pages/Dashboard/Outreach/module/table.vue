@@ -25,7 +25,7 @@
         </div>
         <div class="md:flex md:space-x-3 items-center flex-none" :class="window.width < 768 ? 'space-x-rb' : ''">
           <Button
-            v-if="(permissions?.includes('CAN_CREATE_OUTREACH') && (currentTab !== 'approved requests' && currentTab !== 'pending requests'))"
+            v-if="(permissions?.includes('CAN_CREATE_OUTREACH') && (currentTab !== 'planned outreach' && currentTab !== 'pending requests'))"
             icon="heroicons-outline:plus-sm" text="Create outreach" btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg" @click="
       type = 'add';
@@ -162,8 +162,8 @@
           ? 'Add Report'
           : type === 'reportedit'
             ? 'Edit Report'
-            : 'View outreach information'
-      " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-3xl">
+            : selectedOutreachData?.outreachName
+      " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-md">
     <AddReport v-if="type === 'reportadd'" :data="selectedOutreachData" />
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" :data="selectedOutreachData" />
@@ -211,9 +211,9 @@ const addReportSuccess = computed(() => state.profile.createOutreachReportSucces
 const editsuccess = computed(() => state.profile.editOutreachRequestSuccess);
 const outreachreport = computed(() => state?.profile?.outreachReport);
 
-const tabs = ["all requests", "approved requests", "pending requests"];
+const tabs = ["planned outreach", "my Outreach", "pending requests"];
 
-const currentTab = ref(tabs[0]);
+const currentTab = ref(tabs[1]);
 
 const confirmType = ref("");
 const formatter = {
@@ -261,10 +261,6 @@ const options = [
 
 const approvedRequestcolumns = [
   {
-    label: "Approval Date",
-    field: "approval_date",
-  },
-  {
     label: "Name of Outreach",
     field: "outreachName",
   },
@@ -275,10 +271,6 @@ const approvedRequestcolumns = [
   {
     label: "Location",
     field: "locationOfOutreach",
-  },
-  {
-    label: "Status",
-    field: "status",
   },
   {
     label: "Action",

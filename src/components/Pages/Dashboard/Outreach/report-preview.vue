@@ -2,20 +2,22 @@
   <div class="mt-8">
     <div class="lg:flex justify-between flex-wrap items-center mb-6">
       <h1 class="text-slate-900 font-semibold text-lg">OUTREACH REPORT</h1>
-      <button @click="handleModal('reportedit')"
-        class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
-        <span class="text-lg">
-          <Icon icon="ant-design:edit-outlined" />
-        </span>
-        <span>Edit Report</span>
-      </button>
-      <button @click="openDeleteModal()"
-        class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
-        <span class="text-lg">
-          <Icon icon="ant-design:edit-outlined" />
-        </span>
-        <span>Delete Report</span>
-      </button>
+      <span>
+        <button @click="handleModal('reportedit')"
+          class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
+          <span class="text-lg">
+            <Icon icon="ant-design:edit-outlined" />
+          </span>
+          <span>Edit Report</span>
+        </button>
+        <button @click="openDeleteModal()"
+          class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
+          <span class="text-lg">
+            <Icon icon="ant-design:edit-outlined" />
+          </span>
+          <span>Delete Report</span>
+        </button>
+      </span>
     </div>
     <Card bodyClass="p-6">
       <div class="mb-8">
