@@ -104,7 +104,7 @@ const routes = [
         meta: {
           hide: true,
           activeName: "overview",
-          roles: "CAN_VIEW_ADMIN_DASHBOA",
+          roles: "",
           subroles: ["cihpastor", "cihcoordinator"],
         },
       },
