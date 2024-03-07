@@ -1,8 +1,8 @@
 <!-- eslint-disable no-unused-vars -->
 <template>
   <div>
-    <div className="flex items-center  overflow-x-auto pb-6 ">
-      <div v-for="tab in tabs" class="max-w-max" :key="tab">
+    <div className="flex items-center  overflow-x-auto mb-6 border-b">
+      <div v-for="tab in tabs" class="" :key="tab">
         <div
           @click="currentTab = tab"
           :class="`${
@@ -330,7 +330,7 @@ const addReportSuccess = computed(
 );
 const editsuccess = computed(() => state.profile.editOutreachRequestSuccess);
 // const outreachreport = computed(() => state?.profile?.outreachReport);
-
+const pageRange = ref(5);
 const tabs = ["approved requests", "all requests", "pending requests"];
 
 const currentTab = ref(tabs[1]);
