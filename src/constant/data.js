@@ -1,5 +1,9 @@
 import store from "../store";
 // store.state.auth.userData.id
+export const dashboardPermission = [
+  "CAN_VIEW_ADMIN_DASHBOARD",
+  "CAN_VIEW_INSPECTORATE_DASHBOARD",
+];
 export const menuItems = [
   {
     isHeadr: true,
