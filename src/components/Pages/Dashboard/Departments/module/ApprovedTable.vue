@@ -434,14 +434,14 @@ export default {
           label: "Dob",
           field: "doB",
         },
-        {
-          label: "Status",
-          field: "status",
-        },
-        {
-          label: "Approval Date",
-          field: "approveDate",
-        },
+        // {
+        //   label: "Status",
+        //   field: "status",
+        // },
+        // {
+        //   label: "Approval Date",
+        //   field: "approveDate",
+        // },
         {
           label: "Action",
           field: "action",
