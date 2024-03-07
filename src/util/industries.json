@@ -1,0 +1,306 @@
+[
+  {
+    "name": "Technology",
+    "subSectors": [
+      { "name": "Software Development" },
+      { "name": "Hardware Manufacturing" },
+      { "name": "Telecommunications" },
+      { "name": "Internet Services" },
+      { "name": "E-commerce" },
+      { "name": "Artificial Intelligence" },
+      { "name": "Cybersecurity" },
+      { "name": "Cloud Computing" },
+      { "name": "Data Analytics" },
+      { "name": "Blockchain" },
+      { "name": "Mobile Applications" }
+    ]
+  },
+  {
+    "name": "Finance",
+    "subSectors": [
+      { "name": "Banking" },
+      { "name": "Insurance" },
+      { "name": "Investment Banking" },
+      { "name": "Financial Technology (Fintech)" },
+      { "name": "Wealth Management" },
+      { "name": "Accounting" },
+      { "name": "Venture Capital" },
+      { "name": "Private Equity" },
+      { "name": "Hedge Funds" },
+      { "name": "Asset Management" },
+      { "name": "Payments Processing" }
+    ]
+  },
+  {
+    "name": "Healthcare",
+    "subSectors": [
+      { "name": "Pharmaceuticals" },
+      { "name": "Biotechnology" },
+      { "name": "Healthcare Services" },
+      { "name": "Medical Devices" },
+      { "name": "Healthcare IT" },
+      { "name": "Telemedicine" },
+      { "name": "Health Insurance" },
+      { "name": "Diagnostics" },
+      { "name": "Genomics" },
+      { "name": "Healthcare Facilities" },
+      { "name": "Healthcare Consulting" }
+    ]
+  },
+  {
+    "name": "Manufacturing",
+    "subSectors": [
+      { "name": "Automobiles" },
+      { "name": "Aerospace" },
+      { "name": "Consumer Electronics" },
+      { "name": "Chemicals" },
+      { "name": "Heavy Machinery" },
+      { "name": "Textiles" },
+      { "name": "Food Processing" },
+      { "name": "Semiconductors" },
+      { "name": "Industrial Equipment" },
+      { "name": "Packaging" },
+      { "name": "Plastics" }
+    ]
+  },
+  {
+    "name": "Retail",
+    "subSectors": [
+      { "name": "Apparel" },
+      { "name": "Electronics" },
+      { "name": "Home Furnishings" },
+      { "name": "Supermarkets" },
+      { "name": "Department Stores" },
+      { "name": "E-commerce" },
+      { "name": "Specialty Stores" },
+      { "name": "Furniture" },
+      { "name": "Sporting Goods" },
+      { "name": "Jewelry" },
+      { "name": "Beauty Products" }
+    ]
+  },
+  {
+    "name": "Hospitality",
+    "subSectors": [
+      { "name": "Hotels" },
+      { "name": "Restaurants" },
+      { "name": "Travel Agencies" },
+      { "name": "Cruise Lines" },
+      { "name": "Theme Parks" },
+      { "name": "Casinos" },
+      { "name": "Event Planning" },
+      { "name": "Catering" },
+      { "name": "Tourism" },
+      { "name": "Gaming" },
+      { "name": "Bed & Breakfast" }
+    ]
+  },
+  {
+    "name": "Energy",
+    "subSectors": [
+      { "name": "Oil & Gas" },
+      { "name": "Renewable Energy" },
+      { "name": "Utilities" },
+      { "name": "Nuclear Power" },
+      { "name": "Electric Vehicles" },
+      { "name": "Solar Power" },
+      { "name": "Wind Power" },
+      { "name": "Hydropower" },
+      { "name": "Coal Mining" },
+      { "name": "Biofuels" },
+      { "name": "Energy Storage" }
+    ]
+  },
+  {
+    "name": "Entertainment",
+    "subSectors": [
+      { "name": "Film" },
+      { "name": "Television" },
+      { "name": "Music" },
+      { "name": "Gaming" },
+      { "name": "Streaming Services" },
+      { "name": "Live Events" },
+      { "name": "Broadcasting" },
+      { "name": "Radio" },
+      { "name": "Theater" },
+      { "name": "Celebrity Management" },
+      { "name": "Ticket Sales" }
+    ]
+  },
+  {
+    "name": "Transportation",
+    "subSectors": [
+      { "name": "Aviation" },
+      { "name": "Railways" },
+      { "name": "Shipping" },
+      { "name": "Trucking" },
+      { "name": "Logistics" },
+      { "name": "Public Transit" },
+      { "name": "Ride-Sharing" },
+      { "name": "Cycling" },
+      { "name": "Maritime" },
+      { "name": "Cargo" },
+      { "name": "Drone Delivery" }
+    ]
+  },
+  {
+    "name": "Real Estate",
+    "subSectors": [
+      { "name": "Residential" },
+      { "name": "Commercial" },
+      { "name": "Industrial" },
+      { "name": "Retail" },
+      { "name": "Hospitality" },
+      { "name": "Property Management" },
+      { "name": "Real Estate Development" },
+      { "name": "Real Estate Investment" },
+      { "name": "Real Estate Brokerage" },
+      { "name": "Construction" },
+      { "name": "Architecture" }
+    ]
+  },
+  {
+    "name": "Education",
+    "subSectors": [
+      { "name": "K-12 Education" },
+      { "name": "Higher Education" },
+      { "name": "EdTech" },
+      { "name": "Educational Publishing" },
+      { "name": "Tutoring" },
+      { "name": "Online Learning" },
+      { "name": "Language Learning" },
+      { "name": "Corporate Training" },
+      { "name": "Education Consulting" },
+      { "name": "Educational Software" },
+      { "name": "School Supplies" }
+    ]
+  },
+  {
+    "name": "Agriculture",
+    "subSectors": [
+      { "name": "Crop Farming" },
+      { "name": "Livestock Farming" },
+      { "name": "Agricultural Machinery" },
+      { "name": "AgTech" },
+      { "name": "Food Production" },
+      { "name": "Aquaculture" },
+      { "name": "Horticulture" },
+      { "name": "Poultry Farming" },
+      { "name": "Dairy Farming" },
+      { "name": "Seed Production" },
+      { "name": "Organic Farming" }
+    ]
+  },
+  {
+    "name": "Telecommunications",
+    "subSectors": [
+      { "name": "Mobile Networks" },
+      { "name": "Telecom Equipment" },
+      { "name": "Telecom Services" },
+      { "name": "Satellite Communications" },
+      { "name": "Fiber Optics" },
+      { "name": "Wireless Communication" },
+      { "name": "Internet Providers" },
+      { "name": "VoIP" },
+      { "name": "Telecom Infrastructure" },
+      { "name": "Telecom Consulting" },
+      { "name": "Telecom Regulatory" }
+    ]
+  },
+  {
+    "name": "Government",
+    "subSectors": [
+      { "name": "Federal Government" },
+      { "name": "State Government" },
+      { "name": "Local Government" },
+      { "name": "Defense" },
+      { "name": "Public Safety" },
+      { "name": "E-Government" },
+      { "name": "Policy Making" },
+      { "name": "Public Administration" },
+      { "name": "Law Enforcement" },
+      { "name": "Taxation" },
+      { "name": "Immigration" }
+    ]
+  },
+  {
+    "name": "Legal",
+    "subSectors": [
+      { "name": "Law Firms" },
+      { "name": "Legal Technology" },
+      { "name": "Legal Services" },
+      { "name": "Legal Consulting" },
+      { "name": "Corporate Law" },
+      { "name": "Intellectual Property" },
+      { "name": "Litigation" },
+      { "name": "Regulatory Compliance" },
+      { "name": "Legal Education" },
+      { "name": "Legal Publishing" },
+      { "name": "Legal Research" }
+    ]
+  },
+  {
+    "name": "Media",
+    "subSectors": [
+      { "name": "Broadcasting" },
+      { "name": "Publishing" },
+      { "name": "Journalism" },
+      { "name": "Advertising" },
+      { "name": "Public Relations" },
+      { "name": "Social Media" },
+      { "name": "Digital Media" },
+      { "name": "Film Production" },
+      { "name": "Music Production" },
+      { "name": "Animation" },
+      { "name": "Podcasting" }
+    ]
+  },
+  {
+    "name": "Non-Profit",
+    "subSectors": [
+      { "name": "Charity" },
+      { "name": "Advocacy" },
+      { "name": "Community Development" },
+      { "name": "Education" },
+      { "name": "Healthcare" },
+      { "name": "Environmental Conservation" },
+      { "name": "Humanitarian Aid" },
+      { "name": "Animal Welfare" },
+      { "name": "Arts & Culture" },
+      { "name": "Research" },
+      { "name": "International Development" }
+    ]
+  },
+  {
+    "name": "Automotive",
+    "subSectors": [
+      { "name": "Automobile Manufacturing" },
+      { "name": "Automobile Dealerships" },
+      { "name": "Auto Parts Manufacturing" },
+      { "name": "Car Rental" },
+      { "name": "Auto Repair" },
+      { "name": "Auto Leasing" },
+      { "name": "Electric Vehicles" },
+      { "name": "Autonomous Vehicles" },
+      { "name": "Fleet Management" },
+      { "name": "Vehicle Sharing" },
+      { "name": "Motorcycles" }
+    ]
+  },
+  {
+    "name": "Construction",
+    "subSectors": [
+      { "name": "Residential Construction" },
+      { "name": "Commercial Construction" },
+      { "name": "Civil Engineering" },
+      { "name": "Industrial Construction" },
+      { "name": "Road Construction" },
+      { "name": "Bridge Construction" },
+      { "name": "Heavy Construction" },
+      { "name": "Renovation" },
+      { "name": "Demolition" },
+      { "name": "Green Building" },
+      { "name": "Architecture" }
+    ]
+  }
+]
