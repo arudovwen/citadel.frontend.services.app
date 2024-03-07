@@ -60,6 +60,7 @@ export default {
         description,
         startAge,
         endAge,
+        maritalStatus,
       }
     ) {
       state.selectedGroupToEdit = {
@@ -70,6 +71,7 @@ export default {
         description,
         startAge,
         endAge,
+        maritalStatus,
       };
     },
     addAffinityGroupBegin(state) {

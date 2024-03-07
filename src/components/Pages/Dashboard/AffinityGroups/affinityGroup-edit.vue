@@ -16,7 +16,6 @@
           v-model.value="maritalStatus"
           :modelValue="maritalStatus"
           :error="maritalStatusError"
-          classInput="!h-[40px]"
           multiple
         />
         <Textinput
@@ -42,7 +41,7 @@
       <div class="text-right space-x-3 mt-8">
         <Button
           type="submit"
-          text="Add Affinity Group"
+          text="Update Affinity Group"
           btnClass="btn-dark w-full disabled:opacity-50"
           :isLoading="loading"
           :disabled="loading"
@@ -74,7 +73,7 @@ const success = computed(() => state.affinityGroup.updateAffinityGroupSuccess);
 
 const schema = yup.object().shape({
   affinityGroupName: yup.string().required("Group is required"),
-  maritalStatus: yup.string(),
+  maritalStatus: yup.array(),
   startAge: yup
     .number()
     .typeError("Invalid value")
@@ -99,6 +98,8 @@ const { handleSubmit } = useForm({
   initialValues: {
     ...defaultData.value,
     userId: userId.value,
+    startAge: defaultData.value.startAge.toString(),
+    endAge: defaultData.value.endAge.toString(),
     maritalStatus: defaultData.value.maritalStatus
       ?.split(",")
       ?.map((i) => ({ label: i, value: i })),
