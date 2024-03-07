@@ -381,12 +381,12 @@ export default {
   methods: {
     handleAction(status) {
       let newaction = this.actions;
-      if (this.$store.state.auth.userData.userRole.toLowerCase() === "member") {
+      if (!this.$store.state.auth.permissions.includes("CAN_UPDATE_EVENTS")) {
         newaction = this.actions.filter(
           (i) => i.name !== "approve" && i.name !== "decline"
         );
       }
-      if (this.$store.state.auth.userData.userRole.toLowerCase() !== "member") {
+      if (this.$store.state.auth.permissions.includes("CAN_UPDATE_EVENTS")) {
         newaction = this.actions.filter(
           (i) => i.name == "approve" && i.name == "decline"
         );

@@ -13,18 +13,6 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
-
-          <!-- <VueSelect
-            v-if="
-              state.auth.userData.userRole.toLowerCase() === 'administrator' ||
-              state.auth.userData.userRole.toLowerCase() === 'inspectorate'
-            "
-            class="min-w-[200px] w-full md:w-auto !h-9"
-            v-model.value="zoneObj"
-            :options="zoneOptions"
-            placeholder="Select zone"
-            name="zone"
-          /> -->
         </div>
         <div
           class="md:flex md:space-x-3 items-center flex-none"
@@ -560,8 +548,7 @@ export default {
   },
   computed: {
     filteredActions() {
-      return this.$store.state.auth.userData.userRole !== "administrator" &&
-        this.$store.state.auth.userData.userRole !== "inspectorate"
+      return !this.$store.state.auth.permissions.includes("CAN_UPDATE_CENTERS")
         ? this.actions.filter(
             (i) =>
               i.name.toLowerCase() !== "edit" &&

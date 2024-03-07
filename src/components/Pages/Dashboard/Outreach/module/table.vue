@@ -1,11 +1,13 @@
+<!-- eslint-disable no-unused-vars -->
+
 <template>
   <div>
     <div v-if="isInspectorate" className="flex items-center border-b-[1px] border-b-[#DDDDDD] overflow-x-auto mb-6">
       <div v-for="tab in tabs" class="max-w-max" :key="tab">
         <div @click="currentTab = tab"
           :class="`${currentTab.toLowerCase() == tab.toLowerCase()
-      ? '!border-slate-900 !text-slate-900 mr-6 '
-      : 'border-transparent text-[#727272] mr-6 '
+        ? '!border-slate-900 !text-slate-900 mr-6 '
+        : 'border-transparent text-[#727272] mr-6 '
       },
           'flex cursor-pointer flex-col items-center justify-center text-nowrap border-b-[2px] pb-4 pt-6 font-semibold'`">
           <span className="text-sm capitalize">{{ tab }} </span>
@@ -47,7 +49,7 @@
               {{ props.row.outreachName }}
             </span>
             <span v-if="props.column.field == 'approval_date'" class="font-medium">
-              {{ moment(item?.dateOfBirth).format("ll")}}
+              {{ moment(item?.dateOfBirth).format("ll") }}
             </span>
             <span v-if="props.column.field == 'status'" class="font-medium capitalize">
               <div v-if="props.row.status === true"
@@ -71,9 +73,10 @@
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in filteredActions(actions, props.row)" :key="i">
                   <div @click="() => {
-      selectedOutreachId = props.row.id
-      item.doit(item, props.row);
-    }" :class="` hover:bg-slate-900
+        selectedOutreachId = props.row.id;
+        item.doit(item, props.row);
+      }
+      " :class="` hover:bg-slate-900
                     ${item.name === 'delete'
         ? 'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white'
         : 'hover:bg-slate-900 hover:text-white'
@@ -127,8 +130,8 @@
     <template v-slot:footer>
       <div class="flex gap-x-5">
         <Button text="Cancel" @click="$refs.modal.closeModal()" btnClass="btn-outline-secondary btn-sm " />
-        <Button 
-        :disabled="rejectReason.length > 0 && rejectReason.trim().length()" v-if="type === 'delete'" text="Delete" :isLoading="deleteReportStatus.loading" :btnClass="`btn-dark btn-sm 
+        <Button :disabled="rejectReason.length > 0 && rejectReason.trim().length()" v-if="type === 'delete'"
+          text="Delete" :isLoading="deleteReportStatus.loading" :btnClass="`btn-dark btn-sm 
           ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="
       dispatch('deleteOutreachRequest', {
         id: selectedOutreachId,
@@ -137,32 +140,36 @@
         <Button v-else :text="type === 'approve' ? 'Approve Request' : 'Reject Request'"
           :isLoading="approveOrRejectStatus.loading" :btnClass="`btn-dark btn-sm 
           ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="() => {
-      if (rejectReason.length === 0 || rejectReason.trim().length === 0) {
-        rejectReasonErr = 'Reason cannot be empty';
-        return
+        if (
+          rejectReason.length === 0 ||
+          rejectReason.trim().length === 0
+        ) {
+          rejectReasonErr = 'Reason cannot be empty';
+          return;
+        }
+        dispatch('approveOrRejectOutreach', {
+          inspectorateId: userId,
+          reason: type === 'approve' ? null : rejectReason,
+          outreachLogId: selectedOutreachId,
+          status: type === 'approve',
+        });
       }
-      dispatch('approveOrRejectOutreach', {
-        inspectorateId: userId,
-        reason: type === 'approve' ? null : rejectReason,
-        outreachLogId: selectedOutreachId,
-        status: type === 'approve',
-      })
-    }
       " />
       </div>
     </template>
   </Modal>
   <Modal :handleClose="() => {
-      modalChange.value.closeModal();
-    }" :title="type === 'add'
-      ? 'Create outreach'
-      : type === 'edit'
-        ? 'Edit outreach information'
-        : type === 'reportadd'
-          ? 'Add Report'
-          : type === 'reportedit'
-            ? 'Edit Report'
-            : selectedOutreachData?.outreachName
+        modalChange.value.closeModal();
+      }
+      " :title="type === 'add'
+        ? 'Create outreach'
+        : type === 'edit'
+          ? 'Edit outreach information'
+          : type === 'reportadd'
+            ? 'Add Report'
+            : type === 'reportedit'
+              ? 'Edit Report'
+              : selectedOutreachData?.outreachName
       " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-md">
     <AddReport v-if="type === 'reportadd'" :data="selectedOutreachData" />
     <AddRecord v-if="type === 'add'" />
@@ -189,7 +196,7 @@ import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
 import { useToast } from "vue-toastification";
 import window from "@/mixins/window";
-import moment from "moment"
+import moment from "moment";
 import {
   computed,
   onMounted,
@@ -207,34 +214,39 @@ const rejectReason = ref("");
 const rejectReasonErr = ref("");
 const permissions = computed(() => state.auth.permissions);
 const addsuccess = computed(() => state.profile.addOutreachRequestSuccess);
-const addReportSuccess = computed(() => state.profile.createOutreachReportSuccess);
+const addReportSuccess = computed(
+  () => state.profile.createOutreachReportSuccess
+);
 const editsuccess = computed(() => state.profile.editOutreachRequestSuccess);
-const outreachreport = computed(() => state?.profile?.outreachReport);
+// const outreachreport = computed(() => state?.profile?.outreachReport);
 
 const tabs = ["planned outreach", "my Outreach", "pending requests"];
 
 const currentTab = ref(tabs[1]);
 
-const confirmType = ref("");
 const formatter = {
   date: "DD MMM YYYY",
   month: "MMM",
 };
 
+const isInspectorate = computed(
+  () => state.auth.userData.userRole.toLowerCase() === "inspectorate"
+);
+
 watch(currentTab, () => {
   query.status =
-    currentTab.value === tabs[0]
-    ? null
-    : currentTab.value === tabs[1]
-    ? "approved"
+    currentTab.value === tabs[1]
+      ? null
+      : currentTab.value === tabs[0]
+        ? "approved"
         : "pending";
-  query.dateFilter = currentTab.value === tabs[1] ? "dateOfOutreach" : null;
+  query.dateFilter = currentTab.value === tabs[0] ? "dateOfOutreach" : null;
 });
 
 watch(rejectReason, () => {
-  if ((rejectReason.value.length > 0) && rejectReason.value.trim().length())
-    rejectReasonErr = ""
-})
+  if (rejectReason.value.length > 0 && rejectReason.value.trim().length())
+    rejectReasonErr.value = "";
+});
 
 const options = [
   {
@@ -327,14 +339,10 @@ const userId = computed(() => {
   return state?.auth?.userData?.id;
 });
 
-const isInspectorate = computed(
-  () => state.auth.userData.userRole.toLowerCase() === "inspectorate"
-);
-
 const query = reactive({
   dateFilter: null,
   status: null,
-  userId: isInspectorate.value ? null : userId,
+  userId: null,
   searchParameter: "",
   startDate: "",
   endDate: "",
@@ -408,6 +416,8 @@ onMounted(() => {
   dispatch("getRoles");
 });
 
+
+
 const outreachListLoading = computed(
   () => state?.profile?.getAllOutreachloading
 );
@@ -419,7 +429,7 @@ const outreachs = computed(() => {
       //   ? moment(item?.dateOfBirth).format("ll")
       //   : "-";
       // item.department = item?.department ? item?.department : "-";
-      item.date = moment(item?.dateOfOutreach).format("ll")
+      item.date = moment(item?.dateOfOutreach).format("ll");
       return item;
     })
     // .filter(item => new Date(item?.dateOfOutreach) > Date.now())
@@ -439,9 +449,15 @@ const editStatus = computed(() => ({
 }));
 
 const deleteReportStatus = computed(() => ({
-  loading: state?.profile?.deleteOutreachReportLoading || state?.profile?.deleteOutreachRequestLoading,
-  success: state?.profile?.deleteOutreachReportSuccess || state?.profile?.deleteOutreachRequestSuccess,
-  error: state?.profile?.deleteOutreachReportreachError || state?.profile?.deleteOutreachRequestError,
+  loading:
+    state?.profile?.deleteOutreachReportLoading ||
+    state?.profile?.deleteOutreachRequestLoading,
+  success:
+    state?.profile?.deleteOutreachReportSuccess ||
+    state?.profile?.deleteOutreachRequestSuccess,
+  error:
+    state?.profile?.deleteOutreachReportreachError ||
+    state?.profile?.deleteOutreachRequestError,
 }));
 
 watch([addsuccess], () => {
@@ -493,8 +509,8 @@ function perPage({ currentPerPage }) {
 const selectedOutreachId = ref(null);
 
 watch(selectedOutreachId, () => {
-  console.log(selectedOutreachId.value)
-})
+  console.log(selectedOutreachId.value);
+});
 
 const selectedOutreachData = computed(() => {
   if (!selectedOutreachId.value) return null;
@@ -504,7 +520,7 @@ const selectedOutreachData = computed(() => {
 
 const filteredActions = (actions, row) => {
   let actions2 = [...actions];
-  if (!isInspectorate.value) {
+  if (!state.auth?.permissions.includes("CAN_APPROVE_REJECT_OUTREACH")) {
     actions2 = actions2.filter(
       (i) => i.name !== "approve" && i.name !== "reject"
     );
@@ -516,13 +532,14 @@ const filteredActions = (actions, row) => {
   if (row.status !== null || row.userId !== userId.value)
     actions2 = actions2.filter((i) => i.name !== "delete");
 
-
   if (row.status !== true) {
     actions2 = actions2.filter((i) => i.name !== "report");
   }
 
   if (row.status === true || row.status === false)
-    actions2 = actions2.filter((i) => i.name !== "reject" && i.name !== "approve");
+    actions2 = actions2.filter(
+      (i) => i.name !== "reject" && i.name !== "approve"
+    );
 
   return actions2;
 };

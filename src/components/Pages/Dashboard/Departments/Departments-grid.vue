@@ -9,14 +9,7 @@
           :to="`/departments/view/${item?.departmentName}/${item.id}/${item.userId}`"
           class="flex-1"
         >
-          <div
-            class="px-6 pt-6"
-            :class="
-              state.auth.userData.userRole.toLowerCase() === 'administrator'
-                ? ''
-                : 'pb-6'
-            "
-          >
+          <div class="px-6 pt-6">
             <header class="flex justify-between items-end mb-4">
               <div class="flex space-x-4 items-center">
                 <div class="flex-none">

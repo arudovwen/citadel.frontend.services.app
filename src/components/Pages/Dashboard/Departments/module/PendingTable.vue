@@ -495,8 +495,9 @@ export default {
   },
   computed: {
     filteredActions() {
-      return this.$store.state.auth.userData.userRole !== "administrator" &&
-        this.$store.state.auth.userData.userRole !== "hod"
+      return !this.$store.state.auth.permissions.includes(
+        "CAN_UPDATE_DEPARTMENT"
+      )
         ? this.actions.filter((i) => i.name.toLowerCase() !== "delete")
         : this.actions;
     },
