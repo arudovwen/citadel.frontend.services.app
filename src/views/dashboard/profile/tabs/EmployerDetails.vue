@@ -7,13 +7,7 @@
     <!-- {{ values }} -->
     <!-- {{ employerData == null }} -->
     <!-- <pre class="text-blue-500">
-     Subsector: {{ subSectorMenu }}
-
-     sector: {{sector}}
-
-     subSector: {{ subSector }}
-
-      {{ industryMenu }}
+    {{ nigeriaOption }}
     </pre> -->
 
     <ProfileInputSkeleton v-if="employerDataLoading" />
@@ -129,7 +123,11 @@
         :error="lgaError"
         classInput="!h-[40px]"
       /> -->
-      <FormGroup label="LGA" :error="lgaError">
+      <FormGroup
+        v-if="values?.country?.value?.toLowerCase() == 'nigeria'"
+        label="LGA"
+        :error="lgaError"
+      >
         <VueSelect
           class="w-full"
           v-model.value="lga"
@@ -196,6 +194,12 @@ const countriesOption = computed(() =>
   })
 );
 
+const nigeriaOption = computed(() => {
+  return countriesOption?.value?.find(
+    (i) => i.label.toLowerCase() === "nigeria"
+  );
+});
+
 const statesOption = computed(() => {
   return Countries.find((i) => i.name === country?.value?.label)?.states?.map(
     (i) => {
@@ -243,7 +247,7 @@ const schema = yup.object({
   subSector: yup.string(),
 });
 
-const { handleSubmit, setValues } = useForm({
+const { handleSubmit, setValues, values } = useForm({
   validationSchema: schema,
   initialValues: employerData.value,
 });
