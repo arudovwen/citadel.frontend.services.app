@@ -6,6 +6,15 @@
     ></div>
     <!-- {{ values }} -->
     <!-- {{ employerData == null }} -->
+    <!-- <pre class="text-blue-500">
+     Subsector: {{ subSectorMenu }}
+
+     sector: {{sector}}
+
+     subSector: {{ subSector }}
+
+      {{ industryMenu }}
+    </pre> -->
 
     <ProfileInputSkeleton v-if="employerDataLoading" />
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -49,7 +58,7 @@
       /> -->
       <Select
         label="Sub Sector"
-        :options="industryMenu"
+        :options="subSectorMenu"
         v-model.value="subSector"
         :modelValue="subSector"
         :error="subSectorError"
@@ -152,13 +161,15 @@ import Select from "@/components/Select";
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import { industryMenu } from "@/constant/data";
+// import { industryMenu } from "@/constant/data";
 import lgaState from "@/util/lgastate.json";
 import { useToast } from "vue-toastification";
 import { inject, onMounted, computed, watch } from "vue";
 import { useStore } from "vuex";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 import Countries from "@/util/countries.json";
+import Industries from "@/util/industries.json";
+
 import VueSelect from "@/components/Select/VueSelect";
 import FormGroup from "@/components/FormGroup";
 
@@ -184,8 +195,23 @@ const countriesOption = computed(() =>
     return { label: i.name, value: i.name };
   })
 );
+
 const statesOption = computed(() => {
   return Countries.find((i) => i.name === country?.value?.label)?.states?.map(
+    (i) => {
+      return { label: i.name, value: i.name };
+    }
+  );
+});
+
+const industryMenu = computed(() => {
+  return Industries.map((i) => {
+    return { label: i.name, value: i.name };
+  });
+});
+
+const subSectorMenu = computed(() => {
+  return Industries.find((i) => i.name === sector?.value)?.subSectors?.map(
     (i) => {
       return { label: i.name, value: i.name };
     }
@@ -243,27 +269,27 @@ const { value: subSector, errorMessage: subSectorError } =
 // const { value: email, errorMessage: emailError } = useField("email");
 const prepareDetails = (values, type) => {
   const updateObj = {
-    userId: id.value,
-    employerName: values.employerName,
-    employerAddress: values.employerAddress,
-    lga: values.lga.value,
-    state: values.state.value,
-    positionHeld: values.positionHeld,
-    sector: values.sector,
-    subSector: values.subSector,
-    country: values.country.value,
-    id: employerData.value?.id,
+    userId: id?.value,
+    employerName: values?.employerName,
+    employerAddress: values?.employerAddress,
+    lga: values?.lga?.value,
+    state: values?.state?.value,
+    positionHeld: values?.positionHeld,
+    sector: values?.sector,
+    subSector: values?.subSector,
+    country: values?.country?.value,
+    id: employerData?.value?.id,
   };
   const createObj = {
-    userId: id.value,
-    employerName: values.employerName,
-    employerAddress: values.employerAddress,
-    lga: values.lga.value,
-    state: values.state.value,
-    positionHeld: values.positionHeld,
-    sector: values.sector,
-    subSector: values.subSector,
-    country: values.country.value,
+    userId: id?.value,
+    employerName: values?.employerName,
+    employerAddress: values?.employerAddress,
+    lga: values?.lga?.value,
+    state: values?.state?.value,
+    positionHeld: values?.positionHeld,
+    sector: values?.sector,
+    subSector: values?.subSector,
+    country: values?.country?.value,
   };
   const obj = type == "create" ? createObj : updateObj;
   return obj;
