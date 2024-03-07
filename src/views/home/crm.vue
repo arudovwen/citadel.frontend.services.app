@@ -1,6 +1,7 @@
 <template>
   <div>
     <Breadcrumb />
+    <!-- {{ checkPermission() }} -->
     <div class="card-auto space-y-5">
       <div class="grid grid-cols-12 gap-5">
         <div class="lg:col-span-8 col-span-12 space-y-5">
@@ -128,7 +129,8 @@ import RecentReportsTable from "@/views/home/Analytics-Component/RecentReportsTa
 import RecentEventsTable from "@/views/home/Analytics-Component/RecentEventsTable";
 import { onMounted, computed, inject, watch, provide } from "vue";
 import { useStore } from "vuex";
-
+import { useRouter } from "vue-router";
+import { dashboardPermission } from "@/constant/data";
 export default {
   components: {
     Card,
@@ -144,13 +146,15 @@ export default {
   },
   setup() {
     onMounted(() => {
+      checkPermission();
       getCIHDashboardStats();
       getActivityReports();
       getAllEvents();
     });
 
     const { state, dispatch } = useStore();
-    // const userId = computed(() => state.auth.userData?.id);
+    const router = useRouter();
+    const userId = computed(() => state.auth.userData?.id);
     const authChurchAffiliation = inject("authChurchAffiliation");
     const CIHDashboardStats = computed(
       () => state?.attendance?.CIHDashboardStats
@@ -158,6 +162,19 @@ export default {
     const getCIHDashboardStatsLoading = computed(
       () => state?.attendance?.getCIHDashboardStatsLoading
     );
+
+    const permissions = computed(() => state.auth.permissions);
+
+    const checkPermission = () => {
+      const canSeeDashboards = permissions?.value?.some((permission) =>
+        dashboardPermission.includes(permission)
+      );
+      if (!canSeeDashboards) {
+        router.push("/profile/" + userId.value);
+      }
+
+      return canSeeDashboards ? "True" : "False";
+    };
     const eventRequests = computed(() => state.event.events);
 
     const getActivityReports = () => {
@@ -277,6 +294,7 @@ export default {
       distro,
       authChurchAffiliation,
       recentReports,
+      checkPermission,
     };
   },
   data() {

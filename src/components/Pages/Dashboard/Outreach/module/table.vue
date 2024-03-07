@@ -1,7 +1,10 @@
 <!-- eslint-disable no-unused-vars -->
+
 <template>
   <div>
-    <div className="flex items-center  overflow-x-auto mb-6 border-b">
+    <div
+      className="flex items-center  overflow-x-auto mb-6 border-b border-b-[#DDDDDD]"
+    >
       <div v-for="tab in tabs" class="" :key="tab">
         <div
           @click="currentTab = tab"
@@ -50,7 +53,7 @@
           <Button
             v-if="
               permissions?.includes('CAN_CREATE_OUTREACH') &&
-              currentTab !== 'approved requests' &&
+              currentTab !== 'planned outreach' &&
               currentTab !== 'pending requests'
             "
             icon="heroicons-outline:plus-sm"
@@ -272,11 +275,11 @@
         ? 'Add Report'
         : type === 'reportedit'
         ? 'Edit Report'
-        : 'View outreach information'
+        : selectedOutreachData?.outreachName
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
-    sizeClass="max-w-3xl"
+    sizeClass="max-w-md"
   >
     <AddReport v-if="type === 'reportadd'" :data="selectedOutreachData" />
     <AddRecord v-if="type === 'add'" />
@@ -331,7 +334,7 @@ const addReportSuccess = computed(
 const editsuccess = computed(() => state.profile.editOutreachRequestSuccess);
 // const outreachreport = computed(() => state?.profile?.outreachReport);
 const pageRange = ref(5);
-const tabs = ["approved requests", "all requests", "pending requests"];
+const tabs = ["planned outreach", "my Outreach", "pending requests"];
 
 const currentTab = ref(tabs[1]);
 
@@ -342,10 +345,10 @@ const formatter = {
 
 watch(currentTab, () => {
   query.status =
-    currentTab.value === tabs[0]
-      ? "approved"
-      : currentTab.value === tabs[1]
+    currentTab.value === tabs[1]
       ? null
+      : currentTab.value === tabs[0]
+      ? "approved"
       : "pending";
   query.dateFilter = currentTab.value === tabs[0] ? "dateOfOutreach" : null;
 });
@@ -380,10 +383,6 @@ const options = [
 
 const approvedRequestcolumns = [
   {
-    label: "Approval Date",
-    field: "approval_date",
-  },
-  {
     label: "Name of Outreach",
     field: "outreachName",
   },
@@ -394,10 +393,6 @@ const approvedRequestcolumns = [
   {
     label: "Location",
     field: "locationOfOutreach",
-  },
-  {
-    label: "Status",
-    field: "status",
   },
   {
     label: "Action",
@@ -545,6 +540,7 @@ const outreachs = computed(() => {
       item.date = moment(item?.dateOfOutreach).format("ll");
       return item;
     });
+    // .filter(item => new Date(item?.dateOfOutreach) > Date.now())
   }
   return [];
 });
@@ -632,7 +628,7 @@ const selectedOutreachData = computed(() => {
 
 const filteredActions = (actions, row) => {
   let actions2 = [...actions];
-  if (!state.auth?.permissions.includes("CAN_UPDATE_OUTREACH")) {
+  if (!state.auth?.permissions.includes("CAN_APPROVE_REJECT_OUTREACH")) {
     actions2 = actions2.filter(
       (i) => i.name !== "approve" && i.name !== "reject"
     );

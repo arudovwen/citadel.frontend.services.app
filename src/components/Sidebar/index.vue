@@ -1,5 +1,8 @@
 <template>
   <div :class="this.$store.state.semidark ? 'dark' : ''">
+    <!-- <pre class="ml-[400px]">Permissions: {{ permissions }}</pre> -->
+
+    <!-- <pre class="ml-[400px]">menuItems: {{ menuItems.slice(1) }}</pre> -->
     <div
       :class="`sidebar-wrapper bg-white dark:bg-slate-800    ${
         this.$store.state.skin === 'bordered'
@@ -116,7 +119,14 @@ export default defineComponent({
       let newItems;
       const filteredItems = menuItems
         .slice(1)
-        .filter((i) => permissions.value.includes(i.roles) || !i.roles);
+        .filter(
+          (i) =>
+            permissions?.value?.includes(i?.roles) ||
+            !i.roles ||
+            permissions?.value?.some((permission) =>
+              i?.roles.includes(permission)
+            )
+        );
       newItems = filteredItems;
       if (
         (!permissions.value.includes("CAN_VIEW_ALL_ZONES") &&
@@ -214,6 +224,8 @@ export default defineComponent({
       leaveWidget,
       simplebarInstance,
       shadowbase,
+      permissions,
+      // menuItems,
     };
   },
 });
