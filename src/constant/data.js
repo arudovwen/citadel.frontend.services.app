@@ -16,7 +16,7 @@ export const menuItems = [
     title: "Overview",
     icon: "heroicons-outline:home",
     link: "/overview",
-    roles: "",
+    roles: ["CAN_VIEW_ADMIN_DASHBOARD", "CAN_VIEW_INSPECTORATE_DASHBOARD"],
     subroles: ["cihpastor", "cihcoordinator"],
   },
 

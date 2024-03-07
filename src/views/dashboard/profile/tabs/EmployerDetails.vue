@@ -194,11 +194,11 @@ const countriesOption = computed(() =>
   })
 );
 
-const nigeriaOption = computed(() => {
-  return countriesOption?.value?.find(
-    (i) => i.label.toLowerCase() === "nigeria"
-  );
-});
+// const nigeriaOption = computed(() => {
+//   return countriesOption?.value?.find(
+//     (i) => i.label.toLowerCase() === "nigeria"
+//   );
+// });
 
 const statesOption = computed(() => {
   return Countries.find((i) => i.name === country?.value?.label)?.states?.map(
