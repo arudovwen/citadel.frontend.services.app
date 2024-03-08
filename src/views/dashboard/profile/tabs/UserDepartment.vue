@@ -20,7 +20,10 @@
         name="Department"
       /> -->
 
-      <div :class="`inline-block input-label mb-4 ml-auto`">
+      <div
+        v-if="canEditDetails"
+        :class="`inline-block input-label mb-4 ml-auto`"
+      >
         <span
           class="text-blue-400"
           @click="$store.dispatch('toggleReqDepartment', true)"
@@ -73,6 +76,8 @@ onMounted(async () => {
 });
 
 const { dispatch, state } = useStore();
+const canEditDetails = inject("canEditDetails");
+
 // const loggedInUserRoles = inject("loggedInUserRoles");
 // const isInspectorate = inject("isInspectorate");
 // const isUserProfile = inject("isUserProfile");
