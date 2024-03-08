@@ -546,7 +546,7 @@ const routes = [
                 },
               },
               {
-                path: "followup/:id",
+                path: "followup/:id/:name",
                 name: "Followup Report",
                 component: () =>
                   import(
@@ -556,7 +556,7 @@ const routes = [
                   activeName: "reports",
                   roles: "",
                   groupParent: {
-                    name: "Reports",
+                    name: "Follow-up Reports",
                     url: "/cih/reports/followup",
                   },
                 },

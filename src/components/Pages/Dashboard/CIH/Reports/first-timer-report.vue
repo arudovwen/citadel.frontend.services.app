@@ -310,10 +310,10 @@ const columns = ref([
     label: "Report Sender",
     field: "createdBy",
   },
-  {
-    label: "First Timer",
-    field: "fullName",
-  },
+  // {
+  //   label: "First Timer",
+  //   field: "fullName",
+  // },
 
   {
     label: "Action",

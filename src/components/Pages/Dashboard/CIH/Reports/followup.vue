@@ -103,30 +103,16 @@
             </span>
 
             <span v-if="props.column.field == 'action'">
-              <Dropdown classMenuItems="w-[170px]">
-                <span class="text-xl">
-                  <Icon icon="heroicons-outline:dots-vertical" />
-                </span>
-                <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in actions" :key="i">
-                    <div
-                      @click="item.doit(item.name, props.row)"
-                      :class="{
-                        'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
-                          item.name === 'delete',
-                        'hover:bg-slate-900 hover:text-white':
-                          item.name !== 'delete',
-                      }"
-                      class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
-                    >
-                      <span class="text-base">
-                        <Icon :icon="item.icon" />
-                      </span>
-                      <span>{{ item.name }}</span>
-                    </div>
-                  </MenuItem>
-                </template>
-              </Dropdown>
+              <div
+                @click="
+                  router.push(
+                    `/cih/reports/followup/${props.row.userId}/${props.row.fullName}`
+                  )
+                "
+                class="text-sm cursor-pointer hover:underline"
+              >
+                <span>view reports</span>
+              </div>
             </span>
           </template>
           <template #pagination-bottom="props">
@@ -156,13 +142,10 @@
 <script setup>
 import Select from "@/components/Select";
 // import VueTailwindDatePicker from "vue-tailwind-datepicker";
-import Dropdown from "@/components/Dropdown";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
-import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
-import { MenuItem } from "@headlessui/vue";
 
 import moment from "moment";
 import { useStore } from "vuex";
@@ -187,8 +170,6 @@ const query = reactive({
 });
 
 const pageRange = ref(5);
-const detail = ref(null);
-const type = ref("");
 const mytable = ref(null);
 // const dateValue = ref(null);
 // upgradeToMember
@@ -196,17 +177,6 @@ const mytable = ref(null);
 //   date: "DD MMM YYYY",
 //   month: "MMM",
 // });
-const actions = ref([
-  {
-    name: "view reports",
-    icon: "heroicons-outline:eye",
-    doit: (name, data) => {
-      type.value = name;
-      detail.value = data;
-      router.push(`/cih/reports/followup/${detail?.value?.userId}`);
-    },
-  },
-]);
 
 const options = ref([
   {
