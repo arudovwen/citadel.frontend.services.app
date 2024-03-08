@@ -9,13 +9,13 @@
           :error="affinityGroupNameError"
           placeholder="Type in your group name"
         />
-        <Select
+        <VueSelect
           label="Marital Status"
           :options="maritalStatusMenu"
           v-model.value="maritalStatus"
           :modelValue="maritalStatus"
           :error="maritalStatusError"
-          classInput="!h-[40px]"
+          multiple
         />
 
         <Textinput
@@ -53,7 +53,7 @@
   </form>
 </template>
 <script setup>
-import Select from "@/components/Select";
+// import Select from "@/components/Select";
 
 import { reactive, computed, watch } from "vue";
 import { useField, useForm } from "vee-validate";
@@ -66,6 +66,7 @@ import { useToast } from "vue-toastification";
 
 import { useStore } from "vuex";
 import { maritalStatusMenu } from "@/constant/data";
+import VueSelect from "@/components/Select/VueSelect.vue";
 
 const { state, dispatch } = useStore();
 const toast = useToast();
@@ -81,7 +82,7 @@ const formData = reactive({
 });
 const schema = yup.object().shape({
   affinityGroupName: yup.string().required("Group is required"),
-  maritalStatus: yup.string(),
+  maritalStatus: yup.array(),
   startAge: yup
     .number()
     .typeError("Invalid value")
@@ -113,14 +114,15 @@ const { value: startAge, errorMessage: startAgeError } = useField("startAge");
 const { value: endAge, errorMessage: endAgeError } = useField("endAge");
 
 const onSubmit = handleSubmit((values) => {
-  dispatch("addAffinityGroup", {
+  const data = {
     ...values,
+    maritalStatus: values.maritalStatus.map((i) => i.value).join(","),
     affinityGroupCode:
       values.affinityGroupName.slice(0, 2).toUpperCase() +
       Math.floor(Math.random() * 100 + 100),
-  });
+  };
 
-  console.log(values);
+  dispatch("addAffinityGroup", data);
 });
 
 watch(success, () => {

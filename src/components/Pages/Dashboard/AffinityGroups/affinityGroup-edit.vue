@@ -10,13 +10,13 @@
           :error="affinityGroupNameError"
           placeholder="Type in your group name"
         />
-        <Select
+        <VueSelect
           label="Marital Status"
           :options="maritalStatusMenu"
           v-model.value="maritalStatus"
           :modelValue="maritalStatus"
           :error="maritalStatusError"
-          classInput="!h-[40px]"
+          multiple
         />
         <Textinput
           label="Minimum age"
@@ -41,7 +41,7 @@
       <div class="text-right space-x-3 mt-8">
         <Button
           type="submit"
-          text="Add Affinity Group"
+          text="Update Affinity Group"
           btnClass="btn-dark w-full disabled:opacity-50"
           :isLoading="loading"
           :disabled="loading"
@@ -60,7 +60,7 @@ import Textinput from "@/components/Textinput";
 import Textarea from "@/components/Textarea";
 import { useToast } from "vue-toastification";
 import { maritalStatusMenu } from "@/constant/data";
-import Select from "@/components/Select";
+import VueSelect from "@/components/Select/VueSelect.vue";
 
 import { useStore } from "vuex";
 
@@ -73,7 +73,7 @@ const success = computed(() => state.affinityGroup.updateAffinityGroupSuccess);
 
 const schema = yup.object().shape({
   affinityGroupName: yup.string().required("Group is required"),
-  maritalStatus: yup.string(),
+  maritalStatus: yup.array(),
   startAge: yup
     .number()
     .typeError("Invalid value")
@@ -93,9 +93,17 @@ const schema = yup.object().shape({
   userId: yup.string(),
 });
 
-const { handleSubmit, setValues } = useForm({
+const { handleSubmit } = useForm({
   validationSchema: schema,
-  initialValues: { ...defaultData.value, userId: userId.value },
+  initialValues: {
+    ...defaultData.value,
+    userId: userId.value,
+    startAge: defaultData.value.startAge.toString(),
+    endAge: defaultData.value.endAge.toString(),
+    maritalStatus: defaultData.value.maritalStatus
+      ?.split(",")
+      ?.map((i) => ({ label: i, value: i })),
+  },
 });
 
 const { value: maritalStatus, errorMessage: maritalStatusError } =
@@ -108,17 +116,14 @@ const { value: startAge, errorMessage: startAgeError } = useField("startAge");
 const { value: endAge, errorMessage: endAgeError } = useField("endAge");
 
 const onSubmit = handleSubmit((values) => {
-  dispatch("updateAffinityGroup", values);
+  const data = {
+    ...values,
+    maritalStatus: values.maritalStatus.map((i) => i.value).join(","),
+  };
+
+  dispatch("updateAffinityGroup", data);
 
   // console.log(values);
-});
-
-watch(defaultData, () => {
-  console.log("Changed");
-  setValues({
-    ...defaultData.value,
-    startAge: parseInt(defaultData.value.startAge),
-  });
 });
 
 watch(success, () => {

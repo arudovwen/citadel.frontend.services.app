@@ -66,6 +66,18 @@
               {{ props.row.endAge }}
               <span class="lowercase">yrs</span>
             </span>
+            <span
+              class="max-w-max line-clamp-2"
+              v-if="props.column.field == 'maritalStatus'"
+            >
+              {{ props.row.maritalStatus }}
+            </span>
+            <span
+              class="max-w-max line-clamp-2"
+              v-if="props.column.field == 'description'"
+            >
+              {{ props.row.description }}
+            </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown
                 v-if="permissions.includes('CAN_UPDATE_AFFINITYGROUPS')"
@@ -288,9 +300,13 @@ export default {
           field: "description",
         },
         {
-          label: "Date Created",
-          field: "createdAt",
+          label: "Marital status",
+          field: "maritalStatus",
         },
+        // {
+        //   label: "Date Created",
+        //   field: "createdAt",
+        // },
         {
           label: "Age range",
           field: "ageRange",

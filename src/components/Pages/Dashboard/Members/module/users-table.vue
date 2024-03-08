@@ -391,10 +391,10 @@ export default {
           label: "Phone",
           field: "mobileNo",
         },
-        {
-          label: "Gender",
-          field: "gender",
-        },
+        // {
+        //   label: "Gender",
+        //   field: "gender",
+        // },
         {
           label: "Role",
           field: "role",
