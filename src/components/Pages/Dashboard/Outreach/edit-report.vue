@@ -193,7 +193,8 @@ watch(editStatus, () => {
 });
 
 const onSubmit = handleSubmit((values) => {
-  const d = {
+  const d = 
+  {
     id: props.data.id,
     outreachOutcome: values.outreachOutcome,
     outreachDate: values.outreachDate,
