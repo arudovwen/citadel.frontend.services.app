@@ -246,6 +246,21 @@ export default {
         commit("getCIHStatsError", err);
       }
     },
+    async getZoneCIHStats({ commit }, id) {
+      try {
+        commit("getCIHStatsBegin");
+        const response = await DataService.get(
+          `${urls.GET_ZONE_STATS}?ZoneId=${id}`
+        );
+
+        if (response.status === 200) {
+          commit("getCIHStatsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getCIHStatsError", err);
+      }
+    },
+
     async getCIHDashboardStats({ commit }) {
       try {
         commit("getCIHDashboardStatsBegin");
