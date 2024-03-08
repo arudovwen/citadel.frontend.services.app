@@ -336,6 +336,7 @@ watch(currentTab, () => {
       ? "approved"
       : "pending";
   query.dateFilter = currentTab.value === tabs[0] ? "dateOfOutreach" : null;
+  query.pageNumber = 1;
 });
 
 watch(rejectReason, () => {
