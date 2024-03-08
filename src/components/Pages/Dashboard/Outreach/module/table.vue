@@ -140,9 +140,10 @@
         <Button v-else :text="type === 'approve' ? 'Approve Request' : 'Reject Request'"
           :isLoading="approveOrRejectStatus.loading" :btnClass="`btn-dark btn-sm 
           ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="() => {
+            console.log(type);
         if (
-          rejectReason.length === 0 ||
-          rejectReason.trim().length === 0
+          (rejectReason.length === 0 ||
+          rejectReason.trim().length === 0) && type === 'reject'
         ) {
           rejectReasonErr = 'Reason cannot be empty';
           return;
