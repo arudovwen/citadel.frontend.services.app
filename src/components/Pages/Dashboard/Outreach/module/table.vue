@@ -215,48 +215,33 @@
 
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button
-          text="Cancel"
-          @click="$refs.modal.closeModal()"
-          btnClass="btn-outline-secondary btn-sm "
-        />
-        <Button
-          :disabled="rejectReason.length > 0 && rejectReason.trim().length()"
-          v-if="type === 'delete'"
-          text="Delete"
-          :isLoading="deleteReportStatus.loading"
-          :btnClass="`btn-dark btn-sm 
-          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
-          @click="
-            dispatch('deleteOutreachRequest', {
-              id: selectedOutreachId,
-            })
-          "
-        />
-        <Button
-          v-else
-          :text="type === 'approve' ? 'Approve Request' : 'Reject Request'"
-          :isLoading="approveOrRejectStatus.loading"
-          :btnClass="`btn-dark btn-sm 
-          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
-          @click="
-            () => {
-              if (
-                rejectReason.length === 0 ||
-                rejectReason.trim().length === 0
-              ) {
-                rejectReasonErr = 'Reason cannot be empty';
-                return;
-              }
-              dispatch('approveOrRejectOutreach', {
-                inspectorateId: userId,
-                reason: type === 'approve' ? null : rejectReason,
-                outreachLogId: selectedOutreachId,
-                status: type === 'approve',
-              });
-            }
-          "
-        />
+        <Button text="Cancel" @click="$refs.modal.closeModal()" btnClass="btn-outline-secondary btn-sm " />
+        <Button :disabled="rejectReason.length > 0 && rejectReason.trim().length()" v-if="type === 'delete'"
+          text="Delete" :isLoading="deleteReportStatus.loading" :btnClass="`btn-dark btn-sm 
+          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="
+      dispatch('deleteOutreachRequest', {
+        id: selectedOutreachId,
+      })
+      " />
+        <Button v-else :text="type === 'approve' ? 'Approve Request' : 'Reject Request'"
+          :isLoading="approveOrRejectStatus.loading" :btnClass="`btn-dark btn-sm 
+          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="() => {
+            console.log(type);
+        if (
+          (rejectReason.length === 0 ||
+          rejectReason.trim().length === 0) && type === 'reject'
+        ) {
+          rejectReasonErr = 'Reason cannot be empty';
+          return;
+        }
+        dispatch('approveOrRejectOutreach', {
+          inspectorateId: userId,
+          reason: type === 'approve' ? null : rejectReason,
+          outreachLogId: selectedOutreachId,
+          status: type === 'approve',
+        });
+      }
+      " />
       </div>
     </template>
   </Modal>
@@ -522,7 +507,6 @@ const modalChange = ref(null);
 // const deleteModal = ref(true);
 onMounted(() => {
   dispatch("getAllOutreach", query);
-  dispatch("getAllOutreachReport", { query, pageSize: 30000 });
   dispatch("getRoles");
 });
 

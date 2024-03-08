@@ -2,27 +2,12 @@
   <form @submit.prevent="onSubmit">
     <Card title="">
       <div class="grid gap-5 mb-10">
-        <FormGroup
-          label="Date"
-          name="dateOfOutreach"
-          :error="outreachDateError"
-        >
-          <flat-pickr
-            v-model="outreachDate"
-            class="form-control"
-            id="d1"
-            placeholder="yyyy, dd M"
-          />
+        <FormGroup label="Date" name="dateOfOutreach" :error="outreachDateError">
+          <flat-pickr v-model="outreachDate" class="form-control" id="d1" placeholder="yyyy, dd M" />
         </FormGroup>
 
-        <Textarea
-          label="Summary"
-          type="text"
-          :rows="4"
-          v-model="outreachOutcome"
-          :error="outreachOutcomeError"
-          placeholder="Provide activities report summary"
-        />
+        <Textarea label="Summary" type="text" :rows="4" v-model="outreachOutcome" :error="outreachOutcomeError"
+          placeholder="Provide activities report summary" />
       </div>
 
       <div>
@@ -30,78 +15,49 @@
         <div class="flex flex-col md:flex-row gap-8 md:items-start mb-7">
           <h3 class="text-base font-medium min-w-[150px]">Adults</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Textinput
-              label="Total"
-              v-model="adultTotal"
-              :error="adultTotalError"
-              placeholder="Enter value"
-            />
+            <Textinput class="min-w-[150px]" label="Total" v-model="adultTotal" :error="adultTotalError"
+              placeholder="Enter value" />
           </div>
         </div>
         <div class="flex flex-col md:flex-row gap-8 md:items-start mb-7">
           <h3 class="text-base font-medium min-w-[150px]">Youths</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Textinput
-              label="Total"
-              v-model="youthTotal"
-              :error="youthTotalError"
-              placeholder="Enter value"
-            />
+            <Textinput class="min-w-[150px]" label="Total" v-model="youthTotal" :error="youthTotalError"
+              placeholder="Enter value" />
           </div>
         </div>
         <div class="flex flex-col md:flex-row gap-8 md:items-start mb-7">
           <h3 class="text-base font-medium min-w-[150px]">Teenagers</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Textinput
-              label="Total"
-              v-model="teenagerTotal"
-              :error="teenagerTotalError"
-              placeholder="Enter value"
-            />
+            <Textinput class="min-w-[150px]" label="Total" v-model="teenagerTotal" :error="teenagerTotalError"
+              placeholder="Enter value" />
           </div>
         </div>
         <div class="flex flex-col md:flex-row gap-8 md:items-start mb-7">
           <h3 class="text-base font-medium min-w-[150px]">children</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Textinput
-              label="Total"
-              v-model="childrenTotal"
-              :error="childrenTotalError"
-              placeholder="Enter value"
-            />
+            <Textinput class="min-w-[150px]" label="Total" v-model="childrenTotal" :error="childrenTotalError"
+              placeholder="Enter value" />
           </div>
         </div>
         <div class="flex flex-col md:flex-row gap-8 md:items-start mb-7">
           <h3 class="text-base font-medium min-w-[150px]">Males</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Textinput
-              label="Total"
-              v-model="maleTotal"
-              :error="maleTotalError"
-              placeholder="Enter value"
-            />
+            <Textinput class="min-w-[150px]" label="Total" v-model="maleTotal" :error="maleTotalError"
+              placeholder="Enter value" />
           </div>
         </div>
         <div class="flex flex-col md:flex-row gap-8 md:items-start mb-7">
           <h3 class="text-base font-medium min-w-[150px]">Females</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Textinput
-              label="Total"
-              v-model="femaleTotal"
-              :error="femaleTotalError"
-              placeholder="Enter value"
-            />
+            <Textinput class="min-w-[150px]" label="Total" v-model="femaleTotal" :error="femaleTotalError"
+              placeholder="Enter value" />
           </div>
         </div>
       </div>
 
       <div class="text-right space-x-3 mt-8">
-        <Button
-          :isLoading="editStatus?.loading"
-          type="submit"
-          text="Submit"
-          btnClass="btn-dark"
-        />
+        <Button :isLoading="editStatus?.loading" type="submit" text="Submit" btnClass="btn-dark" />
       </div>
     </Card>
   </form>
@@ -237,7 +193,8 @@ watch(editStatus, () => {
 });
 
 const onSubmit = handleSubmit((values) => {
-  const d = {
+  const d = 
+  {
     id: props.data.id,
     outreachOutcome: values.outreachOutcome,
     outreachDate: values.outreachDate,

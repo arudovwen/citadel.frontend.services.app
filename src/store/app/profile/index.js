@@ -1131,10 +1131,14 @@ export default {
       commit("editOutreachReportBegin");
       await DataService.put(`${urls.UPDATE_OUTREACH_REPORT}`, data)
         .then(async () => {
-          await DataService.put(`${urls.UPDATE_DETAIL_OF_CONVERTS}`, data?.detailOfConverts)
-            .then(() => {
-              commit("editOutreachReportSuccess");
-            })
+          commit("editOutreachReportSuccess");
+        })
+        .catch((err) => {
+          // commit("editOutreachReportFailure", err);
+        });
+      await DataService.put(`${urls.UPDATE_DETAIL_OF_CONVERTS}`, data?.detailOfConverts)
+        .then(() => {
+          commit("editOutreachReportSuccess");
         })
         .catch((err) => {
           commit("editOutreachReportFailure", err);

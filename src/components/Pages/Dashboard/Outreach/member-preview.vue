@@ -8,73 +8,64 @@
       </div> -->
     </div>
     <!-- <Card bodyClass="p-6"> -->
-      <div class="max-w-[980px] mx-auto my-6 rounded-md overflow-x-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h6 class="text-xs font-semibold text-slate-400">Location</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{ props.data.locationOfOutreach }}
-            </p>
-          </div>
-          <div>
-            <h6 class="text-xs font-semibold text-slate-400">Date</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{ new Date(props.data?.dateOfOutreach).toLocaleDateString() }}
-            </p>
-          </div>
+    <div class="max-w-[980px] mx-auto my-6 rounded-md overflow-x-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h6 class="text-xs font-semibold text-slate-400">Location</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{ props.data.locationOfOutreach }}
+          </p>
+        </div>
+        <div>
+          <h6 class="text-xs font-semibold text-slate-400">Date</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{ new Date(props.data?.dateOfOutreach).toLocaleDateString() }}
+          </p>
+        </div>
 
-          <div class="col-span-2">
-            <h6 class="text-xs font-semibold text-slate-400">Description</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{ props.data.description }}
-            </p>
-          </div>
+        <div class="col-span-2">
+          <h6 class="text-xs font-semibold text-slate-400">Description</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{ props.data.description }}
+          </p>
+        </div>
 
-          <div>
-            <h6 class="text-xs font-semibold text-slate-400">Status</h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{
-                props.data.status === true
-                  ? "Approved"
-                  : props.data.status === false
+        <div>
+          <h6 class="text-xs font-semibold text-slate-400">Status</h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{
+              props.data.status === true
+                ? "Approved"
+                : props.data.status === false
                   ? "Rejected"
                   : "Pending"
-              }}
-            </p>
-          </div>
-          <div></div>
-          <div v-if="props.data.status === false">
-            <h6 class="text-xs font-semibold text-slate-400">
-              Reason for rejection
-            </h6>
-            <p class="text-base font-semibold text-slate-900">
-              {{ props.data.reason }}
-            </p>
-          </div>
+            }}
+          </p>
+        </div>
+        <div></div>
+        <div v-if="props.data.status === false">
+          <h6 class="text-xs font-semibold text-slate-400">
+            Reason for rejection
+          </h6>
+          <p class="text-base font-semibold text-slate-900">
+            {{ props.data.reason }}
+          </p>
         </div>
       </div>
+    </div>
     <!-- </Card> -->
 
-    <div
-      v-if="(state?.auth?.permissions.includes('CAN_APPROVE_REJECT_OUTREACH') && props.data.status === null)"
-      class="flex lg:justify-end items-center flex-wrap my-6 gap-x-3"
-    >
-      <button
-        v-if="props.data.status !== true"
-        type="button"
-        @click="handleModal('approve')"
-        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-      >
+    <div v-if="(state?.auth?.permissions.includes('CAN_APPROVE_REJECT_OUTREACH') && props.data.status === null)"
+      class="flex lg:justify-end items-center flex-wrap my-6 gap-x-3">
+      <button v-if="props.data.status !== true" type="button" @click="handleModal('approve')"
+        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
         <span class="text-lg">
           <Icon icon="codicon:check-all" />
         </span>
         <span>Approve</span>
       </button>
-      <button
-        v-if="props.data.status !== false"
-        @click="handleModal('reject')"
-        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
-      >
+      <button v-if="props.data.status !== false" @click="handleModal('reject')"
+        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
         <span class="text-lg">
           <Icon icon="iconamoon:sign-times-thin" />
         </span>
@@ -84,7 +75,8 @@
 
     <ViewReport v-if="!state.profile.getOutreachByIdloading && (props.data.status && report)" :data="report"
       :handleModal="handleModal" :openDeleteModal="openDeleteModal" />
-    <!-- <div v-if="!state.profile.getOutreachByIdloading && (!props.data.status && !report)" class="lg:flex justify-between flex-wrap items-center mb-6">
+    <div v-if="!state.profile.getOutreachByIdloading && (props.data.status===true && !report)"
+      class="lg:flex justify-between flex-wrap items-center mb-6">
       <button @click="handleModal('reportadd')"
         class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
         <span class="text-lg">
@@ -92,7 +84,7 @@
         </span>
         <span>Add Report</span>
       </button>
-    </div> -->
+    </div>
   </div>
 </template>
 
