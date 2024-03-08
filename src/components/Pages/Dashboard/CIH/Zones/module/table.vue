@@ -521,10 +521,7 @@ export default {
           label: "Center Name",
           field: "centerName",
         },
-        {
-          label: "coordinator",
-          field: "cordinator",
-        },
+
         {
           label: "Total members",
           field: "totalmembers",

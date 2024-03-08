@@ -5,7 +5,7 @@
     <div
       className="flex items-center  overflow-x-auto mb-6 border-b border-b-[#DDDDDD]"
     >
-      <div v-for="tab in tabs" class="" :key="tab">
+      <div v-for="tab in filteredTabs" class="" :key="tab">
         <div
           @click="currentTab = tab"
           :class="`${
@@ -32,18 +32,10 @@
           />
 
           <VueTailwindDatePicker
-            v-model="query.startDate"
+            v-model="query.dateValue"
             :formatter="formatter"
             input-classes="form-control h-[36px]"
-            placeholder="Start date"
-            as-single
-          />
-          <VueTailwindDatePicker
-            v-model="query.endDate"
-            :formatter="formatter"
-            input-classes="form-control h-[36px]"
-            placeholder="End date"
-            as-single
+            placeholder="Filter date"
           />
         </div>
         <div
@@ -53,7 +45,7 @@
           <Button
             v-if="
               permissions?.includes('CAN_CREATE_OUTREACH') &&
-              currentTab !== 'planned outreach' &&
+              currentTab !== 'upcoming outreach' &&
               currentTab !== 'pending requests'
             "
             icon="heroicons-outline:plus-sm"
@@ -215,33 +207,50 @@
 
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button text="Cancel" @click="$refs.modal.closeModal()" btnClass="btn-outline-secondary btn-sm " />
-        <Button :disabled="rejectReason.length > 0 && rejectReason.trim().length()" v-if="type === 'delete'"
-          text="Delete" :isLoading="deleteReportStatus.loading" :btnClass="`btn-dark btn-sm 
-          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="
-      dispatch('deleteOutreachRequest', {
-        id: selectedOutreachId,
-      })
-      " />
-        <Button v-else :text="type === 'approve' ? 'Approve Request' : 'Reject Request'"
-          :isLoading="approveOrRejectStatus.loading" :btnClass="`btn-dark btn-sm 
-          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`" @click="() => {
-            console.log(type);
-        if (
-          (rejectReason.length === 0 ||
-          rejectReason.trim().length === 0) && type === 'reject'
-        ) {
-          rejectReasonErr = 'Reason cannot be empty';
-          return;
-        }
-        dispatch('approveOrRejectOutreach', {
-          inspectorateId: userId,
-          reason: type === 'approve' ? null : rejectReason,
-          outreachLogId: selectedOutreachId,
-          status: type === 'approve',
-        });
-      }
-      " />
+        <Button
+          text="Cancel"
+          @click="$refs.modal.closeModal()"
+          btnClass="btn-outline-secondary btn-sm "
+        />
+        <Button
+          :disabled="rejectReason.length > 0 && rejectReason.trim().length()"
+          v-if="type === 'delete'"
+          text="Delete"
+          :isLoading="deleteReportStatus.loading"
+          :btnClass="`btn-dark btn-sm 
+          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
+          @click="
+            dispatch('deleteOutreachRequest', {
+              id: selectedOutreachId,
+            })
+          "
+        />
+        <Button
+          v-else
+          :text="type === 'approve' ? 'Approve Request' : 'Reject Request'"
+          :isLoading="approveOrRejectStatus.loading"
+          :btnClass="`btn-dark btn-sm 
+          ${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
+          @click="
+            () => {
+              console.log(type);
+              if (
+                (rejectReason.length === 0 ||
+                  rejectReason.trim().length === 0) &&
+                type === 'reject'
+              ) {
+                rejectReasonErr = 'Reason cannot be empty';
+                return;
+              }
+              dispatch('approveOrRejectOutreach', {
+                inspectorateId: userId,
+                reason: type === 'approve' ? null : rejectReason,
+                outreachLogId: selectedOutreachId,
+                status: type === 'approve',
+              });
+            }
+          "
+        />
       </div>
     </template>
   </Modal>
@@ -319,10 +328,14 @@ const addReportSuccess = computed(
 const editsuccess = computed(() => state.profile.editOutreachRequestSuccess);
 // const outreachreport = computed(() => state?.profile?.outreachReport);
 const pageRange = ref(5);
-const tabs = ["planned outreach", "my Outreach", "pending requests"];
+const tabs = ["upcoming outreach", "my outreach", "pending requests"];
 
-const currentTab = ref(tabs[1]);
-
+const filteredTabs = computed(() =>
+  state.auth.permissions.includes("CAN_CREATE_OUTREACH")
+    ? tabs
+    : tabs.filter((i) => i === "my outreach")
+);
+const currentTab = ref(filteredTabs.value[0]);
 const formatter = {
   date: "DD MMM YYYY",
   month: "MMM",
@@ -440,10 +453,12 @@ const query = reactive({
   status: null,
   userId: null,
   searchParameter: "",
-  startDate: "",
+  StartDate: moment().format("YYYY-MM-DD"),
   endDate: "",
   pageNumber: 1,
+  dateValue: [],
   pageSize: 10,
+  EndDate: moment().add("years", 10).format("YYYY-MM-DD"),
 });
 const type = ref("");
 
@@ -530,10 +545,34 @@ const outreachs = computed(() => {
   return [];
 });
 
-watch(query, () => {
-  dispatch("getAllOutreach", query);
-});
-
+watch(
+  () => [
+    query.pageNumber,
+    query.StartDate,
+    query.EndDate,
+    query.searchParameter,
+    query.pageSize,
+  ],
+  () => {
+    dispatch("getAllOutreach", query);
+  }
+);
+watch(
+  () => query.dateValue,
+  () => {
+    if (query.dateValue.length) {
+      query.EndDate = moment(query.dateValue[1]).format(
+        "YYYY-MM-DD HH:mm:ss.SSS"
+      );
+      query.StartDate = moment(query.dateValue[0]).format(
+        "YYYY-MM-DD HH:mm:ss.SSS"
+      );
+    } else {
+      query.EndDate = "";
+      query.StartDate = "";
+    }
+  }
+);
 const total = computed(() => state.profile.allOutreach?.totalCount);
 const editStatus = computed(() => ({
   loading: state?.profile?.editOutreachReportLoading,
@@ -613,7 +652,10 @@ const selectedOutreachData = computed(() => {
 
 const filteredActions = (actions, row) => {
   let actions2 = [...actions];
-  if (!state.auth?.permissions.includes("CAN_APPROVE_REJECT_OUTREACH")) {
+  if (
+    !state.auth?.permissions.includes("CAN_APPROVE_REJECT_OUTREACH") ||
+    currentTab.value !== "pending requests"
+  ) {
     actions2 = actions2.filter(
       (i) => i.name !== "approve" && i.name !== "reject"
     );

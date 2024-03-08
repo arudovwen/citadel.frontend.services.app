@@ -19,22 +19,22 @@
               placeholder="Filter date range"
             />
             <VueSelect
-              class="min-w-[250px] w-full md:w-auto"
+              class="min-w-[200px] w-full md:w-auto"
               v-model="eventType"
               :options="eventsOption"
               placeholder="Filter type"
               name="filterType"
             />
-            <Select
-              label=""
-              :options="StatusOptions"
-              v-model="query.status"
-              placeholder="Sort by"
-              classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
-            />
+            <!-- <VueSelect
+            class="min-w-[200px] w-full md:w-auto"
+            v-model="center"
+            :options="zoneOptions"
+            placeholder="Filter center"
+            name="center"
+          /> -->
           </div>
         </div>
-        <!-- <div
+        <div
           v-if="permissions.includes('CAN_CREATE_EVENTS')"
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
@@ -51,11 +51,11 @@
               }
             "
           />
-        </div> -->
+        </div>
       </div>
       <div class="-mx-6">
         <vue-good-table
-          :columns="filteredColumns"
+          :columns="columns"
           mode="remote"
           :isLoading="loading"
           styleClass=" vgt-table  centered "
@@ -89,6 +89,12 @@
               class="text-slate-500 dark:text-slate-400"
             >
               {{ moment(props.row.eventDate).format("ll") }}
+            </span>
+            <span
+              v-if="props.column.field == 'reason'"
+              class="text-slate-500 dark:text-slate-400 max-w-[160px] truncate"
+            >
+              {{ props.row.reason || "-" }}
             </span>
             <span
               v-if="props.column.field == 'requesterName'"
@@ -272,10 +278,26 @@
     <EditEvent v-if="type === 'edit'" :detail="detail" />
     <ViewEvent v-if="type === 'view'" :detail="detail" />
   </Modal>
+
+  <Modal
+    :title="`Reason for decline`"
+    labelClass="btn-outline-dark"
+    ref="reasonModal"
+    sizeClass="max-w-lg"
+  >
+    <div class="flex items-start justify-start w-full">
+      <span v-if="!detail?.reason?.length" class="text-gray-400"
+        >None specified</span
+      >
+      <div v-else class="min-h-[300px]">
+        <div v-html="detail?.reason"></div>
+      </div>
+    </div>
+  </Modal>
 </template>
 <script>
 import { eventsOptions } from "@/constant/data";
-import Select from "@/components/Select";
+
 import { onMounted, reactive, watch, computed, ref } from "vue";
 import { useStore } from "vuex";
 import VueSelect from "@/components/Select/VueSelect";
@@ -289,9 +311,9 @@ import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal/Modal";
 import { MenuItem } from "@headlessui/vue";
 import { advancedTable } from "@/constant/basic-tablle-data";
-import AddEvent from "./addevent.vue";
-import EditEvent from "./editevent.vue";
-import ViewEvent from "./preview.vue";
+import AddEvent from "./Events/addevent.vue";
+import EditEvent from "./Events/editevent.vue";
+import ViewEvent from "./Events/preview.vue";
 import { debounce } from "lodash";
 import { useToast } from "vue-toastification";
 // eslint-disable-next-line no-unused-vars
@@ -314,7 +336,6 @@ export default {
     Button,
     VueSelect,
     VueTailwindDatePicker,
-    Select,
   },
 
   data() {
@@ -340,13 +361,16 @@ export default {
       },
       actions: [
         {
-          name: "approve",
-        },
-        {
-          name: "reject",
-        },
-        {
           name: "view",
+        },
+        // {
+        //   name: "see reason",
+        // },
+        {
+          name: "edit",
+        },
+        {
+          name: "delete",
         },
       ],
       options: [
@@ -373,12 +397,25 @@ export default {
     handleAction(status) {
       let newaction = this.actions;
 
-      if (status === true) {
-        return newaction.filter((i) => i.name == "view");
-      }
+      //handle declined
       if (status === false) {
-        return newaction.filter((i) => i.name === "view");
+        return newaction.filter(
+          (i) =>
+            i.name == "see reason" || i.name == "delete" || i.name == "view"
+        );
       }
+
+      // handle pending
+      if (status === null) {
+        return newaction.filter(
+          (i) => i.name == "view" || i.name == "edit" || i.name == "delete"
+        );
+      }
+      //handle approved
+      if (status === true) {
+        return newaction.filter((i) => i.name == "view" || i.name == "delete");
+      }
+
       return newaction;
     },
 
@@ -398,36 +435,36 @@ export default {
     },
     generateAction(name, id) {
       this.id = id;
-
+      this.type = name;
       const actions = {
         view: {
           name: "view",
           icon: "heroicons-outline:eye",
-          doit: (data, detail) => {
-            this.type = data;
-            this.detail = detail;
+          doit: (name, value) => {
+            console.log("🚀 ~ generateAction ~ name:", name);
+            this.detail = value;
             this.$refs.modalChange.openModal();
           },
         },
-        approve: {
-          name: "approve",
-          icon: "ph:check",
-          doit: (data, detail) => {
-            this.type = data;
-            this.detail = detail;
-            this.$refs.modalStatus.openModal();
+        // "see reason": {
+        //   name: "see reason",
+        //   icon: "heroicons-outline:eye",
+        //   doit: (name, value) => {
+        //     console.log("🚀 ~ generateAction ~ name:", name);
+        //     this.detail = value;
+        //     this.$refs.reasonModal.openModal();
+        //   },
+        // },
+        edit: {
+          name: "edit",
+          icon: "heroicons-outline:edit",
+          doit: (name, value) => {
+            console.log("🚀 ~ generateAction ~ name:", name);
+            this.detail = value;
+            this.$refs.modalChange.openModal();
           },
         },
 
-        reject: {
-          name: "reject",
-          icon: "ph:x-light",
-          doit: (data, detail) => {
-            this.type = data;
-            this.detail = detail;
-            this.$refs.modalStatus.openModal();
-          },
-        },
         delete: {
           name: "delete",
           icon: "heroicons-outline:trash",
@@ -450,6 +487,7 @@ export default {
     const modal = ref(null);
     const modalStatus = ref(null);
     const modalChange = ref(null);
+    const reasonModal = ref(null);
     const selectedZone = ref(null);
     const toast = useToast();
     const { dispatch, state } = useStore();
@@ -482,10 +520,6 @@ export default {
         label: "Event Type",
         field: "eventType",
       },
-      {
-        label: "Requester Name",
-        field: "requesterName",
-      },
 
       {
         label: "Event date",
@@ -495,6 +529,11 @@ export default {
         label: "Status",
         field: "status",
       },
+
+      // {
+      //   label: "Reason",
+      //   field: "reason",
+      // },
 
       {
         label: "Action",
@@ -508,24 +547,6 @@ export default {
       },
       ...eventsOptions,
     ];
-    const StatusOptions = [
-      {
-        label: "Default",
-        value: "none",
-      },
-      {
-        label: "Pending",
-        value: "pending",
-      },
-      {
-        label: "Approved",
-        value: "approved",
-      },
-      {
-        label: "Rejected",
-        value: "rejected",
-      },
-    ];
     const eventType = ref("");
     const query = reactive({
       pageNumber: 1,
@@ -535,21 +556,15 @@ export default {
       searchParameter: "",
       events: "",
       zone: "",
-      status: "pending",
-      UserId:
-        state.auth.userData.userRole === "member" ? state.auth.userData.id : "",
+      UserId: state.auth.userData.id,
     });
     const memberQuery = reactive({
       pageNumber: 1,
       pageSize: 2500000,
     });
+
     function getData() {
-      dispatch(
-        state.auth.userData.userRole === "member"
-          ? "getEvents"
-          : "getAllEvents",
-        query
-      );
+      dispatch("getEvents", query);
     }
 
     const zoneOptions = computed(() =>
@@ -635,7 +650,6 @@ export default {
         query.FromDate,
         query.EndDate,
         query.zone,
-        query.status,
       ],
       () => {
         getData();
@@ -673,8 +687,9 @@ export default {
       modal,
       eventType,
       selectedZone,
+      columns,
       permissions,
-      StatusOptions,
+      reasonModal,
     };
   },
 };

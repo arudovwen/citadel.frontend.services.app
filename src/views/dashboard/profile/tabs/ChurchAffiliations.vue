@@ -18,7 +18,11 @@
 
       <div>
         <Select
-          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
+          :disabled="
+            !state.auth.permissions.includes(
+              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+            )
+          "
           label="Level Of ATS"
           :options="levelOfATSMenu"
           v-model.value="levelOfATS"
@@ -30,7 +34,11 @@
 
       <div>
         <Select
-          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
+          :disabled="
+            !state.auth.permissions.includes(
+              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+            )
+          "
           label="Charter Member"
           :options="isCharterMemberMenu"
           v-model.value="charteredMember"
@@ -47,7 +55,11 @@
         "
       >
         <Textinput
-          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
+          :disabled="
+            !state.auth.permissions.includes(
+              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+            )
+          "
           label="Charter Member Number"
           type="number"
           placeholder="Type your charter number"
@@ -60,11 +72,13 @@
 
       <div>
         <CustomVueSelect
-          :canRequest="
-            !loggedInUserRoles.includes('inspectorate') && isUserProfile
-          "
+          :canRequest="isUserProfile"
           :request="requestFnObj('Request to change zone', 'toggleReqZone')"
-          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
+          :disabled="
+            !state.auth.permissions.includes(
+              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+            )
+          "
           label="CIH Zone"
           class="min-w-[200px] w-full md:w-auto"
           v-model.value="zoneObj"
@@ -79,7 +93,10 @@
       <div>
         <CustomVueSelect
           :disabled="
-            centersLoading || !loggedInUserRoles.includes('inspectorate')
+            centersLoading ||
+            !state.auth.permissions.includes(
+              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+            )
           "
           :menuLoading="centersLoading"
           label="Center Address"
@@ -95,7 +112,11 @@
 
       <div class="hidden">
         <Textinput
-          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
+          :disabled="
+            !state.auth.permissions.includes(
+              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+            )
+          "
           label="Mountain of Influence"
           type="text"
           placeholder="Type your mountain of influence"
@@ -116,7 +137,7 @@
         />
 
         <div
-          class="absolute px-3 h-[40px] border bottom-0 left-0 border-gray-200 rounded-[4px] w-full flex gap-2 overflow-x-auto"
+          class="absolute px-3 min-h-[40px] border bottom-0 left-0 border-gray-200 rounded-[4px] w-full flex flex-wrap gap-4"
         >
           <div
             class="my-auto h-[30px] px-2 flex items-center justify-center text-xs rounded-lg bg-gray-100"
@@ -138,12 +159,8 @@
               'toggleReqDepartment'
             )
           "
-          :canRequest="
-            !loggedInUserRoles.includes('inspectorate') &&
-            !isHOD &&
-            isUserProfile
-          "
-          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
+          :canRequest="!canEditDetails && isUserProfile"
+          :disabled="canEditDetails"
           label="Department"
           classInput="!h-[40px]"
           v-model.value="departmentObj"
@@ -157,7 +174,7 @@
       <!-- 
       <div>
         <Select
-          :disabled="loggedInUserRoles.includes('inspectorate') ? false : true"
+          :disabled="canEditDetails"
           label="CIH Role"
           :options="cihRoles"
           v-model.value="cihRole"
@@ -170,9 +187,17 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
       <Button
-        v-if="loggedInUserRoles.includes('inspectorate')"
+        v-if="
+          state.auth.permissions.includes(
+            'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+          )
+        "
         :isLoading="submitLoading"
-        :disabled="!loggedInUserRoles.includes('inspectorate')"
+        :disabled="
+          !state.auth.permissions.includes(
+            'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+          )
+        "
         type="submit"
         class="btn btn-primary block w-full text-center"
       >
@@ -226,8 +251,7 @@ onUnmounted(() => {
 });
 const store = useStore();
 const id = inject("id");
-const loggedInUserRoles = inject("loggedInUserRoles");
-const isHOD = inject("isHOD");
+const canEditDetails = inject("canEditDetails");
 const isUserProfile = inject("isUserProfile");
 
 // const isInspectorate = inject("isInspectorate");

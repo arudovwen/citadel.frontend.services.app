@@ -9,6 +9,7 @@ import AffinityGroupsIndex from "@/views/dashboard/affinityGroups/index.vue";
 import MinistriesIndex from "@/views/dashboard/ministries/index.vue";
 import UnitsIndex from "@/views/dashboard/units/index.vue";
 import AccessoriesIndex from "@/components/Pages/Dashboard/Accessories/index.vue";
+import AuditIndex from "@/components/Pages/Dashboard/Audit/index.vue";
 
 import SpecialUnitsIndex from "@/views/dashboard/special-units/index.vue";
 // import MountainOfInfluenceIndex from "@/views/dashboard/mountain-of-influence/index.vue";
@@ -211,6 +212,26 @@ const routes = [
               ),
             meta: {
               activeName: "accessories",
+            },
+          },
+        ],
+      },
+      {
+        path: "/audit-logs",
+        name: "audit logs",
+        component: AuditIndex,
+        meta: {
+          roles: "",
+          subroles: [],
+        },
+        children: [
+          {
+            path: "",
+            name: "audits logs",
+            component: () =>
+              import("@/components/Pages/Dashboard/Audit/audits.vue"),
+            meta: {
+              activeName: "audits",
             },
           },
         ],
@@ -525,7 +546,7 @@ const routes = [
                 },
               },
               {
-                path: "followup/:id",
+                path: "followup/:id/:name",
                 name: "Followup Report",
                 component: () =>
                   import(
@@ -535,7 +556,7 @@ const routes = [
                   activeName: "reports",
                   roles: "",
                   groupParent: {
-                    name: "Reports",
+                    name: "Follow-up Reports",
                     url: "/cih/reports/followup",
                   },
                 },

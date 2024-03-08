@@ -6,39 +6,39 @@
         <div>
           <h6 class="text-xs font-semibold text-slate-400">Requester name</h6>
           <p class="text-base font-semibold text-slate-900">
-            {{ detail.requesterName }}
+            {{ detail?.requesterName }}
           </p>
         </div>
         <div>
           <h6 class="text-xs font-semibold text-slate-400">Zone name</h6>
           <p class="text-base font-semibold text-slate-900">
-            {{ detail.zone }}
+            {{ detail?.zone }}
           </p>
         </div>
         <div>
           <h6 class="text-xs font-semibold text-slate-400">Center name</h6>
           <p class="text-base font-semibold text-slate-900">
-            {{ detail.center }}
+            {{ detail?.center }}
           </p>
         </div>
 
         <div>
           <h6 class="text-xs font-semibold text-slate-400">Event type</h6>
           <p class="text-base font-semibold text-slate-900">
-            {{ eventsOptions.find((i) => i.value == detail.eventType)?.label }}
+            {{ eventsOptions.find((i) => i.value == detail?.eventType)?.label }}
           </p>
         </div>
         <div>
           <h6 class="text-xs font-semibold text-slate-400">Event date</h6>
           <p class="text-base font-semibold text-slate-900">
-            {{ moment(detail.eventDate).format("ll") }}
+            {{ moment(detail?.eventDate).format("ll") }}
           </p>
         </div>
 
         <div class="col-span-1 md:col-span-2">
           <h6 class="text-xs font-semibold text-slate-400">Request date</h6>
           <p class="text-base font-semibold text-slate-900">
-            {{ moment(detail.requestDate).format("ll") }}
+            {{ moment(detail?.requestDate).format("ll") }}
           </p>
         </div>
 

@@ -81,18 +81,13 @@ export const menuItems = [
   //   icon: "heroicons-outline:user",
   //   link: "issue-management",
   // },
-  // {
-  //   title: "Events",
-  //   icon: "bx:server",
-  //   link: "/events",
-  //   roles: "CAN_VIEW_EVENTS",
-  //   subroles: [],
-  // },
-  // {
-  //   title: "Notifications",
-  //   icon: "heroicons-outline:speakerphone",
-  //   link: "/notifications",
-  // },
+
+  {
+    title: "Notifications",
+    icon: "heroicons-outline:speakerphone",
+    link: "/notifications",
+    roles: "",
+  },
   // {
   //   title: "Appointments",
   //   icon: "bx:calendar-plus",
@@ -282,6 +277,13 @@ export const menuItems = [
     icon: "la:users-cog",
     link: "/users-management",
     roles: "CAN_VIEW_USER_MANAGEMENT",
+    subroles: [],
+  },
+  {
+    title: "Audit Logs",
+    icon: "icon-park-outline:log",
+    link: "/audit-logs",
+    roles: "",
     subroles: [],
   },
   // {

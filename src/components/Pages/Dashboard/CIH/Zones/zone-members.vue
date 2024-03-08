@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="mb-10">
-      <Card>
+      <div>
         <!-- <div v-if="statsLoading" class="">loading</div> -->
         <div v-if="statsLoading" class="animate-pulse grid grid-cols-5 gap-x-4">
           <div
@@ -57,7 +57,7 @@
             </div>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
 
     <Table />
@@ -65,7 +65,7 @@
 </template>
 <script setup>
 // import Icon from "@/components/Icon";
-import Card from "@/components/Card";
+// import Card from "@/components/Card";
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
