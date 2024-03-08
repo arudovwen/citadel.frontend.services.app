@@ -347,11 +347,7 @@ const isHOD = computed(
   () => state.auth.userData.userRole.toLowerCase() === "hod"
 );
 const canEditDetails = computed(() =>
-  route.params.userId === state.auth.userData.id ||
-  state.auth.userData.userRole.toLowerCase() === "inspectorate" ||
-  state.auth.userData.userRole.toLowerCase() === "administrator"
-    ? true
-    : false
+  state.auth.permissions.includes("CAN_UPDATE_MEMBERS")
 );
 // const churchAffiliationsDataLoading = computed(
 //   () => state.profile.getChurchAffiliationsDataloading
