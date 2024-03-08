@@ -413,7 +413,6 @@ const modalChange = ref(null);
 // const deleteModal = ref(true);
 onMounted(() => {
   dispatch("getAllOutreach", query);
-  dispatch("getAllOutreachReport", { query, pageSize: 30000 });
   dispatch("getRoles");
 });
 
