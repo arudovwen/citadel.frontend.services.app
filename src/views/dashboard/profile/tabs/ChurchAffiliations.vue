@@ -140,7 +140,7 @@
           class="absolute px-3 min-h-[40px] border bottom-0 left-0 border-gray-200 rounded-[4px] w-full flex flex-wrap gap-4"
         >
           <div
-            class="my-auto h-[30px] px-2 flex items-center justify-center text-xs rounded-lg bg-gray-100 "
+            class="my-auto h-[30px] px-2 flex items-center justify-center text-xs rounded-lg bg-gray-100"
             v-for="group in affinityGroup"
             :key="group"
           >

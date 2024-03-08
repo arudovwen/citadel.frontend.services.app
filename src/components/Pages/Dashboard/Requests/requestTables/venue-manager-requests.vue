@@ -59,6 +59,18 @@
                   }}</router-link></span
                 >
               </span>
+              <span
+                v-if="props.column.field == 'requesterName'"
+                class="text-slate-500 dark:text-slate-400"
+              >
+                <router-link
+                  v-if="props.row.requesterName"
+                  class="hover:underline"
+                  :to="`/profile/${props.row.userId}`"
+                  >{{ props.row.requesterName }}</router-link
+                >
+                <span v-else>{{ "-" }}</span>
+              </span>
               <span v-if="props.column.field == 'order'" class="font-medium">
                 {{ "#" + props.row.order }}
               </span>
@@ -268,7 +280,7 @@ const query = reactive({
   pageSize: 25,
   sortOrder: "",
   searchParameter: "",
-  status: "none",
+  status: "pending",
   startDate: "",
   EndDate: "",
   // userId: state.auth.userData.id,
@@ -346,10 +358,10 @@ const columns = [
     field: "venueName",
   },
 
-  // {
-  //   label: "Type",
-  //   field: "type",
-  // },
+  {
+    label: "Requester Name",
+    field: "requesterName",
+  },
 
   {
     label: "Date Of Usage",

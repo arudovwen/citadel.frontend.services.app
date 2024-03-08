@@ -25,20 +25,13 @@
               placeholder="Filter type"
               name="filterType"
             />
-            <!-- <VueSelect
-              class="min-w-[150px] w-full md:w-auto"
-              v-model="selectedZone"
-              :options="zoneOptions"
-              placeholder="Filter zone"
-              name="zone"
-            /> -->
-            <!-- <VueSelect
-            class="min-w-[200px] w-full md:w-auto"
-            v-model="center"
-            :options="zoneOptions"
-            placeholder="Filter center"
-            name="center"
-          /> -->
+            <Select
+              label=""
+              :options="StatusOptions"
+              v-model="query.status"
+              placeholder="Sort by"
+              classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
+            />
           </div>
         </div>
         <!-- <div
@@ -277,12 +270,12 @@
   >
     <AddEvent v-if="type === 'add'" />
     <EditEvent v-if="type === 'edit'" :detail="detail" />
-    <ViewEvent v-if="type === 'view'" />
+    <ViewEvent v-if="type === 'view'" :detail="detail" />
   </Modal>
 </template>
 <script>
 import { eventsOptions } from "@/constant/data";
-
+import Select from "@/components/Select";
 import { onMounted, reactive, watch, computed, ref } from "vue";
 import { useStore } from "vuex";
 import VueSelect from "@/components/Select/VueSelect";
@@ -321,6 +314,7 @@ export default {
     Button,
     VueSelect,
     VueTailwindDatePicker,
+    Select,
   },
 
   data() {
@@ -350,6 +344,9 @@ export default {
         },
         {
           name: "reject",
+        },
+        {
+          name: "view",
         },
       ],
       options: [
@@ -403,13 +400,15 @@ export default {
       this.id = id;
 
       const actions = {
-        // view: {
-        //   name: "view",
-        //   icon: "heroicons-outline:eye",
-        //   doit: () => {
-        //     this.$refs.modalChange.openModal();
-        //   },
-        // },
+        view: {
+          name: "view",
+          icon: "heroicons-outline:eye",
+          doit: (data, detail) => {
+            this.type = data;
+            this.detail = detail;
+            this.$refs.modalChange.openModal();
+          },
+        },
         approve: {
           name: "approve",
           icon: "ph:check",
@@ -419,15 +418,7 @@ export default {
             this.$refs.modalStatus.openModal();
           },
         },
-        // edit: {
-        //   name: "edit",
-        //   icon: "heroicons:pencil-square",
-        //   doit: (data, detail) => {
-        //     this.type = data;
-        //     this.detail = detail;
-        //     this.$refs.modalChange.openModal();
-        //   },
-        // },
+
         reject: {
           name: "reject",
           icon: "ph:x-light",
@@ -517,6 +508,24 @@ export default {
       },
       ...eventsOptions,
     ];
+    const StatusOptions = [
+      {
+        label: "Default",
+        value: "none",
+      },
+      {
+        label: "Pending",
+        value: "pending",
+      },
+      {
+        label: "Approved",
+        value: "approved",
+      },
+      {
+        label: "Rejected",
+        value: "rejected",
+      },
+    ];
     const eventType = ref("");
     const query = reactive({
       pageNumber: 1,
@@ -526,6 +535,7 @@ export default {
       searchParameter: "",
       events: "",
       zone: "",
+      status: "pending",
       UserId:
         state.auth.userData.userRole === "member" ? state.auth.userData.id : "",
     });
@@ -625,6 +635,7 @@ export default {
         query.FromDate,
         query.EndDate,
         query.zone,
+        query.status,
       ],
       () => {
         getData();
@@ -663,6 +674,7 @@ export default {
       eventType,
       selectedZone,
       permissions,
+      StatusOptions,
     };
   },
 };
