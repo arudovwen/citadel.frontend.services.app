@@ -4,7 +4,7 @@
     <!-- {{ checkPermission() }} -->
     <div class="card-auto space-y-5">
       <div class="grid grid-cols-12 gap-5">
-        <div class="lg:col-span-8 col-span-12 space-y-5">
+        <div class="col-span-12 space-y-5">
           <Card>
             <!-- <span>CIH: {{ CIHDashboardStats }}</span> -->
             <!-- <span>Aff: {{ authChurchAffiliation }}</span> -->
@@ -77,7 +77,7 @@
             </div>
           </Card>
         </div>
-
+        <!-- 
         <div class="flex flex-col lg:col-span-4 col-span-12 space-y-5">
           <Card title="Members Distribution">
             <template #header>
@@ -103,19 +103,19 @@
               </div>
             </div>
           </Card>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 </template>
 <script>
-import DistributionType from "@/views/home/Analytics-Component/DistributionType";
+// import DistributionType from "@/views/home/Analytics-Component/DistributionType";
 import Breadcrumb from "./Analytics-Component/Breadcrumbs";
 import Card from "@/components/Card";
 // import FormGroup from "@/components/FormGroup";
 // import Icon from "@/components/Icon";
 // import CrmTable from "./Analytics-Component/CrmTable";
-import ProgressBar from "@/components/ProgressBar";
+// import ProgressBar from "@/components/ProgressBar";
 
 import {
   pieChart,
@@ -137,12 +137,12 @@ export default {
     // Icon,
     // CrmTable,
     // DropEvent,
-    DistributionType,
+    // DistributionType,
     RecentReportsTable,
     RecentEventsTable,
     // FormGroup,
     Breadcrumb,
-    ProgressBar,
+    // ProgressBar,
   },
   setup() {
     onMounted(() => {

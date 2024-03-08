@@ -19,19 +19,19 @@
               placeholder="Filter date range"
             />
             <VueSelect
-              class="min-w-[150px] w-full md:w-auto"
+              class="min-w-[250px] w-full md:w-auto"
               v-model="eventType"
               :options="eventsOption"
               placeholder="Filter type"
               name="filterType"
             />
-            <VueSelect
+            <!-- <VueSelect
               class="min-w-[150px] w-full md:w-auto"
               v-model="selectedZone"
               :options="zoneOptions"
               placeholder="Filter zone"
               name="zone"
-            />
+            /> -->
             <!-- <VueSelect
             class="min-w-[200px] w-full md:w-auto"
             v-model="center"
@@ -377,10 +377,10 @@ export default {
       let newaction = this.actions;
 
       if (status === true) {
-        return newaction.filter((i) => i.name == "reject");
+        return newaction.filter((i) => i.name == "view");
       }
       if (status === false) {
-        return newaction.filter((i) => i.name === "approve");
+        return newaction.filter((i) => i.name === "view");
       }
       return newaction;
     },
