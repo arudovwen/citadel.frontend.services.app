@@ -11,13 +11,13 @@
             merged
             classInput="min-w-[220px] !h-9"
           />
-          <Select
+          <!-- <Select
             label=""
             :options="filters"
             v-model="query.sortOrder"
             placeholder="Sort by"
             classInput="bg-white !h-9 min-w-[150px] !min-h-[36px]"
-          />
+          /> -->
           <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
@@ -200,7 +200,7 @@ import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal";
 import { MenuItem } from "@headlessui/vue";
-import Select from "@/components/Select";
+// import Select from "@/components/Select";
 import AddRecord from "../affinityGroup-add.vue";
 import EditRecord from "../affinityGroup-edit.vue";
 import ViewRecord from "../affinityGroup-preview.vue";
@@ -222,7 +222,7 @@ import window from "@/mixins/window";
 export default {
   mixins: [window],
   components: {
-    Select,
+    // Select,
     AddRecord,
     EditRecord,
     ViewRecord,
@@ -295,10 +295,10 @@ export default {
           label: "Group Code",
           field: "affinityGroupCode",
         },
-        {
-          label: "Description",
-          field: "description",
-        },
+        // {
+        //   label: "Description",
+        //   field: "description",
+        // },
         {
           label: "Marital status",
           field: "maritalStatus",

@@ -2,9 +2,6 @@
   <div class="grid grid-cols-2 gap-6">
     <div class="col-span-2">
       <div v-if="departments?.length > 0" bodyClass="p-0 mt-4">
-        <header class="px-4 pt-4 pb-3 mb-3">
-          <h5 class="card-title mb-0 !text-[18px]">Departments</h5>
-        </header>
         <vue-good-table
           :columns="columns"
           :rows="departments"
