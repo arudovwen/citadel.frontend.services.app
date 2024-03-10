@@ -496,6 +496,25 @@ export default {
       state.getAllOutreachReporterror = err;
       state.getAllOutreachReportsuccess = false;
     },
+    
+    getAllAuditLogBegin(state) {
+      state.getAllAuditLogloading = true;
+      state.getAllAuditLogsuccess = false;
+      state.getAllAuditLogerror = null;
+    },
+
+    getAllAuditLogSuccess(state, { data, totalCount }) {
+      state.getAllAuditLogloading = false;
+      state.getAllAuditLogsuccess = true;
+      state.allAuditLog = data;
+      state.total = totalCount;
+    },
+
+    getAllAuditLogErr(state, err) {
+      state.getAllAuditLogloading = false;
+      state.getAllAuditLogerror = err;
+      state.getAllAuditLogsuccess = false;
+    },
 
     // getAllOutreachSuccess(state, { data, totalCount }) {
     //   state.getAllOutreachloading = false;
@@ -1158,6 +1177,23 @@ export default {
         }
       } catch (err) {
         commit("approveOrRejectOutreachFailure", err);
+      }
+    },
+
+    async getAllAuditLog({ commit }, data) {
+      try {
+        commit("getAllAuditLogBegin");
+        const response = await DataService.get(
+          `${urls.GET_ALL_AUDIT_LOG}?${new URLSearchParams(
+            cleanObject(data)
+          )}`,
+          data
+        );
+        if (response.status === 200) {
+          commit("getAllAuditLogSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getAllAuditLogError", err);
       }
     },
 

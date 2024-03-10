@@ -5,7 +5,7 @@
         <div>
           <div class="flex gap-x-4 items-center">
             <InputGroup
-              v-model="query.searchParameter"
+              v-model="query.searchParams"
               placeholder="Search"
               type="text"
               prependIcon="heroicons-outline:search"
@@ -18,13 +18,13 @@
               input-classes="form-control h-[36px] min-w-[250px]"
               placeholder="Filter date range"
             />
-            <VueSelect
+            <!-- <VueSelect
               class="min-w-[200px] w-full md:w-auto"
               v-model="eventType"
               :options="eventsOption"
               placeholder="Filter type"
               name="filterType"
-            />
+            /> -->
             <!-- <VueSelect
             class="min-w-[200px] w-full md:w-auto"
             v-model="center"
@@ -39,7 +39,7 @@
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
-          <Button
+          <!-- <Button
             icon="heroicons-outline:plus-sm"
             text="Request Event"
             btnClass=" btn-primary font-normal btn-sm "
@@ -50,7 +50,7 @@
                 $refs.modalChange.openModal();
               }
             "
-          />
+          /> -->
         </div>
       </div>
       <div class="-mx-6">
@@ -156,7 +156,7 @@ export default {
       detail: null,
       perpage: 10,
       pageRange: 5,
-      searchParameter: "",
+      searchParams: "",
       filterType: "",
       type: "",
       id: null,
@@ -185,6 +185,10 @@ export default {
         },
       ],
       options: [
+        {
+          value: "10",
+          label: "10",
+        },
         {
           value: "25",
           label: "25",
@@ -290,7 +294,7 @@ export default {
   },
   setup() {
     onMounted(() => {
-      dispatch("getAffiliationByMemberQuery", memberQuery);
+      dispatch("getAllAuditLog", memberQuery);
       dispatch("getZones", memberQuery);
       getData();
     });
@@ -304,13 +308,13 @@ export default {
     const { dispatch, state } = useStore();
     const success = computed(() => state.event.addsuccess);
     const updateeventsuccess = computed(() => state.event.updateeventsuccess);
-    const loading = computed(() => state.event.loading);
+    const loading = computed(() => state.profile.getAllAuditLogloading);
     const updateloading = computed(() => state.event.updateloading);
     const updatesuccess = computed(() => state.event.updatesuccess);
     const permissions = computed(() => state.auth.permissions);
 
-    const total = computed(() => state.event.total);
-    const events = computed(() => state.event.events);
+    const total = computed(() => state.profile.total);
+    const events = computed(() => state.profile.allAuditLog);
     const deleteloading = computed(() => state.event.deleteloading);
     const deletesuccess = computed(() => state.event.deletesuccess);
     const columns = [
@@ -343,22 +347,24 @@ export default {
     const eventType = ref("");
     const query = reactive({
       pageNumber: 1,
-      pageSize: 25,
+      pageSize: 10,
       FromDate: "",
       EndDate: "",
-      searchParameter: "",
+      searchParams: "",
       events: "",
       zone: "",
       UserId: state.auth.userData.id,
     });
     const memberQuery = reactive({
       pageNumber: 1,
-      pageSize: 2500000,
+      pageSize: 15,
     });
 
     function getData() {
-      dispatch("getEvents", query);
+      dispatch("getAllAuditLog", query);
     }
+
+    watch(query, () => console.log(query) )
 
     const zoneOptions = computed(() =>
       state?.zone?.zones?.map((i) => {
@@ -422,7 +428,7 @@ export default {
     }, debounceDelay);
 
     watch(
-      () => query.searchParameter,
+      () => query.searchParams,
       () => {
         debouncedSearch();
       }

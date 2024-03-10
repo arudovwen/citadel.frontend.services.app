@@ -1,7 +1,7 @@
 <template>
   <div>
     <Card noborder>
-      <div class="md:flex pb-6 items-center justify-between">
+      <!-- <div class="md:flex pb-6 items-center justify-between">
         <div class="flex gap-x-3 md:mb-0 mb-3 text-sm">
           <InputGroup
             v-model="query.searchParameter"
@@ -12,7 +12,7 @@
             classInput="min-w-[220px] !h-9"
           />
         </div>
-      </div>
+      </div> -->
 
       <AccessoriesTable />
     </Card>

@@ -77,6 +77,9 @@ export const urls = {
   GET_OUTREACH_BY_ID: "/GetOutreachReportByRequestId",
   UPDATE_DETAIL_OF_CONVERTS: "/UpdateDetailOfConverts",
 
+  // Audit Logs
+  GET_ALL_AUDIT_LOG: "/AuditTrail/GetAllAudit",
+
   //Centers
   CREATE_CENTER: "/Center/CreateCenter",
   UPDATE_CENTER: "/Center/UpdateCenter",
