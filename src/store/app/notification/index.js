@@ -1,175 +1,236 @@
-import { v4 as uuidv4 } from "uuid";
-import { useToast } from "vue-toastification";
-const toast = useToast();
+// // import { v4 as uuidv4 } from "uuid";
+// import { useToast } from "vue-toastification";
+import { DataService } from "@/config/dataService/dataService";
+import { urls } from "@/helpers/apI_urls";
+import { cleanObject } from "@/util/cleanObject";
+// const toast = useToast();
 export default {
   state: {
-    addmodal: false,
     isLoading: null,
-    // for edit
+    //create
+    addModal: false,
+    addNotificationLoading: false,
+    addNotificationSuccess: false,
+    addNotificationError: null,
+
+    //edit
     editModal: false,
-    editName: "",
-    editassignto: null,
-    editStartDate: null,
-    editEndDate: null,
-    editcta: null,
-    editId: null,
-    editdesc: null,
+    updateNotificationLoading: false,
+    updateNotificationSuccess: false,
+    updateNotificationError: null,
+    //read
+    getNotificationLoading: false,
+    getNotificationSuccess: false,
+    getNotificationError: null,
 
-    notifications: [
-      {
-        id: uuidv4(),
-        assignto: [
-          {
-            image: require("@/assets/images/avatar/av-1.svg"),
-            title: "Mahedi Amin",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Sovo Haldar",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Rakibul Islam",
-          },
-        ],
-        name: "Welfare",
-        des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-        startDate: "2022-10-03",
-        endDate: "2022-10-06",
-        progress: 75,
-        category: [
-          {
-            value: "team",
-            label: "team",
-          },
-          {
-            value: "low",
-            label: "low",
-          },
-        ],
-      },
-      {
-        id: uuidv4(),
-        assignto: [
-          {
-            image: require("@/assets/images/avatar/av-1.svg"),
-            title: "Mahedi Amin",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Sovo Haldar",
-          },
-          {
-            image: require("@/assets/images/avatar/av-2.svg"),
-            title: "Rakibul Islam",
-          },
-        ],
-        name: "Sanitation ",
-        des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-        startDate: "2022-10-03",
-        endDate: "2022-10-10",
-        progress: 50,
+    getNotificationByIdLoading: false,
+    getNotificationByIdSuccess: false,
+    getNotificationByIdError: null,
+    //delete
+    deleteNotificationLoading: false,
+    deleteNotificationSuccess: false,
+    deleteNotificationError: null,
+    notification: null,
 
-        category: [
-          {
-            value: "team",
-            label: "team",
-          },
-          {
-            value: "low",
-            label: "low",
-          },
-        ],
-      },
-    ],
+    notifications: [],
+    total: 0,
   },
-  getters: {
-    notifications: (state) => state.notifications,
-  },
+  getters: {},
   mutations: {
-    //
-    addNotification(state, data) {
-      state.isLoading = true;
+    addNotificationBegin(state) {
+      state.addNotificationLoading = true;
+      state.addNotificationSuccess = false;
+      state.addNotificationError = null;
+    },
 
-      setTimeout(() => {
-        state.notifications.unshift(data);
-        state.isLoading = false;
-        toast.success -
-          500("Notification added", {
-            timeout: 2000,
-          });
-      }, 1500);
-      state.addmodal = false;
+    addNotificationSuccess(state) {
+      state.addNotificationLoading = false;
+      state.addNotificationSuccess = true;
+      state.addNotificationError = null;
     },
-    // removeNotification
-    removeNotification(state, data) {
-      state.notifications = state.notifications.filter(
-        (item) => item.id !== data.id
-      );
-      toast.error("Notification Removed", {
-        timeout: 2000,
-      });
+
+    addNotificationError(state, err) {
+      state.addNotificationLoading = false;
+      state.addNotificationSuccess = false;
+      state.addNotificationError = err;
     },
-    // updateNotification
-    updateNotification(state, data) {
-      state.notifications.findIndex((item) => {
-        if (item.id === data.id) {
-          // store data
-          state.editId = data.id;
-          state.editName = data.name;
-          state.editassignto = data.assignto;
-          state.editStartDate = data.startDate;
-          state.editEndDate = data.endDate;
-          state.editcta = data.category;
-          state.editdesc = data.des;
-          state.editModal = !state.editModal;
-          // set data to data
-          item.name = data.name;
-          item.des = data.des;
-          item.startDate = data.startDate;
-          item.endDate = data.endDate;
-          item.assignto = data.assignto;
-          item.progress = data.progress;
-          item.category = data.category;
-        }
-      });
+
+    getNotificationsBegin(state) {
+      state.getNotificationsLoading = true;
+      state.getNotificationsSuccess = false;
+      state.getNotificationsError = null;
     },
-    // openNotification
-    openNotification(state) {
-      state.addmodal = true;
+    getNotificationsSuccess(state, { data, totalCount }) {
+      state.getNotificationsLoading = false;
+      state.getNotificationsSuccess = true;
+      state.getNotificationsError = null;
+      state.notifications = data;
+      state.total = totalCount;
     },
-    // closeModal
-    closeModal(state) {
-      state.addmodal = false;
+    getNotificationsError(state, err) {
+      state.getNotificationsLoading = false;
+      state.getNotificationsSuccess = false;
+      state.getNotificationsError = err;
     },
-    // closeEditModal
-    closeEditModal(state) {
+
+    getNotificationByIdBegin(state) {
+      state.getNotificationByIdLoading = true;
+      state.getNotificationByIdSuccess = false;
+      state.getNotificationByIdError = null;
+    },
+    getNotificationByIdSuccess(state, { data }) {
+      state.getNotificationByIdLoading = false;
+      state.getNotificationByIdSuccess = true;
+      state.getNotificationByIdError = null;
+      state.notification = data;
+    },
+    getNotificationByIdError(state, err) {
+      state.getNotificationByIdLoading = false;
+      state.getNotificationByIdSuccess = false;
+      state.getNotificationByIdError = err;
+    },
+
+    updateNotificationBegin(state) {
+      state.updateNotificationLoading = true;
+      state.updateNotificationSuccess = false;
+      state.updateNotificationError = null;
+    },
+    updateNotificationSuccess(state) {
+      state.updateNotificationLoading = false;
+      state.updateNotificationSuccess = true;
+      state.updateNotificationError = null;
+    },
+    updateNotificationError(state, err) {
+      state.updateNotificationLoading = false;
+      state.updateNotificationSuccess = false;
+      state.updateNotificationError = err;
+    },
+    deleteNotificationBegin(state) {
+      state.deleteNotificationLoading = true;
+      state.deleteNotificationSuccess = false;
+      state.deleteNotificationError = null;
+    },
+    deleteNotificationSuccess(state) {
+      state.deleteNotificationLoading = false;
+      state.deleteNotificationSuccess = true;
+      state.deleteNotificationError = null;
+    },
+    deleteNotificationError(state, err) {
+      state.deleteNotificationLoading = false;
+      state.deleteNotificationSuccess = false;
+      state.deleteNotificationError = err;
+    },
+
+    //open edit Notification
+    openNotificationEditModal(state, data) {
+      state.editModal = true;
+      state.notification = data;
+    },
+
+    // toggleAddNotification
+    toggleAddNotification(state) {
+      state.addModal = !state.addModal;
+    },
+    // closeAddNotificationModal
+    closeAddNotificationModal(state) {
+      state.addModal = false;
+    },
+    // closeNotificationEditModal
+    closeNotificationEditModal(state) {
       state.editModal = false;
     },
   },
   actions: {
-    addNotification({ commit }, data) {
-      commit("addNotification", data);
+    async addNotification({ commit }, data) {
+      try {
+        commit("addNotificationBegin");
+        const response = await DataService.post(urls.NOTIFICATIONS, data);
+
+        if (response.status === 200) {
+          commit("addNotificationSuccess");
+        }
+      } catch (err) {
+        commit("addNotificationError", err);
+      }
+    },
+    async getNotifications({ commit }, data) {
+      try {
+        commit("getNotificationsBegin");
+        const response = await DataService.get(
+          `${urls.NOTIFICATIONS}?${new URLSearchParams(cleanObject(data))}`
+        );
+
+        if (response.status === 200) {
+          commit("getNotificationsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getNotificationsError", err);
+      }
+    },
+
+    async getNotificationById({ commit }, id) {
+      try {
+        commit("getNotificationByIdBegin");
+        const response = await DataService.get(
+          `${urls.GET_ACCESSORY_BY_ID}?id=${id}`
+        );
+
+        if (response.status === 200) {
+          commit("getNotificationByIdSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getNotificationByIdError", err);
+      }
+    },
+
+    async updateNotification({ commit }, data) {
+      try {
+        commit("updateNotificationBegin");
+        const response = await DataService.put(urls.UPDATE_ACCESSORY, data);
+
+        if (response.status === 200) {
+          commit("updateNotificationSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("updateNotificationError", err);
+      }
+    },
+
+    async deleteNotification({ commit }, id) {
+      try {
+        commit("deleteNotificationBegin");
+        const response = await DataService.delete(
+          `${urls.DELETE_ACCESSORY}?id=${id}`
+        );
+
+        if (response.status === 200) {
+          commit("deleteNotificationSuccess", response.data.data);
+        }
+      } catch (err) {
+        commit("deleteNotificationError", err);
+      }
     },
     // removeNotification
     removeNotification({ commit }, data) {
       commit("removeNotification", data);
     },
     // updateNotification
-    updateNotification({ commit }, data) {
-      commit("updateNotification", data);
+
+    //open edit modal
+    openNotificationEditModal({ commit }, data) {
+      commit("openNotificationEditModal", data);
     },
-    // eopen notification
-    openNotification({ commit }) {
-      commit("openNotification");
+    // eopen Notification
+    toggleAddNotification({ commit }) {
+      commit("toggleAddNotification");
     },
 
-    closeModal({ commit }) {
-      commit("closeModal");
+    closeAddNotificationModal({ commit }) {
+      commit("closeAddNotificationModal");
     },
-    // closeEditModal
-    closeEditModal({ commit }) {
-      commit("closeEditModal");
+    // closeNotificationEditModal
+    closeNotificationEditModal({ commit }) {
+      commit("closeNotificationEditModal");
     },
   },
 };

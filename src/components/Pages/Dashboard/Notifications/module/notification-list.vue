@@ -147,9 +147,9 @@ import { notifications } from "@/constant/data";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
 import { useStore } from "vuex";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted, reactive } from "vue";
 
-const { state } = useStore();
+const { state, dispatch } = useStore();
 const isCreateOpen = ref(false);
 const loading = ref(false);
 const files = ref(null);
@@ -158,6 +158,16 @@ const authUser = computed(() => {
     state.auth.userData.userRole.toLowerCase() === "inspectorate" ||
     state.auth.userData.userRole.toLowerCase() === "administrator"
   );
+});
+const query = reactive({
+  pageNumber: 1,
+  pageSize: 10,
+  FromDate: "",
+  EndDate: "",
+  searchParams: "",
+});
+onMounted(() => {
+  dispatch("getNotifications", query);
 });
 const onFileSelected = async (e) => {
   files.value = e.target.files;

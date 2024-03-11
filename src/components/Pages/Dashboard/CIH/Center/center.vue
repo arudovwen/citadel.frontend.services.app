@@ -4,45 +4,70 @@
       {{ detail?.cihAddress }}
     </h1>
     <div class="mb-10">
-      <Card>
-        <div class="grid grid-cols-5 gap-x-4">
+      <div>
+        <!-- <div v-if="statsLoading" class="">loading</div> -->
+        <div v-if="statsLoading" class="animate-pulse grid grid-cols-5 gap-x-4">
           <div
-            v-for="item in content"
+            v-for="(item, index) in content"
             :key="item.title"
-            :class="item.bgClass"
+            :class="colors[index]"
             class="border rounded-lg px-6 py-4 text-gray-600"
           >
             <div class="flex mb-5 gap-x-8">
               <span
                 class="font-bold text-lg flex gap-x-8 capitalize w-full justify-between"
-                ><span>{{ item.title }}</span>
-                <span class="text-2xl">{{ item.total }}</span>
+                ><span>{{ item?.title }}</span>
+                <span class="text-2xl">{{ item?.total }}</span>
               </span>
             </div>
             <div class="flex flex-col text-sm">
               <span class="flex gap-x-3">
-                <span>Male<span v-if="item.males > 1">s</span></span>
-                <span>{{ item.males }}</span></span
+                <span>Male<span v-if="item?.males > 1">s</span></span>
+                <span>{{ item?.males }}</span></span
               >
 
               <span class="flex gap-x-3">
-                <span>Female<span v-if="item.females > 1">s</span></span
-                ><span>{{ item.females }}</span>
+                <span>Female<span v-if="item?.females > 1">s</span></span
+                ><span>{{ item?.females }}</span>
               </span>
             </div>
           </div>
         </div>
-      </Card>
-    </div>
+        <div v-else class="grid grid-cols-5 gap-x-4">
+          <div
+            v-for="(item, index) in CIHStats"
+            :key="item.title"
+            :class="colors[index]"
+            class="border rounded-lg px-6 py-4 text-gray-600"
+          >
+            <div class="flex mb-5 gap-x-8">
+              <span
+                class="font-bold text-lg flex gap-x-8 capitalize w-full justify-between"
+                ><span>{{ item?.title }}</span>
+                <span class="text-2xl">{{ item?.total }}</span>
+              </span>
+            </div>
+            <div class="flex flex-col text-sm">
+              <span class="flex gap-x-3">
+                <span>Male<span v-if="item?.males > 1">s</span></span>
+                <span>{{ item?.males }}</span></span
+              >
 
+              <span class="flex gap-x-3">
+                <span>Female<span v-if="item?.females > 1">s</span></span
+                ><span>{{ item?.females }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <Table />
   </div>
 </template>
 <script setup>
-// import Icon from "@/components/Icon";
-import Card from "@/components/Card";
 import Table from "./centerTable.vue";
-import { reactive, onMounted, computed, provide } from "vue";
+import { reactive, onMounted, computed, provide, watch } from "vue";
 import { useStore } from "vuex";
 
 const { state, dispatch } = useStore();
@@ -53,46 +78,83 @@ const centerQuery = reactive({
   searchParameter: "",
   userId: state.auth.userData.id,
 });
+const CIHStats = computed(() => {
+  let totals = 0;
+  let males = 0;
+  let females = 0;
+
+  const data = state?.attendance?.CIHStats?.map((item) => {
+    return {
+      title: item.gender,
+      total: item.total,
+      males: item.male,
+      females: item.female,
+    };
+  });
+  data?.forEach((obj) => {
+    totals += obj.total;
+    males += obj.males;
+    females += obj.females;
+  });
+  let result = {
+    title: "Members",
+    total: totals,
+    males: males,
+    females: females,
+  };
+  const dataRes = data?.length ? data : [];
+  return [result, ...dataRes];
+});
+const statsLoading = computed(() => state.attendance.getCIHStatsLoading);
+const colors = [
+  "bg-green-100",
+  "bg-yellow-100",
+  "bg-blue-100",
+  "bg-purple-100",
+  "bg-orange-100",
+];
+
 const content = [
   {
     title: "members",
-    total: "5",
-    males: "1",
-    females: "2",
-    bgClass: "bg-green-100",
+    total: "0",
+    males: "0",
+    females: "0",
   },
   {
     title: "adults",
-    total: "5",
-    males: "1",
-    females: "2",
-    bgClass: "bg-yellow-100",
+    total: "0",
+    males: "0",
+    females: "0",
   },
   {
     title: "youths",
-    total: "5",
-    males: "1",
-    females: "2",
-    bgClass: "bg-blue-100",
+    total: "0",
+    males: "0",
+    females: "0",
   },
   {
     title: "teenagers",
-    total: "5",
-    males: "1",
-    females: "2",
-    bgClass: "bg-purple-100",
+    total: "0",
+    males: "0",
+    females: "0",
   },
   {
     title: "children",
-    total: "5",
-    males: "1",
-    females: "2",
-    bgClass: "bg-orange-100",
+    total: "0",
+    males: "0",
+    females: "0",
   },
 ];
 const detail = computed(() => state.profile.churchAffiliationsData);
 onMounted(() => {
   dispatch("getChurchAffiliationsById", state.auth.userData?.id);
+});
+
+watch(detail, () => {
+  if (detail?.value) {
+    dispatch("getCIHStats", detail?.value?.centerId);
+  }
 });
 provide("detail", detail);
 </script>

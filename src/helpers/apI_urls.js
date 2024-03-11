@@ -251,6 +251,8 @@ export const urls = {
   GET_INSPECTION_REPORTS: "/GetAllCIHInspection",
   GET_INSPECTION_REPORT: "/GetCIHInspectionById",
   DELETE_INSPECTION_REPORT: "/DeleteCIHInspection",
+
+  NOTIFICATIONS: "/Notification",
 };
 
 // open delete modal
