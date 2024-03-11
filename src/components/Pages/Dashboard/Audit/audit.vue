@@ -79,10 +79,10 @@
               }}
             </span>
             <span
-              v-if="props.column.field == 'createdBy'"
+              v-if="props.column.field == 'createdAt'"
               class="text-slate-500 dark:text-slate-400"
             >
-              {{ moment(props.row.createdBy).format("lll") }}
+              {{ moment(props.row.createdAt).format("lll") }}
             </span>
 
             <span

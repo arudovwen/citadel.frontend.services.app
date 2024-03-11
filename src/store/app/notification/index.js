@@ -144,7 +144,10 @@ export default {
     async addNotification({ commit }, data) {
       try {
         commit("addNotificationBegin");
-        const response = await DataService.post(urls.NOTIFICATIONS, data);
+        const response = await DataService.post(
+          `${urls.NOTIFICATIONS}/sendnotifications`,
+          data
+        );
 
         if (response.status === 200) {
           commit("addNotificationSuccess");
@@ -157,7 +160,9 @@ export default {
       try {
         commit("getNotificationsBegin");
         const response = await DataService.get(
-          `${urls.NOTIFICATIONS}?${new URLSearchParams(cleanObject(data))}`
+          `${urls.NOTIFICATIONS}/GetAllNotifications?${new URLSearchParams(
+            cleanObject(data)
+          )}`
         );
 
         if (response.status === 200) {

@@ -27,7 +27,7 @@
           <handle-mobile-menu
             v-if="window.width < 1280 && window.width > 768"
           />
-          <SearchModal />
+          <!-- <SearchModal /> -->
         </div>
         <div
           v-if="this.$store.state.menuLayout === 'horizontal'"
@@ -65,7 +65,7 @@ import Profile from "./Navtools/Profile.vue";
 // import SwitchDark from "./Navtools/SwitchDark.vue";
 import Mainnav from "./horizental-nav.vue";
 import Icon from "../Icon";
-import SearchModal from "./Navtools/SearchModal.vue";
+// import SearchModal from "./Navtools/SearchModal.vue";
 // import LanguageVue from "./Navtools/Language.vue";
 import Logo from "./Navtools/Logo.vue";
 import MobileLogo from "./Navtools/MobileLogo.vue";
@@ -89,7 +89,7 @@ export default {
     Mainnav,
     Icon,
     // LanguageVue,
-    SearchModal,
+    // SearchModal,
     Logo,
     MobileLogo,
     HandleMobileMenu,
