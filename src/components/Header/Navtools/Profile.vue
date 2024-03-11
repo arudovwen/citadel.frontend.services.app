@@ -76,13 +76,13 @@ export default {
           },
         },
 
-        {
-          label: "Settings",
-          icon: "heroicons-outline:cog",
-          link: () => {
-            this.$router.push("settings");
-          },
-        },
+        // {
+        //   label: "Settings",
+        //   icon: "heroicons-outline:cog",
+        //   link: () => {
+        //     this.$router.push("settings");
+        //   },
+        // },
 
         {
           label: "Logout",

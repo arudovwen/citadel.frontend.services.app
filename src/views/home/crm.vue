@@ -187,7 +187,11 @@ export default {
     };
 
     const getAllEvents = () => {
-      dispatch("getAllEvents", { pageNumber: 1, pageSize: 5 });
+      dispatch("getAllEvents", {
+        pageNumber: 1,
+        pageSize: 5,
+        status: "pending",
+      });
     };
 
     const recentReports = computed(() => state.report.data);

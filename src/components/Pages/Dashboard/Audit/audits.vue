@@ -1,25 +1,8 @@
 <template>
   <div>
     <Card noborder>
-      <!-- <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex gap-x-3 md:mb-0 mb-3 text-sm">
-          <InputGroup
-            v-model="query.searchParameter"
-            placeholder="Search"
-            type="text"
-            prependIcon="heroicons-outline:search"
-            merged
-            classInput="min-w-[220px] !h-9"
-          />
-        </div>
-      </div> -->
-
       <AccessoriesTable />
     </Card>
-    <!-- <GridSkletion :count="units.length" v-if="isSkeletion" /> -->
-
-    <AddModal />
-    <EditModal />
   </div>
 </template>
 

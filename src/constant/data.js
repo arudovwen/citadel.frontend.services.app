@@ -82,12 +82,6 @@ export const menuItems = [
   //   link: "issue-management",
   // },
 
-  {
-    title: "Notifications",
-    icon: "heroicons-outline:speakerphone",
-    link: "/notifications",
-    roles: "",
-  },
   // {
   //   title: "Appointments",
   //   icon: "bx:calendar-plus",
@@ -278,6 +272,12 @@ export const menuItems = [
     link: "/users-management",
     roles: "CAN_VIEW_USER_MANAGEMENT",
     subroles: [],
+  },
+  {
+    title: "Notifications",
+    icon: "heroicons-outline:speakerphone",
+    link: "/notifications",
+    roles: "",
   },
   {
     title: "Audit Logs",
