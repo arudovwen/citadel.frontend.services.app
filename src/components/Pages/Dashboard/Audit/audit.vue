@@ -123,9 +123,7 @@ import { eventsOptions } from "@/constant/data";
 
 import { onMounted, reactive, watch, computed, ref } from "vue";
 import { useStore } from "vuex";
-import VueSelect from "@/components/Select/VueSelect";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
-import Button from "@/components/Button";
 import Card from "@/components/Card";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
@@ -143,9 +141,6 @@ export default {
     InputGroup,
 
     Card,
-
-    Button,
-    VueSelect,
     VueTailwindDatePicker,
   },
 
@@ -320,7 +315,7 @@ export default {
     const columns = [
       {
         label: "Date",
-        field: "createdBy",
+        field: "createdAt",
       },
 
       {
@@ -364,7 +359,7 @@ export default {
       dispatch("getAllAuditLog", query);
     }
 
-    watch(query, () => console.log(query) )
+    watch(query, () => console.log(query));
 
     const zoneOptions = computed(() =>
       state?.zone?.zones?.map((i) => {
