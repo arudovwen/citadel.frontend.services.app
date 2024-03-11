@@ -97,20 +97,12 @@ const formData = reactive({
 
 const report = computed(() => state?.profile?.outreachReport);
 
-onMounted(() => {
-  dispatch("getOutreachById", { id: props.data.id });
-});
-
 watch(report, () => {
   console.log("v ==", report);
 });
 
 // eslint-disable-next-line no-undef
 const props = defineProps(["data", "id"]);
-
-onMounted(() => {
-  dispatch("");
-});
 
 const formDataSchema = yup.object().shape({
   outreachDate: yup.string().required("Date is required"),
@@ -195,7 +187,6 @@ watch(editStatus, () => {
 const onSubmit = handleSubmit((values) => {
   const d = 
   {
-    id: props.data.id,
     outreachOutcome: values.outreachOutcome,
     outreachDate: values.outreachDate,
     outreachRequestId: props.data.id,

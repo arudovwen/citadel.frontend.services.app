@@ -72,19 +72,6 @@
         <span>Reject</span>
       </button>
     </div>
-
-    <ViewReport v-if="!state.profile.getOutreachByIdloading && (props.data.status && report)" :data="report"
-      :handleModal="handleModal" :openDeleteModal="openDeleteModal" />
-    <div v-if="!state.profile.getOutreachByIdloading && (props.data.status===true && !report)"
-      class="lg:flex justify-between flex-wrap items-center mb-6">
-      <button @click="handleModal('reportadd')"
-        class="outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
-        <span class="text-lg">
-          <Icon icon="ant-design:edit-outlined" />
-        </span>
-        <span>Add Report</span>
-      </button>
-    </div>
   </div>
 </template>
 
@@ -128,16 +115,16 @@ watchEffect(props, () => {
   console.log("p", props);
 });
 
-watch(deleteReportStatus, () => {
-  if (deleteReportStatus.value.success) {
-    console.log("completed;");
-    dispatch("getOutreachById", { id: props.data.id });
-  }
-});
+// watch(deleteReportStatus, () => {
+//   if (deleteReportStatus.value.success) {
+//     console.log("completed;");
+//     dispatch("getOutreachById", { id: props.data.id });
+//   }
+// });
 
-onMounted(() => {
-  dispatch("getOutreachById", { id: props.data.id });
-});
+// onMounted(() => {
+//   dispatch("getOutreachById", { id: props.data.id });
+// });
 </script>
 
 <style lang="scss">

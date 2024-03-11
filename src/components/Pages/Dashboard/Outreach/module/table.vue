@@ -24,7 +24,7 @@
             placeholder="Filter date" />
         </div>
         <div class="md:flex md:space-x-3 items-center flex-none" :class="window.width < 768 ? 'space-x-rb' : ''">
-          <Button v-if="permissions?.includes('CAN_CREATE_OUTREACH') &&currentTab === tabs[1]
+          <Button v-if="permissions?.includes('CAN_CREATE_OUTREACH') && currentTab === tabs[1]
         " icon="heroicons-outline:plus-sm" text="Create outreach" btnClass=" btn-primary font-normal btn-sm "
             iconClass="text-lg" @click="
         type = 'add';
@@ -166,15 +166,18 @@
           ? 'Edit outreach information'
           : type === 'reportadd'
             ? 'Add Report'
-            : type === 'reportedit'
-              ? 'Edit Report'
-              : selectedOutreachData?.outreachName
+            : type === 'reportview'
+              ? 'Outreach Report'
+              : type === 'reportedit'
+                ? 'Edit Report'
+                : selectedOutreachData?.outreachName
         " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-md">
     <AddReport v-if="type === 'reportadd'" :data="selectedOutreachData" />
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" :data="selectedOutreachData" />
     <ViewRecord v-if="type === 'view'" :data="selectedOutreachData" />
     <EditReport v-if="type === 'reportedit'" :id="selectedOutreachId" :data="selectedOutreachData" />
+    <ViewReport v-if="type === 'reportview'" :id="selectedOutreachId" :handle-modal="handleModal"/>
   </Modal>
 </template>
 
@@ -184,6 +187,7 @@ import Modal from "@/components/Modal/Modal";
 import AddRecord from "../member-add.vue";
 import EditRecord from "../member-edit.vue";
 import ViewRecord from "../member-preview.vue";
+import ViewReport from "../report-preview.vue";
 import AddReport from "../add-report.vue";
 import EditReport from "../edit-report.vue";
 import Dropdown from "@/components/Dropdown";
@@ -346,7 +350,7 @@ const userId = computed(() => {
   return state?.auth?.userData?.id;
 });
 
-const   query = reactive({
+const query = reactive({
   dateFilter: "dateOfOutreach",
   status: "approved",
   userId: null,
@@ -397,15 +401,16 @@ const actions = [
       modal.value.openModal();
     },
   },
-  // {
-  //   name: "report",
-  //   icon: "heroicons-outline:plus-sm",
-  //   doit: (data, row) => {
-  //     selectedOutreachId.value = row.id;
-  //     type.value = "reportadd";
-  //     modalChange.value.openModal();
-  //   },
-  // },
+  {
+    name: "report",
+    icon: "heroicons-outline:document-report",
+    doit: (data, row) => {
+      console.log(row);
+      selectedOutreachId.value = row.id;
+      type.value = "reportview";
+      modalChange.value.openModal();
+    },
+  },
   {
     name: "delete",
     icon: "heroicons-outline:trash",
@@ -621,7 +626,7 @@ watchEffect(selectedOutreachId, () => {
   selectedOutreachId.value;
   rejectReason.value = "";
   rejectReasonErr.value = "";
-  dispatch("getOutreachById", { id: selectedOutreachId.value });
+  // dispatch("getOutreachById", { id: selectedOutreachId.value });
 });
 </script>
 
