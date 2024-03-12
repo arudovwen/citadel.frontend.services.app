@@ -156,6 +156,7 @@ export default {
         commit("addNotificationError", err);
       }
     },
+    
     async getNotifications({ commit }, data) {
       try {
         commit("getNotificationsBegin");
