@@ -13,48 +13,34 @@
 
     <Modal
       :activeModal="isCreateOpen"
-      @close="toggleCreateModal"
+      @close="() => {}"
       title="Send Notification"
       centered
+      :canCancel="false"
     >
       <form @submit.prevent="onSubmit" class="space-y-4">
         <div class="grid grid-cols-1 gap-y-6">
-          <div class="flex flex-col lg:flex-row gap-4">
-            <FormGroup
-              label="Notification type"
-              name="d1"
-              :error="notifyTypeError"
-              class="max-w-[150px]"
-            >
-              <Select
-                label=""
-                :options="filters"
-                placeholder="Choose type"
-                classInput="bg-white !h-10 min-w-[150px]  !min-h-[36px]"
-                v-model="notifyType"
-              />
-            </FormGroup>
-            <Textinput
-              label="Title"
-              type="text"
-              placeholder="Title"
-              name="title"
-              v-model.trim="title"
-              :error="titleError"
-              class="flex-1"
-            />
-          </div>
-          <FormGroup label="Recipients" name="d1" :error="recipientsError">
+          <Textinput
+            label="Title"
+            type="text"
+            placeholder="Title"
+            name="title"
+            v-model.trim="title"
+            :error="titleError"
+            class="flex-1"
+          />
+          <!-- </div> -->
+          <FormGroup label="Recipients" name="d1" :error="userIdError">
             <VueSelect
               label=""
               :options="options"
               placeholder="Choose recipients"
               classInput="bg-white !h-10 min-w-[150px]  !min-h-[36px]"
-              v-model="recipients"
+              v-model="userId"
               multiple
               :reduce="(option) => option.value"
             />
-            <div class="mt-1">
+            <div class="mt-1 max-w-max">
               <Checkbox v-model="isSelectAll" label="Select all recipients" />
             </div>
           </FormGroup>
@@ -68,27 +54,39 @@
             />
           </div>
           <FormGroup label="Add attachment" name="d1">
-            <Fileinput @change="onFileSelected" multiple name="multipule" />
+            <Fileinput @change="onFileSelected" name="file" />
           </FormGroup>
-          <Checkbox v-model="isScheduled" label="Schedule for later" />
-          <FormGroup v-if="isScheduled" label="Schedule Date" name="d1">
+          <FormGroup label="" name="isScheduled" :error="isScheduledError">
+            <Checkbox v-model="isScheduled" label="Schedule for later" />
+          </FormGroup>
+          <FormGroup
+            v-if="isScheduled"
+            :error="scheduledDateError"
+            label="Schedule Date"
+            name="d1"
+          >
             <flat-pickr
-              v-model="date"
+              v-model="scheduledDate"
               :config="config"
               class="form-control"
               id="d1"
               placeholder="yyyy, dd M"
-              :error="dateError"
             />
           </FormGroup>
 
           <!-- <span>files: {{ files }}</span> -->
-          <div class="text-right">
+          <div class="text-right flex gap-x-5 justify-end">
             <Button
-              :isLoading="loading"
-              :disabled="loading"
+              text="Cancel"
+              btnClass="btn-outline-secondary btn-sm"
+              @click="toggleCreateModal"
+              type="button"
+            />
+            <Button
+              :isLoading="addloading"
+              :disabled="addloading"
               text="Send"
-              btnClass="btn-dark"
+              btnClass="btn-dark btn-sm"
               type="submit"
             ></Button>
           </div>
@@ -110,7 +108,7 @@ import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
 import { useStore } from "vuex";
 import { computed, ref, defineEmits, defineProps, watch } from "vue";
-import Select from "@/components/Select";
+// import Select from "@/components/Select";
 import VueSelect from "@/components/Select/VueSelect";
 
 const props = defineProps({
@@ -119,68 +117,105 @@ const props = defineProps({
   },
 });
 const emits = defineEmits(["close", "refresh"]);
-const { state } = useStore();
+// eslint-disable-next-line no-unused-vars
+const { state, dispatch } = useStore();
 const isCreateOpen = ref(false);
-const files = ref(null);
-const isScheduled = ref(false);
-const loading = computed(() => state.notification.getNotificationLoading);
+const file = ref(null);
+const success = computed(() => state.notification.addNotificationSuccess);
+const addloading = computed(() => state.notification.addNotificationLoading);
 
 const onFileSelected = async (e) => {
-  files.value = e.target.files;
+  file.value = e.target.files[0];
 };
 const schema = yup.object({
   title: yup.string().required("Title is required"),
   message: yup.string().required("Message is required"),
-  date: yup.string(),
-  notifyType: yup.string().required("Select a notification type"),
-  recipients: yup.array().required("Select recipients"),
+  scheduledDate: yup
+    .date()
+    .typeError("Scheduled date is required")
+    .when("isScheduled", {
+      is: true,
+      then: (schema) => schema.required("Scheduled date is required"),
+      otherwise: (schema) => schema.nullable(),
+    }),
+  userId: yup
+    .array()
+    .typeError("Select recipients")
+    .required("Select recipients"),
+  isScheduled: yup.boolean(),
 });
 
+const initValues = {
+  title: "",
+  message: "",
+  scheduledDate: null,
+  userId: "",
+  notityType: 10,
+  isScheduled: false,
+};
 const { handleSubmit, setFieldValue } = useForm({
   validationSchema: schema,
+  initialValues: initValues,
 });
-const filters = [
-  {
-    label: "SMS",
-    value: "sms",
-  },
+// const filters = [
+//   {
+//     label: "SMS",
+//     value: "sms",
+//   },
 
-  {
-    label: "Email",
-    value: "email",
-  },
-];
+//   {
+//     label: "Email",
+//     value: "email",
+//   },
+// ];
 const { value: title, errorMessage: titleError } = useField("title");
 const { value: message, errorMessage: messageError } = useField("message");
-const { value: date, errorMessage: dateError } = useField("date");
-const { value: recipients, errorMessage: recipientsError } =
-  useField("recipients");
-const { value: notifyType, errorMessage: notifyTypeError } =
-  useField("notifyType");
+const { value: scheduledDate, errorMessage: scheduledDateError } =
+  useField("scheduledDate");
+const { value: isScheduled, errorMessage: isScheduledError } =
+  useField("isScheduled");
+const { value: userId, errorMessage: userIdError } = useField("userId");
 
 const onSubmit = handleSubmit((values) => {
-  console.log({ ...values, files: files.value });
-  toggleCreateModal();
-  emits("refresh");
+  const formData = new FormData();
+  formData.append("title", values.title);
+  formData.append("message", values.message);
+  formData.append("userId", JSON.stringify(values.userId)); // Convert array to string
+  formData.append("isScheduled", values.isScheduled ? "true" : "false");
+  if (values.isScheduled) {
+    formData.append("scheduledDate", values.scheduledDate); // Convert date to ISO string
+    formData.append("status", "2"); // Set status to 2 if scheduled
+  } else {
+    formData.append("status", "1"); // Set status to 1 if not scheduled
+  }
+  formData.append("file", file.value);
+
+  dispatch("sendNotification", formData);
 });
+
 const toggleCreateModal = () => {
   isCreateOpen.value = !isCreateOpen.value;
 };
 const openNotification = () => {
   toggleCreateModal();
-  console.log("Create notification");
 };
 const isSelectAll = ref(false);
 watch(isSelectAll, () => {
   if (isSelectAll.value) {
     setFieldValue(
-      "recipients",
+      "userId",
       props.options.map((i) => i.value)
     );
   } else {
-    setFieldValue("recipients", []);
+    setFieldValue("userId", []);
   }
 });
-const config = ref({ enableTime: true });
+watch(success, () => {
+  if (success.value) {
+    toggleCreateModal();
+    emits("refresh");
+  }
+});
+const config = ref({ enableTime: true, minDate: "today" });
 </script>
 <style lang=""></style>

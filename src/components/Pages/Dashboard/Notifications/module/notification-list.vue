@@ -130,6 +130,7 @@
 </template>
 
 <script setup>
+import Button from "@/components/Button";
 import Modal from "@/components/Modal/Modal";
 import CreateNotification from "../create-notification";
 import Dropdown from "@/components/Dropdown";

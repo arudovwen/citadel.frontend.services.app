@@ -142,7 +142,6 @@ export default {
       type: Array,
     },
     reduce: {
-      type: Array,
       default: () => [],
     },
   },

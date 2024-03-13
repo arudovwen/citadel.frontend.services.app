@@ -465,7 +465,7 @@ export default {
       state.getOutreachByIderror = null;
     },
 
-    getOutreachByIdSuccess(state, { data, totalCount }) {
+    getOutreachByIdSuccess(state, { data }) {
       state.getOutreachByIdloading = false;
       state.getOutreachByIdsuccess = true;
       state.outreachReport = data;
@@ -496,7 +496,7 @@ export default {
       state.getAllOutreachReporterror = err;
       state.getAllOutreachReportsuccess = false;
     },
-    
+
     getAllAuditLogBegin(state) {
       state.getAllAuditLogloading = true;
       state.getAllAuditLogsuccess = false;
@@ -816,7 +816,6 @@ export default {
       }
     },
     async uploadFile({ commit }, data) {
-      console.log("🚀 ~ file: index.js:511 ~ uploadFile ~ data:", data);
       try {
         commit("uploadFileBegin");
         const response = await DataService.post(
@@ -1135,7 +1134,9 @@ export default {
     async deleteOutreachRequest({ commit }, data) {
       commit("deleteOutreachRequestBegin");
       await DataService.delete(
-        `${urls.DELETE_OUTREACH_REQUEST}?${new URLSearchParams(cleanObject(data))}`
+        `${urls.DELETE_OUTREACH_REQUEST}?${new URLSearchParams(
+          cleanObject(data)
+        )}`
       )
         .then(() => {
           console;
@@ -1155,7 +1156,10 @@ export default {
         .catch((err) => {
           // commit("editOutreachReportFailure", err);
         });
-      await DataService.put(`${urls.UPDATE_DETAIL_OF_CONVERTS}`, data?.detailOfConverts)
+      await DataService.put(
+        `${urls.UPDATE_DETAIL_OF_CONVERTS}`,
+        data?.detailOfConverts
+      )
         .then(() => {
           commit("editOutreachReportSuccess");
         })
@@ -1184,9 +1188,7 @@ export default {
       try {
         commit("getAllAuditLogBegin");
         const response = await DataService.get(
-          `${urls.GET_ALL_AUDIT_LOG}?${new URLSearchParams(
-            cleanObject(data)
-          )}`,
+          `${urls.GET_ALL_AUDIT_LOG}?${new URLSearchParams(cleanObject(data))}`,
           data
         );
         if (response.status === 200) {

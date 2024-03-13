@@ -47,7 +47,11 @@
                 >
                   {{ title }}
                 </h2>
-                <button @click="closeModal" class="text-[22px]">
+                <button
+                  @click="closeModal"
+                  class="text-[22px]"
+                  v-if="canCancel"
+                >
                   <Icon icon="heroicons-outline:x" />
                 </button>
               </div>
@@ -183,12 +187,16 @@ export default defineComponent({
     activeModal: {
       type: Boolean,
       default: false,
-    }
+    },
+    canCancel: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   setup(props) {
     const isOpen = ref(props.activeModal);
-    
+
     // open
     const openModal = () => {
       isOpen.value = true;

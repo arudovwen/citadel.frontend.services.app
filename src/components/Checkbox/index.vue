@@ -1,7 +1,7 @@
 <template>
   <div>
     <label
-      class="flex items-center"
+      class="flex items-center max-w-max"
       :class="disabled ? ' cursor-not-allowed opacity-50' : 'cursor-pointer'"
     >
       <input
