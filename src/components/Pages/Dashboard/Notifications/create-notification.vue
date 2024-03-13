@@ -18,39 +18,47 @@
       centered
     >
       <form @submit.prevent="onSubmit" class="space-y-4">
-        <div class="grid grid-cols-1 gap-5">
-          <FormGroup
-            label="Notification type"
-            name="d1"
-            :error="notifyTypeError"
-          >
-            <Select
-              label=""
-              :options="filters"
-              placeholder="Choose type"
-              classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
-              v-model="notifyType"
+        <div class="grid grid-cols-1 gap-y-6">
+          <div class="flex flex-col lg:flex-row gap-4">
+            <FormGroup
+              label="Notification type"
+              name="d1"
+              :error="notifyTypeError"
+              class="max-w-[150px]"
+            >
+              <Select
+                label=""
+                :options="filters"
+                placeholder="Choose type"
+                classInput="bg-white !h-10 min-w-[150px]  !min-h-[36px]"
+                v-model="notifyType"
+              />
+            </FormGroup>
+            <Textinput
+              label="Title"
+              type="text"
+              placeholder="Title"
+              name="title"
+              v-model.trim="title"
+              :error="titleError"
+              class="flex-1"
             />
-          </FormGroup>
+          </div>
           <FormGroup label="Recipients" name="d1" :error="recipientsError">
             <VueSelect
               label=""
               :options="options"
               placeholder="Choose recipients"
-              classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
+              classInput="bg-white !h-10 min-w-[150px]  !min-h-[36px]"
               v-model="recipients"
               multiple
+              :reduce="(option) => option.value"
             />
+            <div class="mt-1">
+              <Checkbox v-model="isSelectAll" label="Select all recipients" />
+            </div>
           </FormGroup>
 
-          <Textinput
-            label="Title"
-            type="text"
-            placeholder="Title"
-            name="title"
-            v-model.trim="title"
-            :error="titleError"
-          />
           <div class="assagin space-y-4">
             <Textarea
               label="Message"
@@ -59,19 +67,21 @@
               :error="messageError"
             />
           </div>
+          <FormGroup label="Add attachment" name="d1">
+            <Fileinput @change="onFileSelected" multiple name="multipule" />
+          </FormGroup>
           <Checkbox v-model="isScheduled" label="Schedule for later" />
           <FormGroup v-if="isScheduled" label="Schedule Date" name="d1">
             <flat-pickr
               v-model="date"
+              :config="config"
               class="form-control"
               id="d1"
               placeholder="yyyy, dd M"
               :error="dateError"
             />
           </FormGroup>
-          <FormGroup label="Add attachment" name="d1">
-            <Fileinput @change="onFileSelected" multiple name="multipule" />
-          </FormGroup>
+
           <!-- <span>files: {{ files }}</span> -->
           <div class="text-right">
             <Button
@@ -99,11 +109,11 @@ import { useField, useForm } from "vee-validate";
 import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
 import { useStore } from "vuex";
-import { computed, ref, defineEmits, defineProps } from "vue";
+import { computed, ref, defineEmits, defineProps, watch } from "vue";
 import Select from "@/components/Select";
 import VueSelect from "@/components/Select/VueSelect";
 
-defineProps({
+const props = defineProps({
   options: {
     default: [],
   },
@@ -126,7 +136,7 @@ const schema = yup.object({
   recipients: yup.array().required("Select recipients"),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setFieldValue } = useForm({
   validationSchema: schema,
 });
 const filters = [
@@ -160,5 +170,17 @@ const openNotification = () => {
   toggleCreateModal();
   console.log("Create notification");
 };
+const isSelectAll = ref(false);
+watch(isSelectAll, () => {
+  if (isSelectAll.value) {
+    setFieldValue(
+      "recipients",
+      props.options.map((i) => i.value)
+    );
+  } else {
+    setFieldValue("recipients", []);
+  }
+});
+const config = ref({ enableTime: true });
 </script>
 <style lang=""></style>

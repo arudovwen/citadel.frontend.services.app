@@ -4,7 +4,7 @@
       class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:justify-between md:items-center mb-6 md:mb-4 w-full md:w-auto"
     >
       <div></div>
-      <CreateNotification />
+      <CreateNotification :options="members" />
     </div>
 
     <div class="">
@@ -82,18 +82,69 @@
       </vue-good-table>
     </div>
   </div>
+  <Modal
+    title="Delete request"
+    label="Small modal"
+    labelClass="btn-outline-danger"
+    ref="modal"
+    sizeClass="max-w-md"
+    themeClass="bg-danger-500"
+  >
+    <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
+      Are you sure you want to delete this request?
+    </div>
+
+    <template v-slot:footer>
+      <div class="flex gap-x-5">
+        <Button
+          :disabled="deleteloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Delete"
+          :isLoading="deleteloading"
+          :disabled="deleteloading"
+          btnClass="btn-danger btn-sm"
+          @click="handleDelete"
+        />
+      </div>
+    </template>
+  </Modal>
+  <Modal
+    :title="
+      type === 'add'
+        ? 'Request Notification'
+        : type === 'edit'
+        ? 'Edit Notification'
+        : 'Notification detail'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-lg"
+  >
+    <EditNotification v-if="type === 'edit'" :detail="detail" />
+    <ViewNotification v-if="type === 'view'" :detail="detail" />
+  </Modal>
 </template>
 
 <script setup>
+import Modal from "@/components/Modal/Modal";
 import CreateNotification from "../create-notification";
 import Dropdown from "@/components/Dropdown";
 import Pagination from "@/components/Pagination";
 import { useStore } from "vuex";
-import { computed, onMounted, reactive } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import moment from "moment";
 import Icon from "@/components/Icon";
 import { MenuItem } from "@headlessui/vue";
+import EditNotification from "../member-edit";
+import ViewNotification from "../member-preview";
 
+const type = ref(null);
+const modalChange = ref(null);
+const modal = ref(null);
 const { state, dispatch } = useStore();
 const query = reactive({
   pageNumber: 1,
@@ -104,9 +155,23 @@ const query = reactive({
   EndDate: "",
   searchParams: "",
 });
+const memberQuery = reactive({
+  pageNumber: 1,
+  pageSize: 2500000,
+});
 onMounted(() => {
   dispatch("getNotifications", query);
+  dispatch("getAffiliationByMemberQuery", memberQuery);
 });
+const members = computed(() =>
+  state?.member?.data?.map((i) => {
+    return {
+      label: `${i.firstName} ${i.surName}`,
+      value: i.userId,
+    };
+  })
+);
+const detail = ref(null);
 const notifications = computed(() => state.notification.notifications);
 const loading = computed(() => state.notification.getNotificationLoading);
 const total = computed(() => state.profile.total);
@@ -158,17 +223,28 @@ const actions = [
   {
     name: "view",
     icon: "heroicons-outline:eye",
-    doit: () => {},
+    doit: (item) => {
+      detail.value = item;
+      type.value = "view";
+      modalChange.value.openModal();
+    },
   },
   {
     name: "edit",
     icon: "heroicons-outline:eye",
-    doit: () => {},
+    doit: (item) => {
+      detail.value = item;
+      type.value = "edit";
+      modalChange.value.openModal();
+    },
   },
   {
     name: "delete",
     icon: "heroicons-outline:trash",
-    doit: () => {},
+    doit: (tempType, item) => {
+      detail.value = item;
+      modal.value.openModal();
+    },
   },
 ];
 
