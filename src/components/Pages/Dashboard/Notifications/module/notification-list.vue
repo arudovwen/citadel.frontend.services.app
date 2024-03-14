@@ -4,7 +4,7 @@
       class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:justify-between md:items-center mb-6 md:mb-4 w-full md:w-auto"
     >
       <div></div>
-      <CreateNotification :options="members" />
+      <CreateNotification :options="members" @refresh="refresh" />
     </div>
 
     <div class="">
@@ -26,19 +26,36 @@
             {{ moment(props.row.createdAt).format("ll") }}
           </span>
           <span
-            v-html="props?.row?.message"
             v-if="props.column.field == 'message'"
-            class="max-w-[200px]"
+            class="max-w-[300px] truncate block"
           >
+            {{ props?.row?.message }}
           </span>
-
+          <span v-if="props.column.field == 'title'"
+            >{{ props.row.title || "Notification" }}
+          </span>
+          <span
+            :class="`${
+              props.row.status === 'sent' || !props.row.status
+                ? 'text-green-600'
+                : 'text-blue-600'
+            }`"
+            v-if="props.column.field == 'status'"
+            >{{ props.row.status || "Sent" }}
+          </span>
+          <span v-if="props.column.field == 'notifyType'"
+            >{{ getTextForKey(props.row.notifyType) }}
+          </span>
           <span v-if="props.column.field == 'action'">
             <Dropdown classMenuItems=" w-[140px]">
               <span class="text-xl"
                 ><Icon icon="heroicons-outline:dots-vertical"
               /></span>
               <template v-slot:menus>
-                <MenuItem v-for="(item, i) in actions" :key="i">
+                <MenuItem
+                  v-for="(item, i) in filterActions(props.row.status)"
+                  :key="i"
+                >
                   <div
                     @click="item.doit(props.row)"
                     :class="{
@@ -164,18 +181,65 @@ onMounted(() => {
   dispatch("getNotifications", query);
   dispatch("getAffiliationByMemberQuery", memberQuery);
 });
+function refresh() {
+  dispatch("getNotifications", query);
+}
+// const statusText = {
+//   none: 0,
+//   EventRejection: 1,
+//   EventApproval: 2,
+//   WelcomeEmail: 3,
+//   DepartmentApproval: 4,
+//   DepartmentRejection: 5,
+//   CIHCenterZoneApproval: 6,
+//   CIHCenterZoneRejection: 7,
+//   JoinDepartmentRequest: 8,
+//   CIHRoleChange: 9,
+//   GeneralEmail: 10,
+// };
+
+function getTextForKey(key) {
+  const lowerCaseKey = key?.toLowerCase();
+  switch (lowerCaseKey) {
+    case "none":
+      return "None";
+    case "eventrejection":
+      return "Event Rejection";
+    case "eventapproval":
+      return "Event Approval";
+    case "welcomeemail":
+      return "Welcome Email";
+    case "departmentapproval":
+      return "Department Approval";
+    case "departmentrejection":
+      return "Department Rejection";
+    case "cihcenterzoneapproval":
+      return "CIH Center Zone Approval";
+    case "cihcenterzonerejection":
+      return "CIH Center Zone Rejection";
+    case "joindepartmentrequest":
+      return "Join Department Request";
+    case "cihrolechange":
+      return "CIH Role Change";
+    case "generalemail":
+      return "General Email";
+    default:
+      return "General Email";
+  }
+}
+
 const members = computed(() =>
   state?.member?.data?.map((i) => {
     return {
       label: `${i.firstName} ${i.surName}`,
-      value: i.userId,
+      value: i.email,
     };
   })
 );
 const detail = ref(null);
 const notifications = computed(() => state.notification.notifications);
 const loading = computed(() => state.notification.getNotificationLoading);
-const total = computed(() => state.profile.total);
+const total = computed(() => state.notification.total);
 const options = [
   {
     value: "25",
@@ -202,7 +266,11 @@ const columns = [
   },
 
   {
-    label: "Message title",
+    label: "title",
+    field: "title",
+  },
+  {
+    label: "Message",
     field: "message",
   },
 
@@ -252,6 +320,12 @@ const actions = [
 function perPage({ currentPerPage }) {
   query.pageNumber = 1;
   query.pageSize = currentPerPage;
+}
+function filterActions(status) {
+  if (status === "sent" || !status) {
+    return actions.filter((i) => i.name === "view");
+  }
+  return actions;
 }
 </script>
 <style lang=""></style>

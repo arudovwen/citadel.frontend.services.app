@@ -146,12 +146,7 @@ export default {
         commit("addNotificationBegin");
         const response = await DataService.post(
           `${urls.NOTIFICATIONS}/sendnotifications`,
-          data,
-          {
-            // headers: {
-            "Content-Type": "multipart/form-data",
-            // },
-          }
+          data
         );
 
         if (response.status === 200) {

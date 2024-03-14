@@ -30,13 +30,13 @@
             class="flex-1"
           />
           <!-- </div> -->
-          <FormGroup label="Recipients" name="d1" :error="userIdError">
+          <FormGroup label="Recipients" name="d1" :error="emailError">
             <VueSelect
               label=""
               :options="options"
               placeholder="Choose recipients"
               classInput="bg-white !h-10 min-w-[150px]  !min-h-[36px]"
-              v-model="userId"
+              v-model="email"
               multiple
               :reduce="(option) => option.value"
             />
@@ -54,7 +54,7 @@
             />
           </div>
           <FormGroup label="Add attachment" name="d1">
-            <Fileinput @change="onFileSelected" name="file" />
+            <Fileinput @change="onFileSelected" name="file" multiple />
           </FormGroup>
           <FormGroup label="" name="isScheduled" :error="isScheduledError">
             <Checkbox v-model="isScheduled" label="Schedule for later" />
@@ -108,7 +108,7 @@ import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
 import { useStore } from "vuex";
 import { computed, ref, defineEmits, defineProps, watch } from "vue";
-// import Select from "@/components/Select";
+import moment from "moment";
 import VueSelect from "@/components/Select/VueSelect";
 
 const props = defineProps({
@@ -120,12 +120,12 @@ const emits = defineEmits(["close", "refresh"]);
 // eslint-disable-next-line no-unused-vars
 const { state, dispatch } = useStore();
 const isCreateOpen = ref(false);
-const file = ref(null);
+const files = ref(null);
 const success = computed(() => state.notification.addNotificationSuccess);
 const addloading = computed(() => state.notification.addNotificationLoading);
 
 const onFileSelected = async (e) => {
-  file.value = e.target.files[0];
+  files.value = e.target.files;
 };
 const schema = yup.object({
   title: yup.string().required("Title is required"),
@@ -138,7 +138,7 @@ const schema = yup.object({
       then: (schema) => schema.required("Scheduled date is required"),
       otherwise: (schema) => schema.nullable(),
     }),
-  userId: yup
+  email: yup
     .array()
     .typeError("Select recipients")
     .required("Select recipients"),
@@ -146,51 +146,38 @@ const schema = yup.object({
 });
 
 const initValues = {
+  userId: state.auth.userData.id,
+  fullName: "",
   title: "",
   message: "",
   scheduledDate: null,
-  userId: "",
-  notityType: 10,
+  email: "",
+  notifyType: 10,
   isScheduled: false,
 };
-const { handleSubmit, setFieldValue } = useForm({
+const { handleSubmit, setFieldValue, resetForm } = useForm({
   validationSchema: schema,
   initialValues: initValues,
 });
-// const filters = [
-//   {
-//     label: "SMS",
-//     value: "sms",
-//   },
-
-//   {
-//     label: "Email",
-//     value: "email",
-//   },
-// ];
 const { value: title, errorMessage: titleError } = useField("title");
 const { value: message, errorMessage: messageError } = useField("message");
 const { value: scheduledDate, errorMessage: scheduledDateError } =
   useField("scheduledDate");
 const { value: isScheduled, errorMessage: isScheduledError } =
   useField("isScheduled");
-const { value: userId, errorMessage: userIdError } = useField("userId");
+const { value: email, errorMessage: emailError } = useField("email");
 
 const onSubmit = handleSubmit((values) => {
-  const formData = new FormData();
-  formData.append("title", values.title);
-  formData.append("message", values.message);
-  formData.append("userId", JSON.stringify(values.userId)); // Convert array to string
-  formData.append("isScheduled", values.isScheduled ? "true" : "false");
-  if (values.isScheduled) {
-    formData.append("scheduledDate", values.scheduledDate); // Convert date to ISO string
-    formData.append("status", "2"); // Set status to 2 if scheduled
-  } else {
-    formData.append("status", "1"); // Set status to 1 if not scheduled
-  }
-  formData.append("file", file.value);
-
-  dispatch("sendNotification", formData);
+  dispatch("sendNotification", {
+    ...values,
+    status: values.isScheduled ? 2 : 1,
+    attachments: [...files.value],
+    email: values.email.join(),
+    scheduledDate: moment
+      .utc(values.scheduledDate, "YYYY-MM-DD HH:mm:ss.SSS")
+      .toISOString(),
+  });
+  console.log("🚀 ~ onSubmit ~ files.value:", [...files.value]);
 });
 
 const toggleCreateModal = () => {
@@ -203,17 +190,18 @@ const isSelectAll = ref(false);
 watch(isSelectAll, () => {
   if (isSelectAll.value) {
     setFieldValue(
-      "userId",
+      "email",
       props.options.map((i) => i.value)
     );
   } else {
-    setFieldValue("userId", []);
+    setFieldValue("email", []);
   }
 });
 watch(success, () => {
   if (success.value) {
     toggleCreateModal();
     emits("refresh");
+    resetForm();
   }
 });
 const config = ref({ enableTime: true, minDate: "today" });
