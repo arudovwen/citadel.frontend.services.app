@@ -125,7 +125,7 @@ const success = computed(() => state.notification.addNotificationSuccess);
 const addloading = computed(() => state.notification.addNotificationLoading);
 
 const onFileSelected = async (e) => {
-  files.value = e.target.files;
+  files.value = [...e.target.files];
 };
 const schema = yup.object({
   title: yup.string().required("Title is required"),
@@ -167,17 +167,42 @@ const { value: isScheduled, errorMessage: isScheduledError } =
   useField("isScheduled");
 const { value: email, errorMessage: emailError } = useField("email");
 
-const onSubmit = handleSubmit((values) => {
-  dispatch("sendNotification", {
-    ...values,
-    status: values.isScheduled ? 2 : 1,
-    attachments: [...files.value],
-    email: values.email.join(),
-    scheduledDate: moment
-      .utc(values.scheduledDate, "YYYY-MM-DD HH:mm:ss.SSS")
-      .toISOString(),
-  });
-  console.log("🚀 ~ onSubmit ~ files.value:", [...files.value]);
+const onSubmit = handleSubmit(async (values) => {
+  const formattedScheduledDate = values.isScheduled
+    ? moment.utc(values.scheduledDate, "YYYY-MM-DD HH:mm:ss.SSS").toISOString()
+    : null;
+
+  const formattedEmail = Array.isArray(values.email)
+    ? values.email.join()
+    : values.email;
+  console.log("🚀 ~ files.value?.forEach ~ files.value:", files.value);
+  const formData = new FormData();
+  formData.append("title", values.title);
+  formData.append("message", values.message);
+  formData.append("userId", JSON.stringify(values.userId));
+  formData.append("isScheduled", values.isScheduled ? "true" : "false");
+  formData.append("status", values.isScheduled ? "2" : "1");
+  if (formattedScheduledDate) {
+    formData.append("scheduledDate", formattedScheduledDate);
+  }
+  if (formattedEmail) {
+    formData.append("email", formattedEmail);
+  }
+  if (Array.isArray(files.value)) {
+    files.value.forEach((file, index) => {
+      formData.append(`attachments[${index}]`, file);
+    });
+  } else {
+    console.error("files.value is not an array or iterable");
+    return; // Exit early if files.value is not iterable
+  }
+  try {
+    // Assuming dispatch is an asynchronous action that sends the formData to the server
+    await dispatch("sendNotification", formData);
+    console.log("Notification sent successfully");
+  } catch (error) {
+    console.error("Error sending notification:", error);
+  }
 });
 
 const toggleCreateModal = () => {
