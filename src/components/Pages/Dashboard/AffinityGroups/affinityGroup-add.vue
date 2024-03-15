@@ -83,7 +83,7 @@ const formData = reactive({
 });
 const schema = yup.object().shape({
   affinityGroupName: yup.string().required("Group is required"),
-  maritalStatus: yup.array(),
+  maritalStatus: yup.array().nullable(),
   startAge: yup
     .number()
     .typeError("Invalid value")
