@@ -1,93 +1,161 @@
 <template>
-  <div>
-    <Card title="Edit invoice">
-      <h4 class="text-slate-900 dark:text-white text-xl mb-4">#89572935Kh</h4>
-      <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
-        <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
-          <div
-            class="lg:col-span-2 col-span-1 text-slate-600 dark:text-slate-300 text-xs font-medium"
-          >
-            Recipient info-500
-          </div>
-          <FormGroup label="Issued date" name="d1">
-            <flat-pickr
-              v-model="dateDefault"
-              class="form-control"
-              id="d1"
-              placeholder="yyyy, dd M"
-            />
-          </FormGroup>
-          <Textinput label="Name" type="text" placeholder="Add your name" />
-          <Textinput label="Phone" type="text" placeholder="Add your phone" />
-          <Textinput label="Email" type="email" placeholder="Add your email" />
-          <div class="lg:col-span-2 col-span-1">
-            <Textarea
-              label="Address"
-              type="email"
-              placeholder="address"
-              rows="2"
-            />
-          </div>
+  <form @submit.prevent="onSubmit" class="space-y-4">
+    <div class="grid grid-cols-1 gap-y-6">
+      <div class="flex flex-col lg:flex-row gap-4">
+        <FormGroup
+          label="Notification type"
+          name="d1"
+          :error="notifyTypeError"
+          class="max-w-[150px]"
+        >
+          <Select
+            label=""
+            :options="filters"
+            placeholder="Choose type"
+            classInput="bg-white !h-10 min-w-[150px]  !min-h-[36px]"
+            v-model="notifyType"
+          />
+        </FormGroup>
+        <Textinput
+          label="Title"
+          type="text"
+          placeholder="Title"
+          name="title"
+          v-model.trim="title"
+          :error="titleError"
+          class="flex-1"
+        />
+      </div>
+      <FormGroup label="Recipients" name="d1" :error="recipientsError">
+        <VueSelect
+          label=""
+          :options="options"
+          placeholder="Choose recipients"
+          classInput="bg-white !h-10 min-w-[150px]  !min-h-[36px]"
+          v-model="recipients"
+          multiple
+          :reduce="(option) => option.value"
+        />
+        <div class="mt-1">
+          <Checkbox v-model="isSelectAll" label="Select all recipients" />
         </div>
-        <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
-          <div
-            class="lg:col-span-2 col-span-1 text-slate-600 dark:text-slate-300 text-xs font-medium"
-          >
-            Owner info-500
-          </div>
+      </FormGroup>
 
-          <Textinput label="Name" type="text" placeholder="Add your name" />
-          <Textinput label="Phone" type="text" placeholder="Add your phone" />
-          <div class="lg:col-span-2 col-span-1">
-            <Textinput
-              label="Email"
-              type="email"
-              placeholder="Add your email"
-            />
-          </div>
+      <div class="assagin space-y-4">
+        <Textarea
+          label="Message"
+          placeholder=""
+          v-model="message"
+          :error="messageError"
+        />
+      </div>
+      <FormGroup label="Add attachment" name="d1">
+        <Fileinput @change="onFileSelected" multiple name="multipule" />
+      </FormGroup>
+      <Checkbox v-model="isScheduled" label="Schedule for later" />
+      <FormGroup v-if="isScheduled" label="Schedule Date" name="d1">
+        <flat-pickr
+          v-model="date"
+          :config="config"
+          class="form-control"
+          id="d1"
+          placeholder="yyyy, dd M"
+          :error="dateError"
+        />
+      </FormGroup>
 
-          <div class="lg:col-span-2 col-span-1">
-            <Textarea
-              label="Address"
-              type="email"
-              placeholder="address"
-              rows="2"
-            />
-          </div>
-        </div>
+      <!-- <span>files: {{ files }}</span> -->
+      <div class="text-right">
+        <Button
+          :isLoading="loading"
+          :disabled="loading"
+          text="Send"
+          btnClass="btn-dark"
+          type="submit"
+        ></Button>
       </div>
-      <div class="my-6">
-        <Repeater />
-      </div>
-      <Textarea
-        label="Additional note"
-        type="text"
-        rows="2"
-        placeholder="Note"
-        class="lg:w-1/2"
-      />
-      <div class="text-right space-x-3">
-        <Button text="Save" btnClass="btn-dark" />
-      </div>
-    </Card>
-  </div>
+    </div>
+  </form>
 </template>
-<script>
+
+<script setup>
+import Checkbox from "@/components/Checkbox";
 import Button from "@/components/Button";
-import Card from "@/components/Card";
+import Fileinput from "@/components/Fileinput";
 import FormGroup from "@/components/FormGroup";
+import * as yup from "yup";
+import { useField, useForm } from "vee-validate";
 import Textarea from "@/components/Textarea";
 import Textinput from "@/components/Textinput";
-import Repeater from "./module/repeater";
-export default {
-  components: {
-    Button,
-    Card,
-    Textinput,
-    FormGroup,
-    Textarea,
-    Repeater,
+import { useStore } from "vuex";
+import { computed, ref, defineEmits, defineProps, watch } from "vue";
+import Select from "@/components/Select";
+import VueSelect from "@/components/Select/VueSelect";
+
+const props = defineProps({
+  options: {
+    default: [],
   },
+});
+const emits = defineEmits(["close", "refresh"]);
+const { state } = useStore();
+const isCreateOpen = ref(false);
+const files = ref(null);
+const isScheduled = ref(false);
+const loading = computed(() => state.notification.getNotificationLoading);
+
+const onFileSelected = async (e) => {
+  files.value = e.target.files;
 };
+const schema = yup.object({
+  title: yup.string().required("Title is required"),
+  message: yup.string().required("Message is required"),
+  date: yup.string(),
+  notifyType: yup.string().required("Select a notification type"),
+  recipients: yup.array().required("Select recipients"),
+});
+
+const { handleSubmit, setFieldValue } = useForm({
+  validationSchema: schema,
+});
+const filters = [
+  {
+    label: "SMS",
+    value: "sms",
+  },
+
+  {
+    label: "Email",
+    value: "email",
+  },
+];
+const { value: title, errorMessage: titleError } = useField("title");
+const { value: message, errorMessage: messageError } = useField("message");
+const { value: date, errorMessage: dateError } = useField("date");
+const { value: recipients, errorMessage: recipientsError } =
+  useField("recipients");
+const { value: notifyType, errorMessage: notifyTypeError } =
+  useField("notifyType");
+
+const onSubmit = handleSubmit((values) => {
+  console.log({ ...values, files: files.value });
+  toggleCreateModal();
+  emits("refresh");
+});
+const toggleCreateModal = () => {
+  isCreateOpen.value = !isCreateOpen.value;
+};
+const isSelectAll = ref(false);
+watch(isSelectAll, () => {
+  if (isSelectAll.value) {
+    setFieldValue(
+      "recipients",
+      props.options.map((i) => i.value)
+    );
+  } else {
+    setFieldValue("recipients", []);
+  }
+});
+const config = ref({ enableTime: true });
 </script>
 <style lang=""></style>
