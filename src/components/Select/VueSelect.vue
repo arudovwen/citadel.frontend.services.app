@@ -141,9 +141,7 @@ export default {
     options: {
       type: Array,
     },
-    reduce: {
-      default: () => [],
-    },
+    reduce: {},
   },
   mounted() {
     this.selectedValue = this.modelValue;
