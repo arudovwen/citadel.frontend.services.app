@@ -13,9 +13,10 @@
         <VueSelect
           label="Marital Status"
           :options="maritalStatusMenu"
-          v-model.value="maritalStatus"
+          v-bind:model-value="maritalStatus"
           :modelValue="maritalStatus"
           :error="maritalStatusError"
+          :reduce="(option) => option.value"
           multiple
         />
         <Textinput
