@@ -128,25 +128,27 @@
       </div>
 
       <div class="relative">
-        <Textinput
+        <!-- <Textinput
           placeholder=""
           :disabled="true"
           label="Affinity Group"
           name="Affinity Group"
           classInput="h-[40px]"
-        />
+        /> -->
 
-        <div
-          class="absolute px-3 min-h-[40px] border bottom-0 left-0 border-gray-200 rounded-[4px] w-full flex flex-wrap gap-4"
-        >
+        <FormGroup label="Affinity Group" name="Affinity Group">
           <div
-            class="my-auto h-[30px] px-2 flex items-center justify-center text-xs rounded-lg bg-gray-100"
-            v-for="group in affinityGroup"
-            :key="group"
+            class="px-3 py-2 min-h-[40px] border bottom-0 left-0 border-gray-200 rounded-[4px] w-full flex flex-wrap gap-3"
           >
-            {{ group }}
+            <div
+              class="h-[30px] px-2 flex items-center justify-center text-xs rounded-lg bg-gray-100"
+              v-for="group in affinityGroup"
+              :key="group"
+            >
+              {{ group }}
+            </div>
           </div>
-        </div>
+        </FormGroup>
       </div>
 
       <div className="hidden ">
@@ -220,7 +222,7 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
-// import VueSelect from "@/components/Select/VueSelect";
+import FormGroup from "@/components/FormGroup";
 import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
 // import { useRouter } from "vue-router";
 import { levelOfATSMenu, isCharterMemberMenu } from "@/constant/data";
@@ -250,6 +252,7 @@ onUnmounted(() => {
   // store.state.profile.churchAffiliationsData =
 });
 const store = useStore();
+const { state } = store;
 const id = inject("id");
 const canEditDetails = inject("canEditDetails");
 const isUserProfile = inject("isUserProfile");
