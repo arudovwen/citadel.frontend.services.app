@@ -221,7 +221,7 @@ const routes = [
         name: "audit logs",
         component: AuditIndex,
         meta: {
-          roles: "",
+          roles: "CAN_VIEW_AUDIT_REPORT",
           subroles: [],
         },
         children: [
@@ -738,7 +738,7 @@ const routes = [
           },
         ],
         meta: {
-          roles: "",
+          roles: "CAN_VIEW_NOTIFICATIONS",
           subroles: [],
         },
       },
