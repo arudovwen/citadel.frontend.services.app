@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div v-if="permissions.includes('CAN_CREATE_NOTIFICATIONS')">
       <Button
         icon="heroicons-outline:plus"
         text="Send Notification"
@@ -121,6 +121,7 @@ const emits = defineEmits(["close", "refresh"]);
 const { state, dispatch } = useStore();
 const isCreateOpen = ref(false);
 const files = ref(null);
+const permissions = computed(() => state.auth.permissions);
 const success = computed(() => state.notification.addNotificationSuccess);
 const addloading = computed(() => state.notification.addNotificationLoading);
 

@@ -277,13 +277,13 @@ export const menuItems = [
     title: "Notifications",
     icon: "heroicons-outline:speakerphone",
     link: "/notifications",
-    roles: "",
+    roles: "CAN_VIEW_NOTIFICATIONS",
   },
   {
     title: "Audit Logs",
     icon: "icon-park-outline:log",
     link: "/audit-logs",
-    roles: "",
+    roles: "CAN_VIEW_AUDIT_REPORT",
     subroles: [],
   },
   // {

@@ -202,7 +202,7 @@ const { id } = route.params;
 onMounted(() => {
   // dispatch("getAllBiodata", query);
 
-  dispatch("getAllFollowupReport", { userId: id, ...query });
+  dispatch("getAllFollowupReportById", { id });
   dispatch("getRoles");
 });
 const { state, dispatch } = useStore();

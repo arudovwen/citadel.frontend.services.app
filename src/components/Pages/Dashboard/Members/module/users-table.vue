@@ -395,10 +395,7 @@ export default {
         //   label: "Gender",
         //   field: "gender",
         // },
-        {
-          label: "Role",
-          field: "role",
-        },
+
         // {
         //   label: "DOB",
         //   field: "dob",
