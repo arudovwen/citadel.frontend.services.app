@@ -13,9 +13,9 @@
         <VueSelect
           label="Marital Status"
           :options="maritalStatusMenu"
-          v-model.value="maritalStatus"
-          :modelValue="maritalStatus"
+          v-model="maritalStatus"
           :error="maritalStatusError"
+          :reduce="(option) => option.value"
           multiple
         />
         <Textinput
@@ -73,7 +73,7 @@ const success = computed(() => state.affinityGroup.updateAffinityGroupSuccess);
 
 const schema = yup.object().shape({
   affinityGroupName: yup.string().required("Group is required"),
-  maritalStatus: yup.array(),
+  maritalStatus: yup.array().nullable(),
   startAge: yup
     .number()
     .typeError("Invalid value")
@@ -100,9 +100,7 @@ const { handleSubmit } = useForm({
     userId: userId.value,
     startAge: defaultData.value.startAge.toString(),
     endAge: defaultData.value.endAge.toString(),
-    maritalStatus: defaultData.value.maritalStatus
-      ?.split(",")
-      ?.map((i) => ({ label: i, value: i })),
+    maritalStatus: defaultData.value.maritalStatus?.split(","),
   },
 });
 
@@ -118,7 +116,7 @@ const { value: endAge, errorMessage: endAgeError } = useField("endAge");
 const onSubmit = handleSubmit((values) => {
   const data = {
     ...values,
-    maritalStatus: values.maritalStatus.map((i) => i.value).join(","),
+    maritalStatus: values.maritalStatus.join(","),
   };
 
   dispatch("updateAffinityGroup", data);

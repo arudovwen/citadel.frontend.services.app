@@ -12,9 +12,9 @@
         <VueSelect
           label="Marital Status"
           :options="maritalStatusMenu"
-          v-model.value="maritalStatus"
-          :modelValue="maritalStatus"
+          v-model="maritalStatus"
           :error="maritalStatusError"
+          :reduce="(option) => option.value"
           multiple
         />
 
@@ -79,10 +79,11 @@ const formData = reactive({
   description: "",
   startAge: null,
   endAge: null,
+  maritalStatus: null,
 });
 const schema = yup.object().shape({
   affinityGroupName: yup.string().required("Group is required"),
-  maritalStatus: yup.array(),
+  maritalStatus: yup.array().nullable(),
   startAge: yup
     .number()
     .typeError("Invalid value")
@@ -116,7 +117,7 @@ const { value: endAge, errorMessage: endAgeError } = useField("endAge");
 const onSubmit = handleSubmit((values) => {
   const data = {
     ...values,
-    maritalStatus: values.maritalStatus.map((i) => i.value).join(","),
+    maritalStatus: values.maritalStatus.join(","),
     affinityGroupCode:
       values.affinityGroupName.slice(0, 2).toUpperCase() +
       Math.floor(Math.random() * 100 + 100),

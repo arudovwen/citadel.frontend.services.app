@@ -25,6 +25,7 @@
           :options="options"
           :placeholder="placeholder"
           v-model="selectedValue"
+          :reduce="reduce"
         >
         </vSelect>
       </div>
@@ -140,6 +141,7 @@ export default {
     options: {
       type: Array,
     },
+    reduce: {},
   },
   mounted() {
     this.selectedValue = this.modelValue;
