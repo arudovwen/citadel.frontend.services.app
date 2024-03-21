@@ -185,7 +185,6 @@ watch(reqStatus, () => {
 // const clck = () => dispatch("getOutreachById", { id: props.data.id });
 
 const onSubmit = handleSubmit((values) => {
-  console.log("d", userData?.value, values);
   const reqData = {
     ...values,
     userId: userData?.value?.id,
