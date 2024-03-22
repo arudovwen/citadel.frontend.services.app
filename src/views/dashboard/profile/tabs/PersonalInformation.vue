@@ -532,7 +532,7 @@ watchEffect(() => {
     showMarriedTab.value = false;
   }
 
-  if (values.maritalStatus !== "Single") {
+  if (values.maritalStatus && values.maritalStatus !== "Single") {
     showChildrenTab.value = true;
   } else {
     showChildrenTab.value = false;
