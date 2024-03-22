@@ -315,6 +315,13 @@ const { value: gender, errorMessage: genderError } = useField("gender");
 const { value: dateOfBirth, errorMessage: dateOfBirthError } =
   useField("dateOfBirth");
 
+const setGenderByTitle = (title) => {
+  const autoFillGenderValue = genderMenu.find((gender) =>
+    gender.titles.includes(title)
+  );
+  values.gender = autoFillGenderValue?.value;
+};
+
 const prepareDetails = (values) => {
   const createObj = {
     userId: id.value,
@@ -365,6 +372,9 @@ watch(success, () => {
   resetForm();
 
   getChildrensData();
+});
+watch(title, () => {
+  setGenderByTitle(title.value);
 });
 </script>
 
