@@ -332,6 +332,8 @@ const isMarried = computed(() =>
 );
 // const isMarried = ref(false);
 const showMarriedTab = ref(false);
+const showChildrenTab = ref(false);
+
 const isEmployed = ref(false);
 const spouseTitle = computed(() =>
   state.profile.biodata?.gender == "Male" ? "Mrs" : "Mr"
@@ -397,6 +399,7 @@ provide("spouseTitle", spouseTitle);
 provide("spouseGender", spouseGender);
 provide("isUserProfile", isUserProfile);
 provide("showMarriedTab", showMarriedTab);
+provide("showChildrenTab", showChildrenTab);
 provide("getUserAvatar", getUserAvatar);
 provide("isInspectorate", isInspectorate);
 provide("canEditDetails", canEditDetails);

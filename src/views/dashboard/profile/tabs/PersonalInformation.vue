@@ -272,6 +272,8 @@ const canEditDetails = inject("canEditDetails");
 
 const isShowing = ref(false);
 const showMarriedTab = inject("showMarriedTab");
+const showChildrenTab = inject("showChildrenTab");
+
 const isEmployed = inject("isEmployed");
 
 const biodataLoading = computed(() => store.state.profile.getBiodataloading);
@@ -528,6 +530,12 @@ watchEffect(() => {
     showMarriedTab.value = true;
   } else {
     showMarriedTab.value = false;
+  }
+
+  if (values.maritalStatus !== "Single") {
+    showChildrenTab.value = true;
+  } else {
+    showChildrenTab.value = false;
   }
 
   if (values.employmentStatus == "Employed") {
