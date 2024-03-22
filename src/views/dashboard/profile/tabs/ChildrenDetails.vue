@@ -109,6 +109,7 @@
                   id="d1"
                   placeholder="yyyy, dd M"
                   :error="dateOfBirthError"
+                  :config="{ maxDate: 'today' }"
                 />
               </FormGroup>
             </div>

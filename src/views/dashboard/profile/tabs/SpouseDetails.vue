@@ -63,6 +63,7 @@
           class="form-control"
           id="d1"
           placeholder="yyyy, dd M"
+          :config="{ maxDate: 'today' }"
         />
       </FormGroup>
 
