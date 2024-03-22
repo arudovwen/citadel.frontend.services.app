@@ -18,7 +18,7 @@
           </div>
         </div>
         <div v-else-if="item.title == 'Children Details'">
-          <div v-if="showMarriedTab">
+          <div v-if="showChildrenTab">
             <button
               @click="selectTab(item.title)"
               :class="[
@@ -92,6 +92,8 @@ import { inject, ref } from "vue";
 // const buttonType = ref("defaultButtons");
 
 const showMarriedTab = inject("showMarriedTab");
+const showChildrenTab = inject("showChildrenTab");
+
 const selectedTab = ref("Personal Information");
 const isEmployed = inject("isEmployed");
 

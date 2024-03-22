@@ -4,18 +4,7 @@
       v-if="!canEditDetails"
       class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
     ></div>
-    <!-- {{ biodata }} -->
 
-    <!-- {{ getBiodataError !== null }} -->
-    <!-- <span>{{ createProfileLoading }}</span>
-    <span>{{  }}</span> -->
-    <!-- <span>UserData: {{ profileData.phoneNumber }}</span> -->
-    <!-- <span>FormVal: {{ formValues }}</span> -->
-    <!-- {{ values }} -->
-    <!-- <span
-      >Country: {{ values?.country?.value?.toLowerCase() == "nigeria" }}</span
-    > -->
-    <!-- {{ canEditDetails }} -->
     <ProfileInputSkeleton
       v-if="(!biodata && biodataLoading) || isShowing == false"
     />
@@ -104,6 +93,7 @@
           id="d1"
           placeholder="yyyy, dd M"
           :error="dateOfBirthError"
+          :config="{ maxDate: 'today' }"
         />
       </FormGroup>
 
@@ -282,6 +272,8 @@ const canEditDetails = inject("canEditDetails");
 
 const isShowing = ref(false);
 const showMarriedTab = inject("showMarriedTab");
+const showChildrenTab = inject("showChildrenTab");
+
 const isEmployed = inject("isEmployed");
 
 const biodataLoading = computed(() => store.state.profile.getBiodataloading);
@@ -403,6 +395,13 @@ const stateOfOriginOption = computed(() => {
   });
 });
 
+const setGenderByTitle = (title) => {
+  const autoFillGenderValue = genderMenu.find((gender) =>
+    gender.titles.includes(title)
+  );
+  values.gender = autoFillGenderValue?.value;
+};
+
 const prepareDetails = (values, type) => {
   const updateObj = {
     title: values?.title,
@@ -522,20 +521,9 @@ watch(id, (newValue) => {
   }
 });
 
-// watch(biodata, () => {
-//   setValues(biodata.value);
-// });
-
-// watch(
-//   () => values.maritalStatus,
-//   (newValue) => {
-//     if (newValue == "Married") {
-//       showMarriedTab.value = true;
-//     } else {
-//       showMarriedTab.value = false;
-//     }
-//   }
-// );
+watch(title, () => {
+  setGenderByTitle(title.value);
+});
 
 watchEffect(() => {
   if (values.maritalStatus == "Married") {
@@ -544,22 +532,17 @@ watchEffect(() => {
     showMarriedTab.value = false;
   }
 
+  if (values.maritalStatus && values.maritalStatus !== "Single") {
+    showChildrenTab.value = true;
+  } else {
+    showChildrenTab.value = false;
+  }
+
   if (values.employmentStatus == "Employed") {
     isEmployed.value = true;
   } else {
     isEmployed.value = false;
   }
 });
-
-// watch(
-//   () => values.employmentStatus,
-//   (newValue) => {
-//     if (newValue == "Employed") {
-//       isEmployed.value = true;
-//     } else {
-//       isEmployed.value = false;
-//     }
-//   }
-// );
 </script>
 <style lang="scss" scoped></style>
