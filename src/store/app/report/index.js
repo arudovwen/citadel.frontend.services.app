@@ -229,6 +229,21 @@ export default {
         commit("getAllError", err);
       }
     },
+    async getAllFollowupReportById({ commit }, data) {
+      try {
+        commit("getAllBegin");
+        const response = await DataService.get(
+          `${urls.GET_FOLLOW_UP_REPORT_BY_ID}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("getAllSuccess", response.data);
+        }
+      } catch (err) {
+        commit("getAllError", err);
+      }
+    },
     async addActivityReport({ commit }, data) {
       try {
         commit("addBegin");

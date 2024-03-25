@@ -8,6 +8,7 @@
     >
       <form @submit.prevent="updateChildDetail" :validation-schema="schema">
         <div class="flex gap-x-8 mb-12">
+          <!-- <pre class="text-blue-500">details: {{ details }}</pre> -->
           <div class="w-full lg:grid-cols-2 grid-cols-1 grid gap-5 last:mb-0">
             <Select
               label="Title"
@@ -72,17 +73,6 @@
               classInput="h-[40px]"
             />
 
-            <!-- <Textinput
-              :id="mobile2"
-              label="Mobile 2"
-              type="text"
-              v-model="mobile2"
-              placeholder="Type your mobile 2"
-              :name="mobile2"
-              :error="mobile2Error"
-              classInput="h-[40px]"
-            /> -->
-
             <Select
               label="Gender"
               :options="genderMenu"
@@ -99,6 +89,7 @@
                 id="d1"
                 placeholder="yyyy, dd M"
                 :error="dateOfBirthError"
+                :config="{ maxDate: 'today' }"
               />
             </FormGroup>
           </div>
@@ -142,6 +133,7 @@ const canEditDetails = inject("canEditDetails");
 
 const submitLoading = computed(() => state.profile.updateChildrenDataloading);
 const success = computed(() => state.profile.updateChildrenDataSuccess);
+const modalIsOpen = computed(() => state.profile.editModal);
 // const loading = computed(() => false);
 const schema = yup.object({
   firstName: yup.string().required("First name is required"),
@@ -170,7 +162,7 @@ const formValues = {
   dateOfBirth: null,
 };
 
-const { handleSubmit, values, setValues } = useForm({
+const { handleSubmit, values, setValues, resetForm } = useForm({
   validationSchema: schema,
   initialValues: formValues,
 });
@@ -189,6 +181,13 @@ const { value: gender, errorMessage: genderError } = useField("gender");
 
 const { value: dateOfBirth, errorMessage: dateOfBirthError } =
   useField("dateOfBirth");
+
+const setGenderByTitle = (title) => {
+  const autoFillGenderValue = genderMenu.find((gender) =>
+    gender.titles.includes(title)
+  );
+  values.gender = autoFillGenderValue?.value;
+};
 
 const prepareDetails = (values) => {
   const updateObj = {
@@ -214,6 +213,14 @@ const updateChildDetail = handleSubmit(() => {
 watch(details, () => {
   setValues(details.value);
 });
+
+watch(modalIsOpen, () => {
+  if (modalIsOpen.value === true) {
+    setValues(details.value);
+  } else {
+    resetForm();
+  }
+});
 watch(success, () => {
   if (success.value) {
     toast.success("Details updated");
@@ -221,6 +228,10 @@ watch(success, () => {
     dispatch("getChildrenDetailByUserId", id.value);
     closeEditModal();
   }
+});
+
+watch(title, () => {
+  setGenderByTitle(title.value);
 });
 const closeEditModal = () => {
   dispatch("closeEditModal");

@@ -109,6 +109,7 @@
                   id="d1"
                   placeholder="yyyy, dd M"
                   :error="dateOfBirthError"
+                  :config="{ maxDate: 'today' }"
                 />
               </FormGroup>
             </div>
@@ -245,6 +246,7 @@ const getChildrensData = () => {
   store.dispatch("getChildrenDetailByUserId", id.value);
 };
 const canEditDetails = inject("canEditDetails");
+const biodata = inject("biodata");
 
 const childrensData = computed(() => store.state.profile.childrensData);
 const success = computed(() => store.state.profile.createChildrenDataSuccess);
@@ -276,7 +278,7 @@ const schema = yup.object({
 const formValues = {
   userId: id.value,
   firstName: "",
-  surName: "",
+  surName: biodata?.value?.surName ? biodata?.value?.surName : "",
   middleName: "",
   email: "",
   title: "",
@@ -313,6 +315,13 @@ const { value: gender, errorMessage: genderError } = useField("gender");
 
 const { value: dateOfBirth, errorMessage: dateOfBirthError } =
   useField("dateOfBirth");
+
+const setGenderByTitle = (title) => {
+  const autoFillGenderValue = genderMenu.find((gender) =>
+    gender.titles.includes(title)
+  );
+  values.gender = autoFillGenderValue?.value;
+};
 
 const prepareDetails = (values) => {
   const createObj = {
@@ -353,7 +362,11 @@ watch(deleteSuccess, () => {
 // };
 
 watch(childrensData, () => {
-  childrenDetails.value = childrensData.value;
+  const sortedData = childrensData?.value?.sort(
+    (a, b) => new Date(a.dateOfBirth) - new Date(b.dateOfBirth)
+  );
+
+  childrenDetails.value = sortedData;
 });
 
 watch(success, () => {
@@ -364,6 +377,9 @@ watch(success, () => {
   resetForm();
 
   getChildrensData();
+});
+watch(title, () => {
+  setGenderByTitle(title.value);
 });
 </script>
 

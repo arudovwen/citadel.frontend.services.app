@@ -189,7 +189,7 @@ import Icon from "@/components/Icon";
 import InputGroup from "@/components/InputGroup";
 import Pagination from "@/components/Pagination";
 import { MenuItem } from "@headlessui/vue";
-
+import { useRoute } from "vue-router";
 import moment from "moment";
 import { useStore } from "vuex";
 import { debounce } from "lodash";
@@ -198,22 +198,21 @@ import { roleFilters } from "@/constant/data";
 // import FormGroup from "@/components/FormGroup";
 
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-
+const route = useRoute();
+const { id } = route.params;
 onMounted(() => {
   // dispatch("getAllBiodata", query);
 
-  dispatch("getAllFollowupReport", { userId: userId.value, ...query });
+  dispatch("getAllFollowupReportById", { id });
   dispatch("getRoles");
 });
 const { state, dispatch } = useStore();
 // const permissions = computed(() => state.auth.permissions);
-const userId = computed(() => state.auth.userData.id);
+// const userId = computed(() => state.auth.userData.id);
 const query = reactive({
   pageNumber: 1,
   pageSize: 25,
   searchParameter: "",
-  sortOrder: "",
-  isFirstTimer: true,
 });
 
 // const editor = ClassicEditor;

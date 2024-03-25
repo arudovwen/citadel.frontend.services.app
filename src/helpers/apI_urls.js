@@ -154,7 +154,7 @@ export const urls = {
   //Follow up first timer
   CREATE_FOLLOW_UP_REPORT: "/CreateFollowupFirsttimerReport",
   UPDATE_FOLLOW_UP_REPORT: "/UpdateFollowupFirsttimerReport",
-  GET_FOLLOW_UP_REPORT_BY_ID: "/GetFollowupFirsttimerReportById",
+  GET_FOLLOW_UP_REPORT_BY_ID: "/GetFollowupFirsttimerReportByFirstTimerId",
   GET_ALL_FOLLOW_UP_REPORT: "/GetAllFollowupFirsttimerReport",
   DELETE_FOLLOW_UP_REPORT: "/DeleteFollowupFirsttimerReport",
 

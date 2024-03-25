@@ -107,7 +107,7 @@
               <div
                 @click="
                   router.push(
-                    `/cih/reports/followup/${props.row.userId}/${props.row.fullName}`
+                    `/cih/reports/followup/${props.row.id}/${props.row.fullName}`
                   )
                 "
                 class="text-sm cursor-pointer hover:underline"

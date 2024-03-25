@@ -277,13 +277,13 @@ export const menuItems = [
     title: "Notifications",
     icon: "heroicons-outline:speakerphone",
     link: "/notifications",
-    roles: "",
+    roles: "CAN_VIEW_NOTIFICATIONS",
   },
   {
     title: "Audit Logs",
     icon: "icon-park-outline:log",
     link: "/audit-logs",
-    roles: "",
+    roles: "CAN_VIEW_AUDIT_REPORT",
     subroles: [],
   },
   // {
@@ -834,6 +834,10 @@ export const titleMenu = [
     value: "Miss",
     label: "Miss",
   },
+  {
+    value: "Master",
+    label: "Master",
+  },
 ];
 
 export const LGAMenu = [
@@ -872,10 +876,12 @@ export const genderMenu = [
   {
     value: "Male",
     label: "Male",
+    titles: ["Mr", "Master"],
   },
   {
     value: "Female",
     label: "Female",
+    titles: ["Mrs", "Miss"],
   },
 ];
 
