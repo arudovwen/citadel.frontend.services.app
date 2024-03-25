@@ -3,6 +3,7 @@
     ><ProfilePageSkeleton
   /></span>
   <div v-else class="space-y-5 profile-page">
+    <pre className="hidden">{{ JSON.stringify(biodata, null, 2) }}</pre>
     <div
       class="profiel-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0 space-y-6 justify-between items-end relative z-[1]"
     >
@@ -288,6 +289,8 @@ const biodata = computed(() => state.profile.biodata);
 console.log(state.auth.accessToken);
 // console.log("Member:" + JSON.stringify(state.member.profile));
 const profileData = computed(() => state.member.profile);
+// const familyName = ref("");
+// const spouseTitle = ref("");
 // const success = computed(() => state.member.profilesuccess);
 const profileLoading = computed(() => state.member.profileloading);
 const profileError = computed(() => state.member.profileerror);
@@ -329,6 +332,8 @@ const isMarried = computed(() =>
 );
 // const isMarried = ref(false);
 const showMarriedTab = ref(false);
+const showChildrenTab = ref(false);
+
 const isEmployed = ref(false);
 const spouseTitle = computed(() =>
   state.profile.biodata?.gender == "Male" ? "Mrs" : "Mr"
@@ -394,6 +399,7 @@ provide("spouseTitle", spouseTitle);
 provide("spouseGender", spouseGender);
 provide("isUserProfile", isUserProfile);
 provide("showMarriedTab", showMarriedTab);
+provide("showChildrenTab", showChildrenTab);
 provide("getUserAvatar", getUserAvatar);
 provide("isInspectorate", isInspectorate);
 provide("canEditDetails", canEditDetails);
@@ -401,5 +407,6 @@ provide("isHOD", isHOD);
 provide("roles", roles);
 provide("authUserRoles", authUserRoles);
 provide("loggedInUserRoles", loggedInUserRoles);
+provide("biodata", biodata);
 </script>
 <style lang="scss" scoped></style>

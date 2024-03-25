@@ -3,117 +3,79 @@
     <div>
       <div class="md:flex pb-6 items-center justify-between px-5">
         <div class="flex gap-x-4 rounded text-sm">
-          <InputGroup
-            v-model="query.searchParameter"
-            placeholder="Search"
-            type="text"
-            prependIcon="heroicons-outline:search"
-            merged
-            classInput="min-w-[220px] !h-9"
-          />
-          <Select
-            label=""
-            :options="filters"
-            v-model="query.sortOrder"
-            placeholder="Sort by"
-            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
-          />
+          <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
+            prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9" />
+          <Select label="" :options="filters" v-model="query.sortOrder" placeholder="Sort by"
+            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]" />
         </div>
-        <Button
-          icon="clarity:export-line"
-          text="Export"
-          btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-          iconClass="text-lg"
-        />
+        <export-excel :data="members || []" worksheet="reports" :name="`pending-${query.DepartmentName}-members.xls`">
+          <Button icon="clarity:export-line" text="Export"
+            btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+            iconClass="text-lg" />
+        </export-excel>
       </div>
       <div class="">
-        <vue-good-table
-          :columns="columns"
-          styleClass="vgt-table"
-          :isLoading="deptloading"
-          :rows="members || []"
+        <vue-good-table :columns="columns" styleClass="vgt-table" :isLoading="deptloading" :rows="members || []"
           :sort-options="{
             enabled: false,
-          }"
-          :pagination-options="{
+          }" :pagination-options="{
             enabled: true,
             perPage: query.pageSize,
-          }"
-        >
+          }">
           <template v-slot:table-row="props">
-            <span
-              v-if="props.column.field == 'fullName'"
-              class="font-medium flex items-center gap-x-1"
-            >
-              <router-link
-                :to="`/profile/${props.row.id}`"
-                class="hover:underline"
-              >
+            <span v-if="props.column.field == 'fullName'" class="font-medium flex items-center gap-x-1">
+              <router-link :to="`/profile/${props.row.id}`" class="hover:underline">
                 {{ props.row.fullName }}
               </router-link>
             </span>
 
-            <span
-              v-if="props.column.field == 'requestDate'"
-              class="text-slate-500 dark:text-slate-400"
-            >
+            <span v-if="props.column.field == 'requestDate'" class="text-slate-500 dark:text-slate-400">
               {{ moment(props.row.requestDate).format("ll") }}
             </span>
-            <span
-              v-if="props.column.field == 'email'"
-              class="font-medium lowercase"
-            >
+            <span v-if="props.column.field == 'email'" class="font-medium lowercase">
               {{ props.row.email }}
             </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
-              <span
-                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                :class="`${
-                  props.row.status === 'active' ||
-                  props.row.statusText === 'approved'
-                    ? 'text-success-500 bg-success-500'
-                    : ''
-                } 
-              ${
-                props.row.status === 'inactive' ||
-                props.row.statusText === 'rejected'
-                  ? 'text-warning-500 bg-warning-500'
-                  : ''
-              }
-              ${
-                props.row.status === 'pending' ||
-                props.row.statusText === 'pending'
-                  ? 'text-blue-500 bg-blue-500'
-                  : ''
-              }
+              <span class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                :class="`${props.row.status === 'active' ||
+              props.row.statusText === 'approved'
+              ? 'text-success-500 bg-success-500'
+              : ''
+            } 
+              ${props.row.status === 'inactive' ||
+              props.row.statusText === 'rejected'
+              ? 'text-warning-500 bg-warning-500'
+              : ''
+            }
+              ${props.row.status === 'pending' ||
+              props.row.statusText === 'pending'
+              ? 'text-blue-500 bg-blue-500'
+              : ''
+            }
               
-               `"
-              >
+               `">
                 {{ props.row.statusText }}
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
-                <span class="text-xl"
-                  ><Icon icon="heroicons-outline:dots-vertical"
-                /></span>
+                <span class="text-xl">
+                  <Icon icon="heroicons-outline:dots-vertical" />
+                </span>
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
-                    <div
-                      @click="item.doit(props.row)"
-                      :class="{
-                        'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
-                          item.name === 'delete',
-                        'hover:bg-slate-900 hover:text-white':
-                          item.name !== 'delete',
-                      }"
-                      class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
-                    >
-                      <span class="text-base">
-                        <Icon :icon="item.icon" />
-                      </span>
-                      <span>{{ item.name }}</span>
-                    </div>
+                  <div @click="item.doit(props.row)" :class="{
+            'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
+              item.name === 'delete',
+            'hover:bg-slate-900 hover:text-white':
+              item.name !== 'delete',
+          }"
+                    class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center">
+                    <span class="text-base">
+                      <Icon :icon="item.icon" />
+                    </span>
+                    <span>{{ item.name }}</span>
+                  </div>
                   </MenuItem>
                 </template>
               </Dropdown>
@@ -124,17 +86,9 @@
           </template>
           <template #pagination-bottom>
             <div class="py-4 px-3">
-              <Pagination
-                :total="total"
-                :current="query.pageNumber"
-                :per-page="query.pageSize"
-                :pageRange="pageRange"
-                @page-changed="query.pageNumber = $event"
-                :perPageChanged="perPage"
-                enableSearch
-                enableSelect
-                :options="options"
-              >
+              <Pagination :total="total" :current="query.pageNumber" :per-page="query.pageSize" :pageRange="pageRange"
+                @page-changed="query.pageNumber = $event" :perPageChanged="perPage" enableSearch enableSelect
+                :options="options">
                 >
               </Pagination>
             </div>
@@ -143,62 +97,31 @@
       </div>
     </div>
   </div>
-  <Modal
-    :title="`${type} request`"
-    label="Small modal"
-    :labelClass="
-      type === 'approve' ? 'btn-outline-success' : 'btn-outline-danger'
-    "
-    ref="modal"
-    sizeClass="max-w-md"
-    :themeClass="type === 'approve' ? 'bg-success-500' : 'bg-danger-500'"
-  >
+  <Modal :title="`${type} request`" label="Small modal" :labelClass="type === 'approve' ? 'btn-outline-success' : 'btn-outline-danger'
+            " ref="modal" sizeClass="max-w-md" :themeClass="type === 'approve' ? 'bg-success-500' : 'bg-danger-500'">
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to {{ type }} this request?
     </div>
     <div v-if="type.toLowerCase() === 'reject'">
-      <textarea
-        resize="none"
-        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
-        rows="4"
-        placeholder="Provide reason"
-        v-model="comment"
-      ></textarea>
+      <textarea resize="none" class="px-3 py-3 border border-gray-200 rounded-lg w-full" rows="4"
+        placeholder="Provide reason" v-model="comment"></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button
-          text="Cancel"
-          btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modal.closeModal()"
-        />
-        <Button
-          :isLoading="approveloading"
-          :disabled="
-            approveloading || (!comment && type.toLowerCase() === 'reject')
-          "
-          text="Proceed"
-          :btnClass="
-            type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
-          "
-          @click="handleRequest()"
-        />
+        <Button text="Cancel" btnClass="btn-outline-secondary btn-sm " @click="$refs.modal.closeModal()" />
+        <Button :isLoading="approveloading" :disabled="approveloading || (!comment && type.toLowerCase() === 'reject')
+            " text="Proceed" :btnClass="type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
+            " @click="handleRequest()" />
       </div>
     </template>
   </Modal>
 
-  <Modal
-    :title="
-      type === 'add'
-        ? 'Add member'
-        : type === 'edit'
-        ? 'Edit member'
-        : 'View member'
-    "
-    labelClass="btn-outline-dark"
-    ref="modalChange"
-    sizeClass="max-w-3xl"
-  >
+  <Modal :title="type === 'add'
+              ? 'Add member'
+              : type === 'edit'
+                ? 'Edit member'
+                : 'View member'
+            " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-3xl">
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />
     <ViewRecord v-if="type === 'view'" />
@@ -231,6 +154,7 @@ import {
   ref,
   // getCurrentInstance,
 } from "vue";
+import member from "@/store/app/member";
 
 export default {
   mixins: [window],
@@ -314,6 +238,9 @@ export default {
     const approveloading = computed(() => state.request.approveloading);
     const loading = computed(() => state.member.loading);
     const deptloading = computed(() => state.department.loading);
+    const departmentName = computed(() => {
+      return state.department?.DepartmentName
+    })
     const members = computed(() =>
       state.department.departments.map((i) => {
         return {
@@ -323,8 +250,8 @@ export default {
             i.status === null
               ? "pending"
               : i.status === true
-              ? "approved"
-              : "rejected",
+                ? "approved"
+                : "rejected",
         };
       })
     );
@@ -392,6 +319,7 @@ export default {
       approveloading,
       deptloading,
       moment,
+      departmentName
     };
   },
 

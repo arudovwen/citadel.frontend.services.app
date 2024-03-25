@@ -834,6 +834,10 @@ export const titleMenu = [
     value: "Miss",
     label: "Miss",
   },
+  {
+    value: "Master",
+    label: "Master",
+  },
 ];
 
 export const LGAMenu = [
@@ -872,10 +876,12 @@ export const genderMenu = [
   {
     value: "Male",
     label: "Male",
+    titles: ["Mr", "Master"],
   },
   {
     value: "Female",
     label: "Female",
+    titles: ["Mrs", "Miss"],
   },
 ];
 

@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form class="overflow-y-auto" @submit.prevent="onSubmit">
     <Card noborder className="border-none shadow-none" bodyClass="p-2" title="">
       <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
         <Textinput

@@ -63,6 +63,7 @@
           class="form-control"
           id="d1"
           placeholder="yyyy, dd M"
+          :config="{ maxDate: 'today' }"
         />
       </FormGroup>
 
@@ -118,6 +119,7 @@ const getSpouseData = () => {
   store.dispatch("getSpouseDetailById", id.value);
 };
 const canEditDetails = inject("canEditDetails");
+const biodata = inject("biodata");
 
 const spouseDataLoading = computed(
   () => store.state.profile.getSpouseDataloading
@@ -154,7 +156,7 @@ const schema = yup.object({
 
 const formValues = {
   firstName: "",
-  surName: "",
+  surName: biodata?.value?.surName ? biodata?.value?.surName : "",
   middleName: "",
   email: "",
   mobile1: "",
