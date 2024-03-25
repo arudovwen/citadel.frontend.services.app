@@ -30,7 +30,7 @@
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
-          <export-excel :data="members" worksheet="members" name="members.xls">
+          <export-excel :data="members" worksheet="members" type="csv" name="members.csv">
             <Button
               icon="clarity:export-line"
               text="Export"

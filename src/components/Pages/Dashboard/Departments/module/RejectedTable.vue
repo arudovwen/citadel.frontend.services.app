@@ -8,7 +8,8 @@
           <Select label="" :options="filters" v-model="query.sortOrder" placeholder="Sort by"
             classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]" />
         </div>
-        <export-excel :data="members" worksheet="reports" :name="`rejected-${query.DepartmentName}-members.xls`">
+        <export-excel type="csv" :data="members" worksheet="reports" :fields="filteredMembers"
+          :name="`rejected-${query.DepartmentName}-members.csv`">
           <Button icon="clarity:export-line" text="Export"
             btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
             iconClass="text-lg" />
@@ -53,8 +54,7 @@
               item.name === 'delete',
             'hover:bg-slate-900 hover:text-white':
               item.name !== 'delete',
-          }"
-                    class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center">
+          }" class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center">
                     <!-- <span class="text-base">
                         <Icon :icon="item.icon" />
                       </span> -->
@@ -161,6 +161,20 @@ export default {
         value: "firstName",
       },
     ];
+    const filteredMembers = computed(() => ({
+      "id": "id",
+      "gender": "gender",
+      "phone": "phone",
+      "First Name": "firstName",
+      "Last Name": "lastName",
+      "Email": "email",
+      "actionDate": "actionDate",
+      "Current Department": "currentDepartment",
+      "New Department": "newDepartment",
+      "userId": "userId",
+      "Request Date": "requestDate",
+      "dob": "dob"
+    }))
     // none, firstName, userId, surname, department, center, zone, role
     onMounted(() => {
       dispatch("getRejectedDepartments", query);
@@ -256,6 +270,7 @@ export default {
       delistSuccess,
       moment,
       reasonModal,
+      filteredMembers
     };
   },
 

@@ -39,7 +39,7 @@
             }`" />
           </div>
           <export-excel :data="active === 'inspection' ? inspectionsData : reports" worksheet="reports"
-            :name="`${active === 'inspection' ? 'inspectionsData' : 'reports'}.xls`">
+            :name="`${active === 'inspection' ? 'inspectionsData' : 'reports'}.csv`" type="csv">
             <Button icon="clarity:export-line" text="Export"
               btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
               iconClass="text-lg" />

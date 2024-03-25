@@ -8,7 +8,8 @@
           <Select label="" :options="filters" v-model="query.sortOrder" placeholder="Sort by"
             classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]" />
         </div>
-        <export-excel :data="members" worksheet="reports" :name="`delisted-${query.DepartmentName}-members.xls`">
+        <export-excel :data="members" type="csv" worksheet="reports"
+          :name="`delisted-${query.DepartmentName}-members.csv`" :fields="filteredMembers">
           <Button icon="clarity:export-line" text="Export"
             btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
             iconClass="text-lg" />
@@ -55,8 +56,7 @@
               item.name === 'delete',
             'hover:bg-slate-900 hover:text-white':
               item.name !== 'delete',
-          }"
-                    class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center">
+          }" class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center">
                     <span class="text-base">
                       <Icon :icon="item.icon" />
                     </span>
@@ -195,7 +195,20 @@ export default {
     const addsuccess = computed(() => state.profile.addsuccess);
     const deleteloading = computed(() => state.profile.deleteloading);
     // const deletesuccess = computed(() => state.profile.deletesuccess);
-
+    const filteredMembers = computed(() => ({
+      "id": "id",
+      "gender": "gender",
+      "phone": "phone",
+      "First Name": "firstName",
+      "Last Name": "lastName",
+      "Email": "email",
+      "actionDate": "actionDate",
+      "Current Department": "currentDepartment",
+      "New Department": "newDepartment",
+      "userId": "userId",
+      "Request Date": "requestDate",
+      "dob": "dob"
+    }))
     function handleDelete(id) {
       dispatch("removeMemberFromDepartment", id);
     }
@@ -247,6 +260,7 @@ export default {
       roles,
       search,
       handleDelete,
+      filteredMembers,
       modal,
       modalChange,
       modalStatus,
