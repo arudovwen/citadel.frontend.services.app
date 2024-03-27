@@ -3,78 +3,56 @@
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div class="">
-          <InputGroup
-            v-model="query.searchParameter"
-            placeholder="Search"
-            type="text"
-            prependIcon="heroicons-outline:search"
-            merged
-            classInput="min-w-[220px] !h-9"
-          />
+          <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
+            prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9" />
         </div>
+        <export-excel :data="members || []" worksheet="members" type="csv" :name="`members.csv`">
+          <Button icon="clarity:export-line" text="Export"
+            btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+            iconClass="text-lg" />
+        </export-excel>
       </div>
       <div class="-mx-6">
-        <vue-good-table
-          :columns="columns"
-          mode="remote"
-          styleClass="vgt-table"
-          :isLoading="loading"
-          :rows="members || []"
-          :sort-options="{
+        <vue-good-table :columns="columns" mode="remote" styleClass="vgt-table" :isLoading="loading"
+          :rows="members || []" :sort-options="{
             enabled: false,
-          }"
-          :pagination-options="{
+          }" :pagination-options="{
             enabled: true,
             perPage: query.pageSize,
-          }"
-        >
+          }">
           <template v-slot:table-row="props">
-            <span
-              v-if="props.column.field == 'email'"
-              class="font-medium lowercase"
-            >
+            <span v-if="props.column.field == 'email'" class="font-medium lowercase">
               {{ props.row.email }}
             </span>
-            <span
-              v-if="props.column.field == 'fullName'"
-              class="font-medium flex items-center gap-x-1"
-            >
-              <router-link
-                :to="`/profile/${props.row.userId}`"
-                class="hover:underline"
-              >
+            <span v-if="props.column.field == 'fullName'" class="font-medium flex items-center gap-x-1">
+              <router-link :to="`/profile/${props.row.userId}`" class="hover:underline">
                 {{ props.row.fullName }}
               </router-link>
-              <span
-                v-if="
-                  props.row.cihRoles &&
-                  props.row.cihRoles.toLowerCase() !== 'cihmember'
-                "
-                class="px-2 py-[2px] rounded-full bg-gray-100 text-gray-500 text-xs"
-                >{{ props.row.cihRoles.replace("cih", "") }}</span
-              >
+              <span v-if="props.row.cihRoles &&
+            props.row.cihRoles.toLowerCase() !== 'cihmember'
+            " class="px-2 py-[2px] rounded-full bg-gray-100 text-gray-500 text-xs">{{
+            props.row.cihRoles.replace("cih", "") }}</span>
             </span>
             <span v-if="props.column.field == 'action'">
               <Dropdown classMenuItems=" w-[140px]">
-                <span class="text-xl"
-                  ><Icon icon="heroicons-outline:dots-vertical"
-                /></span>
+                <span class="text-xl">
+                  <Icon icon="heroicons-outline:dots-vertical" />
+                </span>
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in actions" :key="i">
-                    <div
-                      @click="item.doit(props.row)"
-                      :class="`
+                  <div @click="item.doit(props.row)"
+                    :class="`
                 
-                  ${
-                    item.name === 'delete'
-                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
-                      : 'hover:bg-slate-900 hover:text-white'
-                  }
-                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
-                    >
-                      <span class="text-base"><Icon :icon="item.icon" /></span>
-                      <span>{{ item.name }}</span>
-                    </div>
+                  ${item.name === 'delete'
+              ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
+              : 'hover:bg-slate-900 hover:text-white'
+            }
+                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `">
+                    <span class="text-base">
+                      <Icon :icon="item.icon" />
+                    </span>
+                    <span>{{ item.name }}</span>
+                  </div>
                   </MenuItem>
                 </template>
               </Dropdown>
@@ -82,17 +60,9 @@
           </template>
           <template #pagination-bottom>
             <div class="py-4 px-3">
-              <Pagination
-                :total="total"
-                :current="query.pageNumber"
-                :per-page="query.pageSize"
-                :pageRange="pageRange"
-                @page-changed="query.pageNumber = $event"
-                :perPageChanged="perPage"
-                enableSearch
-                enableSelect
-                :options="options"
-              >
+              <Pagination :total="total" :current="query.pageNumber" :per-page="query.pageSize" :pageRange="pageRange"
+                @page-changed="query.pageNumber = $event" :perPageChanged="perPage" enableSearch enableSelect
+                :options="options">
                 >
               </Pagination>
             </div>
@@ -101,36 +71,18 @@
       </div>
     </Card>
   </div>
-  <Modal
-    title="Confirm action"
-    label="Small modal"
-    labelClass="btn-outline-dark"
-    ref="modal"
-    sizeClass="max-w-md"
-  >
+  <Modal title="Confirm action" label="Small modal" labelClass="btn-outline-dark" ref="modal" sizeClass="max-w-md">
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure about this action?
     </div>
     <div v-if="type.toLowerCase() === 'delist'">
-      <textarea
-        resize="none"
-        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
-        rows="4"
-        placeholder="Provide reason"
-      ></textarea>
+      <textarea resize="none" class="px-3 py-3 border border-gray-200 rounded-lg w-full" rows="4"
+        placeholder="Provide reason"></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button
-          text="Cancel"
-          btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modal.closeModal()"
-        />
-        <Button
-          text="Proceed"
-          btnClass="btn-dark btn-sm"
-          @click="$refs.modal.closeModal()"
-        />
+        <Button text="Cancel" btnClass="btn-outline-secondary btn-sm " @click="$refs.modal.closeModal()" />
+        <Button text="Proceed" btnClass="btn-dark btn-sm" @click="$refs.modal.closeModal()" />
       </div>
     </template>
   </Modal>

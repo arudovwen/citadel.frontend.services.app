@@ -24,7 +24,8 @@
           <export-excel
             :data="members"
             worksheet="First timers"
-            name="firsttimers.xls"
+            name="firsttimers.csv" 
+            type="csv"
           >
             <Button
               icon="clarity:export-line"

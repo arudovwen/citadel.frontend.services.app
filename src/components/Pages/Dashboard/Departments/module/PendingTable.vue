@@ -8,7 +8,7 @@
           <Select label="" :options="filters" v-model="query.sortOrder" placeholder="Sort by"
             classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]" />
         </div>
-        <export-excel :data="members || []" worksheet="reports" :name="`pending-${query.DepartmentName}-members.xls`">
+        <export-excel :data="members || []" worksheet="reports" type="csv" :name="`pending-${query.DepartmentName}-members.csv`" :fields="filteredMembers">
           <Button icon="clarity:export-line" text="Export"
             btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
             iconClass="text-lg" />
@@ -257,6 +257,20 @@ export default {
     );
     const total = computed(() => state.profile.total);
     const roles = computed(() => state.profile.roles);
+    const filteredMembers = computed(() => ({
+      "id": "id",
+      "gender": "gender",
+      "phone": "phone",
+      "First Name": "firstName",
+      "Last Name": "lastName",
+      "Email": "email",
+      "actionDate": "actionDate",
+      "Current Department": "currentDepartment",
+      "New Department": "newDepartment",
+      "userId": "userId",
+      "Request Date": "requestDate",
+      "dob": "dob"
+    }))
 
     function handleRequest() {
       dispatch("approveCOD", {
@@ -319,7 +333,8 @@ export default {
       approveloading,
       deptloading,
       moment,
-      departmentName
+      departmentName,
+      filteredMembers
     };
   },
 
