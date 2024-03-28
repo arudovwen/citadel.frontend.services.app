@@ -86,6 +86,17 @@
         classInput="!h-[40px]"
       />
 
+      <Textinput
+        v-if="gender?.toLowerCase() === 'female'"
+        label="maidenName"
+        type="text"
+        placeholder="Provide your Maiden Name"
+        name="maidenName"
+        v-model="maidenName"
+        :error="maidenNameError"
+        classInput="h-[40px]"
+      />
+
       <FormGroup label="DOB" name="d1">
         <flat-pickr
           v-model="dateOfBirth"
@@ -314,6 +325,7 @@ const schema = yup.object({
   stateOfOrigin: yup.object().nullable(),
   maritalStatus: yup.string().nullable(),
   dateOfBirth: yup.string().nullable(),
+  maidenName: yup.string().nullable(),
 });
 
 const { handleSubmit, setValues, values } = useForm({
@@ -324,6 +336,8 @@ const { handleSubmit, setValues, values } = useForm({
 // No need to define rules for fields
 const { value: firstName, errorMessage: firstNameError } =
   useField("firstName");
+const { value: maidenName, errorMessage: maidenNameError } =
+  useField("maidenName");
 const { value: surName, errorMessage: surNameError } = useField("surName");
 const { value: middleName, errorMessage: middleNameError } =
   useField("middleName");
@@ -425,6 +439,7 @@ const prepareDetails = (values, type) => {
     nationality: values?.nationality?.value,
     stateOfOrigin: values?.stateOfOrigin?.value,
     maritalStatus: values?.maritalStatus,
+    maidenName: values?.maidenName,
   };
   const createObj = {
     title: values.title,
@@ -447,6 +462,7 @@ const prepareDetails = (values, type) => {
     nationality: values?.nationality,
     stateOfOrigin: values?.stateOfOrigin,
     maritalStatus: values?.maritalStatus,
+    maidenName: values?.maidenName,
   };
 
   const obj = type == "create" ? createObj : updateObj;
