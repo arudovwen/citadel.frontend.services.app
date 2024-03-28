@@ -106,6 +106,7 @@ import { useToast } from "vue-toastification";
 // eslint-disable-next-line no-unused-vars
 const { state, dispatch } = useStore();
 const isLoading = computed(() => state.auth.loading);
+const error = computed(() => state.auth.error);
 const isSuccess = computed(() => state.auth.signupsuccess);
 
 const checkbox = ref(false);
@@ -157,6 +158,9 @@ watch(isSuccess, () => {
   // toast.success("Sign up successful")
   isSuccess.value &&
     router.push(`/email-verify/${encodeURIComponent(emailAddress.value)}`);
+});
+watch(error, () => {
+  error.value && toast.error(error.value);
 });
 </script>
 <style lang="scss"></style>

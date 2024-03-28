@@ -266,9 +266,15 @@ export default {
         const response = await DataService.post(urls.SIGN_UP_USER, data);
 
         if (response.status === 200) {
-          commit("signupSuccess");
+          if (response.data.succeeded) {
+            commit("signupSuccess");
+            return;
+          } else {
+            console.log("🚀 ~ signup ~ response:", response);
+            commit("signupErr", response.data.message);
+            return;
+          }
         }
-        commit("signupSuccess");
       } catch (err) {
         commit("signupErr", err);
       }
