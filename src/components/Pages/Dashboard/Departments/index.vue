@@ -4,15 +4,14 @@
       class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:justify-between md:items-center mb-6 md:mb-4 w-full md:w-auto"
     >
       <div
-        class="md:flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:gap-x-4 items-center w-full md:w-auto"
+        class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:gap-x-4 items-center w-full md:w-auto"
       >
         <InputGroup
           v-model="query.searchParameter"
           placeholder="Search department "
           type="text"
           prependIcon="heroicons-outline:search"
-          merged
-          classInput="min-w-[320px] !h-9"
+          classInput="w-full md:w-auto md:min-w-[320px] !h-9"
         />
 
         <Select

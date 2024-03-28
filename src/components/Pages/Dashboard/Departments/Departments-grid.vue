@@ -24,9 +24,9 @@
                 </div>
                 <div class="font-medium text-base leading-6">
                   <div
-                    class="dark:text-slate-200 text-slate-900 max-w-[300px] truncate"
+                    class="dark:text-slate-200 text-slate-900 max-w-[250px] md:max-w-[300px] truncate"
                   >
-                    {{ item?.departmentName }} Department
+                    {{ item?.departmentName }}
                   </div>
                 </div>
               </div>
@@ -40,7 +40,9 @@
             </div>
             <div class="text-slate-600 dark:text-slate-400 text-xs font-medium">
               <span>HOD</span>:
-              <span class="font-medium">{{ item?.hodName || "n/a" }}</span>
+              <span class="font-medium capitalize">{{
+                item?.hodName || "n/a"
+              }}</span>
             </div>
             <div class="flex justify-start mt-5">
               <div class="text-right">

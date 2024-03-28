@@ -15,7 +15,7 @@
     <div class="relative">
       <select
         :name="name"
-        :class="`${classInput} input-control block w-full focus:outline-none min-h-[40px] `"
+        :class="`${classInput} input-control block w-full focus:outline-none min-h-[36px] `"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         :error="error"

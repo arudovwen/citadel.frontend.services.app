@@ -2,7 +2,9 @@
   <div>
     <div>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex gap-x-4 rounded text-sm">
+        <div
+          class="flex flex-col md:flex-row rounded-[6px] text-sm overflow-hidden gap-4 mb-4 md:md-0"
+        >
           <InputGroup
             v-model="query.searchParameter"
             placeholder="Search"

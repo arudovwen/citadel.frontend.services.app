@@ -46,6 +46,26 @@
         :error="middleNameError"
         classInput="h-[40px]"
       />
+      <Select
+        label="Gender"
+        :options="genderMenu"
+        v-model.value="gender"
+        :modelValue="gender"
+        :error="genderError"
+        classInput="!h-[40px]"
+      />
+
+      <Textinput
+        v-if="gender?.toLowerCase() === 'female'"
+        label="Maiden Name"
+        type="text"
+        placeholder="Provide your Maiden Name"
+        name="maidenName"
+        v-model="maidenName"
+        :error="maidenNameError"
+        classInput="h-[40px]"
+      />
+
       <Textinput
         label="Email Address"
         type="email"
@@ -74,26 +94,6 @@
         name="mobile2"
         v-model="mobile2"
         :error="mobile2Error"
-        classInput="h-[40px]"
-      />
-
-      <Select
-        label="Gender"
-        :options="genderMenu"
-        v-model.value="gender"
-        :modelValue="gender"
-        :error="genderError"
-        classInput="!h-[40px]"
-      />
-
-      <Textinput
-        v-if="gender?.toLowerCase() === 'female'"
-        label="Maiden Name"
-        type="text"
-        placeholder="Provide your Maiden Name"
-        name="maidenName"
-        v-model="maidenName"
-        :error="maidenNameError"
         classInput="h-[40px]"
       />
 
