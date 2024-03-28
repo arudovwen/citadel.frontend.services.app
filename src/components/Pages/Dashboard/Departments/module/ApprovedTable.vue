@@ -2,45 +2,86 @@
   <div>
     <div class="md:flex pb-6 items-center justify-between px-5">
       <div class="flex gap-x-4 rounded text-sm">
-        <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
-          prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9 border border-gray-200" />
-        <Select label="" :options="filters" v-model="query.sortOrder" placeholder="Sort by"
-          classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]" />
+        <InputGroup
+          v-model="query.searchParameter"
+          placeholder="Search"
+          type="text"
+          prependIcon="heroicons-outline:search"
+          merged
+          classInput="min-w-[220px] !h-9 border border-gray-200"
+        />
+        <Select
+          label=""
+          :options="filters"
+          v-model="query.sortOrder"
+          placeholder="Sort by"
+          classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
+        />
       </div>
-      <export-excel :data="members" worksheet="reports" :fields="filteredMembers"
-        :name="`approved-${query.DepartmentName}-members.csv`" type="csv">
-        <Button icon="clarity:export-line" text="Export"
+      <export-excel
+        :data="members"
+        worksheet="reports"
+        :fields="filteredMembers"
+        :name="`approved-${query.DepartmentName}-members.csv`"
+        type="csv"
+      >
+        <Button
+          icon="clarity:export-line"
+          text="Export"
           btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-          iconClass="text-lg" />
+          iconClass="text-lg"
+        />
       </export-excel>
     </div>
     <div class="">
-      <vue-good-table :columns="columns" styleClass="vgt-table" :isLoading="deptloading" :rows="members || []"
+      <vue-good-table
+        :columns="columns"
+        styleClass="vgt-table"
+        :isLoading="deptloading"
+        :rows="members || []"
         :sort-options="{
           enabled: false,
-        }" :pagination-options="{
+        }"
+        :pagination-options="{
           enabled: true,
           perPage: query.pageSize,
-        }">
+        }"
+      >
         <template v-slot:table-row="props">
-          <span v-if="props.column.field == 'fullName'" class="font-medium flex items-center gap-x-1">
-            <router-link :to="`/profile/${props.row.id}`" class="hover:underline">
+          <span
+            v-if="props.column.field == 'fullName'"
+            class="font-medium flex items-center gap-x-1"
+          >
+            <router-link
+              :to="`/profile/${props.row.id}`"
+              class="hover:underline"
+            >
               {{ props.row.fullName }}
             </router-link>
           </span>
 
-          <span v-if="props.column.field == 'approveDate'" class="text-slate-500 dark:text-slate-400">
+          <span
+            v-if="props.column.field == 'approveDate'"
+            class="text-slate-500 dark:text-slate-400"
+          >
             {{ moment(props.row.approveDate).format("ll") }}
           </span>
-          <span v-if="props.column.field == 'doB'" class="text-slate-500 dark:text-slate-400">
+          <span
+            v-if="props.column.field == 'doB'"
+            class="text-slate-500 dark:text-slate-400"
+          >
             {{ moment(props.row.doB).format("ll") }}
           </span>
-          <span v-if="props.column.field == 'email'" class="font-medium lowercase">
+          <span
+            v-if="props.column.field == 'email'"
+            class="font-medium lowercase"
+          >
             {{ props.row.email }}
           </span>
           <span v-if="props.column.field == 'status'" class="block w-full">
             <span
-              class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500 bg-success-500">
+              class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500 bg-success-500"
+            >
               Approved
             </span>
           </span>
@@ -51,18 +92,21 @@
               </span>
               <template v-slot:menus>
                 <MenuItem v-for="(item, i) in actions" :key="i">
-                <div @click="item.doit(props.row)" :class="{
-          'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
-            item.name === 'delete',
-          'hover:bg-slate-900 hover:text-white':
-            item.name !== 'delete',
-        }"
-                  class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center">
-                  <span class="text-base">
-                    <Icon :icon="item.icon" />
-                  </span>
-                  <span>{{ item.name }}</span>
-                </div>
+                  <div
+                    @click="item.doit(props.row)"
+                    :class="{
+                      'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
+                        item.name === 'delete',
+                      'hover:bg-slate-900 hover:text-white':
+                        item.name !== 'delete',
+                    }"
+                    class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
+                  >
+                    <span class="text-base">
+                      <Icon :icon="item.icon" />
+                    </span>
+                    <span>{{ item.name }}</span>
+                  </div>
                 </MenuItem>
               </template>
             </Dropdown>
@@ -73,9 +117,17 @@
         </template>
         <template #pagination-bottom>
           <div class="py-4 px-3">
-            <Pagination :total="total" :current="query.pageNumber" :per-page="query.pageSize" :pageRange="pageRange"
-              @page-changed="query.pageNumber = $event" :perPageChanged="perPage" enableSearch enableSelect
-              :options="options">
+            <Pagination
+              :total="total"
+              :current="query.pageNumber"
+              :per-page="query.pageSize"
+              :pageRange="pageRange"
+              @page-changed="query.pageNumber = $event"
+              :perPageChanged="perPage"
+              enableSearch
+              enableSelect
+              :options="options"
+            >
               >
             </Pagination>
           </div>
@@ -83,14 +135,25 @@
       </vue-good-table>
     </div>
   </div>
-  <Modal title="Delist member" label="Small modal" labelClass="btn-outline-danger" ref="modal" sizeClass="max-w-md"
-    themeClass="bg-danger-500">
+  <Modal
+    title="Delist member"
+    label="Small modal"
+    labelClass="btn-outline-danger"
+    ref="modal"
+    sizeClass="max-w-md"
+    themeClass="bg-danger-500"
+  >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to delist this member from department?
     </div>
     <div class="w-full flex flex-col">
-      <textarea resize="none" class="px-3 py-3 border border-gray-200 rounded-lg w-full" rows="4"
-        placeholder="Provide reason" v-model="reason"></textarea>
+      <textarea
+        resize="none"
+        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
+        rows="4"
+        placeholder="Provide reason"
+        v-model="reason"
+      ></textarea>
       <span v-if="reasonErr?.length > 0" class="mt-2 text-danger-500 text-xs">
         <!-- <Icon icon="heroicons-outline:information-circle" /> -->
         {{ reasonErr }}
@@ -98,19 +161,34 @@
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button text="Cancel" btnClass="btn-outline-secondary btn-sm " @click="$refs.modal.closeModal()" />
-        <Button :isLoading="delistLoading" :disabled="delistLoading || !reason" text="Proceed"
-          btnClass="btn-danger btn-sm" @click="handleDelist()" />
+        <Button
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm "
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          :isLoading="delistLoading"
+          :disabled="delistLoading || !reason"
+          text="Proceed"
+          btnClass="btn-danger btn-sm"
+          @click="handleDelist()"
+        />
       </div>
     </template>
   </Modal>
 
-  <Modal :title="type === 'add'
-            ? 'Add member'
-            : type === 'edit'
-              ? 'Edit member'
-              : 'View member'
-          " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-3xl">
+  <Modal
+    :title="
+      type === 'add'
+        ? 'Add member'
+        : type === 'edit'
+        ? 'Edit member'
+        : 'View member'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-3xl"
+  >
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />
     <ViewRecord v-if="type === 'view'" />
@@ -217,25 +295,25 @@ export default {
             i.status === null
               ? "pending"
               : i.status === true
-                ? "approved"
-                : "rejected",
+              ? "approved"
+              : "rejected",
         };
       })
     );
     const filteredMembers = computed(() => ({
-      "id": "id",
-      "gender": "gender",
-      "phone": "phone",
+      id: "id",
+      gender: "gender",
+      phone: "phone",
       "First Name": "firstName",
       "Last Name": "lastName",
-      "Email": "email",
-      "actionDate": "actionDate",
+      Email: "email",
+      actionDate: "actionDate",
       "Current Department": "currentDepartment",
       "New Department": "newDepartment",
-      "userId": "userId",
+      userId: "userId",
       "Request Date": "requestDate",
-      "dob": "dob"
-    }))
+      dob: "dob",
+    }));
     const total = computed(() => state.profile.total);
     const roles = computed(() => state.profile.roles);
     const addsuccess = computed(() => state.profile.addsuccess);

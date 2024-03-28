@@ -6,12 +6,15 @@
     <div class="mb-10">
       <div>
         <!-- <div v-if="statsLoading" class="">loading</div> -->
-        <div v-if="statsLoading" class="animate-pulse flex flex-wrap md:grid md:grid-cols-5 gap-x-4">
+        <div
+          v-if="statsLoading"
+          class="animate-pulse grid grid-cols-1 md:grid-cols-5 gap-4"
+        >
           <div
             v-for="(item, index) in content"
             :key="item.title"
             :class="colors[index]"
-            class="border rounded-lg px-6 py-4 text-gray-600 w-[47%] my-3 md:my-0"
+            class="border rounded-lg px-6 py-4 text-gray-600"
           >
             <div class="flex mb-5 gap-x-8">
               <span
@@ -33,12 +36,12 @@
             </div>
           </div>
         </div>
-        <div v-else class="flex justify-between flex-wrap md:grid grid-cols-5 gap-x-4">
+        <div v-else class="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div
             v-for="(item, index) in CIHStats"
             :key="item.title"
             :class="colors[index]"
-            class="border rounded-lg px-6 py-4 text-gray-600 w-[47%] my-3 md:my-0"
+            class="border rounded-lg px-6 py-4 text-gray-600"
           >
             <div class="flex mb-5 gap-x-8">
               <span

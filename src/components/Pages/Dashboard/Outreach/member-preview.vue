@@ -37,8 +37,8 @@
               props.data.status === true
                 ? "Approved"
                 : props.data.status === false
-                  ? "Rejected"
-                  : "Pending"
+                ? "Rejected"
+                : "Pending"
             }}
           </p>
         </div>
@@ -55,17 +55,29 @@
     </div>
     <!-- </Card> -->
 
-    <div v-if="(state?.auth?.permissions.includes('CAN_APPROVE_REJECT_OUTREACH') && props.data.status === null)"
-      class="flex lg:justify-end items-center flex-wrap my-6 gap-x-3">
-      <button v-if="props.data.status !== true" type="button" @click="handleModal('approve')"
-        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
+    <div
+      v-if="
+        state?.auth?.permissions.includes('CAN_APPROVE_REJECT_OUTREACH') &&
+        props.data.status === null
+      "
+      class="flex lg:justify-end items-center flex-wrap my-6 gap-x-3"
+    >
+      <button
+        v-if="props.data.status !== true"
+        type="button"
+        @click="handleModal('approve')"
+        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
+      >
         <span class="text-lg">
           <Icon icon="codicon:check-all" />
         </span>
         <span>Approve</span>
       </button>
-      <button v-if="props.data.status !== false" @click="handleModal('reject')"
-        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900">
+      <button
+        v-if="props.data.status !== false"
+        @click="handleModal('reject')"
+        class="border outreach-btn inline-flex btn btn-sm whitespace-nowrap space-x-1 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-300 btn-md h-min text-sm font-normal text-slate-900"
+      >
         <span class="text-lg">
           <Icon icon="iconamoon:sign-times-thin" />
         </span>
@@ -76,21 +88,11 @@
 </template>
 
 <script setup>
-import Card from "@/components/Card";
 import Icon from "@/components/Icon";
-import ViewReport from "./report-preview.vue";
-import {
-  defineProps,
-  watch,
-  watchEffect,
-  computed,
-  inject,
-  provide,
-} from "vue";
+import { defineProps, watchEffect, computed, inject, provide } from "vue";
 import { useStore } from "vuex";
-import { onMounted } from "vue";
 
-const { dispatch, state } = useStore();
+const { state } = useStore();
 
 const deleteReportStatus = computed(() => ({
   loading: state?.profile?.deleteOutreachReportLoading,
@@ -108,7 +110,7 @@ const props = defineProps(["data"]);
 // const userRole = computed(() => {
 //   return state?.auth?.userData?.userRole;
 // });
-const report = computed(() => state?.profile?.outreachReport);
+// const report = computed(() => state?.profile?.outreachReport);
 // const reportLoading = computed(() => state?.profile?.getOutreachByIdloading);
 
 watchEffect(props, () => {

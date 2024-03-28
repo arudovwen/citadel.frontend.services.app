@@ -6,16 +6,16 @@
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         > -->
-          <InputGroup
-            v-model="query.searchParameter"
-            placeholder="Search"
-            type="text"
-            prependIcon="heroicons-outline:search"
-            merged
-            classInput="min-w-[220px] !h-9"
-          />
+        <InputGroup
+          v-model="query.searchParameter"
+          placeholder="Search"
+          type="text"
+          prependIcon="heroicons-outline:search"
+          merged
+          classInput="min-w-[220px] !h-9"
+        />
 
-          <!-- <VueTailwindDatePicker
+        <!-- <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
             input-classes="form-control h-[36px]"
@@ -27,18 +27,18 @@
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         > -->
-          <Button
-            icon="heroicons-outline:plus-sm"
-            text="Add Venue"
-            btnClass="btn-primary font-normal btn-sm w-full md:w-auto mt-2 md:mt-0"
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                $refs.venueModal.openModal();
-              }
-            "
-          />
+        <Button
+          icon="heroicons-outline:plus-sm"
+          text="Add Venue"
+          btnClass="btn-primary font-normal btn-sm w-full md:w-auto mt-2 md:mt-0"
+          iconClass="text-lg"
+          @click="
+            () => {
+              type = 'add';
+              $refs.venueModal.openModal();
+            }
+          "
+        />
         <!-- </div> -->
       </div>
 

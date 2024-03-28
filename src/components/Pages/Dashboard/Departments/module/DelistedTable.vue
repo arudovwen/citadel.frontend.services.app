@@ -2,45 +2,83 @@
   <div>
     <div>
       <div class="md:flex pb-6 items-center justify-between px-5">
-        <div class="flex gap-x-4 rounded text-sm">
-          <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
-            prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9" />
-          <Select label="" :options="filters" v-model="query.sortOrder" placeholder="Sort by"
-            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]" />
+        <div class="flex gap-x-4 rounded text-sm mb-4 md:md-0">
+          <InputGroup
+            v-model="query.searchParameter"
+            placeholder="Search"
+            type="text"
+            prependIcon="heroicons-outline:search"
+            merged
+            classInput="min-w-[220px] !h-9"
+          />
+          <Select
+            label=""
+            :options="filters"
+            v-model="query.sortOrder"
+            placeholder="Sort by"
+            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
+          />
         </div>
-        <export-excel :data="members" type="csv" worksheet="reports"
-          :name="`delisted-${query.DepartmentName}-members.csv`" :fields="filteredMembers">
-          <Button icon="clarity:export-line" text="Export"
+        <export-excel
+          :data="members"
+          type="csv"
+          worksheet="reports"
+          :name="`delisted-${query.DepartmentName}-members.csv`"
+          :fields="filteredMembers"
+        >
+          <Button
+            icon="clarity:export-line"
+            text="Export"
             btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-            iconClass="text-lg" />
+            iconClass="text-lg"
+          />
         </export-excel>
       </div>
       <!-- <div class="flex w-full">{{ members }}</div>
       <div class="flex w-full">{{ $store.state.department.departments }}</div> -->
       <div class="">
-        <vue-good-table :columns="columns" styleClass="vgt-table" :isLoading="loading" :rows="members || []"
+        <vue-good-table
+          :columns="columns"
+          styleClass="vgt-table"
+          :isLoading="loading"
+          :rows="members || []"
           :sort-options="{
             enabled: false,
-          }" :pagination-options="{
+          }"
+          :pagination-options="{
             enabled: true,
             perPage: query.pageSize,
-          }">
+          }"
+        >
           <template v-slot:table-row="props">
-            <span v-if="props.column.field == 'fullName'" class="font-medium flex items-center gap-x-1">
-              <router-link :to="`/profile/${props.row.userId}`" class="hover:underline">
+            <span
+              v-if="props.column.field == 'fullName'"
+              class="font-medium flex items-center gap-x-1"
+            >
+              <router-link
+                :to="`/profile/${props.row.userId}`"
+                class="hover:underline"
+              >
                 {{ props.row.fullName }}
               </router-link>
             </span>
 
-            <span v-if="props.column.field == 'actionDate'" class="text-slate-500 dark:text-slate-400">
+            <span
+              v-if="props.column.field == 'actionDate'"
+              class="text-slate-500 dark:text-slate-400"
+            >
               {{ moment(props.row.actionDate).format("ll") }}
             </span>
-            <span v-if="props.column.field == 'email'" class="font-medium lowercase">
+            <span
+              v-if="props.column.field == 'email'"
+              class="font-medium lowercase"
+            >
               {{ props.row.email }}
             </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span
-                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500 bg-warning-500">
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500 bg-warning-500"
+              >
                 Delisted
               </span>
             </span>
@@ -51,17 +89,21 @@
                 </span>
                 <template v-slot:menus>
                   <MenuItem v-for="(item, i) in filteredActions" :key="i">
-                  <div @click="item.doit(item.name, props.row)" :class="{
-            'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
-              item.name === 'delete',
-            'hover:bg-slate-900 hover:text-white':
-              item.name !== 'delete',
-          }" class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center">
-                    <span class="text-base">
-                      <Icon :icon="item.icon" />
-                    </span>
-                    <span>{{ item.name }}</span>
-                  </div>
+                    <div
+                      @click="item.doit(item.name, props.row)"
+                      :class="{
+                        'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
+                          item.name === 'delete',
+                        'hover:bg-slate-900 hover:text-white':
+                          item.name !== 'delete',
+                      }"
+                      class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
+                    >
+                      <span class="text-base">
+                        <Icon :icon="item.icon" />
+                      </span>
+                      <span>{{ item.name }}</span>
+                    </div>
                   </MenuItem>
                 </template>
               </Dropdown>
@@ -72,9 +114,17 @@
           </template>
           <template #pagination-bottom>
             <div class="py-4 px-3">
-              <Pagination :total="total" :current="query.pageNumber" :per-page="query.pageSize" :pageRange="pageRange"
-                @page-changed="query.pageNumber = $event" :perPageChanged="perPage" enableSearch enableSelect
-                :options="options">
+              <Pagination
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="pageRange"
+                @page-changed="query.pageNumber = $event"
+                :perPageChanged="perPage"
+                enableSearch
+                enableSelect
+                :options="options"
+              >
                 >
               </Pagination>
             </div>
@@ -83,15 +133,25 @@
       </div>
     </div>
   </div>
-  <Modal title="View Reason" label="Small modal" labelClass="btn-outline-primary" ref="reasonModal" sizeClass="max-w-md"
-    themeClass="bg-primary-500">
+  <Modal
+    title="View Reason"
+    label="Small modal"
+    labelClass="btn-outline-primary"
+    ref="reasonModal"
+    sizeClass="max-w-md"
+    themeClass="bg-primary-500"
+  >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       {{ reason ? reason : "None" }}
     </div>
 
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button text="Close" btnClass="btn-primary btn-sm" @click="$refs.reasonModal.closeModal()" />
+        <Button
+          text="Close"
+          btnClass="btn-primary btn-sm"
+          @click="$refs.reasonModal.closeModal()"
+        />
       </div>
     </template>
   </Modal>
@@ -196,19 +256,19 @@ export default {
     const deleteloading = computed(() => state.profile.deleteloading);
     // const deletesuccess = computed(() => state.profile.deletesuccess);
     const filteredMembers = computed(() => ({
-      "id": "id",
-      "gender": "gender",
-      "phone": "phone",
+      id: "id",
+      gender: "gender",
+      phone: "phone",
       "First Name": "firstName",
       "Last Name": "lastName",
-      "Email": "email",
-      "actionDate": "actionDate",
+      Email: "email",
+      actionDate: "actionDate",
       "Current Department": "currentDepartment",
       "New Department": "newDepartment",
-      "userId": "userId",
+      userId: "userId",
       "Request Date": "requestDate",
-      "dob": "dob"
-    }))
+      dob: "dob",
+    }));
     function handleDelete(id) {
       dispatch("removeMemberFromDepartment", id);
     }

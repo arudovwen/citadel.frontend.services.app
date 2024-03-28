@@ -24,7 +24,7 @@
           <export-excel
             :data="members"
             worksheet="First timers"
-            name="firsttimers.csv" 
+            name="firsttimers.csv"
             type="csv"
           >
             <Button

@@ -2,11 +2,21 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
-          prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9 w-full md:w-auto" />
-        <Button icon="heroicons-outline:plus" text="Add Accessory"
+        <InputGroup
+          v-model="query.searchParameter"
+          placeholder="Search"
+          type="text"
+          prependIcon="heroicons-outline:search"
+          merged
+          classInput="min-w-[220px] !h-9 w-full md:w-auto"
+        />
+        <Button
+          icon="heroicons-outline:plus"
+          text="Add Accessory"
           btnClass="btn-primary btn-sm dark:bg-slate-800  h-min text-sm font-normal w-full md:w-auto mt-2 md:mt-0"
-          iconClass="text-lg" @click="toggleAddAccessory" />
+          iconClass="text-lg"
+          @click="toggleAddAccessory"
+        />
       </div>
 
       <AccessoriesTable />

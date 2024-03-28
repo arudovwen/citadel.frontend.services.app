@@ -2,36 +2,36 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-          <div class="md:flex gap-x-4 items-center">
-            <InputGroup
-              v-model="query.searchParameter"
-              placeholder="Search"
-              type="text"
-              prependIcon="heroicons-outline:search"
-              merged
-              classInput="min-w-[220px] !h-9"
-            />
-            <VueTailwindDatePicker
-              v-model="query.dateValue"
-              :formatter="formatter"
-              input-classes="form-control h-[36px] min-w-[250px]"
-              placeholder="Filter date range"
-            />
-            <VueSelect
-              class="min-w-[200px] w-full md:w-auto"
-              v-model="eventType"
-              :options="eventsOption"
-              placeholder="Filter type"
-              name="filterType"
-            />
-            <!-- <VueSelect
+        <div class="md:flex gap-x-4 items-center">
+          <InputGroup
+            v-model="query.searchParameter"
+            placeholder="Search"
+            type="text"
+            prependIcon="heroicons-outline:search"
+            merged
+            classInput="min-w-[220px] !h-9"
+          />
+          <VueTailwindDatePicker
+            v-model="query.dateValue"
+            :formatter="formatter"
+            input-classes="form-control h-[36px] min-w-[250px]"
+            placeholder="Filter date range"
+          />
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto"
+            v-model="eventType"
+            :options="eventsOption"
+            placeholder="Filter type"
+            name="filterType"
+          />
+          <!-- <VueSelect
             class="min-w-[200px] w-full md:w-auto"
             v-model="center"
             :options="zoneOptions"
             placeholder="Filter center"
             name="center"
             /> -->
-          </div>
+        </div>
         <div
           v-if="permissions.includes('CAN_CREATE_EVENTS')"
           class="md:flex md:space-x-3 items-center flex-none"

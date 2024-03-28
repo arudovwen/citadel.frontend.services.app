@@ -10,10 +10,13 @@
           merged
           classInput="min-w-[220px] !h-9 "
         />
-        <div
-          class="md:flex md:space-x-3 items-center flex-none" 
-        >
-          <export-excel :data="members" type="csv" worksheet="Users" name="users.csv">
+        <div class="md:flex md:space-x-3 items-center flex-none">
+          <export-excel
+            :data="members"
+            type="csv"
+            worksheet="Users"
+            name="users.csv"
+          >
             <Button
               icon="clarity:export-line"
               text="Export"
