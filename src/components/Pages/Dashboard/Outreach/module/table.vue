@@ -16,11 +16,11 @@
     </div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex gap-x-4 items-center">
+        <div class="gap-x-4 items-center md:flex" :class="width > 768 && 'flex'">
           <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
             prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9" />
 
-          <VueTailwindDatePicker v-model="query.dateValue" :formatter="formatter" input-classes="form-control h-[36px]"
+          <VueTailwindDatePicker v-model="query.dateValue" :formatter="formatter" input-classes="form-control w-max-[300px] !w-min-[250px] h-[36px]"
             placeholder="Filter date" />
         </div>
         <div class="md:flex md:space-x-3 items-center flex-none" :class="window.width < 768 ? 'space-x-rb' : ''">

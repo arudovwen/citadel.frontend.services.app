@@ -2,7 +2,7 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex gap-x-4">
+        <div class="md:flex gap-x-4">
           <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
             prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9" />
           <Select label="" :options="sortFilters" v-model="query.sortOrder" placeholder="Sort by"
@@ -13,7 +13,7 @@
         <div class="md:flex md:space-x-3 items-center flex-none" :class="window.width < 768 ? 'space-x-rb' : ''">
           <Button v-if="active === 'inspection' &&
             permissions.includes('CAN_CREATE_INSPECTION_REPORT')
-            " icon="heroicons-outline:plus-sm" text="Add Report" btnClass=" btn-primary font-normal btn-sm "
+            " icon="heroicons-outline:plus-sm" text="Add Report" btnClass=" btn-primary font-normal btn-sm w-full mt-2 md:mt-0"
             iconClass="text-lg" @click="() => {
               type = 'add';
               $refs.modalChange.openModal();
@@ -22,7 +22,7 @@
           <!-- v-if="state.auth.userData?.cihRole?.toLowerCase() === 'cihpastor'" -->
           <Button v-if="active !== 'inspection' &&
             permissions.includes('CAN_CREATE_ACTIVITY_REPORT')
-            " icon="heroicons-outline:plus-sm" text="Add Report" btnClass=" btn-primary font-normal btn-sm "
+            " icon="heroicons-outline:plus-sm" text="Add Report" btnClass=" btn-primary font-normal btn-sm w-full mt-2 md:mt-0 "
             iconClass="text-lg" @click="() => {
               type = 'add';
               $refs.modalChange.openModal();

@@ -3,21 +3,23 @@
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div>
-          <div class="flex gap-x-4 items-center">
+          <div class="md:flex gap-x-4 items-center flex-wrap">
             <InputGroup
               v-model="query.searchParams"
               placeholder="Search"
               type="text"
               prependIcon="heroicons-outline:search"
               merged
-              classInput="min-w-[220px] !h-9"
+              classInput="min-w-[220px] !h-9 sm:mb-2"
             />
-            <VueTailwindDatePicker
-              v-model="query.dateValue"
-              :formatter="formatter"
-              input-classes="form-control h-[36px] min-w-[250px]"
-              placeholder="Filter date range"
-            />
+            <div>
+              <VueTailwindDatePicker
+                v-model="query.dateValue"
+                :formatter="formatter"
+                input-classes="form-control h-[36px] min-w-[250px] sm:w-[100px]"
+                placeholder="Filter date range"
+              />
+            </div>
             <!-- <VueSelect
               class="min-w-[200px] w-full md:w-auto"
               v-model="eventType"

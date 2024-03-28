@@ -4,7 +4,7 @@
       class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:justify-between md:items-center mb-6 md:mb-4 w-full md:w-auto"
     >
       <div
-        class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:gap-x-4 items-center w-full md:w-auto"
+        class="md:flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:gap-x-4 items-center w-full md:w-auto"
       >
         <InputGroup
           v-model="query.searchParameter"

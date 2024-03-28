@@ -4,27 +4,28 @@
     <!-- {{ query }}{{ zoneObj }} -->
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex gap-x-4 rounded text-sm">
+        <div class="md:flex gap-x-4 rounded text-sm">
           <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
             prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9" />
           <Select label="" :options="filters" v-model="query.sortOrder" placeholder="Sort by"
-            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]" />
+            classInput="bg-white !h-9 min-w-[150px] mt-2 md:mt-0 !min-h-[36px]" />
         </div>
         <div class="md:flex md:space-x-3 items-center flex-none" :class="window.width < 768 ? 'space-x-rb' : ''">
-          <Button v-if="permissions.includes('CAN_CREATE_CENTERS')" icon="mdi:house-group-add" text="Add center"
-            btnClass=" btn-primary font-normal btn-sm " iconClass="text-lg" @click="() => {
+          <router-link :to="`/cih/zones/zone-members/${route.params.zoneId}?name=${route.query.name}`">
+            <Button text="View all members in this zone" btnClass=" btn-dark font-normal btn-sm w-full mt-2 md:mt-0" iconClass="text-lg" />
+          </router-link>
+          <div class="flex justify-between w-full box-border mt-2 md:mt-0">
+            <Button v-if="permissions.includes('CAN_CREATE_CENTERS')" icon="mdi:house-group-add" text="Add center"
+              btnClass=" btn-primary font-normal btn-sm " iconClass="text-lg" @click="() => {
               type = 'add';
               $refs.modalChange.openModal();
-            }
-            " />
-          <router-link :to="`/cih/zones/zone-members/${route.params.zoneId}?name=${route.query.name}`">
-            <Button text="View all members in this zone" btnClass=" btn-dark font-normal btn-sm " iconClass="text-lg" />
-          </router-link>
-          <export-excel :data="centers || []" worksheet="centers" :name="`${route.query.name}-centers.csv`" type="csv">
-            <Button icon="clarity:export-line" text="Export"
-              btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-              iconClass="text-lg" />
-          </export-excel>
+            }" />
+            <export-excel :data="centers || []" worksheet="centers" :name="`${route.query.name}-centers.csv`" type="csv">
+              <Button icon="clarity:export-line" text="Export"
+                btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm md:ml-4"
+                iconClass="text-lg" />
+            </export-excel>
+          </div>
         </div>
       </div>
       <div class="-mx-6">
@@ -59,8 +60,8 @@
             <span v-if="props.column.field == 'status'" class="block w-full">
               <span class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
                 :class="`${props.row.status === 'active'
-              ? 'text-success-500 bg-success-500'
-              : ''
+            ? 'text-success-500 bg-success-500'
+            : ''
             } 
             ${props.row.status === 'inactive'
               ? 'text-warning-500 bg-warning-500'
@@ -84,8 +85,7 @@
               item.name === 'delete',
             'hover:bg-slate-900 hover:text-white':
               item.name !== 'delete',
-          }"
-                    class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center">
+          }" class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center">
                     <span class="text-base">
                       <Icon :icon="item.icon" />
                     </span>
@@ -118,10 +118,10 @@
   </Modal>
 
   <Modal :title="type === 'add'
-              ? 'Add center'
-              : type === 'edit'
-                ? 'Edit center'
-                : 'View center'
+            ? 'Add center'
+            : type === 'edit'
+              ? 'Edit center'
+              : 'View center'
             " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-md">
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />

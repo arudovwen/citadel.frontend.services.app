@@ -2,10 +2,10 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 justify-between items-center">
-        <div
+        <!-- <div
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
+        > -->
           <InputGroup
             v-model="query.searchParameter"
             placeholder="Search"
@@ -22,16 +22,15 @@
             placeholder="Select date"
             as-single
           /> -->
-        </div>
-        <div
+        <!-- </div> -->
+        <!-- <div
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
+        > -->
           <Button
             icon="heroicons-outline:plus-sm"
             text="Add Venue"
-            btnClass="
-          btn-primary font-normal btn-sm "
+            btnClass="btn-primary font-normal btn-sm w-full md:w-auto mt-2 md:mt-0"
             iconClass="text-lg"
             @click="
               () => {
@@ -40,7 +39,7 @@
               }
             "
           />
-        </div>
+        <!-- </div> -->
       </div>
 
       <div class="-mx-6">

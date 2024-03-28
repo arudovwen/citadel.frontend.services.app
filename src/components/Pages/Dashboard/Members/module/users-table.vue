@@ -2,25 +2,22 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex rounded-[6px] text-sm overflow-hidden gap-x-4">
-          <InputGroup
-            v-model="search"
-            placeholder="Search"
-            type="text"
-            prependIcon="heroicons-outline:search"
-            merged
-            classInput="min-w-[220px] !h-9"
-          />
-        </div>
+        <InputGroup
+          v-model="search"
+          placeholder="Search"
+          type="text"
+          prependIcon="heroicons-outline:search"
+          merged
+          classInput="min-w-[220px] !h-9 "
+        />
         <div
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
+          class="md:flex md:space-x-3 items-center flex-none" 
         >
           <export-excel :data="members" type="csv" worksheet="Users" name="users.csv">
             <Button
               icon="clarity:export-line"
               text="Export"
-              btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+              btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm w-full mt-2 md:mt-0"
               iconClass="text-lg"
             />
           </export-excel>
@@ -28,7 +25,7 @@
 
           <Button
             text="Roles"
-            btnClass=" btn-primary font-normal btn-sm "
+            btnClass=" btn-primary font-normal btn-sm w-full mt-2 md:mt-0"
             iconClass="text-lg"
             @click="
               () => {

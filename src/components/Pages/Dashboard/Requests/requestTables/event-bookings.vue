@@ -2,8 +2,7 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div>
-          <div class="flex gap-x-4 items-center">
+          <div class="md:flex gap-x-4 items-center">
             <InputGroup
               v-model="query.searchParameter"
               placeholder="Search"
@@ -31,9 +30,8 @@
             :options="zoneOptions"
             placeholder="Filter center"
             name="center"
-          /> -->
+            /> -->
           </div>
-        </div>
         <div
           v-if="permissions.includes('CAN_CREATE_EVENTS')"
           class="md:flex md:space-x-3 items-center flex-none"

@@ -2,22 +2,16 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex rounded-[6px] text-sm overflow-hidden gap-x-4">
+        <div class="md:flex rounded-[6px] text-sm overflow-hidden gap-x-4">
           <InputGroup
             v-model="query.searchParameter"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
             merged
-            classInput="min-w-[220px] !h-9"
+            classInput="min-w-[220px] !h-9 w-full"
           />
-          <!-- <Select
-            label=""
-            :options="filters"
-            v-model="query.sortOrder"
-            placeholder="Sort by"
-            classInput="bg-white !h-9 min-w-[150px] !min-h-[36px]"
-          /> -->
+
           <VueTailwindDatePicker
             v-model="dateValue"
             :formatter="formatter"
@@ -34,7 +28,7 @@
             v-if="permissions.includes('CAN_CREATE_AFFINITYGROUPS')"
             icon="ri:user-add-line"
             text="Add Affinity Group"
-            btnClass=" btn-primary font-normal btn-sm "
+            btnClass=" btn-primary font-normal btn-sm w-full mt-2 md:mt-0"
             iconClass="text-lg"
             @click="
               () => {
