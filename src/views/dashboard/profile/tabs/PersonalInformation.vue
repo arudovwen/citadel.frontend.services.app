@@ -88,7 +88,7 @@
 
       <Textinput
         v-if="gender?.toLowerCase() === 'female'"
-        label="maidenName"
+        label="Maiden Name"
         type="text"
         placeholder="Provide your Maiden Name"
         name="maidenName"
