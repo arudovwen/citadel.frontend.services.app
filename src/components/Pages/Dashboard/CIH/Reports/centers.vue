@@ -546,10 +546,10 @@ export default {
         console.log(query.dateValue)
         if (query.dateValue.length) {
           query.endDate = moment(query.dateValue[1]).format(
-            "YYYY-MM-DD HH:mm:ss.SSS"
+            "YYYY-MM-DD"
           );
           query.startDate = moment(query.dateValue[0]).format(
-            "YYYY-MM-DD HH:mm:ss.SSS"
+            "YYYY-MM-DD"
           );
         } else {
           query.endDate = "";
@@ -594,10 +594,10 @@ export default {
       () => {
         if (query.dateValue.length) {
           query.endDate = moment(query.dateValue[1]).format(
-            "YYYY-MM-DD HH:mm:ss.SSS"
+            "YYYY-MM-DD"
           );
           query.startDate = moment(query.dateValue[0]).format(
-            "YYYY-MM-DD HH:mm:ss.SSS"
+            "YYYY-MM-DD"
           );
         } else {
           query.endDate = "";
