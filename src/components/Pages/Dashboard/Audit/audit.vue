@@ -345,7 +345,7 @@ export default {
     const query = reactive({
       pageNumber: 1,
       pageSize: 10,
-      FromDate: "",
+      StartDate: "",
       EndDate: "",
       searchParams: "",
       events: "",
@@ -409,12 +409,12 @@ export default {
           query.EndDate = moment(query.dateValue[1]).format(
             "YYYY-MM-DD HH:mm:ss.SSS"
           );
-          query.FromDate = moment(query.dateValue[0]).format(
+          query.StartDate = moment(query.dateValue[0]).format(
             "YYYY-MM-DD HH:mm:ss.SSS"
           );
         } else {
           query.EndDate = "";
-          query.FromDate = "";
+          query.StartDate = "";
         }
       }
     );
@@ -443,7 +443,7 @@ export default {
         query.pageNumber,
         query.events,
         query.pageSize,
-        query.FromDate,
+        query.StartDate,
         query.EndDate,
         query.zone,
       ],

@@ -281,7 +281,7 @@
     "
     labelClass="btn-outline-dark"
     ref="modalChange"
-    sizeClass="max-w-md"
+    sizeClass="max-w-[28vw]"
   >
     <AddReport v-if="type === 'reportadd'" :data="selectedOutreachData" />
     <AddRecord v-if="type === 'add'" />
