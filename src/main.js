@@ -24,6 +24,7 @@ import "v-calendar/dist/style.css";
 import VOtpInput from "vue3-otp-input";
 import excel from "vue-excel-export";
 import CKEditor from "@ckeditor/ckeditor5-vue";
+import vue3ToPdf from "vue3-to-pdf";
 
 if (localStorage.users === undefined) {
   let users = [
@@ -88,5 +89,6 @@ createApp(App)
   .use(VueApexCharts)
   .use(VCalendar)
   .use(CKEditor)
+  .use(vue3ToPdf)
   .component("v-otp-input", VOtpInput)
   .mount("#app");

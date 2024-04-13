@@ -24,6 +24,42 @@
           class="md:flex md:space-x-3 items-center flex-none"
           :class="window.width < 768 ? 'space-x-rb' : ''"
         >
+          <Dropdown classMenuItems=" min-w-[100px]">
+            <div class="text-xl">
+              <Button
+                icon="clarity:export-line"
+                text="Export"
+                btnClass=" btn-outline-secondary mt-2 md:mt-0 w-full text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+                iconClass="text-lg"
+              />
+            </div>
+            <template v-slot:menus>
+              <MenuItem>
+                <export-excel
+                  :data="affinityGroups"
+                  worksheet="Affinity Groups"
+                  name="affinityGroups.csv"
+                  type="csv"
+                  class="w-[90px]"
+                >
+                  <button
+                    class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
+                  >
+                    Export csv
+                  </button>
+                </export-excel>
+              </MenuItem>
+              <MenuItem>
+                <button
+                  @click="generateReport"
+                  class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
+                >
+                  Export pdf
+                </button>
+              </MenuItem>
+            </template>
+          </Dropdown>
+
           <Button
             v-if="permissions.includes('CAN_CREATE_AFFINITYGROUPS')"
             icon="ri:user-add-line"
@@ -39,55 +75,57 @@
           />
         </div>
       </div>
-      <div class="-mx-6">
-        <vue-good-table
-          :columns="columns"
-          mode="remote"
-          styleClass="vgt-table"
-          :isLoading="loading"
-          :rows="affinityGroups || []"
-          :sort-options="{
-            enabled: false,
-          }"
-          :pagination-options="{
-            enabled: true,
-            perPage: query.pageSize,
-          }"
-        >
-          <template v-slot:table-row="props">
-            <span v-if="props.column.field == 'ageRange'">
-              {{ props.row.startAge }} <span class="lowercase">-</span>
-              {{ props.row.endAge }}
-              <span class="lowercase">yrs</span>
-            </span>
-            <span
-              class="max-w-max line-clamp-2"
-              v-if="props.column.field == 'maritalStatus'"
-            >
-              {{ props.row.maritalStatus }}
-            </span>
-            <span
-              class="max-w-max line-clamp-2"
-              v-if="props.column.field == 'description'"
-            >
-              {{ props.row.description }}
-            </span>
-            <span v-if="props.column.field == 'action'">
-              <Dropdown
-                v-if="permissions.includes('CAN_UPDATE_AFFINITYGROUPS')"
-                classMenuItems=" w-[140px]"
+      <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
+        <div class="-mx-6">
+          <vue-good-table
+            :columns="columns"
+            mode="remote"
+            styleClass="vgt-table"
+            :isLoading="loading"
+            :rows="affinityGroups || []"
+            :sort-options="{
+              enabled: false,
+            }"
+            :pagination-options="{
+              enabled: true,
+              perPage: query.pageSize,
+            }"
+          >
+            <template v-slot:table-row="props">
+              <span v-if="props.column.field == 'ageRange'">
+                {{ props.row.startAge }} <span class="lowercase">-</span>
+                {{ props.row.endAge }}
+                <span class="lowercase">yrs</span>
+              </span>
+              <span
+                class="max-w-max line-clamp-2"
+                v-if="props.column.field == 'maritalStatus'"
               >
-                <span class="text-xl"
-                  ><Icon icon="heroicons-outline:dots-vertical"
-                /></span>
-                <template v-slot:menus>
-                  <!-- {{ props.row }} -->
-                  <MenuItem v-for="(item, i) in actions" :key="i">
-                    <div
-                      @click="
-                        generateAction(item.name.toLowerCase(), props.row).doit
-                      "
-                      :class="`
+                {{ props.row.maritalStatus }}
+              </span>
+              <span
+                class="max-w-max line-clamp-2"
+                v-if="props.column.field == 'description'"
+              >
+                {{ props.row.description }}
+              </span>
+              <span v-if="props.column.field == 'action'">
+                <Dropdown
+                  v-if="permissions.includes('CAN_UPDATE_AFFINITYGROUPS')"
+                  classMenuItems=" w-[140px]"
+                >
+                  <span class="text-xl"
+                    ><Icon icon="heroicons-outline:dots-vertical"
+                  /></span>
+                  <template v-slot:menus>
+                    <!-- {{ props.row }} -->
+                    <MenuItem v-for="(item, i) in actions" :key="i">
+                      <div
+                        @click="
+                          generateAction(item.name.toLowerCase(), props.row)
+                            .doit
+                        "
+                        :class="`
                 
                   ${
                     item.name === 'delist'
@@ -95,42 +133,43 @@
                       : 'hover:bg-slate-900 hover:text-white'
                   }
                    w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
-                    >
-                      <span class="text-base"
-                        ><Icon
-                          :icon="generateAction(item.name, props.row).icon"
-                      /></span>
-                      <span>{{
-                        generateAction(item.name, props.row).name
-                      }}</span>
-                    </div>
-                  </MenuItem>
-                </template>
-              </Dropdown>
-              <span v-else class="cursor-not-allowed text-xl"
-                ><Icon icon="heroicons-outline:dots-vertical"
-              /></span>
-            </span>
-          </template>
-          <template #pagination-bottom>
-            <div class="py-4 px-3">
-              <Pagination
-                :total="total"
-                :current="query.pageNumber"
-                :per-page="query.pageSize"
-                :pageRange="pageRange"
-                @page-changed="query.pageNumber = $event"
-                :perPageChanged="perPage"
-                enableSearch
-                enableSelect
-                :options="options"
-              >
+                      >
+                        <span class="text-base"
+                          ><Icon
+                            :icon="generateAction(item.name, props.row).icon"
+                        /></span>
+                        <span>{{
+                          generateAction(item.name, props.row).name
+                        }}</span>
+                      </div>
+                    </MenuItem>
+                  </template>
+                </Dropdown>
+                <span v-else class="cursor-not-allowed text-xl"
+                  ><Icon icon="heroicons-outline:dots-vertical"
+                /></span>
+              </span>
+            </template>
+            <template #pagination-bottom>
+              <div class="py-4 px-3">
+                <Pagination
+                  :total="total"
+                  :current="query.pageNumber"
+                  :per-page="query.pageSize"
+                  :pageRange="pageRange"
+                  @page-changed="query.pageNumber = $event"
+                  :perPageChanged="perPage"
+                  enableSearch
+                  enableSelect
+                  :options="options"
                 >
-              </Pagination>
-            </div>
-          </template>
-        </vue-good-table>
-      </div>
+                  >
+                </Pagination>
+              </div>
+            </template>
+          </vue-good-table>
+        </div>
+      </v-pdf>
     </Card>
   </div>
 
@@ -314,6 +353,9 @@ export default {
     };
   },
   methods: {
+    generateReport() {
+      this.$refs.pdf.download();
+    },
     openModal() {
       this.$store.dispatch("openModal");
     },
@@ -365,6 +407,20 @@ export default {
     onMounted(() => {
       getAllAffinityGroups();
     });
+    const pdfOptions = {
+      margin: 10,
+      image: {
+        type: "jpeg",
+        quality: 1,
+      },
+      html2canvas: { scale: 1 },
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "l",
+      },
+    };
+    const exportFilename = "file.pdf";
     const permissions = computed(() => state.auth.permissions);
     const filters = [
       {
@@ -473,6 +529,9 @@ export default {
       modalStatus,
       perPage,
       permissions,
+
+      pdfOptions,
+      exportFilename,
     };
   },
 };

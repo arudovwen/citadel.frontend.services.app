@@ -21,69 +21,95 @@
             classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
           />
         </div>
-        <export-excel
-          :data="members || []"
-          worksheet="reports"
-          type="csv"
-          :name="`pending-${query.DepartmentName}-members.csv`"
-          :fields="filteredMembers"
-        >
-          <Button
-            icon="clarity:export-line"
-            text="Export"
-            btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-            iconClass="text-lg"
-          />
-        </export-excel>
-      </div>
-      <div class="">
-        <vue-good-table
-          :columns="columns"
-          styleClass="vgt-table"
-          :isLoading="deptloading"
-          :rows="members || []"
-          :sort-options="{
-            enabled: false,
-          }"
-          :pagination-options="{
-            enabled: true,
-            perPage: query.pageSize,
-          }"
-        >
-          <template v-slot:table-row="props">
-            <span
-              v-if="props.column.field == 'fullName'"
-              class="font-medium flex items-center gap-x-1"
-            >
-              <router-link
-                :to="`/profile/${props.row.id}`"
-                class="hover:underline"
+        <Dropdown classMenuItems=" min-w-[100px]">
+          <div class="text-xl">
+            <Button
+              icon="clarity:export-line"
+              text="Export"
+              btnClass=" btn-outline-secondary mt-2 md:mt-0 w-full text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+              iconClass="text-lg"
+            />
+          </div>
+          <template v-slot:menus>
+            <MenuItem>
+              <export-excel
+                :data="members"
+                worksheet="reports"
+                :fields="filteredMembers"
+                :name="`pending-${query.DepartmentName}-members.csv`"
+                type="csv"
               >
-                {{ props.row.fullName }}
-              </router-link>
-            </span>
-
-            <span
-              v-if="props.column.field == 'requestDate'"
-              class="text-slate-500 dark:text-slate-400"
-            >
-              {{ moment(props.row.requestDate).format("ll") }}
-            </span>
-            <span
-              v-if="props.column.field == 'email'"
-              class="font-medium lowercase"
-            >
-              {{ props.row.email }}
-            </span>
-            <span v-if="props.column.field == 'status'" class="block w-full">
+                <button
+                  class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
+                >
+                  Export csv
+                </button>
+              </export-excel>
+            </MenuItem>
+            <MenuItem>
+              <button
+                @click="generateReport"
+                class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
+              >
+                Export pdf
+              </button>
+            </MenuItem>
+          </template>
+        </Dropdown>
+      </div>
+      <v-pdf
+        ref="pdf"
+        :options="pdfOptions"
+        :filename="`pennding-${query.DepartmentName}-members.pdf`"
+      >
+        <div class="">
+          <vue-good-table
+            :columns="columns"
+            styleClass="vgt-table"
+            :isLoading="deptloading"
+            :rows="members || []"
+            :sort-options="{
+              enabled: false,
+            }"
+            :pagination-options="{
+              enabled: true,
+              perPage: query.pageSize,
+            }"
+          >
+            <template v-slot:table-row="props">
               <span
-                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                :class="`${
-                  props.row.status === 'active' ||
-                  props.row.statusText === 'approved'
-                    ? 'text-success-500 bg-success-500'
-                    : ''
-                } 
+                v-if="props.column.field == 'fullName'"
+                class="font-medium flex items-center gap-x-1"
+              >
+                <router-link
+                  :to="`/profile/${props.row.id}`"
+                  class="hover:underline"
+                >
+                  {{ props.row.fullName }}
+                </router-link>
+              </span>
+
+              <span
+                v-if="props.column.field == 'requestDate'"
+                class="text-slate-500 dark:text-slate-400"
+              >
+                {{ moment(props.row.requestDate).format("ll") }}
+              </span>
+              <span
+                v-if="props.column.field == 'email'"
+                class="font-medium lowercase"
+              >
+                {{ props.row.email }}
+              </span>
+              <span v-if="props.column.field == 'status'" class="block w-full">
+                <span
+                  class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                  :class="`${
+                    props.row.status === 'active' ||
+                    props.row.statusText === 'approved'
+                      ? 'text-success-500 bg-success-500'
+                      : ''
+                  } 
               ${
                 props.row.status === 'inactive' ||
                 props.row.statusText === 'rejected'
@@ -98,59 +124,60 @@
               }
               
                `"
-              >
-                {{ props.row.statusText }}
-              </span>
-            </span>
-            <span v-if="props.column.field == 'action'">
-              <Dropdown classMenuItems=" w-[140px]">
-                <span class="text-xl">
-                  <Icon icon="heroicons-outline:dots-vertical" />
+                >
+                  {{ props.row.statusText }}
                 </span>
-                <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in actions" :key="i">
-                    <div
-                      @click="item.doit(props.row)"
-                      :class="{
-                        'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
-                          item.name === 'delete',
-                        'hover:bg-slate-900 hover:text-white':
-                          item.name !== 'delete',
-                      }"
-                      class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
-                    >
-                      <span class="text-base">
-                        <Icon :icon="item.icon" />
-                      </span>
-                      <span>{{ item.name }}</span>
-                    </div>
-                  </MenuItem>
-                </template>
-              </Dropdown>
-              <!-- <span v-else class="cursor-not-allowed text-xl"
+              </span>
+              <span v-if="props.column.field == 'action'">
+                <Dropdown classMenuItems=" w-[140px]">
+                  <span class="text-xl">
+                    <Icon icon="heroicons-outline:dots-vertical" />
+                  </span>
+                  <template v-slot:menus>
+                    <MenuItem v-for="(item, i) in actions" :key="i">
+                      <div
+                        @click="item.doit(props.row)"
+                        :class="{
+                          'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
+                            item.name === 'delete',
+                          'hover:bg-slate-900 hover:text-white':
+                            item.name !== 'delete',
+                        }"
+                        class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
+                      >
+                        <span class="text-base">
+                          <Icon :icon="item.icon" />
+                        </span>
+                        <span>{{ item.name }}</span>
+                      </div>
+                    </MenuItem>
+                  </template>
+                </Dropdown>
+                <!-- <span v-else class="cursor-not-allowed text-xl"
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span> -->
-            </span>
-          </template>
-          <template #pagination-bottom>
-            <div class="py-4 px-3">
-              <Pagination
-                :total="total"
-                :current="query.pageNumber"
-                :per-page="query.pageSize"
-                :pageRange="pageRange"
-                @page-changed="query.pageNumber = $event"
-                :perPageChanged="perPage"
-                enableSearch
-                enableSelect
-                :options="options"
-              >
+              </span>
+            </template>
+            <template #pagination-bottom>
+              <div class="py-4 px-3">
+                <Pagination
+                  :total="total"
+                  :current="query.pageNumber"
+                  :per-page="query.pageSize"
+                  :pageRange="pageRange"
+                  @page-changed="query.pageNumber = $event"
+                  :perPageChanged="perPage"
+                  enableSearch
+                  enableSelect
+                  :options="options"
                 >
-              </Pagination>
-            </div>
-          </template>
-        </vue-good-table>
-      </div>
+                  >
+                </Pagination>
+              </div>
+            </template>
+          </vue-good-table>
+        </div>
+      </v-pdf>
     </div>
   </div>
   <Modal
@@ -268,6 +295,20 @@ export default {
       searchParameter: "",
       DepartmentName: route.params.name,
     });
+    const pdfOptions = {
+      margin: 10,
+      image: {
+        type: "jpeg",
+        quality: 1,
+      },
+      html2canvas: { scale: 1 },
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "l",
+      },
+    };
+    const exportFilename = "file.pdf";
     const { state, dispatch } = useStore();
     const toast = useToast();
     const type = ref(null);
@@ -421,6 +462,8 @@ export default {
       moment,
       departmentName,
       filteredMembers,
+      pdfOptions,
+      exportFilename,
     };
   },
 
@@ -490,6 +533,9 @@ export default {
     };
   },
   methods: {
+    generateReport() {
+      this.$refs.pdf.download();
+    },
     generateAction(name, id) {
       this.id = id;
 

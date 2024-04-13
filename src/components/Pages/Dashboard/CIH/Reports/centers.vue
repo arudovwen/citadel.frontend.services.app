@@ -2,181 +2,347 @@
   <div>
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
-        <div class="flex flex-col md:flex-row rounded-[6px] text-sm overflow-hidden gap-4 mb-4 md:md-0">
-          <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
-            prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9" />
-          <Select label="" :options="sortFilters" v-model="query.sortOrder" placeholder="Sort by"
-            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]" />
+        <div
+          class="flex flex-col md:flex-row rounded-[6px] text-sm overflow-hidden gap-4 mb-4 md:md-0"
+        >
+          <InputGroup
+            v-model="query.searchParameter"
+            placeholder="Search"
+            type="text"
+            prependIcon="heroicons-outline:search"
+            merged
+            classInput="min-w-[220px] !h-9"
+          />
+          <Select
+            label=""
+            :options="sortFilters"
+            v-model="query.sortOrder"
+            placeholder="Sort by"
+            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
+          />
+          <VueTailwindDatePicker
+            v-model="query.dateValue"
+            :formatter="formatter"
+            input-classes="form-control h-[36px]"
+            placeholder="Select date range"
+          />
         </div>
-        <div class="md:flex md:space-x-3 items-center flex-none" :class="window.width < 768 ? 'space-x-rb' : ''">
-          <VueTailwindDatePicker v-model="query.dateValue" :formatter="formatter" input-classes="form-control h-[36px]"
-            placeholder="Select date range" />
-          <Button v-if="active === 'inspection' &&
-            permissions.includes('CAN_CREATE_INSPECTION_REPORT')
-            " icon="heroicons-outline:plus-sm" text="Add Report"
-            btnClass=" btn-primary font-normal btn-sm w-full mt-2 md:mt-0" iconClass="text-lg" @click="() => {
-            type = 'add';
-            $refs.modalChange.openModal();
-          }
-            " />
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
+          <Button
+            v-if="
+              active === 'inspection' &&
+              permissions.includes('CAN_CREATE_INSPECTION_REPORT')
+            "
+            icon="heroicons-outline:plus-sm"
+            text="Add Report"
+            btnClass=" btn-primary font-normal btn-sm w-full mt-2 md:mt-0"
+            iconClass="text-lg"
+            @click="
+              () => {
+                type = 'add';
+                $refs.modalChange.openModal();
+              }
+            "
+          />
           <!-- v-if="state.auth.userData?.cihRole?.toLowerCase() === 'cihpastor'" -->
-          <Button v-if="active !== 'inspection' &&
-            permissions.includes('CAN_CREATE_ACTIVITY_REPORT')
-            " icon="heroicons-outline:plus-sm" text="Add Report"
-            btnClass=" btn-primary font-normal btn-sm w-full mt-2 md:mt-0 " iconClass="text-lg" @click="() => {
-            type = 'add';
-            $refs.modalChange.openModal();
-          }
-            " />
-          <div class="flex border border-gray-200 rounded" v-if="permissions.includes('CAN_VIEW_INSPECTION_REPORT') ||
-            permissions.includes('CAN_VIEW_ACTIVITY_REPORT')
-            ">
-            <Button v-if="permissions.includes('CAN_VIEW_ACTIVITY_REPORT')" text="Activity reports"
-              @click="active = 'activity'" :btnClass="`border-r h-9 py-2 rounded-[0px] flex items-center ${active === 'activity' ? 'bg-gray-100' : ''
-            }`" />
-            <Button v-if="permissions.includes('CAN_VIEW_INSPECTION_REPORT')" text="Inspection reports"
-              @click="active = 'inspection'" :btnClass="`h-9 py-2 flex items-center ${active === 'inspection' ? 'bg-gray-100' : ''
-            }`" />
-          </div>
-          <export-excel :data="active === 'inspection' ? inspectionsData : reports" worksheet="reports" :name="`${active === 'inspection' ? 'inspectionsData' : 'reports'
-            }.csv`" type="csv">
-            <Button icon="clarity:export-line" text="Export"
-              btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-              iconClass="text-lg" />
-          </export-excel>
+          <Button
+            v-if="
+              active !== 'inspection' &&
+              permissions.includes('CAN_CREATE_ACTIVITY_REPORT')
+            "
+            icon="heroicons-outline:plus-sm"
+            text="Add Report"
+            btnClass=" btn-primary font-normal btn-sm w-full mt-2 md:mt-0 "
+            iconClass="text-lg"
+            @click="
+              () => {
+                type = 'add';
+                $refs.modalChange.openModal();
+              }
+            "
+          />
+          <Dropdown classMenuItems=" min-w-[100px]">
+            <div class="text-xl">
+              <Button
+                icon="clarity:export-line"
+                text="Export"
+                btnClass=" btn-outline-secondary mt-2 md:mt-0 w-full text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+                iconClass="text-lg"
+              />
+            </div>
+            <template v-slot:menus>
+              <MenuItem>
+                <export-excel
+                  :data="active === 'inspection' ? inspectionsData : reports"
+                  worksheet="reports"
+                  :name="`${
+                    active === 'inspection' ? 'inspectionsData' : 'reports'
+                  }.csv`"
+                  type="csv"
+                >
+                  <button
+                    class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
+                  >
+                    Export csv
+                  </button>
+                </export-excel>
+              </MenuItem>
+              <MenuItem>
+                <button
+                  @click="generateReport"
+                  class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
+                >
+                  Export pdf
+                </button>
+              </MenuItem>
+            </template>
+          </Dropdown>
         </div>
       </div>
-      <div class="-mx-6">
-        <vue-good-table :columns="active === 'inspection' ? inspectionColumns : activityColumns
-            " mode="remote" styleClass=" vgt-table  centered "
-          :rows="active === 'inspection' ? inspectionsData : reports" :sort-options="{
-            enabled: false,
-          }" :pagination-options="{
-            enabled: true,
-            perPage: perPage,
-          }" :search-options="{
-            enabled: true,
-            externalQuery: searchParameter,
-          }" :select-options="{
-            enabled: permissions.includes('CAN_CREATE_COORDINATOR_REPORT'),
-            selectionInfoClass: 'top-select',
-            selectionText:
-              'reports selected, Do you wish to send these reports?',
-            selectOnCheckboxOnly: true,
-            clearSelectionText: 'Clear selection',
-          }">
-          <template #selected-row-actions>
-            <button :disabled="loading" :isLoading="loading" @click="handleReports" class="text-[#232322] font-medium">
-              Send reports
-            </button>
-          </template>
-          <template v-slot:table-row="props">
-            <span v-if="props.column.field == 'customer'" class="flex items-center">
-              <span class="w-7 h-7 rounded-full mr-3 flex-none">
-                <img :src="require('@/assets/images/all-img/' +
-            props.row.customer.image)
-            " :alt="props.row.customer.name" class="object-cover w-full h-full rounded-full" />
+      <div class="md:flex pb-6 items-center justify-between">
+        <div
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
+          <div
+            class="flex border border-gray-200 rounded"
+            v-if="
+              permissions.includes('CAN_VIEW_INSPECTION_REPORT') ||
+              permissions.includes('CAN_VIEW_ACTIVITY_REPORT')
+            "
+          >
+            <Button
+              v-if="permissions.includes('CAN_VIEW_ACTIVITY_REPORT')"
+              text="Activity reports"
+              @click="active = 'activity'"
+              :btnClass="`border-r h-9 py-2 rounded-[0px] flex items-center ${
+                active === 'activity' ? 'bg-gray-100' : ''
+              }`"
+            />
+            <Button
+              v-if="permissions.includes('CAN_VIEW_INSPECTION_REPORT')"
+              text="Inspection reports"
+              @click="active = 'inspection'"
+              :btnClass="`h-9 py-2 flex items-center ${
+                active === 'inspection' ? 'bg-gray-100' : ''
+              }`"
+            />
+          </div>
+        </div>
+      </div>
+      <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
+        <div class="-mx-6">
+          <vue-good-table
+            :columns="
+              active === 'inspection' ? inspectionColumns : activityColumns
+            "
+            mode="remote"
+            styleClass=" vgt-table  centered "
+            :rows="active === 'inspection' ? inspectionsData : reports"
+            :sort-options="{
+              enabled: false,
+            }"
+            :pagination-options="{
+              enabled: true,
+              perPage: perPage,
+            }"
+            :search-options="{
+              enabled: true,
+              externalQuery: searchParameter,
+            }"
+            :select-options="{
+              enabled: permissions.includes('CAN_CREATE_COORDINATOR_REPORT'),
+              selectionInfoClass: 'top-select',
+              selectionText:
+                'reports selected, Do you wish to send these reports?',
+              selectOnCheckboxOnly: true,
+              clearSelectionText: 'Clear selection',
+            }"
+          >
+            <template #selected-row-actions>
+              <button
+                :disabled="loading"
+                :isLoading="loading"
+                @click="handleReports"
+                class="text-[#232322] font-medium"
+              >
+                Send reports
+              </button>
+            </template>
+            <template v-slot:table-row="props">
+              <span
+                v-if="props.column.field == 'customer'"
+                class="flex items-center"
+              >
+                <span class="w-7 h-7 rounded-full mr-3 flex-none">
+                  <img
+                    :src="
+                      require('@/assets/images/all-img/' +
+                        props.row.customer.image)
+                    "
+                    :alt="props.row.customer.name"
+                    class="object-cover w-full h-full rounded-full"
+                  />
+                </span>
+                <span
+                  class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium"
+                  >{{ props.row.customer.name }}</span
+                >
               </span>
-              <span class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium">{{ props.row.customer.name
-                }}</span>
-            </span>
-            <span v-if="props.column.field == 'totalAttendee'" class="font-medium">
-              {{ props.row.totalAttendee || "-" }}
-            </span>
-            <span v-if="props.column.field == 'zoneName'" class="font-medium">
-              {{ props.row.zoneName || "-" }}
-            </span>
-            <span v-if="props.column.field == 'centerName'" class="font-medium">
-              {{ props.row.centerName || "-" }}
-            </span>
-            <span v-if="props.column.field == 'activityDate'" class="text-slate-500 dark:text-slate-400">
-              {{ moment(props.row.activityDate).format("ll") }}
-            </span>
-            <span v-if="props.column.field == 'dateOfInspection'" class="text-slate-500 dark:text-slate-400">
-              {{ moment(props.row.dateOfInspection).format("ll") }}
-            </span>
-            <span v-if="props.column.field == 'status'" class="block w-full">
-              <span class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                :class="`${props.row.status === 'active'
-            ? 'text-success-500 bg-success-500'
-            : ''
-            } 
-            ${props.row.status === 'inactive'
-              ? 'text-warning-500 bg-warning-500'
-              : ''
+              <span
+                v-if="props.column.field == 'totalAttendee'"
+                class="font-medium"
+              >
+                {{ props.row.totalAttendee || "-" }}
+              </span>
+              <span v-if="props.column.field == 'zoneName'" class="font-medium">
+                {{ props.row.zoneName || "-" }}
+              </span>
+              <span
+                v-if="props.column.field == 'centerName'"
+                class="font-medium"
+              >
+                {{ props.row.centerName || "-" }}
+              </span>
+              <span
+                v-if="props.column.field == 'activityDate'"
+                class="text-slate-500 dark:text-slate-400"
+              >
+                {{ moment(props.row.activityDate).format("ll") }}
+              </span>
+              <span
+                v-if="props.column.field == 'dateOfInspection'"
+                class="text-slate-500 dark:text-slate-400"
+              >
+                {{ moment(props.row.dateOfInspection).format("ll") }}
+              </span>
+              <span v-if="props.column.field == 'status'" class="block w-full">
+                <span
+                  class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                  :class="`${
+                    props.row.status === 'active'
+                      ? 'text-success-500 bg-success-500'
+                      : ''
+                  } 
+            ${
+              props.row.status === 'inactive'
+                ? 'text-warning-500 bg-warning-500'
+                : ''
             }
             ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
             
-             `">
-                {{ props.row.status }}
-              </span>
-            </span>
-            <span v-if="props.column.field == 'action'">
-              <Dropdown classMenuItems=" w-[140px]">
-                <span class="text-xl">
-                  <Icon icon="heroicons-outline:dots-vertical" />
-                </span>
-                <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in actions" :key="i">
-                  <div @click="generateAction(item.name, props.row.id).doit"
-                    :class="`
-                
-                  ${generateAction(item.name, props.row.id).name === 'delete'
-              ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
-              : 'hover:bg-slate-900 hover:text-white'
-            }
-                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `">
-                    <span class="text-base">
-                      <Icon :icon="generateAction(item.name, props.row.id).icon" />
-                    </span>
-                    <span>{{
-            generateAction(item.name, props.row.id).name
-          }}</span>
-                  </div>
-                  </MenuItem>
-                </template>
-              </Dropdown>
-            </span>
-          </template>
-          <template #pagination-bottom>
-            <div class="py-4 px-3">
-              <Pagination :total="total" :current="query.pageNumber" :per-page="query.pageSize" :pageRange="5"
-                :perPageChanged="perPage" @page-changed="query.pageNumber = $event" enableSearch enableSelect
-                :options="options">
+             `"
                 >
-              </Pagination>
-            </div>
-          </template>
-        </vue-good-table>
-      </div>
+                  {{ props.row.status }}
+                </span>
+              </span>
+              <span v-if="props.column.field == 'action'">
+                <Dropdown classMenuItems=" w-[140px]">
+                  <span class="text-xl">
+                    <Icon icon="heroicons-outline:dots-vertical" />
+                  </span>
+                  <template v-slot:menus>
+                    <MenuItem v-for="(item, i) in actions" :key="i">
+                      <div
+                        @click="generateAction(item.name, props.row.id).doit"
+                        :class="`
+                
+                  ${
+                    generateAction(item.name, props.row.id).name === 'delete'
+                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
+                      : 'hover:bg-slate-900 hover:text-white'
+                  }
+                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
+                      >
+                        <span class="text-base">
+                          <Icon
+                            :icon="generateAction(item.name, props.row.id).icon"
+                          />
+                        </span>
+                        <span>{{
+                          generateAction(item.name, props.row.id).name
+                        }}</span>
+                      </div>
+                    </MenuItem>
+                  </template>
+                </Dropdown>
+              </span>
+            </template>
+            <template #pagination-bottom>
+              <div class="py-4 px-3">
+                <Pagination
+                  :total="total"
+                  :current="query.pageNumber"
+                  :per-page="query.pageSize"
+                  :pageRange="5"
+                  :perPageChanged="perPage"
+                  @page-changed="query.pageNumber = $event"
+                  enableSearch
+                  enableSelect
+                  :options="options"
+                >
+                  >
+                </Pagination>
+              </div>
+            </template>
+          </vue-good-table>
+        </div>
+      </v-pdf>
     </Card>
   </div>
 
-  <Modal title="Delete report" label="Small modal" labelClass="btn-outline-danger" ref="modal" sizeClass="max-w-md"
-    themeClass="bg-danger-500">
+  <Modal
+    title="Delete report"
+    label="Small modal"
+    labelClass="btn-outline-danger"
+    ref="modal"
+    sizeClass="max-w-md"
+    themeClass="bg-danger-500"
+  >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to delete this report?
     </div>
 
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button :disabled="deletereportloading" text="Cancel" btnClass="btn-outline-secondary btn-sm"
-          @click="$refs.modal.closeModal()" />
-        <Button text="Delete" :isLoading="deletereportloading" :disabled="deletereportloading"
-          btnClass="btn-danger btn-sm" @click="handleDelete" />
+        <Button
+          :disabled="deletereportloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Delete"
+          :isLoading="deletereportloading"
+          :disabled="deletereportloading"
+          btnClass="btn-danger btn-sm"
+          @click="handleDelete"
+        />
       </div>
     </template>
   </Modal>
-  <Modal :title="type === 'add'
-            ? `Create ${active} report`
-            : type === 'edit'
-              ? 'Edit Report'
-              : 'View report'
-            " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-3xl">
+  <Modal
+    :title="
+      type === 'add'
+        ? `Create ${active} report`
+        : type === 'edit'
+        ? 'Edit Report'
+        : 'View report'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-3xl"
+  >
     <AddReport v-if="type === 'add' && active === 'activity'" />
     <AddInspectionReport v-if="type === 'add' && active === 'inspection'" />
     <EditReport v-if="type === 'edit' && active === 'activity'" :id="id" />
-    <EditInspectionReport v-if="type === 'edit' && active === 'inspection'" :id="id" />
+    <EditInspectionReport
+      v-if="type === 'edit' && active === 'inspection'"
+      :id="id"
+    />
     <ViewReport v-if="type === 'view'" :active="active" :id="id" />
   </Modal>
 </template>
@@ -342,6 +508,9 @@ export default {
     };
   },
   methods: {
+    generateReport() {
+      this.$refs.pdf.download();
+    },
     handleDelete() {
       this.$store.dispatch("deleteCIHReport", {
         type: this.active,
@@ -383,7 +552,20 @@ export default {
   },
   setup() {
     const route = useRoute();
-
+    const pdfOptions = {
+      margin: 10,
+      image: {
+        type: "jpeg",
+        quality: 1,
+      },
+      html2canvas: { scale: 1 },
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "l",
+      },
+    };
+    const exportFilename = "file.pdf";
     const sortFilters = [
       {
         label: "Default",
@@ -421,7 +603,7 @@ export default {
       searchParameter: "",
       sortOrder: "",
       ZoneName: route.params.name,
-      dateValue: []
+      dateValue: [],
     });
 
     const zoneOptions = computed(() =>
@@ -471,7 +653,6 @@ export default {
         dispatch("getActivityReports", {
           ...query,
           ZoneName: route.params.name,
-
         });
       } else {
         dispatch("getActivityReports", {
@@ -543,14 +724,10 @@ export default {
     watch(
       () => query.dateValue,
       () => {
-        console.log(query.dateValue)
+        console.log(query.dateValue);
         if (query.dateValue.length) {
-          query.endDate = moment(query.dateValue[1]).format(
-            "YYYY-MM-DD"
-          );
-          query.startDate = moment(query.dateValue[0]).format(
-            "YYYY-MM-DD"
-          );
+          query.endDate = moment(query.dateValue[1]).format("YYYY-MM-DD");
+          query.startDate = moment(query.dateValue[0]).format("YYYY-MM-DD");
         } else {
           query.endDate = "";
           query.startDate = "";
@@ -590,15 +767,16 @@ export default {
       }
     );
     watch(
-      () => [query.pageNumber, query.pageSize, query.sortOrder, query.dateValue],
+      () => [
+        query.pageNumber,
+        query.pageSize,
+        query.sortOrder,
+        query.dateValue,
+      ],
       () => {
         if (query.dateValue.length) {
-          query.endDate = moment(query.dateValue[1]).format(
-            "YYYY-MM-DD"
-          );
-          query.startDate = moment(query.dateValue[0]).format(
-            "YYYY-MM-DD"
-          );
+          query.endDate = moment(query.dateValue[1]).format("YYYY-MM-DD");
+          query.startDate = moment(query.dateValue[0]).format("YYYY-MM-DD");
         } else {
           query.endDate = "";
           query.startDate = "";
@@ -626,6 +804,8 @@ export default {
       total,
       zoneOptions,
       permissions,
+      pdfOptions,
+      exportFilename,
     };
   },
 };
