@@ -4,14 +4,15 @@
       <div class="md:flex pb-6 items-center justify-between">
         <div>
           <div class="md:flex gap-x-4 items-center flex-wrap">
-            <InputGroup
-              v-model="query.searchParams"
-              placeholder="Search"
-              type="text"
-              prependIcon="heroicons-outline:search"
-              merged
-              classInput="min-w-[220px] !h-9 sm:mb-2"
-            />
+            <div class="h-[36px]">
+              <InputGroup
+                v-model="query.searchParams"
+                placeholder="Search"
+                type="text"
+                merged
+                classInput="min-w-[220px] !h-[36px] sm:mb-2"
+              />
+            </div>
             <div>
               <VueTailwindDatePicker
                 v-model="query.dateValue"
@@ -36,24 +37,106 @@
           /> -->
           </div>
         </div>
-        <div
-          v-if="permissions.includes('CAN_CREATE_EVENTS')"
-          class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''"
-        >
-          <!-- <Button
-            icon="heroicons-outline:plus-sm"
-            text="Request Event"
-            btnClass=" btn-primary font-normal btn-sm "
-            iconClass="text-lg"
-            @click="
-              () => {
-                type = 'add';
-                $refs.modalChange.openModal();
-              }
-            "
-          /> -->
-        </div>
+        <Dropdown classMenuItems=" min-w-[100px]">
+          <div class="text-xl">
+            <Button
+              icon="clarity:export-line"
+              text="Export"
+              btnClass=" btn-outline-secondary mt-2 md:mt-0 w-full text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+              iconClass="text-lg"
+            />
+          </div>
+          <template v-slot:menus>
+            <MenuItem>
+              <export-excel
+                :data="events"
+                worksheet="report"
+                type="csv"
+                name="report.csv"
+              >
+                <button
+                  class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
+                >
+                  Export csv
+                </button>
+              </export-excel>
+            </MenuItem>
+            <MenuItem>
+              <button
+                @click="generateReport"
+                class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
+              >
+                Export pdf
+              </button>
+            </MenuItem>
+          </template>
+        </Dropdown>
+      </div>
+      <div class="hidden">
+        <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
+          <div class="-mx-6">
+            <vue-good-table
+              :columns="columns"
+              mode="remote"
+              :isLoading="loading"
+              styleClass=" vgt-table  centered "
+              :rows="events || []"
+              :sort-options="{
+                enabled: false,
+              }"
+              :pagination-options="{
+                enabled: false,
+                perPage: perpage,
+              }"
+            >
+              <template v-slot:table-row="props">
+                <span
+                  v-if="props.column.field == 'eventType'"
+                  class="text-slate-500 dark:text-slate-400"
+                >
+                  {{
+                    eventsOption.find((i) => i.value === props.row.eventType)
+                      ?.label || "-"
+                  }}
+                </span>
+                <span
+                  v-if="props.column.field == 'createdAt'"
+                  class="text-slate-500 dark:text-slate-400"
+                >
+                  {{ moment(props.row.createdAt).format("lll") }}
+                </span>
+
+                <span
+                  v-if="props.column.field == 'actionPerformedBy'"
+                  class="text-slate-500 dark:text-slate-400"
+                >
+                  <router-link
+                    class="hover:underline"
+                    :to="`/profile/${props.row.actionPerformedById}`"
+                    >{{ props.row.actionPerformedBy }}</router-link
+                  >
+                </span>
+              </template>
+              <template #pagination-bottom>
+                <div class="py-4 px-3">
+                  <Pagination
+                    :total="total"
+                    :current="query.pageNumber"
+                    :per-page="query.pageSize"
+                    :pageRange="5"
+                    :perPageChanged="perPage"
+                    @page-changed="query.pageNumber = $event"
+                    enableSearch
+                    enableSelect
+                    :options="options"
+                  >
+                    >
+                  </Pagination>
+                </div>
+              </template>
+            </vue-good-table>
+          </div>
+        </v-pdf>
       </div>
       <div class="-mx-6">
         <vue-good-table
@@ -122,7 +205,7 @@
 </template>
 <script>
 import { eventsOptions } from "@/constant/data";
-
+import Dropdown from "@/components/Dropdown";
 import { onMounted, reactive, watch, computed, ref } from "vue";
 import { useStore } from "vuex";
 import VueTailwindDatePicker from "vue-tailwind-datepicker";
@@ -135,15 +218,19 @@ import { useToast } from "vue-toastification";
 // eslint-disable-next-line no-unused-vars
 import moment from "moment";
 import window from "@/mixins/window";
+import { MenuItem } from "@headlessui/vue";
+import Button from "@/components/Button";
 
 export default {
   mixins: [window],
   components: {
     Pagination,
     InputGroup,
-
+    Dropdown,
     Card,
     VueTailwindDatePicker,
+    MenuItem,
+    Button,
   },
 
   data() {
@@ -206,6 +293,9 @@ export default {
     };
   },
   methods: {
+    generateReport() {
+      this.$refs.pdf.download();
+    },
     handleAction(status) {
       let newaction = this.actions;
 
@@ -295,7 +385,20 @@ export default {
       dispatch("getZones", memberQuery);
       getData();
     });
-
+    const pdfOptions = {
+      margin: 10,
+      image: {
+        type: "jpeg",
+        quality: 1,
+      },
+      html2canvas: { scale: 1 },
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "l",
+      },
+    };
+    const exportFilename = "file.pdf";
     const modal = ref(null);
     const modalStatus = ref(null);
     const modalChange = ref(null);
@@ -486,6 +589,8 @@ export default {
       columns,
       permissions,
       reasonModal,
+      pdfOptions,
+      exportFilename,
     };
   },
 };
