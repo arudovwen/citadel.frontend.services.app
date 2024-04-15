@@ -9,6 +9,7 @@
       v-if="(!biodata && biodataLoading) || isShowing == false"
     />
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- <FormDebug :form="values" /> -->
       <Select
         label="Title"
         :options="titleMenu"
@@ -268,7 +269,7 @@ import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
-
+// import FormDebug from "@/components/forms/FormDebug";
 onMounted(() => {
   getBiodata();
 });
@@ -328,7 +329,7 @@ const schema = yup.object({
   maidenName: yup.string().nullable(),
 });
 
-const { handleSubmit, setValues, values } = useForm({
+const { handleSubmit, setValues, values, setFieldValue } = useForm({
   validationSchema: schema,
   initialValues: biodata.value,
 });
@@ -459,8 +460,8 @@ const prepareDetails = (values, type) => {
     employmentStatus: values?.employmentStatus,
     dateOfBirth: values?.dateOfBirth,
     placeOfBirth: values?.placeOfBirth,
-    nationality: values?.nationality,
-    stateOfOrigin: values?.stateOfOrigin,
+    nationality: values?.nationality?.value,
+    stateOfOrigin: values?.stateOfOrigin?.value,
     maritalStatus: values?.maritalStatus,
     maidenName: values?.maidenName,
   };
@@ -480,6 +481,58 @@ const onSubmit = handleSubmit((values) => {
     store.dispatch("updateProfile", prepareDetails(values, "edit"));
   }
 });
+
+const handleStateOfOriginChange = () => {
+  const correspondingState = stateOfOriginOption?.value?.find((i) => {
+    return (
+      stateOfOrigin?.value?.label?.toLowerCase() === i?.label?.toLowerCase()
+    );
+  });
+
+  if (correspondingState == null || correspondingState == undefined) {
+    setFieldValue("stateOfOrigin", {
+      label: "",
+      value: "",
+    });
+  }
+};
+
+const handleStateChange = () => {
+  const correspondingState = statesOption?.value?.find((i) => {
+    return state?.value?.label?.toLowerCase() === i?.label?.toLowerCase();
+  });
+
+  if (correspondingState == null || correspondingState == undefined) {
+    setFieldValue("state", {
+      label: "",
+      value: "",
+    });
+  }
+};
+
+const handleLgaChange = () => {
+  const correspondingState = lgaOption?.value?.find((i) => {
+    return lga?.value?.label?.toLowerCase() === i?.label?.toLowerCase();
+  });
+
+  if (correspondingState == null || correspondingState == undefined) {
+    setFieldValue("lga", {
+      label: "",
+      value: "",
+    });
+  }
+};
+watch(stateOfOriginOption, () => {
+  handleStateOfOriginChange();
+});
+watch(statesOption, () => {
+  handleStateChange();
+});
+
+watch(lgaOption, () => {
+  handleLgaChange();
+});
+
 watch(creationSuccess, () => {
   toast.success("Successfully created profile");
 });
