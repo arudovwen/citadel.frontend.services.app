@@ -75,68 +75,69 @@
           />
         </div>
       </div>
-      <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
-        <div class="-mx-6">
-          <vue-good-table
-            :columns="columns"
-            mode="remote"
-            styleClass="vgt-table"
-            :isLoading="loading"
-            :rows="members || []"
-            :sort-options="{
-              enabled: false,
-            }"
-            :pagination-options="{
-              enabled: true,
-              perPage: query.pageSize,
-            }"
-          >
-            <template v-slot:table-row="props">
-              <span v-if="props.column.field == 'statusText'">
+      <div class="hidden">
+        <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
+          <div class="-mx-6">
+            <vue-good-table
+              :columns="columns.filter((i) => i.field !== 'action')"
+              mode="remote"
+              styleClass="vgt-table"
+              :isLoading="loading"
+              :rows="members || []"
+              :sort-options="{
+                enabled: false,
+              }"
+              :pagination-options="{
+                enabled: false,
+                perPage: query.pageSize,
+              }"
+            >
+              <template v-slot:table-row="props">
+                <span v-if="props.column.field == 'statusText'">
+                  <span
+                    :class="`whitespace-nowrap text-[12.5px] rounded-full px-3 py-1 ${
+                      props?.row?.statusText?.toLowerCase() ===
+                      'pendingactivation'
+                        ? 'text-gray-700 bg-gray-100'
+                        : props?.row?.statusText?.toLowerCase() === 'active'
+                        ? 'text-green-700 bg-green-100'
+                        : 'text-red-700 bg-red-100'
+                    }`"
+                    >{{
+                      props?.row?.statusText?.toLowerCase() ===
+                      "pendingactivation"
+                        ? "Pending"
+                        : props?.row?.statusText
+                    }}</span
+                  >
+                </span>
                 <span
-                  :class="`whitespace-nowrap text-[12.5px] rounded-full px-3 py-1 ${
-                    props?.row?.statusText?.toLowerCase() ===
-                    'pendingactivation'
-                      ? 'text-gray-700 bg-gray-100'
-                      : props?.row?.statusText?.toLowerCase() === 'active'
-                      ? 'text-green-700 bg-green-100'
-                      : 'text-red-700 bg-red-100'
-                  }`"
-                  >{{
-                    props?.row?.statusText?.toLowerCase() ===
-                    "pendingactivation"
-                      ? "Pending"
-                      : props?.row?.statusText
-                  }}</span
+                  v-if="props.column.field == 'emailAddress'"
+                  class="font-medium lowercase"
                 >
-              </span>
-              <span
-                v-if="props.column.field == 'emailAddress'"
-                class="font-medium lowercase"
-              >
-                {{ props.row.emailAddress }}
-              </span>
-              <span v-if="props.column.field == 'action'">
-                <Dropdown classMenuItems=" w-[160px]">
-                  <span class="text-xl"
-                    ><Icon icon="heroicons-outline:dots-vertical"
-                  /></span>
-                  <template v-slot:menus>
-                    <!-- <span>dd</span> -->
-                    <MenuItem
-                      v-for="(item, i) in handleActions(
-                        props?.row?.statusText?.toLowerCase()
-                      )"
-                      :key="i"
-                    >
-                      <div
-                        @click="
-                          generateAction(
-                            item?.name?.toLowerCase(),
-                            props.row.userId
-                          ).doit
-                        "
-                        :class="`
+                  {{ props.row.emailAddress }}
+                </span>
+                <span v-if="props.column.field == 'action'">
+                  <Dropdown classMenuItems=" w-[160px]">
+                    <span class="text-xl"
+                      ><Icon icon="heroicons-outline:dots-vertical"
+                    /></span>
+                    <template v-slot:menus>
+                      <!-- <span>dd</span> -->
+                      <MenuItem
+                        v-for="(item, i) in handleActions(
+                          props?.row?.statusText?.toLowerCase()
+                        )"
+                        :key="i"
+                      >
+                        <div
+                          @click="
+                            generateAction(
+                              item?.name?.toLowerCase(),
+                              props.row.userId
+                            ).doit
+                          "
+                          :class="`
                 
                   ${
                     item.name === 'delete'
@@ -144,42 +145,144 @@
                       : 'hover:bg-slate-900 hover:text-white'
                   }
                    w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
-                      >
-                        <span class="text-base"
-                          ><Icon
-                            :icon="
-                              generateAction(item.name, props.row.userId).icon
-                            "
-                        /></span>
-                        <span>{{
-                          generateAction(item.name, props.row.userId).name
-                        }}</span>
-                      </div>
-                    </MenuItem>
-                  </template>
-                </Dropdown>
-              </span>
-            </template>
-            <template #pagination-bottom>
-              <div class="py-4 px-3">
-                <Pagination
-                  :total="total"
-                  :current="query.pageNumber"
-                  :per-page="query.pageSize"
-                  :pageRange="pageRange"
-                  @page-changed="query.pageNumber = $event"
-                  :perPageChanged="perPage"
-                  enableSearch
-                  enableSelect
-                  :options="options"
-                >
+                        >
+                          <span class="text-base"
+                            ><Icon
+                              :icon="
+                                generateAction(item.name, props.row.userId).icon
+                              "
+                          /></span>
+                          <span>{{
+                            generateAction(item.name, props.row.userId).name
+                          }}</span>
+                        </div>
+                      </MenuItem>
+                    </template>
+                  </Dropdown>
+                </span>
+              </template>
+              <template #pagination-bottom>
+                <div class="py-4 px-3">
+                  <Pagination
+                    :total="total"
+                    :current="query.pageNumber"
+                    :per-page="query.pageSize"
+                    :pageRange="pageRange"
+                    @page-changed="query.pageNumber = $event"
+                    :perPageChanged="perPage"
+                    enableSearch
+                    enableSelect
+                    :options="options"
                   >
-                </Pagination>
-              </div>
-            </template>
-          </vue-good-table>
-        </div>
-      </v-pdf>
+                    >
+                  </Pagination>
+                </div>
+              </template>
+            </vue-good-table>
+          </div>
+        </v-pdf>
+      </div>
+      <div class="-mx-6">
+        <vue-good-table
+          :columns="columns"
+          mode="remote"
+          styleClass="vgt-table"
+          :isLoading="loading"
+          :rows="members || []"
+          :sort-options="{
+            enabled: false,
+          }"
+          :pagination-options="{
+            enabled: true,
+            perPage: query.pageSize,
+          }"
+        >
+          <template v-slot:table-row="props">
+            <span v-if="props.column.field == 'statusText'">
+              <span
+                :class="`whitespace-nowrap text-[12.5px] rounded-full px-3 py-1 ${
+                  props?.row?.statusText?.toLowerCase() === 'pendingactivation'
+                    ? 'text-gray-700 bg-gray-100'
+                    : props?.row?.statusText?.toLowerCase() === 'active'
+                    ? 'text-green-700 bg-green-100'
+                    : 'text-red-700 bg-red-100'
+                }`"
+                >{{
+                  props?.row?.statusText?.toLowerCase() === "pendingactivation"
+                    ? "Pending"
+                    : props?.row?.statusText
+                }}</span
+              >
+            </span>
+            <span
+              v-if="props.column.field == 'emailAddress'"
+              class="font-medium lowercase"
+            >
+              {{ props.row.emailAddress }}
+            </span>
+            <span v-if="props.column.field == 'action'">
+              <Dropdown classMenuItems=" w-[160px]">
+                <span class="text-xl"
+                  ><Icon icon="heroicons-outline:dots-vertical"
+                /></span>
+                <template v-slot:menus>
+                  <!-- <span>dd</span> -->
+                  <MenuItem
+                    v-for="(item, i) in handleActions(
+                      props?.row?.statusText?.toLowerCase()
+                    )"
+                    :key="i"
+                  >
+                    <div
+                      @click="
+                        generateAction(
+                          item?.name?.toLowerCase(),
+                          props.row.userId
+                        ).doit
+                      "
+                      :class="`
+                
+                  ${
+                    item.name === 'delete'
+                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
+                      : 'hover:bg-slate-900 hover:text-white'
+                  }
+                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
+                    >
+                      <span class="text-base"
+                        ><Icon
+                          :icon="
+                            generateAction(item.name, props.row.userId).icon
+                          "
+                      /></span>
+                      <span>{{
+                        generateAction(item.name, props.row.userId).name
+                      }}</span>
+                    </div>
+                  </MenuItem>
+                </template>
+              </Dropdown>
+            </span>
+          </template>
+          <template #pagination-bottom>
+            <div class="py-4 px-3">
+              <Pagination
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="pageRange"
+                @page-changed="query.pageNumber = $event"
+                :perPageChanged="perPage"
+                enableSearch
+                enableSelect
+                :options="options"
+              >
+                >
+              </Pagination>
+            </div>
+          </template>
+        </vue-good-table>
+      </div>
     </Card>
   </div>
   <Modal

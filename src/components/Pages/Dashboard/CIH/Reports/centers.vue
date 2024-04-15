@@ -133,100 +133,109 @@
           </div>
         </div>
       </div>
-      <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
-        <div class="-mx-6">
-          <vue-good-table
-            :columns="
-              active === 'inspection' ? inspectionColumns : activityColumns
-            "
-            mode="remote"
-            styleClass=" vgt-table  centered "
-            :rows="active === 'inspection' ? inspectionsData : reports"
-            :sort-options="{
-              enabled: false,
-            }"
-            :pagination-options="{
-              enabled: true,
-              perPage: perPage,
-            }"
-            :search-options="{
-              enabled: true,
-              externalQuery: searchParameter,
-            }"
-            :select-options="{
-              enabled: permissions.includes('CAN_CREATE_COORDINATOR_REPORT'),
-              selectionInfoClass: 'top-select',
-              selectionText:
-                'reports selected, Do you wish to send these reports?',
-              selectOnCheckboxOnly: true,
-              clearSelectionText: 'Clear selection',
-            }"
-          >
-            <template #selected-row-actions>
-              <button
-                :disabled="loading"
-                :isLoading="loading"
-                @click="handleReports"
-                class="text-[#232322] font-medium"
-              >
-                Send reports
-              </button>
-            </template>
-            <template v-slot:table-row="props">
-              <span
-                v-if="props.column.field == 'customer'"
-                class="flex items-center"
-              >
-                <span class="w-7 h-7 rounded-full mr-3 flex-none">
-                  <img
-                    :src="
-                      require('@/assets/images/all-img/' +
-                        props.row.customer.image)
-                    "
-                    :alt="props.row.customer.name"
-                    class="object-cover w-full h-full rounded-full"
-                  />
+      <div class="hidden">
+        <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
+          <div class="-mx-6">
+            <vue-good-table
+              :columns="
+                active === 'inspection'
+                  ? inspectionColumns.filter((i) => i.field !== 'action')
+                  : activityColumns.filter((i) => i.field !== 'action')
+              "
+              mode="remote"
+              styleClass=" vgt-table  centered "
+              :rows="active === 'inspection' ? inspectionsData : reports"
+              :sort-options="{
+                enabled: false,
+              }"
+              :pagination-options="{
+                enabled: false,
+                perPage: perPage,
+              }"
+              :search-options="{
+                enabled: true,
+                externalQuery: searchParameter,
+              }"
+              :select-options="{
+                enabled: permissions.includes('CAN_CREATE_COORDINATOR_REPORT'),
+                selectionInfoClass: 'top-select',
+                selectionText:
+                  'reports selected, Do you wish to send these reports?',
+                selectOnCheckboxOnly: true,
+                clearSelectionText: 'Clear selection',
+              }"
+            >
+              <template #selected-row-actions>
+                <button
+                  :disabled="loading"
+                  :isLoading="loading"
+                  @click="handleReports"
+                  class="text-[#232322] font-medium"
+                >
+                  Send reports
+                </button>
+              </template>
+              <template v-slot:table-row="props">
+                <span
+                  v-if="props.column.field == 'customer'"
+                  class="flex items-center"
+                >
+                  <span class="w-7 h-7 rounded-full mr-3 flex-none">
+                    <img
+                      :src="
+                        require('@/assets/images/all-img/' +
+                          props.row.customer.image)
+                      "
+                      :alt="props.row.customer.name"
+                      class="object-cover w-full h-full rounded-full"
+                    />
+                  </span>
+                  <span
+                    class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium"
+                    >{{ props.row.customer.name }}</span
+                  >
                 </span>
                 <span
-                  class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium"
-                  >{{ props.row.customer.name }}</span
+                  v-if="props.column.field == 'totalAttendee'"
+                  class="font-medium"
                 >
-              </span>
-              <span
-                v-if="props.column.field == 'totalAttendee'"
-                class="font-medium"
-              >
-                {{ props.row.totalAttendee || "-" }}
-              </span>
-              <span v-if="props.column.field == 'zoneName'" class="font-medium">
-                {{ props.row.zoneName || "-" }}
-              </span>
-              <span
-                v-if="props.column.field == 'centerName'"
-                class="font-medium"
-              >
-                {{ props.row.centerName || "-" }}
-              </span>
-              <span
-                v-if="props.column.field == 'activityDate'"
-                class="text-slate-500 dark:text-slate-400"
-              >
-                {{ moment(props.row.activityDate).format("ll") }}
-              </span>
-              <span
-                v-if="props.column.field == 'dateOfInspection'"
-                class="text-slate-500 dark:text-slate-400"
-              >
-                {{ moment(props.row.dateOfInspection).format("ll") }}
-              </span>
-              <span v-if="props.column.field == 'status'" class="block w-full">
+                  {{ props.row.totalAttendee || "-" }}
+                </span>
                 <span
-                  class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                  :class="`${
-                    props.row.status === 'active'
-                      ? 'text-success-500 bg-success-500'
-                      : ''
-                  } 
+                  v-if="props.column.field == 'zoneName'"
+                  class="font-medium"
+                >
+                  {{ props.row.zoneName || "-" }}
+                </span>
+                <span
+                  v-if="props.column.field == 'centerName'"
+                  class="font-medium"
+                >
+                  {{ props.row.centerName || "-" }}
+                </span>
+                <span
+                  v-if="props.column.field == 'activityDate'"
+                  class="text-slate-500 dark:text-slate-400"
+                >
+                  {{ moment(props.row.activityDate).format("ll") }}
+                </span>
+                <span
+                  v-if="props.column.field == 'dateOfInspection'"
+                  class="text-slate-500 dark:text-slate-400"
+                >
+                  {{ moment(props.row.dateOfInspection).format("ll") }}
+                </span>
+                <span
+                  v-if="props.column.field == 'status'"
+                  class="block w-full"
+                >
+                  <span
+                    class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                    :class="`${
+                      props.row.status === 'active'
+                        ? 'text-success-500 bg-success-500'
+                        : ''
+                    } 
             ${
               props.row.status === 'inactive'
                 ? 'text-warning-500 bg-warning-500'
@@ -235,20 +244,20 @@
             ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
             
              `"
-                >
-                  {{ props.row.status }}
-                </span>
-              </span>
-              <span v-if="props.column.field == 'action'">
-                <Dropdown classMenuItems=" w-[140px]">
-                  <span class="text-xl">
-                    <Icon icon="heroicons-outline:dots-vertical" />
+                  >
+                    {{ props.row.status }}
                   </span>
-                  <template v-slot:menus>
-                    <MenuItem v-for="(item, i) in actions" :key="i">
-                      <div
-                        @click="generateAction(item.name, props.row.id).doit"
-                        :class="`
+                </span>
+                <span v-if="props.column.field == 'action'">
+                  <Dropdown classMenuItems=" w-[140px]">
+                    <span class="text-xl">
+                      <Icon icon="heroicons-outline:dots-vertical" />
+                    </span>
+                    <template v-slot:menus>
+                      <MenuItem v-for="(item, i) in actions" :key="i">
+                        <div
+                          @click="generateAction(item.name, props.row.id).doit"
+                          :class="`
                 
                   ${
                     generateAction(item.name, props.row.id).name === 'delete'
@@ -256,41 +265,197 @@
                       : 'hover:bg-slate-900 hover:text-white'
                   }
                    w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
-                      >
-                        <span class="text-base">
-                          <Icon
-                            :icon="generateAction(item.name, props.row.id).icon"
-                          />
-                        </span>
-                        <span>{{
-                          generateAction(item.name, props.row.id).name
-                        }}</span>
-                      </div>
-                    </MenuItem>
-                  </template>
-                </Dropdown>
-              </span>
-            </template>
-            <template #pagination-bottom>
-              <div class="py-4 px-3">
-                <Pagination
-                  :total="total"
-                  :current="query.pageNumber"
-                  :per-page="query.pageSize"
-                  :pageRange="5"
-                  :perPageChanged="perPage"
-                  @page-changed="query.pageNumber = $event"
-                  enableSearch
-                  enableSelect
-                  :options="options"
-                >
+                        >
+                          <span class="text-base">
+                            <Icon
+                              :icon="
+                                generateAction(item.name, props.row.id).icon
+                              "
+                            />
+                          </span>
+                          <span>{{
+                            generateAction(item.name, props.row.id).name
+                          }}</span>
+                        </div>
+                      </MenuItem>
+                    </template>
+                  </Dropdown>
+                </span>
+              </template>
+              <template #pagination-bottom>
+                <div class="py-4 px-3">
+                  <Pagination
+                    :total="total"
+                    :current="query.pageNumber"
+                    :per-page="query.pageSize"
+                    :pageRange="5"
+                    :perPageChanged="perPage"
+                    @page-changed="query.pageNumber = $event"
+                    enableSearch
+                    enableSelect
+                    :options="options"
                   >
-                </Pagination>
-              </div>
-            </template>
-          </vue-good-table>
-        </div>
-      </v-pdf>
+                    >
+                  </Pagination>
+                </div>
+              </template>
+            </vue-good-table>
+          </div>
+        </v-pdf>
+      </div>
+      <div class="-mx-6">
+        <vue-good-table
+          :columns="
+            active === 'inspection' ? inspectionColumns : activityColumns
+          "
+          mode="remote"
+          styleClass=" vgt-table  centered "
+          :rows="active === 'inspection' ? inspectionsData : reports"
+          :sort-options="{
+            enabled: false,
+          }"
+          :pagination-options="{
+            enabled: true,
+            perPage: perPage,
+          }"
+          :search-options="{
+            enabled: true,
+            externalQuery: searchParameter,
+          }"
+          :select-options="{
+            enabled: permissions.includes('CAN_CREATE_COORDINATOR_REPORT'),
+            selectionInfoClass: 'top-select',
+            selectionText:
+              'reports selected, Do you wish to send these reports?',
+            selectOnCheckboxOnly: true,
+            clearSelectionText: 'Clear selection',
+          }"
+        >
+          <template #selected-row-actions>
+            <button
+              :disabled="loading"
+              :isLoading="loading"
+              @click="handleReports"
+              class="text-[#232322] font-medium"
+            >
+              Send reports
+            </button>
+          </template>
+          <template v-slot:table-row="props">
+            <span
+              v-if="props.column.field == 'customer'"
+              class="flex items-center"
+            >
+              <span class="w-7 h-7 rounded-full mr-3 flex-none">
+                <img
+                  :src="
+                    require('@/assets/images/all-img/' +
+                      props.row.customer.image)
+                  "
+                  :alt="props.row.customer.name"
+                  class="object-cover w-full h-full rounded-full"
+                />
+              </span>
+              <span
+                class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium"
+                >{{ props.row.customer.name }}</span
+              >
+            </span>
+            <span
+              v-if="props.column.field == 'totalAttendee'"
+              class="font-medium"
+            >
+              {{ props.row.totalAttendee || "-" }}
+            </span>
+            <span v-if="props.column.field == 'zoneName'" class="font-medium">
+              {{ props.row.zoneName || "-" }}
+            </span>
+            <span v-if="props.column.field == 'centerName'" class="font-medium">
+              {{ props.row.centerName || "-" }}
+            </span>
+            <span
+              v-if="props.column.field == 'activityDate'"
+              class="text-slate-500 dark:text-slate-400"
+            >
+              {{ moment(props.row.activityDate).format("ll") }}
+            </span>
+            <span
+              v-if="props.column.field == 'dateOfInspection'"
+              class="text-slate-500 dark:text-slate-400"
+            >
+              {{ moment(props.row.dateOfInspection).format("ll") }}
+            </span>
+            <span v-if="props.column.field == 'status'" class="block w-full">
+              <span
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                :class="`${
+                  props.row.status === 'active'
+                    ? 'text-success-500 bg-success-500'
+                    : ''
+                } 
+            ${
+              props.row.status === 'inactive'
+                ? 'text-warning-500 bg-warning-500'
+                : ''
+            }
+            ${props.row.status === 'pending' ? 'text-blue-500 bg-blue-500' : ''}
+            
+             `"
+              >
+                {{ props.row.status }}
+              </span>
+            </span>
+            <span v-if="props.column.field == 'action'">
+              <Dropdown classMenuItems=" w-[140px]">
+                <span class="text-xl">
+                  <Icon icon="heroicons-outline:dots-vertical" />
+                </span>
+                <template v-slot:menus>
+                  <MenuItem v-for="(item, i) in actions" :key="i">
+                    <div
+                      @click="generateAction(item.name, props.row.id).doit"
+                      :class="`
+                
+                  ${
+                    generateAction(item.name, props.row.id).name === 'delete'
+                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
+                      : 'hover:bg-slate-900 hover:text-white'
+                  }
+                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
+                    >
+                      <span class="text-base">
+                        <Icon
+                          :icon="generateAction(item.name, props.row.id).icon"
+                        />
+                      </span>
+                      <span>{{
+                        generateAction(item.name, props.row.id).name
+                      }}</span>
+                    </div>
+                  </MenuItem>
+                </template>
+              </Dropdown>
+            </span>
+          </template>
+          <template #pagination-bottom>
+            <div class="py-4 px-3">
+              <Pagination
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="5"
+                :perPageChanged="perPage"
+                @page-changed="query.pageNumber = $event"
+                enableSearch
+                enableSelect
+                :options="options"
+              >
+                >
+              </Pagination>
+            </div>
+          </template>
+        </vue-good-table>
+      </div>
     </Card>
   </div>
 

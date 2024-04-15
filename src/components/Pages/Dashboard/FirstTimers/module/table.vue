@@ -84,132 +84,262 @@
           />
         </div>
       </div>
-      <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
-        <div class="-mx-6">
-          <vue-good-table
-            ref="mytable"
-            :columns="columns"
-            mode="remote"
-            styleClass="vgt-table"
-            :isLoading="loading"
-            :rows="members || []"
-            :sort-options="{
-              enabled: false,
-            }"
-            :pagination-options="{
-              enabled: true,
-              perPage: query.pageSize,
-            }"
-            :select-options="{
-              enabled: true,
-              selectionInfoClass: 'top-select',
-              selectionText:
-                'first timers selected, Do you wish to upgrade all these first timers?',
-              selectOnCheckboxOnly: true,
-              clearSelectionText: 'Clear selection',
-            }"
-            @on-selected-rows-change="selectionChanged"
-          >
-            <template #selected-row-actions>
-              <button
-                :disabled="convertloading"
-                :isLoading="convertloading"
-                @click="handleBulk"
-                class="text-[#232322] font-medium"
-              >
-                Upgrade all
-              </button>
-            </template>
-            <template v-slot:table-row="props">
-              <span
-                v-if="props.column.field == 'fullName'"
-                class="flex items-center"
-              >
+      <div class="hidden">
+        <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
+          <div class="-mx-6">
+            <vue-good-table
+              ref="mytable"
+              :columns="columns.filter((i) => i.field !== 'action')"
+              mode="remote"
+              styleClass="vgt-table"
+              :isLoading="loading"
+              :rows="members || []"
+              :sort-options="{
+                enabled: false,
+              }"
+              :pagination-options="{
+                enabled: false,
+                perPage: query.pageSize,
+              }"
+              :select-options="{
+                enabled: true,
+                selectionInfoClass: 'top-select',
+                selectionText:
+                  'first timers selected, Do you wish to upgrade all these first timers?',
+                selectOnCheckboxOnly: true,
+                clearSelectionText: 'Clear selection',
+              }"
+              @on-selected-rows-change="selectionChanged"
+            >
+              <template #selected-row-actions>
+                <button
+                  :disabled="convertloading"
+                  :isLoading="convertloading"
+                  @click="handleBulk"
+                  class="text-[#232322] font-medium"
+                >
+                  Upgrade all
+                </button>
+              </template>
+              <template v-slot:table-row="props">
                 <span
-                  class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium hover:underline"
-                  ><router-link :to="`/profile/${props.row.userId}`">{{
-                    props.row.fullName
-                  }}</router-link></span
+                  v-if="props.column.field == 'fullName'"
+                  class="flex items-center"
                 >
-              </span>
-              <span v-if="props.column.field == 'order'" class="font-medium">
-                {{ "#" + props.row.order }}
-              </span>
-              <span
-                v-if="props.column.field == 'email'"
-                class="font-medium lowercase"
-              >
-                {{ props.row.email }}
-              </span>
-              <span
-                v-if="props.column.field == 'date'"
-                class="text-slate-500 dark:text-slate-400"
-              >
-                {{ props.row.date }}
-              </span>
-              <span v-if="props.column.field == 'status'" class="block w-full">
-                <span
-                  class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                  :class="{
-                    'text-success-500 bg-success-500':
-                      props.row.status === 'active',
-                    'text-warning-500 bg-warning-500':
-                      props.row.status === 'inactive',
-                    'text-blue-500 bg-blue-500': props.row.status === 'pending',
-                  }"
-                >
-                  {{ props.row.status }}
-                </span>
-              </span>
-
-              <span v-if="props.column.field == 'action'">
-                <Dropdown classMenuItems="w-[170px]">
-                  <span class="text-xl">
-                    <Icon icon="heroicons-outline:dots-vertical" />
-                  </span>
-                  <template v-slot:menus>
-                    <MenuItem v-for="(item, i) in actions" :key="i">
-                      <div
-                        @click="item.doit(item.name, props.row)"
-                        :class="{
-                          'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
-                            item.name === 'delete',
-                          'hover:bg-slate-900 hover:text-white':
-                            item.name !== 'delete',
-                        }"
-                        class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
-                      >
-                        <span class="text-base">
-                          <Icon :icon="item.icon" />
-                        </span>
-                        <span>{{ item.name }}</span>
-                      </div>
-                    </MenuItem>
-                  </template>
-                </Dropdown>
-              </span>
-            </template>
-            <template #pagination-bottom="props">
-              <div class="py-4 px-3">
-                <Pagination
-                  :total="total"
-                  :current="query.pageNumber"
-                  :per-page="query.pageSize"
-                  :pageRange="pageRange"
-                  @page-changed="query.pageNumber = $event"
-                  :pageChanged="perPage"
-                  :perPageChanged="props.perPageChanged"
-                  enableSearch
-                  enableSelect
-                  :options="options"
-                >
+                  <span
+                    class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium hover:underline"
+                    ><router-link :to="`/profile/${props.row.userId}`">{{
+                      props.row.fullName
+                    }}</router-link></span
                   >
-                </Pagination>
-              </div>
-            </template>
-          </vue-good-table>
-        </div>
-      </v-pdf>
+                </span>
+                <span v-if="props.column.field == 'order'" class="font-medium">
+                  {{ "#" + props.row.order }}
+                </span>
+                <span
+                  v-if="props.column.field == 'email'"
+                  class="font-medium lowercase"
+                >
+                  {{ props.row.email }}
+                </span>
+                <span
+                  v-if="props.column.field == 'date'"
+                  class="text-slate-500 dark:text-slate-400"
+                >
+                  {{ props.row.date }}
+                </span>
+                <span
+                  v-if="props.column.field == 'status'"
+                  class="block w-full"
+                >
+                  <span
+                    class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                    :class="{
+                      'text-success-500 bg-success-500':
+                        props.row.status === 'active',
+                      'text-warning-500 bg-warning-500':
+                        props.row.status === 'inactive',
+                      'text-blue-500 bg-blue-500':
+                        props.row.status === 'pending',
+                    }"
+                  >
+                    {{ props.row.status }}
+                  </span>
+                </span>
+
+                <span v-if="props.column.field == 'action'">
+                  <Dropdown classMenuItems="w-[170px]">
+                    <span class="text-xl">
+                      <Icon icon="heroicons-outline:dots-vertical" />
+                    </span>
+                    <template v-slot:menus>
+                      <MenuItem v-for="(item, i) in actions" :key="i">
+                        <div
+                          @click="item.doit(item.name, props.row)"
+                          :class="{
+                            'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
+                              item.name === 'delete',
+                            'hover:bg-slate-900 hover:text-white':
+                              item.name !== 'delete',
+                          }"
+                          class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
+                        >
+                          <span class="text-base">
+                            <Icon :icon="item.icon" />
+                          </span>
+                          <span>{{ item.name }}</span>
+                        </div>
+                      </MenuItem>
+                    </template>
+                  </Dropdown>
+                </span>
+              </template>
+              <template #pagination-bottom="props">
+                <div class="py-4 px-3">
+                  <Pagination
+                    :total="total"
+                    :current="query.pageNumber"
+                    :per-page="query.pageSize"
+                    :pageRange="pageRange"
+                    @page-changed="query.pageNumber = $event"
+                    :pageChanged="perPage"
+                    :perPageChanged="props.perPageChanged"
+                    enableSearch
+                    enableSelect
+                    :options="options"
+                  >
+                    >
+                  </Pagination>
+                </div>
+              </template>
+            </vue-good-table>
+          </div>
+        </v-pdf>
+      </div>
+      <div class="-mx-6">
+        <vue-good-table
+          ref="mytable"
+          :columns="columns"
+          mode="remote"
+          styleClass="vgt-table"
+          :isLoading="loading"
+          :rows="members || []"
+          :sort-options="{
+            enabled: false,
+          }"
+          :pagination-options="{
+            enabled: true,
+            perPage: query.pageSize,
+          }"
+          :select-options="{
+            enabled: true,
+            selectionInfoClass: 'top-select',
+            selectionText:
+              'first timers selected, Do you wish to upgrade all these first timers?',
+            selectOnCheckboxOnly: true,
+            clearSelectionText: 'Clear selection',
+          }"
+          @on-selected-rows-change="selectionChanged"
+        >
+          <template #selected-row-actions>
+            <button
+              :disabled="convertloading"
+              :isLoading="convertloading"
+              @click="handleBulk"
+              class="text-[#232322] font-medium"
+            >
+              Upgrade all
+            </button>
+          </template>
+          <template v-slot:table-row="props">
+            <span
+              v-if="props.column.field == 'fullName'"
+              class="flex items-center"
+            >
+              <span
+                class="text-sm text-slate-600 dark:text-slate-300 capitalize font-medium hover:underline"
+                ><router-link :to="`/profile/${props.row.userId}`">{{
+                  props.row.fullName
+                }}</router-link></span
+              >
+            </span>
+            <span v-if="props.column.field == 'order'" class="font-medium">
+              {{ "#" + props.row.order }}
+            </span>
+            <span
+              v-if="props.column.field == 'email'"
+              class="font-medium lowercase"
+            >
+              {{ props.row.email }}
+            </span>
+            <span
+              v-if="props.column.field == 'date'"
+              class="text-slate-500 dark:text-slate-400"
+            >
+              {{ props.row.date }}
+            </span>
+            <span v-if="props.column.field == 'status'" class="block w-full">
+              <span
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                :class="{
+                  'text-success-500 bg-success-500':
+                    props.row.status === 'active',
+                  'text-warning-500 bg-warning-500':
+                    props.row.status === 'inactive',
+                  'text-blue-500 bg-blue-500': props.row.status === 'pending',
+                }"
+              >
+                {{ props.row.status }}
+              </span>
+            </span>
+
+            <span v-if="props.column.field == 'action'">
+              <Dropdown classMenuItems="w-[170px]">
+                <span class="text-xl">
+                  <Icon icon="heroicons-outline:dots-vertical" />
+                </span>
+                <template v-slot:menus>
+                  <MenuItem v-for="(item, i) in actions" :key="i">
+                    <div
+                      @click="item.doit(item.name, props.row)"
+                      :class="{
+                        'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
+                          item.name === 'delete',
+                        'hover:bg-slate-900 hover:text-white':
+                          item.name !== 'delete',
+                      }"
+                      class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
+                    >
+                      <span class="text-base">
+                        <Icon :icon="item.icon" />
+                      </span>
+                      <span>{{ item.name }}</span>
+                    </div>
+                  </MenuItem>
+                </template>
+              </Dropdown>
+            </span>
+          </template>
+          <template #pagination-bottom="props">
+            <div class="py-4 px-3">
+              <Pagination
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="pageRange"
+                @page-changed="query.pageNumber = $event"
+                :pageChanged="perPage"
+                :perPageChanged="props.perPageChanged"
+                enableSearch
+                enableSelect
+                :options="options"
+              >
+                >
+              </Pagination>
+            </div>
+          </template>
+        </vue-good-table>
+      </div>
     </Card>
   </div>
   <Modal

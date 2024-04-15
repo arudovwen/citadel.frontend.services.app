@@ -12,19 +12,133 @@
             classInput="min-w-[220px] !h-9"
           />
         </div>
-        <export-excel
-          :data="members || []"
-          worksheet="members"
-          :name="`members.csv`"
-          type="csv"
-        >
-          <Button
-            icon="clarity:export-line"
-            text="Export"
-            btnClass=" btn-outline-secondary text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-            iconClass="text-lg"
-          />
-        </export-excel>
+        <Dropdown classMenuItems=" min-w-[100px]">
+          <div class="text-xl">
+            <Button
+              icon="clarity:export-line"
+              text="Export"
+              btnClass=" btn-outline-secondary mt-2 md:mt-0 w-full text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
+              iconClass="text-lg"
+            />
+          </div>
+          <template v-slot:menus>
+            <MenuItem>
+              <export-excel
+                :data="members"
+                worksheet="members"
+                type="csv"
+                name="members.csv"
+              >
+                <button
+                  class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
+                >
+                  Export csv
+                </button>
+              </export-excel>
+            </MenuItem>
+            <MenuItem>
+              <button
+                @click="generateReport"
+                class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
+              >
+                Export pdf
+              </button>
+            </MenuItem>
+          </template>
+        </Dropdown>
+      </div>
+      <div class="hidden">
+        <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
+          <div class="-mx-6">
+            <vue-good-table
+              :columns="columns.filter((i) => i.field !== 'action')"
+              mode="remote"
+              styleClass="vgt-table"
+              :isLoading="loading"
+              :rows="members || []"
+              :sort-options="{
+                enabled: false,
+              }"
+              :pagination-options="{
+                enabled: false,
+                perPage: query.pageSize,
+              }"
+            >
+              <template v-slot:table-row="props">
+                <span
+                  v-if="props.column.field == 'email'"
+                  class="font-medium lowercase"
+                >
+                  {{ props.row.email }}
+                </span>
+                <span
+                  v-if="props.column.field == 'fullName'"
+                  class="font-medium flex items-center gap-x-1"
+                >
+                  <router-link
+                    :to="`/profile/${props.row.userId}`"
+                    class="hover:underline"
+                  >
+                    {{ props.row.fullName }}
+                  </router-link>
+                  <span
+                    v-if="
+                      props.row.cihRoles &&
+                      props.row.cihRoles.toLowerCase() !== 'cihmember' &&
+                      props.row.cihRoles.toLowerCase() !== 'none'
+                    "
+                    class="px-2 py-[2px] rounded-full bg-gray-100 text-gray-500 text-xs"
+                    >{{ props.row.cihRoles.replace("cih", "") }}</span
+                  >
+                </span>
+                <span v-if="props.column.field == 'action'">
+                  <Dropdown classMenuItems=" w-[160px]">
+                    <span class="text-xl">
+                      <Icon icon="heroicons-outline:dots-vertical" />
+                    </span>
+                    <template v-slot:menus>
+                      <MenuItem v-for="(item, i) in actions" :key="i">
+                        <div
+                          @click="item.doit(props.row, item.name)"
+                          :class="`
+                
+                  ${
+                    item.name === 'delete'
+                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
+                      : 'hover:bg-slate-900 hover:text-white'
+                  }
+                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
+                        >
+                          <span class="text-base">
+                            <Icon :icon="item.icon" />
+                          </span>
+                          <span>{{ item.name }}</span>
+                        </div>
+                      </MenuItem>
+                    </template>
+                  </Dropdown>
+                </span>
+              </template>
+              <template #pagination-bottom>
+                <div class="py-4 px-3">
+                  <Pagination
+                    :total="total"
+                    :current="query.pageNumber"
+                    :per-page="query.pageSize"
+                    :pageRange="pageRange"
+                    @page-changed="query.pageNumber = $event"
+                    :perPageChanged="perPage"
+                    enableSearch
+                    enableSelect
+                    :options="options"
+                  >
+                    >
+                  </Pagination>
+                </div>
+              </template>
+            </vue-good-table>
+          </div>
+        </v-pdf>
       </div>
       <div class="-mx-6">
         <vue-good-table
@@ -322,6 +436,9 @@ export default {
     };
   },
   methods: {
+    generateReport() {
+      this.$refs.pdf.download();
+    },
     handleActions(value) {
       if (value === "active") {
         return this.actions.filter((i) => i.name !== "approve");
@@ -338,6 +455,20 @@ export default {
     },
   },
   setup() {
+    const pdfOptions = {
+      margin: 10,
+      image: {
+        type: "jpeg",
+        quality: 1,
+      },
+      html2canvas: { scale: 1 },
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "l",
+      },
+    };
+    const exportFilename = "file.pdf";
     const modal = ref(null);
     const route = useRoute();
     const modalChange = ref(null);
@@ -443,6 +574,8 @@ export default {
       roleModalChange,
       closeRoleModalChange,
       refetchCenterMembers,
+      pdfOptions,
+      exportFilename,
     };
   },
 };

@@ -75,57 +75,53 @@
           />
         </div>
       </div>
-      <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
-        <div class="-mx-6">
-          <vue-good-table
-            :columns="columns"
-            mode="remote"
-            styleClass="vgt-table"
-            :isLoading="loading"
-            :rows="affinityGroups || []"
-            :sort-options="{
-              enabled: false,
-            }"
-            :pagination-options="{
-              enabled: true,
-              perPage: query.pageSize,
-            }"
-          >
-            <template v-slot:table-row="props">
-              <span v-if="props.column.field == 'ageRange'">
-                {{ props.row.startAge }} <span class="lowercase">-</span>
-                {{ props.row.endAge }}
-                <span class="lowercase">yrs</span>
-              </span>
-              <span
-                class="max-w-max line-clamp-2"
-                v-if="props.column.field == 'maritalStatus'"
-              >
-                {{ props.row.maritalStatus }}
-              </span>
-              <span
-                class="max-w-max line-clamp-2"
-                v-if="props.column.field == 'description'"
-              >
-                {{ props.row.description }}
-              </span>
-              <span v-if="props.column.field == 'action'">
-                <Dropdown
-                  v-if="permissions.includes('CAN_UPDATE_AFFINITYGROUPS')"
-                  classMenuItems=" w-[140px]"
-                >
-                  <span class="text-xl"
-                    ><Icon icon="heroicons-outline:dots-vertical"
-                  /></span>
-                  <template v-slot:menus>
-                    <!-- {{ props.row }} -->
-                    <MenuItem v-for="(item, i) in actions" :key="i">
-                      <div
-                        @click="
-                          generateAction(item.name.toLowerCase(), props.row)
-                            .doit
-                        "
-                        :class="`
+
+      <div class="hidden">
+        <v-pdf ref="pdf" :options="pdfOptions" :filename="exportFilename">
+          <div class="-mx-6">
+            <vue-good-table
+              :columns="columns.filter((i) => i.field !== 'action')"
+              mode="remote"
+              styleClass="vgt-table"
+              :isLoading="loading"
+              :rows="affinityGroups || []"
+              :sort-options="{
+                enabled: false,
+              }"
+              :pagination-options="{
+                enabled: false,
+                perPage: query.pageSize,
+              }"
+            >
+              <template v-slot:table-row="props">
+                <span v-if="props.column.field == 'ageRange'">
+                  {{ props.row.startAge }} <span class="lowercase">-</span>
+                  {{ props.row.endAge }}
+                  <span class="lowercase">yrs</span>
+                </span>
+                <span class="" v-if="props.column.field == 'maritalStatus'">
+                  {{ props.row.maritalStatus }}
+                </span>
+                <span class="" v-if="props.column.field == 'description'">
+                  {{ props.row.description }}
+                </span>
+                <span v-if="props.column.field == 'action'">
+                  <Dropdown
+                    v-if="permissions.includes('CAN_UPDATE_AFFINITYGROUPS')"
+                    classMenuItems=" w-[140px]"
+                  >
+                    <span class="text-xl"
+                      ><Icon icon="heroicons-outline:dots-vertical"
+                    /></span>
+                    <template v-slot:menus>
+                      <!-- {{ props.row }} -->
+                      <MenuItem v-for="(item, i) in actions" :key="i">
+                        <div
+                          @click="
+                            generateAction(item.name.toLowerCase(), props.row)
+                              .doit
+                          "
+                          :class="`
                 
                   ${
                     item.name === 'delist'
@@ -133,43 +129,136 @@
                       : 'hover:bg-slate-900 hover:text-white'
                   }
                    w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
-                      >
-                        <span class="text-base"
-                          ><Icon
-                            :icon="generateAction(item.name, props.row).icon"
-                        /></span>
-                        <span>{{
-                          generateAction(item.name, props.row).name
-                        }}</span>
-                      </div>
-                    </MenuItem>
-                  </template>
-                </Dropdown>
-                <span v-else class="cursor-not-allowed text-xl"
+                        >
+                          <span class="text-base"
+                            ><Icon
+                              :icon="generateAction(item.name, props.row).icon"
+                          /></span>
+                          <span>{{
+                            generateAction(item.name, props.row).name
+                          }}</span>
+                        </div>
+                      </MenuItem>
+                    </template>
+                  </Dropdown>
+                  <span v-else class="cursor-not-allowed text-xl"
+                    ><Icon icon="heroicons-outline:dots-vertical"
+                  /></span>
+                </span>
+              </template>
+              <template #pagination-bottom>
+                <div class="py-4 px-3">
+                  <Pagination
+                    :total="total"
+                    :current="query.pageNumber"
+                    :per-page="query.pageSize"
+                    :pageRange="pageRange"
+                    @page-changed="query.pageNumber = $event"
+                    :perPageChanged="perPage"
+                    enableSearch
+                    enableSelect
+                    :options="options"
+                  >
+                    >
+                  </Pagination>
+                </div>
+              </template>
+            </vue-good-table>
+          </div>
+        </v-pdf>
+      </div>
+      <div class="-mx-6">
+        <vue-good-table
+          :columns="columns"
+          mode="remote"
+          styleClass="vgt-table"
+          :isLoading="loading"
+          :rows="affinityGroups || []"
+          :sort-options="{
+            enabled: false,
+          }"
+          :pagination-options="{
+            enabled: true,
+            perPage: query.pageSize,
+          }"
+        >
+          <template v-slot:table-row="props">
+            <span v-if="props.column.field == 'ageRange'">
+              {{ props.row.startAge }} <span class="lowercase">-</span>
+              {{ props.row.endAge }}
+              <span class="lowercase">yrs</span>
+            </span>
+            <span
+              class="max-w-max line-clamp-2"
+              v-if="props.column.field == 'maritalStatus'"
+            >
+              {{ props.row.maritalStatus }}
+            </span>
+            <span
+              class="max-w-max line-clamp-2"
+              v-if="props.column.field == 'description'"
+            >
+              {{ props.row.description }}
+            </span>
+            <span v-if="props.column.field == 'action'">
+              <Dropdown
+                v-if="permissions.includes('CAN_UPDATE_AFFINITYGROUPS')"
+                classMenuItems=" w-[140px]"
+              >
+                <span class="text-xl"
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span>
-              </span>
-            </template>
-            <template #pagination-bottom>
-              <div class="py-4 px-3">
-                <Pagination
-                  :total="total"
-                  :current="query.pageNumber"
-                  :per-page="query.pageSize"
-                  :pageRange="pageRange"
-                  @page-changed="query.pageNumber = $event"
-                  :perPageChanged="perPage"
-                  enableSearch
-                  enableSelect
-                  :options="options"
+                <template v-slot:menus>
+                  <!-- {{ props.row }} -->
+                  <MenuItem v-for="(item, i) in actions" :key="i">
+                    <div
+                      @click="
+                        generateAction(item.name.toLowerCase(), props.row).doit
+                      "
+                      :class="`
+                
+                  ${
+                    item.name === 'delist'
+                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
+                      : 'hover:bg-slate-900 hover:text-white'
+                  }
+                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
+                    >
+                      <span class="text-base"
+                        ><Icon
+                          :icon="generateAction(item.name, props.row).icon"
+                      /></span>
+                      <span>{{
+                        generateAction(item.name, props.row).name
+                      }}</span>
+                    </div>
+                  </MenuItem>
+                </template>
+              </Dropdown>
+              <span v-else class="cursor-not-allowed text-xl"
+                ><Icon icon="heroicons-outline:dots-vertical"
+              /></span>
+            </span>
+          </template>
+          <template #pagination-bottom>
+            <div class="py-4 px-3">
+              <Pagination
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="pageRange"
+                @page-changed="query.pageNumber = $event"
+                :perPageChanged="perPage"
+                enableSearch
+                enableSelect
+                :options="options"
+              >
                 >
-                  >
-                </Pagination>
-              </div>
-            </template>
-          </vue-good-table>
-        </div>
-      </v-pdf>
+              </Pagination>
+            </div>
+          </template>
+        </vue-good-table>
+      </div>
     </Card>
   </div>
 
