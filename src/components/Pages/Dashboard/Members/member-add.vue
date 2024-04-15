@@ -209,7 +209,7 @@ const formDataSchema = yup.object().shape({
     .nullable(),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setFieldValue } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
@@ -240,6 +240,37 @@ const onSubmit = handleSubmit((values) => {
     lga: values.lga.value,
     dateOfVisit: new Date(),
   });
+});
+const handleStateChange = () => {
+  const correspondingState = statesOption?.value?.find((i) => {
+    return state?.value?.label?.toLowerCase() === i?.label?.toLowerCase();
+  });
+
+  if (correspondingState == null || correspondingState == undefined) {
+    setFieldValue("state", {
+      label: "",
+      value: "",
+    });
+  }
+};
+const handleLgaChange = () => {
+  const correspondingState = lgasOption?.value?.find((i) => {
+    return lga?.value?.label?.toLowerCase() === i?.label?.toLowerCase();
+  });
+
+  if (correspondingState == null || correspondingState == undefined) {
+    setFieldValue("lga", {
+      label: "",
+      value: "",
+    });
+  }
+};
+watch(statesOption, () => {
+  handleStateChange();
+});
+
+watch(lgasOption, () => {
+  handleLgaChange();
 });
 watch(success, () => {
   if (success.value) {
