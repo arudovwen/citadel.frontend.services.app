@@ -247,7 +247,7 @@ const schema = yup.object({
   subSector: yup.string(),
 });
 
-const { handleSubmit, setValues, values } = useForm({
+const { handleSubmit, setValues, values, setFieldValue } = useForm({
   validationSchema: schema,
   initialValues: employerData.value,
 });
@@ -306,6 +306,39 @@ const onSubmit = handleSubmit((values) => {
   if (!hasDataError) {
     store.dispatch("updateEmployer", prepareDetails(values, "edit"));
   }
+});
+
+const handleStateChange = () => {
+  const correspondingState = statesOption?.value?.find((i) => {
+    return state?.value?.label?.toLowerCase() === i?.label?.toLowerCase();
+  });
+
+  if (correspondingState == null || correspondingState == undefined) {
+    setFieldValue("state", {
+      label: "",
+      value: "",
+    });
+  }
+};
+
+const handleLgaChange = () => {
+  const correspondingState = lgaOption?.value?.find((i) => {
+    return lga?.value?.label?.toLowerCase() === i?.label?.toLowerCase();
+  });
+
+  if (correspondingState == null || correspondingState == undefined) {
+    setFieldValue("lga", {
+      label: "",
+      value: "",
+    });
+  }
+};
+watch(statesOption, () => {
+  handleStateChange();
+});
+
+watch(lgaOption, () => {
+  handleLgaChange();
 });
 
 watch(employerData, () => {

@@ -338,7 +338,7 @@ export default {
       perpage: 10,
       pageRange: 5,
       searchTerm: "",
-      type: "",
+      type: "add",
       id: null,
       filters: ["all", "pending"],
       activeFilter: "",

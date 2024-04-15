@@ -450,7 +450,7 @@ const pageRange = ref(5);
 const modalUpdate = ref(null);
 const timerid = ref(null);
 const detail = ref(null);
-const type = ref("");
+const type = ref("add");
 const mytable = ref(null);
 // const dateValue = ref(null);
 // upgradeToMember

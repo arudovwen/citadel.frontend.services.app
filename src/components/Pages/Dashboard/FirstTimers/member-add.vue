@@ -193,7 +193,7 @@ const countriesOption = computed(() =>
   })
 );
 const statesOption = computed(() => {
-  return Countries.find((i) => i.name === country.value.label)?.states?.map(
+  return Countries.find((i) => i.name === country.value?.label)?.states?.map(
     (i) => {
       return { label: i.name, value: i.name };
     }
@@ -276,7 +276,7 @@ const placeOptions = [
   { value: "cih", label: "CIH" },
 ];
 
-const { handleSubmit, values } = useForm({
+const { handleSubmit, values, setFieldValue } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
@@ -322,6 +322,39 @@ const onSubmit = handleSubmit((values) => {
       values.purposeOfVisit === "other" ? values.other : values.purposeOfVisit,
     isFirstTime: true,
   });
+});
+
+const handleStateChange = () => {
+  const correspondingState = statesOption?.value?.find((i) => {
+    return state?.value?.label?.toLowerCase() === i?.label?.toLowerCase();
+  });
+
+  if (correspondingState == null || correspondingState == undefined) {
+    setFieldValue("state", {
+      label: "",
+      value: "",
+    });
+  }
+};
+
+const handleLgaChange = () => {
+  const correspondingState = lgasOption?.value?.find((i) => {
+    return lga?.value?.label?.toLowerCase() === i?.label?.toLowerCase();
+  });
+
+  if (correspondingState == null || correspondingState == undefined) {
+    setFieldValue("lga", {
+      label: "",
+      value: "",
+    });
+  }
+};
+watch(statesOption, () => {
+  handleStateChange();
+});
+
+watch(lgasOption, () => {
+  handleLgaChange();
 });
 watch(success, () => {
   if (success.value) {
