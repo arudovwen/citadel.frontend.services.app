@@ -92,6 +92,16 @@
                 :config="{ maxDate: 'today' }"
               />
             </FormGroup>
+            <Textinput
+              :id="position"
+              label="Position"
+              type="number"
+              v-model="position"
+              placeholder="Enter position of child"
+              :name="position"
+              :error="positionError"
+              classInput="h-[40px]"
+            />
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -147,6 +157,7 @@ const schema = yup.object({
 
   gender: yup.string(),
   dateOfBirth: yup.string().nullable(),
+  position: yup.number().required("Position field is required"),
 });
 
 const formValues = {
@@ -160,6 +171,7 @@ const formValues = {
   mobile2: "",
   gender: "",
   dateOfBirth: null,
+  position: null,
 };
 
 const { handleSubmit, values, setValues, resetForm } = useForm({
@@ -181,6 +193,7 @@ const { value: gender, errorMessage: genderError } = useField("gender");
 
 const { value: dateOfBirth, errorMessage: dateOfBirthError } =
   useField("dateOfBirth");
+const { value: position, errorMessage: positionError } = useField("position");
 
 const setGenderByTitle = (title) => {
   const autoFillGenderValue = genderMenu.find((gender) =>
@@ -201,6 +214,7 @@ const prepareDetails = (values) => {
     mobile2: values.mobile2,
     gender: values.gender,
     dateOfBirth: values.dateOfBirth,
+    position: values.position,
     id: values.id,
   };
   return updateObj;
