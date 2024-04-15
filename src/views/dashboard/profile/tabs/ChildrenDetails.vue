@@ -112,6 +112,17 @@
                   :config="{ maxDate: 'today' }"
                 />
               </FormGroup>
+
+              <Textinput
+                :id="position"
+                label="Position"
+                type="number"
+                v-model="position"
+                placeholder="Enter position of child"
+                :name="position"
+                :error="positionError"
+                classInput="h-[40px]"
+              />
             </div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -127,6 +138,7 @@
             <div class="hidden sm:block"></div>
           </div>
         </form>
+        <FormDebug class="hidden" :form="{ values }" />
 
         <Card v-if="childrenDetails.length > 0" bodyClass="p-0 mt-4">
           <header class="px-4 pt-4 pb-3 mb-3">
@@ -224,6 +236,8 @@ import Icon from "@/components/Icon";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
 import FormGroup from "@/components/FormGroup";
+import FormDebug from "@/components/forms/FormDebug";
+
 import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import { titleMenu, genderMenu, childrenDetailstable } from "@/constant/data";
@@ -273,6 +287,7 @@ const schema = yup.object({
 
   gender: yup.string(),
   dateOfBirth: yup.string().nullable(),
+  position: yup.number().required("Position field is required"),
 });
 
 const formValues = {
@@ -286,6 +301,7 @@ const formValues = {
   mobile2: "",
   gender: "",
   dateOfBirth: null,
+  position: null,
 };
 
 const openDelete = (id, openFn) => {
@@ -315,6 +331,7 @@ const { value: gender, errorMessage: genderError } = useField("gender");
 
 const { value: dateOfBirth, errorMessage: dateOfBirthError } =
   useField("dateOfBirth");
+const { value: position, errorMessage: positionError } = useField("position");
 
 const setGenderByTitle = (title) => {
   const autoFillGenderValue = genderMenu.find((gender) =>
@@ -335,6 +352,7 @@ const prepareDetails = (values) => {
     mobile2: values.mobile2,
     gender: values.gender,
     dateOfBirth: values.dateOfBirth,
+    position: values.position,
   };
   return createObj;
 };

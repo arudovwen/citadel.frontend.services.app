@@ -9,6 +9,7 @@
       v-if="!canEditDetails"
       class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
     ></div>
+    <!-- {{ spouseGender }} -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Textinput
         label="First Name"
