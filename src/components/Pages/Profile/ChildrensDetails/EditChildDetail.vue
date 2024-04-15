@@ -215,7 +215,6 @@ const prepareDetails = (values) => {
     gender: values.gender,
     dateOfBirth: values.dateOfBirth,
     position: values.position,
-
     id: values.id,
   };
   return updateObj;
