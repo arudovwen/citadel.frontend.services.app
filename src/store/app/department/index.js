@@ -71,6 +71,26 @@ export default {
       state.error = err;
       state.success = false;
     },
+    fetchAllBegin(state) {
+      // state.loading = true;
+      state.error = null;
+      state.fetchsuccess = false;
+      state.departments = [];
+    },
+    fetchAllSuccess(state, { data, totalCount }) {
+      state.loading = false;
+      state.success = true;
+      state.allDeptMembers = data ? data : [];
+      state.total = totalCount;
+    },
+    fetchAllErr(state, err) {
+      state.loading = false;
+      state.error = err;
+      state.success = false;
+    },
+    fetchAllSuccess(state, { data, totalCount }) {
+      state.allDepartments = data ? data : [];
+    },
     updateBegin(state) {
       state.loading = true;
       state.error = null;
@@ -190,10 +210,26 @@ export default {
           `${urls.GET_ALL_DEPARTMENT}?${new URLSearchParams(cleanObject(data))}`
         );
         if (response.status === 200) {
-          commit("fetchSuccess", response.data);
+          commit("fetchAllSuccess", response.data);
         }
       } catch (err) {
         commit("fetchErr", err);
+      }
+    },
+
+    async getAllDepartmentMembers({ commit }, data) {
+      try {
+        commit("fetcAllBegin");
+        const response = await DataService.get(
+          `${urls.GET_DEPARTMENT_MEMBERS}?${new URLSearchParams(
+            cleanObject(data)
+          )}`
+        );
+        if (response.status === 200) {
+          commit("fetchAllSuccess", response.data);
+        }
+      } catch (err) {
+        commit("fetchAllErr", err);
       }
     },
 

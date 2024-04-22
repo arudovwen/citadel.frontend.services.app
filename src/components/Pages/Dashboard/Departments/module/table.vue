@@ -21,6 +21,12 @@ import PendingTable from "./PendingTable";
 import RejectedTable from "./RejectedTable";
 import DelistedTable from "./DelistedTable";
 import AppTabs from "@/components/Tabs";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+
+
+const { state, dispatch } = useStore();
+const route = useRoute();
 
 const active = ref("approved");
 const tabs = [
@@ -42,6 +48,8 @@ const tabs = [
     key: "delisted",
   },
 ];
+
+dispatch('getAllDepartmentMembers', {name: route.params.name});
 
 provide("active", active);
 </script>
