@@ -532,7 +532,10 @@ export default {
       //   label: "Reason",
       //   field: "reason",
       // },
-
+      {
+        label: "Zone",
+        field: "zone",
+      },
       {
         label: "Action",
         field: "action",
