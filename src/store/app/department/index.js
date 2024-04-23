@@ -77,12 +77,6 @@ export default {
       state.fetchsuccess = false;
       state.departments = [];
     },
-    fetchAllSuccess(state, { data, totalCount }) {
-      state.loading = false;
-      state.success = true;
-      state.allDeptMembers = data ? data : [];
-      state.total = totalCount;
-    },
     fetchAllErr(state, err) {
       state.loading = false;
       state.error = err;

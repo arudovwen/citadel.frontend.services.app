@@ -10,6 +10,18 @@
         <RejectedTable v-if="active === 'rejected'" />
         <DelistedTable v-if="active === 'delisted'" />
       </div>
+      <!-- Tablel for export all members -->
+      <div class="hidden">
+        <v-pdf ref="pdf" :options="pdfOptions" :filename="`${route.params.name}-members.pdf`">
+          <div class="">
+            <vue-good-table :columns="columns" styleClass="vgt-table" :isLoading="deptloading"
+              :rows="allDepartmentMembers || []" :sort-options="{
+          enabled: false,
+        }">
+            </vue-good-table>
+          </div>
+        </v-pdf>
+      </div>
     </Card>
   </div>
 </template>
@@ -23,7 +35,7 @@ import DelistedTable from "./DelistedTable";
 import AppTabs from "@/components/Tabs";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-
+import { watch, computed } from "vue";
 
 const { state, dispatch } = useStore();
 const route = useRoute();
@@ -49,7 +61,50 @@ const tabs = [
   },
 ];
 
-dispatch('getAllDepartmentMembers', {name: route.params.name});
+const columns = [
+  {
+    label: "First Name",
+    field: "firstName",
+  },
+  {
+    label: "Last Name",
+    field: "lastName",
+  },
+  {
+    label: "Phone",
+    field: "phone",
+  },
+  {
+    label: "Email",
+    field: "email",
+  },
+  {
+    label: "Email",
+    field: "email",
+  },
+  {
+    label: "Gender",
+    field: "gender"
+  },
+  {
+    label: "DoB",
+    field: "doB",
+  }
+]
+dispatch('getAllDepartmentMembers', { name: route.params.name });
+const allDepartmentMembers = computed(() => state.department.allDepartments)
+
+watch(allDepartmentMembers, () => {
+  console.log("a = ", allDepartmentMembers.value);
+})
+
+const pdf = ref(null);
+
+const generateReport = () => {
+  pdf?.value?.download();
+}
+
+provide("downloadPdf", generateReport)
 
 provide("active", active);
 </script>

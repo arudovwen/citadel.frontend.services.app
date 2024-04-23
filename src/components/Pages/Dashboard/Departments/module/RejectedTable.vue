@@ -33,10 +33,10 @@
           <template v-slot:menus>
             <MenuItem>
               <export-excel
-                :data="members"
+                :data="allDepartmentMembers"
                 worksheet="reports"
                 :fields="filteredMembers"
-                :name="`rejected-${query.DepartmentName}-members.csv`"
+                :name="`${query.DepartmentName}-members.csv`"
                 type="csv"
               >
                 <button
@@ -57,11 +57,6 @@
           </template>
         </Dropdown>
       </div>
-      <v-pdf
-        ref="pdf"
-        :options="pdfOptions"
-        :filename="`rejected-${query.DepartmentName}-members.pdf`"
-      >
         <div class="">
           <vue-good-table
             :columns="columns"
@@ -157,7 +152,6 @@
             </template>
           </vue-good-table>
         </div>
-      </v-pdf>
     </div>
 
     <Modal
@@ -207,6 +201,7 @@ import {
   watch,
   reactive,
   ref,
+inject,
   // getCurrentInstance,
 } from "vue";
 
@@ -264,6 +259,7 @@ export default {
         value: "firstName",
       },
     ];
+    const allDepartmentMembers = computed(() => state.department.allDepartments)
     const filteredMembers = computed(() => ({
       id: "id",
       gender: "gender",
@@ -271,12 +267,9 @@ export default {
       "First Name": "firstName",
       "Last Name": "lastName",
       Email: "email",
-      actionDate: "actionDate",
-      "Current Department": "currentDepartment",
-      "New Department": "newDepartment",
-      userId: "userId",
-      "Request Date": "requestDate",
-      dob: "dob",
+      "Current Department": "departmentName",
+      userId: "id",
+      dob: "doB",
     }));
     // none, firstName, userId, surname, department, center, zone, role
     onMounted(() => {
@@ -340,7 +333,7 @@ export default {
     //     modalStatus.value.closeModal();
     //   }
     // });
-
+    watch(() => dispatch('getAllDepartmentMembers', { name: route.params.name }))
     watch(
       () => query.searchParameter,
       () => {
@@ -353,7 +346,13 @@ export default {
         dispatch("getRejectedDepartments", query);
       }
     );
+    const downloadPdf = inject("downloadPdf");
+    const generateReport = () => {
+      downloadPdf();
+    }
+
     return {
+      generateReport,
       query,
       total,
       fetchRecords,
@@ -376,6 +375,7 @@ export default {
       filteredMembers,
       pdfOptions,
       exportFilename,
+      allDepartmentMembers
     };
   },
 
@@ -458,9 +458,6 @@ export default {
     };
   },
   methods: {
-    generateReport() {
-      this.$refs.pdf.download();
-    },
     generateAction(name, id) {
       this.id = id;
 
