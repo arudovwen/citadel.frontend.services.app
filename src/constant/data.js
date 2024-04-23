@@ -885,6 +885,17 @@ export const genderMenu = [
   },
 ];
 
+export const demiseMenu = [
+  {
+    value: true,
+    label: "Yes",
+  },
+  {
+    value: false,
+    label: "No",
+  },
+];
+
 export const employmentStatusMenu = [
   {
     value: "Employed",
