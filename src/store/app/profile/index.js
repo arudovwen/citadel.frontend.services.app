@@ -128,6 +128,10 @@ export default {
     deleteQualificationLoading: false,
     deleteQualificationSuccess: false,
     deleteQualificationError: null,
+    firstTimerStatsLoading: false,
+    firstTimerStatsSuccess: false,
+    firstTimerStatsError: null,
+    firstTimerStats: null,
 
     //edit modal
     editModal: false,
@@ -150,6 +154,25 @@ export default {
     },
   },
   mutations: {
+    firstTimerStatsBegin(state) {
+      state.firstTimerStatsLoading = true;
+      state.firstTimerStatsSuccess = false;
+      state.firstTimerStatsError = null;
+    },
+
+    firstTimerStatsSuccess(state, data) {
+      state.firstTimerStatsLoading = false;
+      state.firstTimerStatsSuccess = true;
+      state.firstTimerStatsError = null;
+      state.firstTimerStats = data ? data : [];
+    },
+
+    firstTimerStatsFailure(state, err) {
+      state.firstTimerStatsLoading = false;
+      state.firstTimerStatsSuccess = false;
+      state.firstTimerStatsError = err;
+    },
+
     approveOrRejectOutreachBegin(state) {
       state.approveOrRejectOutreachLoading = true;
       state.approveOrRejectOutreachSuccess = false;
@@ -1154,6 +1177,7 @@ export default {
           commit("editOutreachReportSuccess");
         })
         .catch((err) => {
+          JSON.stringify(err);
           // commit("editOutreachReportFailure", err);
         });
       await DataService.put(
@@ -1375,6 +1399,21 @@ export default {
         }
       } catch (err) {
         commit("getChurchAffiliationsDataErr", err);
+      }
+    },
+
+    async getFirstTimerStats({ commit }) {
+      try {
+        commit("firstTimerStatsBegin");
+        const response = await DataService.get(`${urls.FIRSTTIMER_STATS}`);
+
+        if (response?.status === 200) {
+          commit("firstTimerStatsSuccess", response.data.data);
+        } else {
+          commit("firstTimerStatsSuccess", null);
+        }
+      } catch (err) {
+        commit("firstTimerStatsFailure", err);
       }
     },
 
