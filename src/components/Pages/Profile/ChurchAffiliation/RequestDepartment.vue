@@ -7,6 +7,8 @@
   >
     <form @submit.prevent="onSubmit" class="space-y-4">
       <!-- {{ props.affiliation }} -->
+      <!-- {{ "Dept optns" + JSON.stringify(departmentOptions) }} -->
+      <!-- {{ state?.department?.departments }} -->
       <div class="py-6 flex flex-col" v-if="props.affiliation == null">
         <span class="text-lg"
           >Only members with church affiliations can request to join department.
@@ -122,7 +124,8 @@ const onSubmit = handleSubmit((values) => {
 });
 
 const getDepartments = () => {
-  dispatch("getDepartments", { pageNumber: 1, pageSize: 25000 });
+  // alert("dep");
+  dispatch("getDepartments", { pageNumber: 1, pageSize: 25100 });
 };
 const toggleReqDepartment = (boolean) => {
   dispatch("toggleReqDepartment", boolean);
@@ -144,6 +147,12 @@ watch(reqSuccess, () => {
       label: "",
       departmentId: "",
     };
+  }
+});
+
+watch(state?.profile?.isReqDepartmentOpen, () => {
+  if (state?.profile?.isReqDepartmentOpen === true) {
+    getDepartments();
   }
 });
 

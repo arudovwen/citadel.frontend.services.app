@@ -78,6 +78,7 @@ export default {
       state.departments = [];
     },
     fetchAllSuccess(state, { data, totalCount }) {
+      console.log(JSON.stringify(data, null, 2));
       state.loading = false;
       state.success = true;
       state.allDeptMembers = data ? data : [];
@@ -88,9 +89,9 @@ export default {
       state.error = err;
       state.success = false;
     },
-    fetchAllSuccess(state, { data, totalCount }) {
-      state.allDepartments = data ? data : [];
-    },
+    // fetchAllSuccess(state, { data, totalCount }) {
+    //   state.allDepartments = data ? data : [];
+    // },
     updateBegin(state) {
       state.loading = true;
       state.error = null;
@@ -210,7 +211,7 @@ export default {
           `${urls.GET_ALL_DEPARTMENT}?${new URLSearchParams(cleanObject(data))}`
         );
         if (response.status === 200) {
-          commit("fetchAllSuccess", response.data);
+          commit("fetchSuccess", response.data);
         }
       } catch (err) {
         commit("fetchErr", err);
@@ -219,7 +220,7 @@ export default {
 
     async getAllDepartmentMembers({ commit }, data) {
       try {
-        commit("fetcAllBegin");
+        commit("fetchAllBegin");
         const response = await DataService.get(
           `${urls.GET_DEPARTMENT_MEMBERS}?${new URLSearchParams(
             cleanObject(data)
