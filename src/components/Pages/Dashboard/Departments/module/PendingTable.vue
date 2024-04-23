@@ -300,6 +300,7 @@ export default {
       "Current Department": "departmentName",
       userId: "id",
       dob: "doB",
+      "Approval Date": "approveDate"
     }));
 
     function handleRequest() {

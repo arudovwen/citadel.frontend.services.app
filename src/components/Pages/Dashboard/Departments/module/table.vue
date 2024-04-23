@@ -79,8 +79,8 @@ const columns = [
     field: "email",
   },
   {
-    label: "Email",
-    field: "email",
+    label: "Phone",
+    field: "phone",
   },
   {
     label: "Gender",
@@ -89,6 +89,10 @@ const columns = [
   {
     label: "DoB",
     field: "doB",
+  },
+  {
+    label: "Approval Date",
+    field: "approveDate"
   }
 ]
 dispatch('getAllDepartmentMembers', { name: route.params.name });
@@ -103,6 +107,20 @@ const pdf = ref(null);
 const generateReport = () => {
   pdf?.value?.download();
 }
+
+const pdfOptions = {
+  margin: 10,
+  image: {
+    type: "jpeg",
+    quality: 1,
+  },
+  html2canvas: { scale: 1 },
+  jsPDF: {
+    unit: "mm",
+    format: "a3",
+    orientation: "l",
+  },
+};
 
 provide("downloadPdf", generateReport)
 

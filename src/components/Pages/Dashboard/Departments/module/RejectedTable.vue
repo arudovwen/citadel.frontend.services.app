@@ -270,6 +270,7 @@ export default {
       "Current Department": "departmentName",
       userId: "id",
       dob: "doB",
+      "Approval Date": "approveDate"
     }));
     // none, firstName, userId, surname, department, center, zone, role
     onMounted(() => {
