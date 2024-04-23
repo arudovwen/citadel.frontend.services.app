@@ -13,23 +13,35 @@
             />
           </FormGroup>
         </div> -->
-        <FormGroup label="Event type" name="type" :error="requestTypeError">
-          <Select
-            placeholder="Select type"
-            v-model="requestType"
-            :options="eventsOptions"
-          />
-        </FormGroup>
+        <div class="">
+          <FormGroup label="Event type" name="type" :error="requestTypeError">
+            <Select
+              placeholder="Select type"
+              v-model="requestType"
+              :options="eventsOptions"
+            />
+          </FormGroup>
+        </div>
 
-        <FormGroup label="Event Date" name="date" :error="dateError">
-          <flat-pickr
-            v-model="dateOfRequestedEvent"
-            class="form-control"
-            id="d1"
-            placeholder="Select date of event"
-            :config="{ minDate: 'today' }"
-          />
-        </FormGroup>
+        <div class="">
+          <FormGroup label="Event Date" name="date" :error="dateError">
+            <flat-pickr
+              v-model="dateOfRequestedEvent"
+              class="form-control"
+              id="d1"
+              placeholder="Select date of event"
+              :config="{
+                minDate: isBabyDedication ? new Date().fp_incr(14) : 'today',
+              }"
+            />
+          </FormGroup>
+
+          <div class="h-2">
+            <span v-if="isBabyDedication" class="mt-1 text-xs text-blue-400"
+              >Baby dedication must be booked 14days in advance</span
+            >
+          </div>
+        </div>
       </div>
 
       <div class="text-right space-x-3 mt-8">
@@ -64,6 +76,9 @@ const toast = useToast();
 const { state, dispatch } = useStore();
 const success = computed(() => state.event.addsuccess);
 const loading = computed(() => state.event.loading);
+const isBabyDedication = computed(
+  () => values.requestType?.toLowerCase() === "babydedication"
+);
 
 // const membersOptions = computed(() =>
 //   state?.member?.data?.map((i) => {
@@ -87,7 +102,7 @@ const formDataSchema = Yup.object().shape({
   // name: Yup.object().typeError("Invalid value").required("Name is required"),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, values } = useForm({
   validationSchema: formDataSchema,
   initialValues: formData,
 });
