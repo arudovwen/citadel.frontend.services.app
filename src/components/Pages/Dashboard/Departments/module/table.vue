@@ -91,9 +91,13 @@ const columns = [
     field: "doB",
   },
   {
+    label: "Approved",
+    field: "status"
+  },
+  {
     label: "Approval Date",
     field: "approveDate"
-  }
+  },
 ]
 dispatch('getAllDepartmentMembers', { name: route.params.name });
 const allDepartmentMembers = computed(() => state.department.allDepartments)
