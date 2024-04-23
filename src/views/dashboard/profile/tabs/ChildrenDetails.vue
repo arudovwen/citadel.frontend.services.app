@@ -113,16 +113,18 @@
                 />
               </FormGroup>
 
-              <Textinput
-                :id="position"
-                label="Position"
-                type="number"
-                v-model="position"
-                placeholder="Enter position of child"
-                :name="position"
-                :error="positionError"
-                classInput="h-[40px]"
-              />
+              <div class="hidden">
+                <Textinput
+                  :id="position"
+                  label="Position"
+                  type="number"
+                  v-model="position"
+                  placeholder="Enter position of child"
+                  :name="position"
+                  :error="positionError"
+                  classInput="h-[40px]"
+                />
+              </div>
             </div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -287,7 +289,7 @@ const schema = yup.object({
 
   gender: yup.string(),
   dateOfBirth: yup.string().nullable(),
-  position: yup.number().required("Position field is required"),
+  position: yup.number().nullable(),
 });
 
 const formValues = {
@@ -352,7 +354,7 @@ const prepareDetails = (values) => {
     mobile2: values.mobile2,
     gender: values.gender,
     dateOfBirth: values.dateOfBirth,
-    position: values.position,
+    // position: values.position,
   };
   return createObj;
 };
