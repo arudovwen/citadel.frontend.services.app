@@ -77,21 +77,14 @@ export default {
       state.fetchsuccess = false;
       state.departments = [];
     },
-    fetchAllSuccess(state, { data, totalCount }) {
-      console.log(JSON.stringify(data, null, 2));
-      state.loading = false;
-      state.success = true;
-      state.allDeptMembers = data ? data : [];
-      state.total = totalCount;
-    },
     fetchAllErr(state, err) {
       state.loading = false;
       state.error = err;
       state.success = false;
     },
-    // fetchAllSuccess(state, { data, totalCount }) {
-    //   state.allDepartments = data ? data : [];
-    // },
+    fetchAllSuccess(state, { data, totalCount }) {
+      state.allDepartments = data ? data : [];
+    },
     updateBegin(state) {
       state.loading = true;
       state.error = null;

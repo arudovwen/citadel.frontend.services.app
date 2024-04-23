@@ -2,240 +2,144 @@
   <div>
     <div>
       <div class="md:flex pb-6 items-center justify-between px-5">
-        <div
-          class="flex flex-col md:flex-row rounded-[6px] text-sm overflow-hidden gap-4 mb-4 md:md-0"
-        >
-          <InputGroup
-            v-model="query.searchParameter"
-            placeholder="Search"
-            type="text"
-            prependIcon="heroicons-outline:search"
-            merged
-            classInput="min-w-[220px] !h-9"
-          />
-          <Select
-            label=""
-            :options="filters"
-            v-model="query.sortOrder"
-            placeholder="Sort by"
-            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]"
-          />
+        <div class="flex flex-col md:flex-row rounded-[6px] text-sm overflow-hidden gap-4 mb-4 md:md-0">
+          <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
+            prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9" />
+          <Select label="" :options="filters" v-model="query.sortOrder" placeholder="Sort by"
+            classInput="bg-white !h-9 min-w-[150px]  !min-h-[36px]" />
         </div>
         <Dropdown classMenuItems=" min-w-[100px]">
           <div class="text-xl">
-            <Button
-              icon="clarity:export-line"
-              text="Export"
+            <Button icon="clarity:export-line" text="Export"
               btnClass=" btn-outline-secondary mt-2 md:mt-0 w-full text-slate-600 dark:border-slate-700 dark:text-slate-300 font-normal btn-sm "
-              iconClass="text-lg"
-            />
+              iconClass="text-lg" />
           </div>
           <template v-slot:menus>
             <MenuItem>
-              <export-excel
-                :data="members"
-                worksheet="reports"
-                :fields="filteredMembers"
-                :name="`pending-${query.DepartmentName}-members.csv`"
-                type="csv"
-              >
-                <button
-                  class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
-                >
-                  Export csv
-                </button>
-              </export-excel>
+            <export-excel :data="allDepartmentMembers" worksheet="reports" :fields="filteredMembers"
+              :name="`${query.DepartmentName}-members.csv`" type="csv">
+              <button class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm">
+                Export csv
+              </button>
+            </export-excel>
             </MenuItem>
             <MenuItem>
-              <button
-                @click="generateReport"
-                class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm"
-              >
-                Export pdf
-              </button>
+            <button @click="generateReport"
+              class="px-3 py-2 hover:bg-gray-100 w-full text-left whitespace-nowrap text-sm">
+              Export pdf
+            </button>
             </MenuItem>
           </template>
         </Dropdown>
       </div>
-      <v-pdf
-        ref="pdf"
-        :options="pdfOptions"
-        :filename="`pennding-${query.DepartmentName}-members.pdf`"
-      >
-        <div class="">
-          <vue-good-table
-            :columns="columns"
-            styleClass="vgt-table"
-            :isLoading="deptloading"
-            :rows="members || []"
-            :sort-options="{
-              enabled: false,
-            }"
-            :pagination-options="{
-              enabled: true,
-              perPage: query.pageSize,
-            }"
-          >
-            <template v-slot:table-row="props">
-              <span
-                v-if="props.column.field == 'fullName'"
-                class="font-medium flex items-center gap-x-1"
-              >
-                <router-link
-                  :to="`/profile/${props.row.id}`"
-                  class="hover:underline"
-                >
-                  {{ props.row.fullName }}
-                </router-link>
-              </span>
+      <div class="">
+        <vue-good-table :columns="columns" styleClass="vgt-table" :isLoading="deptloading" :rows="members || []"
+          :sort-options="{
+            enabled: false,
+          }" :pagination-options="{
+            enabled: true,
+            perPage: query.pageSize,
+          }">
+          <template v-slot:table-row="props">
+            <span v-if="props.column.field == 'fullName'" class="font-medium flex items-center gap-x-1">
+              <router-link :to="`/profile/${props.row.id}`" class="hover:underline">
+                {{ props.row.fullName }}
+              </router-link>
+            </span>
 
-              <span
-                v-if="props.column.field == 'requestDate'"
-                class="text-slate-500 dark:text-slate-400"
-              >
-                {{ moment(props.row.requestDate).format("ll") }}
-              </span>
-              <span
-                v-if="props.column.field == 'email'"
-                class="font-medium lowercase"
-              >
-                {{ props.row.email }}
-              </span>
-              <span v-if="props.column.field == 'status'" class="block w-full">
-                <span
-                  class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                  :class="`${
-                    props.row.status === 'active' ||
-                    props.row.statusText === 'approved'
-                      ? 'text-success-500 bg-success-500'
-                      : ''
-                  } 
-              ${
-                props.row.status === 'inactive' ||
-                props.row.statusText === 'rejected'
-                  ? 'text-warning-500 bg-warning-500'
-                  : ''
-              }
-              ${
-                props.row.status === 'pending' ||
-                props.row.statusText === 'pending'
-                  ? 'text-blue-500 bg-blue-500'
-                  : ''
-              }
+            <span v-if="props.column.field == 'requestDate'" class="text-slate-500 dark:text-slate-400">
+              {{ moment(props.row.requestDate).format("ll") }}
+            </span>
+            <span v-if="props.column.field == 'email'" class="font-medium lowercase">
+              {{ props.row.email }}
+            </span>
+            <span v-if="props.column.field == 'status'" class="block w-full">
+              <span class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                :class="`${props.row.status === 'active' ||
+              props.row.statusText === 'approved'
+              ? 'text-success-500 bg-success-500'
+              : ''
+            } 
+              ${props.row.status === 'inactive' ||
+              props.row.statusText === 'rejected'
+              ? 'text-warning-500 bg-warning-500'
+              : ''
+            }
+              ${props.row.status === 'pending' ||
+              props.row.statusText === 'pending'
+              ? 'text-blue-500 bg-blue-500'
+              : ''
+            }
               
-               `"
-                >
-                  {{ props.row.statusText }}
-                </span>
+               `">
+                {{ props.row.statusText }}
               </span>
-              <span v-if="props.column.field == 'action'">
-                <Dropdown classMenuItems=" w-[140px]">
-                  <span class="text-xl">
-                    <Icon icon="heroicons-outline:dots-vertical" />
-                  </span>
-                  <template v-slot:menus>
-                    <MenuItem v-for="(item, i) in actions" :key="i">
-                      <div
-                        @click="item.doit(props.row)"
-                        :class="{
-                          'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
-                            item.name === 'delete',
-                          'hover:bg-slate-900 hover:text-white':
-                            item.name !== 'delete',
-                        }"
-                        class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center"
-                      >
-                        <span class="text-base">
-                          <Icon :icon="item.icon" />
-                        </span>
-                        <span>{{ item.name }}</span>
-                      </div>
-                    </MenuItem>
-                  </template>
-                </Dropdown>
-                <!-- <span v-else class="cursor-not-allowed text-xl"
+            </span>
+            <span v-if="props.column.field == 'action'">
+              <Dropdown classMenuItems=" w-[140px]">
+                <span class="text-xl">
+                  <Icon icon="heroicons-outline:dots-vertical" />
+                </span>
+                <template v-slot:menus>
+                  <MenuItem v-for="(item, i) in actions" :key="i">
+                  <div @click="item.doit(props.row)" :class="{
+            'bg-danger-500 text-danger-500 bg-opacity-30 hover:bg-opacity-100 hover:text-white':
+              item.name === 'delete',
+            'hover:bg-slate-900 hover:text-white':
+              item.name !== 'delete',
+          }"
+                    class="w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center">
+                    <span class="text-base">
+                      <Icon :icon="item.icon" />
+                    </span>
+                    <span>{{ item.name }}</span>
+                  </div>
+                  </MenuItem>
+                </template>
+              </Dropdown>
+              <!-- <span v-else class="cursor-not-allowed text-xl"
                   ><Icon icon="heroicons-outline:dots-vertical"
                 /></span> -->
-              </span>
-            </template>
-            <template #pagination-bottom>
-              <div class="py-4 px-3">
-                <Pagination
-                  :total="total"
-                  :current="query.pageNumber"
-                  :per-page="query.pageSize"
-                  :pageRange="pageRange"
-                  @page-changed="query.pageNumber = $event"
-                  :perPageChanged="perPage"
-                  enableSearch
-                  enableSelect
-                  :options="options"
+            </span>
+          </template>
+          <template #pagination-bottom>
+            <div class="py-4 px-3">
+              <Pagination :total="total" :current="query.pageNumber" :per-page="query.pageSize" :pageRange="pageRange"
+                @page-changed="query.pageNumber = $event" :perPageChanged="perPage" enableSearch enableSelect
+                :options="options">
                 >
-                  >
-                </Pagination>
-              </div>
-            </template>
-          </vue-good-table>
-        </div>
-      </v-pdf>
+              </Pagination>
+            </div>
+          </template>
+        </vue-good-table>
+      </div>
     </div>
   </div>
-  <Modal
-    :title="`${type} request`"
-    label="Small modal"
-    :labelClass="
-      type === 'approve' ? 'btn-outline-success' : 'btn-outline-danger'
-    "
-    ref="modal"
-    sizeClass="max-w-md"
-    :themeClass="type === 'approve' ? 'bg-success-500' : 'bg-danger-500'"
-  >
+  <Modal :title="`${type} request`" label="Small modal" :labelClass="type === 'approve' ? 'btn-outline-success' : 'btn-outline-danger'
+            " ref="modal" sizeClass="max-w-md" :themeClass="type === 'approve' ? 'bg-success-500' : 'bg-danger-500'">
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to {{ type }} this request?
     </div>
     <div v-if="type.toLowerCase() === 'reject'">
-      <textarea
-        resize="none"
-        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
-        rows="4"
-        placeholder="Provide reason"
-        v-model="comment"
-      ></textarea>
+      <textarea resize="none" class="px-3 py-3 border border-gray-200 rounded-lg w-full" rows="4"
+        placeholder="Provide reason" v-model="comment"></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button
-          text="Cancel"
-          btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modal.closeModal()"
-        />
-        <Button
-          :isLoading="approveloading"
-          :disabled="
-            approveloading || (!comment && type.toLowerCase() === 'reject')
-          "
-          text="Proceed"
-          :btnClass="
-            type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
-          "
-          @click="handleRequest()"
-        />
+        <Button text="Cancel" btnClass="btn-outline-secondary btn-sm " @click="$refs.modal.closeModal()" />
+        <Button :isLoading="approveloading" :disabled="approveloading || (!comment && type.toLowerCase() === 'reject')
+            " text="Proceed" :btnClass="type === 'approve' ? 'btn-success btn-sm' : 'btn-danger btn-sm'
+            " @click="handleRequest()" />
       </div>
     </template>
   </Modal>
 
-  <Modal
-    :title="
-      type === 'add'
-        ? 'Add member'
-        : type === 'edit'
-        ? 'Edit member'
-        : 'View member'
-    "
-    labelClass="btn-outline-dark"
-    ref="modalChange"
-    sizeClass="max-w-3xl"
-  >
+  <Modal :title="type === 'add'
+              ? 'Add member'
+              : type === 'edit'
+                ? 'Edit member'
+                : 'View member'
+            " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-3xl">
     <AddRecord v-if="type === 'add'" />
     <EditRecord v-if="type === 'edit'" />
     <ViewRecord v-if="type === 'view'" />
@@ -266,6 +170,7 @@ import {
   watch,
   reactive,
   ref,
+  inject,
   // getCurrentInstance,
 } from "vue";
 
@@ -377,13 +282,14 @@ export default {
             i.status === null
               ? "pending"
               : i.status === true
-              ? "approved"
-              : "rejected",
+                ? "approved"
+                : "rejected",
         };
       })
     );
     const total = computed(() => state.profile.total);
     const roles = computed(() => state.profile.roles);
+    const allDepartmentMembers = computed(() => state.department.allDepartments)
     const filteredMembers = computed(() => ({
       id: "id",
       gender: "gender",
@@ -391,12 +297,9 @@ export default {
       "First Name": "firstName",
       "Last Name": "lastName",
       Email: "email",
-      actionDate: "actionDate",
-      "Current Department": "currentDepartment",
-      "New Department": "newDepartment",
-      userId: "userId",
-      "Request Date": "requestDate",
-      dob: "dob",
+      "Current Department": "departmentName",
+      userId: "id",
+      dob: "doB",
     }));
 
     function handleRequest() {
@@ -440,7 +343,13 @@ export default {
       }
     });
 
+    const downloadPdf = inject("downloadPdf");
+    const generateReport = () => {
+      downloadPdf();
+    }
+
     return {
+      generateReport,
       query,
       total,
       fetchRecords,
@@ -464,6 +373,7 @@ export default {
       filteredMembers,
       pdfOptions,
       exportFilename,
+      allDepartmentMembers,
     };
   },
 
@@ -533,12 +443,8 @@ export default {
     };
   },
   methods: {
-    generateReport() {
-      this.$refs.pdf.download();
-    },
     generateAction(name, id) {
       this.id = id;
-
       const actions = {
         Approve: {
           name: "Approve",
