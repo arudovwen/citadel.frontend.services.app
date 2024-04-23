@@ -267,6 +267,7 @@ export default {
       "Current Department": "departmentName",
       userId: "id",
       dob: "doB",
+      Approved: "status",
       "Approval Date": "approveDate"
     }));
     const total = computed(() => state.profile.total);
