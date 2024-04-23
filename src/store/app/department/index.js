@@ -204,7 +204,7 @@ export default {
           `${urls.GET_ALL_DEPARTMENT}?${new URLSearchParams(cleanObject(data))}`
         );
         if (response.status === 200) {
-          commit("fetchAllSuccess", response.data);
+          commit("fetchSuccess", response.data);
         }
       } catch (err) {
         commit("fetchErr", err);
@@ -213,7 +213,7 @@ export default {
 
     async getAllDepartmentMembers({ commit }, data) {
       try {
-        commit("fetcAllBegin");
+        commit("fetchAllBegin");
         const response = await DataService.get(
           `${urls.GET_DEPARTMENT_MEMBERS}?${new URLSearchParams(
             cleanObject(data)

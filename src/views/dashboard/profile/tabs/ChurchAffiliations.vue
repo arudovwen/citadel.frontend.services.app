@@ -71,43 +71,74 @@
       </div>
 
       <div>
-        <CustomVueSelect
-          :canRequest="isUserProfile"
-          :request="requestFnObj('Request to change zone', 'toggleReqZone')"
-          :disabled="
-            !state.auth.permissions.includes(
-              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
-            )
-          "
-          label="CIH Zone"
-          class="min-w-[200px] w-full md:w-auto"
-          v-model.value="zoneObj"
-          :modelValue="zoneObj"
-          :error="cihZoneError"
-          :options="zoneOptions"
-          placeholder="Select zone"
-          name="zone"
-        />
+        <div v-if="isUserProfile" class="">
+          <CustomVueSelect
+            :canRequest="isUserProfile"
+            :request="requestFnObj('Request to change zone', 'toggleReqZone')"
+            label="CIH Zone"
+            class="min-w-[200px] w-full md:w-auto"
+            v-model.value="zoneObj"
+            :modelValue="zoneObj"
+            :error="cihZoneError"
+            :options="zoneOptions"
+            placeholder="Select zone"
+            name="zone"
+          />
+        </div>
+        <div v-else class="">
+          <CustomVueSelect
+            :canRequest="isUserProfile"
+            :request="requestFnObj('Request to change zone', 'toggleReqZone')"
+            :disabled="
+              !state.auth.permissions.includes(
+                'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+              )
+            "
+            label="CIH Zone"
+            class="min-w-[200px] w-full md:w-auto"
+            v-model.value="zoneObj"
+            :modelValue="zoneObj"
+            :error="cihZoneError"
+            :options="zoneOptions"
+            placeholder="Select zone"
+            name="zone"
+          />
+        </div>
       </div>
 
       <div>
-        <CustomVueSelect
-          :disabled="
-            centersLoading ||
-            !state.auth.permissions.includes(
-              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
-            )
-          "
-          :menuLoading="centersLoading"
-          label="Center Address"
-          class="min-w-[200px] w-full md:w-auto"
-          v-model.value="centerObj"
-          :modelValue="centerObj"
-          :error="cihAddressError"
-          :options="centerOptions"
-          placeholder="Select center"
-          name="CIH Address"
-        />
+        <div v-if="isUserProfile" class="">
+          <CustomVueSelect
+            :menuLoading="centersLoading"
+            label="Center Address"
+            class="min-w-[200px] w-full md:w-auto"
+            v-model.value="centerObj"
+            :modelValue="centerObj"
+            :error="cihAddressError"
+            :options="centerOptions"
+            placeholder="Select center"
+            name="CIH Address"
+          />
+        </div>
+        <div v-else class="">
+          <CustomVueSelect
+            :disabled="
+              centersLoading ||
+              !state.auth.permissions.includes(
+                'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+              )
+            "
+            :menuLoading="centersLoading"
+            label="Center Address"
+            class="min-w-[200px] w-full md:w-auto"
+            v-model.value="centerObj"
+            :modelValue="centerObj"
+            :error="cihAddressError"
+            :options="centerOptions"
+            placeholder="Select center"
+            name="CIH Address"
+          />
+        </div>
       </div>
 
       <div class="hidden">
@@ -188,23 +219,36 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-      <Button
-        v-if="
-          state.auth.permissions.includes(
-            'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
-          )
-        "
-        :isLoading="submitLoading"
-        :disabled="
-          !state.auth.permissions.includes(
-            'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
-          )
-        "
-        type="submit"
-        class="btn btn-primary block w-full text-center"
-      >
-        Save Changes
-      </Button>
+      <div v-if="isUserProfile" class="">
+        <Button
+          v-if="isUserProfile"
+          :isLoading="submitLoading"
+          :disabled="!isUserProfile"
+          type="submit"
+          class="btn btn-primary block w-full text-center"
+        >
+          Save Changes
+        </Button>
+      </div>
+      <div v-else class="">
+        <Button
+          v-if="
+            state.auth.permissions.includes(
+              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+            )
+          "
+          :isLoading="submitLoading"
+          :disabled="
+            !state.auth.permissions.includes(
+              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+            )
+          "
+          type="submit"
+          class="btn btn-primary block w-full text-center"
+        >
+          Save Changes
+        </Button>
+      </div>
       <div class="hidden sm:block"></div>
     </div>
     <RequestZone :affiliation="churchAffiliationsData" />
