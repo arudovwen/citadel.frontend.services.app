@@ -353,7 +353,7 @@ const isHOD = computed(
 );
 const canEditDetails = computed(
   () =>
-    state.auth.permissions.includes("CAN_UPDATE_OTHER_MEMBERS") ||
+    state.auth.permissions.includes("CAN_UPDATE_ALL_MEMBERS") ||
     (state.auth.permissions.includes("CAN_UPDATE_MEMBERS") &&
       state.auth.userData.id === userId.value)
 );
