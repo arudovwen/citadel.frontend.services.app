@@ -240,6 +240,7 @@
       />
 
       <Select
+        v-if="canUpdateDemise"
         label="Status"
         :options="demiseMenu"
         v-model.value="demise"

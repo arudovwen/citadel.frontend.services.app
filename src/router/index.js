@@ -166,7 +166,7 @@ const routes = [
         children: [
           {
             path: "",
-            name: "Demise management",
+            name: "Archived users",
             component: () =>
               import("@/components/Pages/Dashboard/Demise/Demise.vue"),
             meta: {
