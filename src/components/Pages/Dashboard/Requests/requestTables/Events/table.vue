@@ -512,7 +512,6 @@ export default {
         label: "Requester Name",
         field: "requesterName",
       },
-
       {
         label: "Event date",
         field: "eventDate",
@@ -521,7 +520,10 @@ export default {
         label: "Status",
         field: "status",
       },
-
+      {
+        label: "Approver Name",
+        field: "approvedBy",
+      },
       {
         label: "Action",
         field: "action",
