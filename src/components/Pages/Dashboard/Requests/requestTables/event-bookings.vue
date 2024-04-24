@@ -3,71 +3,131 @@
     <Card noborder>
       <div class="md:flex pb-6 items-center justify-between">
         <div class="md:flex gap-x-4 items-center">
-          <InputGroup v-model="query.searchParameter" placeholder="Search" type="text"
-            prependIcon="heroicons-outline:search" merged classInput="min-w-[220px] !h-9" />
-          <VueTailwindDatePicker v-model="query.dateValue" :formatter="formatter"
-            input-classes="form-control h-[36px] min-w-[250px]" placeholder="Filter date range" />
-          <VueSelect class="min-w-[200px] w-full md:w-auto" v-model="eventType" :options="eventsOption"
-            placeholder="Filter type" name="filterType" />
-          <VueSelect class="min-w-[200px] w-full md:w-auto" v-model="center" :options="zoneOptions"
-            placeholder="Filter center" name="center" />
+          <InputGroup
+            v-model="query.searchParameter"
+            placeholder="Search"
+            type="text"
+            prependIcon="heroicons-outline:search"
+            merged
+            classInput="min-w-[220px] !h-9"
+          />
+          <VueTailwindDatePicker
+            v-model="query.dateValue"
+            :formatter="formatter"
+            input-classes="form-control h-[36px] min-w-[250px]"
+            placeholder="Filter date range"
+          />
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto"
+            v-model="eventType"
+            :options="eventsOption"
+            placeholder="Filter type"
+            name="filterType"
+          />
+          <VueSelect
+            class="min-w-[200px] w-full md:w-auto"
+            v-model="center"
+            :options="zoneOptions"
+            placeholder="Filter center"
+            name="center"
+          />
         </div>
-        <div v-if="permissions.includes('CAN_CREATE_EVENTS')" class="md:flex md:space-x-3 items-center flex-none"
-          :class="window.width < 768 ? 'space-x-rb' : ''">
-          <Button icon="heroicons-outline:plus-sm" text="Request Event" btnClass=" btn-primary font-normal btn-sm "
-            iconClass="text-lg" @click="() => {
-            type = 'add';
-            $refs.modalChange.openModal();
-          }
-            " />
+        <div
+          v-if="permissions.includes('CAN_CREATE_EVENTS')"
+          class="md:flex md:space-x-3 items-center flex-none"
+          :class="window.width < 768 ? 'space-x-rb' : ''"
+        >
+          <Button
+            icon="heroicons-outline:plus-sm"
+            text="Request Event"
+            btnClass=" btn-primary font-normal btn-sm "
+            iconClass="text-lg"
+            @click="
+              () => {
+                type = 'add';
+                $refs.modalChange.openModal();
+              }
+            "
+          />
         </div>
       </div>
       <div class="-mx-6">
-        <vue-good-table :columns="columns" mode="remote" :isLoading="loading" styleClass=" vgt-table  centered "
-          :rows="events || []" :sort-options="{
+        <vue-good-table
+          :columns="
+            permissions?.includes('CAN_APPROVE_REJECT_EVENTS')
+              ? columns
+              : columns.filter((i) => i.field !== 'requesterName')
+          "
+          mode="remote"
+          :isLoading="loading"
+          styleClass=" vgt-table  centered "
+          :rows="events || []"
+          :sort-options="{
             enabled: false,
-          }" :pagination-options="{
+          }"
+          :pagination-options="{
             enabled: true,
             perPage: perpage,
-          }">
+          }"
+        >
           <template v-slot:table-row="props">
-            <span v-if="props.column.field == 'eventType'" class="text-slate-500 dark:text-slate-400">
+            <span
+              v-if="props.column.field == 'eventType'"
+              class="text-slate-500 dark:text-slate-400"
+            >
               {{
-            eventsOption.find((i) => i.value === props.row.eventType)
-              ?.label || "-"
-          }}
+                eventsOption.find((i) => i.value === props.row.eventType)
+                  ?.label || "-"
+              }}
             </span>
-            <span v-if="props.column.field == 'createdAt'" class="text-slate-500 dark:text-slate-400">
+            <span
+              v-if="props.column.field == 'createdAt'"
+              class="text-slate-500 dark:text-slate-400"
+            >
               {{ moment(props.row.createdAt).format("ll") }}
             </span>
-            <span v-if="props.column.field == 'eventDate'" class="text-slate-500 dark:text-slate-400">
+            <span
+              v-if="props.column.field == 'eventDate'"
+              class="text-slate-500 dark:text-slate-400"
+            >
               {{ moment(props.row.eventDate).format("ll") }}
             </span>
-            <span v-if="props.column.field == 'reason'"
-              class="text-slate-500 dark:text-slate-400 max-w-[160px] truncate">
+            <span
+              v-if="props.column.field == 'reason'"
+              class="text-slate-500 dark:text-slate-400 max-w-[160px] truncate"
+            >
               {{ props.row.reason || "-" }}
             </span>
-            <span v-if="props.column.field == 'requesterName'" class="text-slate-500 dark:text-slate-400">
-              <router-link class="hover:underline" :to="`/profile/${props.row.userId}`">{{ props.row.requesterName
-                }}</router-link>
+            <span
+              v-if="props.column.field == 'requesterName'"
+              class="text-slate-500 dark:text-slate-400"
+            >
+              <router-link
+                class="hover:underline"
+                :to="`/profile/${props.row.userId}`"
+                >{{ props.row.requesterName }}</router-link
+              >
             </span>
             <span v-if="props.column.field == 'status'" class="block w-full">
-              <span class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
-                :class="`${props.row.status === true
-            ? 'text-success-500 bg-success-500'
-            : ''
-            } 
+              <span
+                class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25"
+                :class="`${
+                  props.row.status === true
+                    ? 'text-success-500 bg-success-500'
+                    : ''
+                } 
             ${props.row.status === false ? 'text-red-500 bg-red-500' : ''}
             ${props.row.status === null ? 'text-blue-500 bg-blue-500' : ''}
             
-             `">
+             `"
+              >
                 {{
-            props.row.status === null
-              ? "Pending"
-              : props.row.status === false
-                ? "declined"
-                : "Approved"
-          }}
+                  props.row.status === null
+                    ? "Pending"
+                    : props.row.status === false
+                    ? "declined"
+                    : "Approved"
+                }}
               </span>
             </span>
             <span v-if="props.column.field == 'action'">
@@ -76,27 +136,37 @@
                   <Icon icon="heroicons-outline:dots-vertical" />
                 </span>
                 <template v-slot:menus>
-                  <MenuItem v-for="(item, i) in handleAction(props.row.status)" :key="i">
-                  <div @click="() => {
-            generateAction(item.name, props.row.id).doit(
-              item.name,
-              props.row
-            );
-          }
-            " :class="`
+                  <MenuItem
+                    v-for="(item, i) in handleAction(props.row.status)"
+                    :key="i"
+                  >
+                    <div
+                      @click="
+                        () => {
+                          generateAction(item.name, props.row.id).doit(
+                            item.name,
+                            props.row
+                          );
+                        }
+                      "
+                      :class="`
                 
-                  ${generateAction(item.name, props.row.id).name === 'delete'
-              ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
-              : 'hover:bg-slate-900 hover:text-white'
-            }
-                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `">
-                    <span class="text-base">
-                      <Icon :icon="generateAction(item.name, props.row.id).icon" />
-                    </span>
-                    <span>{{
-            generateAction(item.name, props.row.id).name
-          }}</span>
-                  </div>
+                  ${
+                    generateAction(item.name, props.row.id).name === 'delete'
+                      ? 'bg-danger-500 text-danger-500 bg-opacity-30  hover:bg-opacity-100 hover:text-white'
+                      : 'hover:bg-slate-900 hover:text-white'
+                  }
+                   w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex  space-x-2 items-center `"
+                    >
+                      <span class="text-base">
+                        <Icon
+                          :icon="generateAction(item.name, props.row.id).icon"
+                        />
+                      </span>
+                      <span>{{
+                        generateAction(item.name, props.row.id).name
+                      }}</span>
+                    </div>
                   </MenuItem>
                 </template>
               </Dropdown>
@@ -104,9 +174,17 @@
           </template>
           <template #pagination-bottom>
             <div class="py-4 px-3">
-              <Pagination :total="total" :current="query.pageNumber" :per-page="query.pageSize" :pageRange="5"
-                :perPageChanged="perPage" @page-changed="query.pageNumber = $event" enableSearch enableSelect
-                :options="options">
+              <Pagination
+                :total="total"
+                :current="query.pageNumber"
+                :per-page="query.pageSize"
+                :pageRange="5"
+                :perPageChanged="perPage"
+                @page-changed="query.pageNumber = $event"
+                enableSearch
+                enableSelect
+                :options="options"
+              >
                 >
               </Pagination>
             </div>
@@ -115,54 +193,105 @@
       </div>
     </Card>
   </div>
-  <Modal title="Confirm action" label="Small modal" labelClass="btn-outline-dark" ref="modalStatus" sizeClass="max-w-md"
-    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`">
+  <Modal
+    title="Confirm action"
+    label="Small modal"
+    labelClass="btn-outline-dark"
+    ref="modalStatus"
+    sizeClass="max-w-md"
+    :themeClass="`${type === 'approve' ? 'bg-green-500' : 'bg-danger-500'}`"
+  >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to {{ type.toLowerCase() }} this request?
     </div>
     <div v-if="type.toLowerCase() === 'reject'">
-      <textarea resize="none" class="px-3 py-3 border border-gray-200 rounded-lg w-full" rows="4"
-        placeholder="Provide reason" v-model="comment"></textarea>
+      <textarea
+        resize="none"
+        class="px-3 py-3 border border-gray-200 rounded-lg w-full"
+        rows="4"
+        placeholder="Provide reason"
+        v-model="comment"
+      ></textarea>
     </div>
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button :disabled="updateloading" text="Cancel" btnClass="btn-outline-secondary btn-sm "
-          @click="$refs.modalStatus.closeModal()" />
-        <Button :disabled="updateloading || (!comment && type.toLowerCase() === 'reject')
-            " :isLoading="updateloading" text="Proceed" :btnClass="` btn-sm ${type === 'approve' ? 'btn-success' : 'btn-danger'
-            }`" @click="handleStatus" />
+        <Button
+          :disabled="updateloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm "
+          @click="$refs.modalStatus.closeModal()"
+        />
+        <Button
+          :disabled="
+            updateloading || (!comment && type.toLowerCase() === 'reject')
+          "
+          :isLoading="updateloading"
+          text="Proceed"
+          :btnClass="` btn-sm ${
+            type === 'approve' ? 'btn-success' : 'btn-danger'
+          }`"
+          @click="handleStatus"
+        />
       </div>
     </template>
   </Modal>
-  <Modal title="Delete request" label="Small modal" labelClass="btn-outline-danger" ref="modal" sizeClass="max-w-md"
-    themeClass="bg-danger-500">
+  <Modal
+    title="Delete request"
+    label="Small modal"
+    labelClass="btn-outline-danger"
+    ref="modal"
+    sizeClass="max-w-md"
+    themeClass="bg-danger-500"
+  >
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to delete this request?
     </div>
 
     <template v-slot:footer>
       <div class="flex gap-x-5">
-        <Button :disabled="deleteloading" text="Cancel" btnClass="btn-outline-secondary btn-sm"
-          @click="$refs.modal.closeModal()" />
-        <Button text="Delete" :isLoading="deleteloading" :disabled="deleteloading" btnClass="btn-danger btn-sm"
-          @click="handleDelete" />
+        <Button
+          :disabled="deleteloading"
+          text="Cancel"
+          btnClass="btn-outline-secondary btn-sm"
+          @click="$refs.modal.closeModal()"
+        />
+        <Button
+          text="Delete"
+          :isLoading="deleteloading"
+          :disabled="deleteloading"
+          btnClass="btn-danger btn-sm"
+          @click="handleDelete"
+        />
       </div>
     </template>
   </Modal>
-  <Modal :title="type === 'add'
-            ? 'Request event'
-            : type === 'edit'
-              ? 'Edit Event'
-              : 'View event'
-            " labelClass="btn-outline-dark" ref="modalChange" sizeClass="max-w-lg">
+  <Modal
+    :title="
+      type === 'add'
+        ? 'Request event'
+        : type === 'edit'
+        ? 'Edit Event'
+        : 'View event'
+    "
+    labelClass="btn-outline-dark"
+    ref="modalChange"
+    sizeClass="max-w-lg"
+  >
     <AddEvent v-if="type === 'add'" />
     <EditEvent v-if="type === 'edit'" :detail="detail" />
     <ViewEvent v-if="type === 'view'" :detail="detail" />
   </Modal>
 
-  <Modal :title="`Reason for decline`" labelClass="btn-outline-dark" ref="reasonModal" sizeClass="max-w-lg">
+  <Modal
+    :title="`Reason for decline`"
+    labelClass="btn-outline-dark"
+    ref="reasonModal"
+    sizeClass="max-w-lg"
+  >
     <div class="flex items-start justify-start w-full">
-      <span v-if="!detail?.reason?.length" class="text-gray-400">None specified</span>
+      <span v-if="!detail?.reason?.length" class="text-gray-400"
+        >None specified</span
+      >
       <div v-else class="min-h-[300px]">
         <div v-html="detail?.reason"></div>
       </div>
@@ -389,6 +518,10 @@ export default {
         label: "Request Date",
         field: "createdAt",
       },
+      {
+        label: "Requester",
+        field: "requesterName",
+      },
 
       {
         label: "Event Type",
@@ -399,6 +532,11 @@ export default {
         label: "Event date",
         field: "eventDate",
       },
+      {
+        label: "Approved by",
+        field: "actionByName",
+      },
+
       {
         label: "Status",
         field: "status",
@@ -446,7 +584,7 @@ export default {
     //   dispatch("getEvents", query);
     // }
 
-    watch(center, () => query.zone = center.value.value);
+    watch(center, () => (query.zone = center.value.value));
 
     function getData() {
       dispatch(
@@ -459,16 +597,16 @@ export default {
 
     const zoneOptions = computed(() => [
       {
-        label: "All", value: "",
+        label: "All",
+        value: "",
       },
       ...state?.zone?.zones?.map((i) => {
         return {
           label: i.zoneName,
           value: i.zoneName,
         };
-      })
-    ]
-    );
+      }),
+    ]);
     const filteredColumns = computed(() => {
       return columns;
     });
@@ -584,7 +722,7 @@ export default {
       columns,
       permissions,
       reasonModal,
-      center
+      center,
     };
   },
 };

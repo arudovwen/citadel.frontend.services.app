@@ -228,6 +228,15 @@
         :error="placeOfBirthError"
         classInput="h-[40px]"
       />
+
+      <Select
+        label="Demise"
+        :options="demiseMenu"
+        v-model.value="demise"
+        :modelValue="demise"
+        :error="demiseError"
+        classInput="!h-[40px]"
+      />
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
       <!-- {{ submitLoading }} -->
@@ -241,6 +250,10 @@
         Save Changes
       </Button>
       <div class="hidden sm:block"></div>
+      <!-- <pre class="text-blue-400">{{
+        JSON.stringify({ demise: values?.demise }, null, 2)
+      }}</pre>
+      <pre class="text-blue-400">{{ { demise: values?.demise } }}</pre> -->
     </div>
   </form>
 </template>
@@ -259,6 +272,7 @@ import {
   titleMenu,
   genderMenu,
   employmentStatusMenu,
+  demiseMenu,
   // nationalityMenu,
   // stateOfOriginMenu,
   maritalStatusMenu,
@@ -327,6 +341,7 @@ const schema = yup.object({
   maritalStatus: yup.string().nullable(),
   dateOfBirth: yup.string().nullable(),
   maidenName: yup.string().nullable(),
+  demise: yup.bool().nullable(),
 });
 
 const { handleSubmit, setValues, values, setFieldValue } = useForm({
@@ -367,6 +382,7 @@ const { value: maritalStatus, errorMessage: maritalStatusError } =
 
 const { value: dateOfBirth, errorMessage: dateOfBirthError } =
   useField("dateOfBirth");
+const { value: demise, errorMessage: demiseError } = useField("demise");
 
 // const { value: email, errorMessage: emailError } = useField("email");
 
@@ -441,6 +457,7 @@ const prepareDetails = (values, type) => {
     stateOfOrigin: values?.stateOfOrigin?.value,
     maritalStatus: values?.maritalStatus,
     maidenName: values?.maidenName,
+    demise: values?.demise,
   };
   const createObj = {
     title: values.title,
@@ -464,6 +481,7 @@ const prepareDetails = (values, type) => {
     stateOfOrigin: values?.stateOfOrigin?.value,
     maritalStatus: values?.maritalStatus,
     maidenName: values?.maidenName,
+    demise: values?.demise,
   };
 
   const obj = type == "create" ? createObj : updateObj;
@@ -611,6 +629,16 @@ watchEffect(() => {
     isEmployed.value = true;
   } else {
     isEmployed.value = false;
+  }
+});
+
+watch(demise, () => {
+  // console.log(demise.value);
+  // console.log(String(demise.value).toLowerCase() == "true");
+  if (String(demise.value).toLowerCase() == "true") {
+    setValues({ ...values, demise: true });
+  } else {
+    setValues({ ...values, demise: false });
   }
 });
 </script>
