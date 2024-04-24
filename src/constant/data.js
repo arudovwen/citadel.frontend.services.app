@@ -270,7 +270,7 @@ export const menuItems = [
     title: "Demise",
     icon: "bx:buildings",
     link: "/demise",
-    roles: "",
+    roles: "CAN_UPDATE_DEMISE_MEMBERS",
     subroles: [],
   },
   {

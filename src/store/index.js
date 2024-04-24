@@ -5,6 +5,7 @@ import kanban from "./app/kanban";
 import project from "./app/project";
 import member from "./app/member";
 import firsttimer from "./app/first-timer";
+import demise from "./app/demise";
 import event from "./app/event";
 import outreach from "./app/outreach";
 import goal from "./app/goal";
@@ -131,5 +132,6 @@ export default createStore({
     moi,
     accessory,
     role,
+    demise,
   },
 });

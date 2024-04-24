@@ -1,6 +1,16 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
-    <FormDebug :form="values" class="hidden" />
+    <FormDebug
+      :form="{
+        values: values,
+        canUpdateDemise,
+        demisePermission:
+          $store.state.auth.permissions[
+            store.state.auth.permissions.length - 1
+          ],
+      }"
+      class="hidden"
+    />
     <div
       v-if="!canEditDetails"
       class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
@@ -291,6 +301,10 @@ onMounted(() => {
 const store = useStore();
 const route = useRoute();
 const toast = useToast();
+const canUpdateDemise = computed(() =>
+  store?.state?.auth?.permissions.includes("CAN_UPDATE_DEMISE_MEMBERS")
+);
+
 const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
