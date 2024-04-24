@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
-      Are you sure you want to assign this role?
+      Are you sure you want to assign this role fhgfg?
       <!-- <p>{{ userId }}</p>
       <p>{{ inspectorateId }}</p> -->
     </div>
@@ -62,7 +62,11 @@ const query = reactive({
 const role = ref("");
 const roles = computed(() =>
   state.role.roles
-    .filter((i) => i?.name?.toLowerCase() !== "firsttimers")
+    .filter(
+      (i) =>
+        i?.name?.toLowerCase() !== "firsttimers" &&
+        i?.name?.toLowerCase() !== "cihcoordinator"
+    )
     .map((i) => {
       return {
         value: i?.roleId,
@@ -81,12 +85,14 @@ const roles = computed(() =>
 //     })
 // );
 const cihRoles = computed(() =>
-  state?.profile?.allCihRoles.map((i) => {
-    return {
-      label: i,
-      value: i,
-    };
-  })
+  state?.profile?.allCihRoles
+    .filter((i) => i?.toLowerCase() !== "cihcoordinator")
+    .map((i) => {
+      return {
+        label: i,
+        value: i,
+      };
+    })
 );
 
 const getAllCihRoles = () => {
