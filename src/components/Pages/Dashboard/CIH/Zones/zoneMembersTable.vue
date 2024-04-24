@@ -4,7 +4,7 @@
       <div class="md:flex pb-6 items-center justify-between">
         <div class="mb-4 md:md-0">
           <InputGroup
-            v-model="query.searchParameter"
+            v-model="search"
             placeholder="Search"
             type="text"
             prependIcon="heroicons-outline:search"
@@ -490,7 +490,7 @@ export default {
       debouncedSearch(search.value);
     });
     watch(
-      () => [query.pageNumber, query.pageSize],
+      () => [query.pageNumber, query.pageSize, query.searchParameter],
       () => {
         dispatch("getAffiliationByMemberQuery", query);
       }

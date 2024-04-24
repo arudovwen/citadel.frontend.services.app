@@ -34,14 +34,6 @@
             {{ moment(detail?.eventDate).format("ll") }}
           </p>
         </div>
-
-        <div class="col-span-1 md:col-span-2">
-          <h6 class="text-xs font-semibold text-slate-400">Request date</h6>
-          <p class="text-base font-semibold text-slate-900">
-            {{ moment(detail?.requestDate).format("ll") }}
-          </p>
-        </div>
-
         <div class="col-span-1 md:col-span-2">
           <h6 class="text-xs font-semibold text-slate-400">Status</h6>
           <p class="text-base font-semibold text-slate-900">

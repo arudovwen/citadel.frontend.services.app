@@ -359,25 +359,7 @@ const actions = [
 
       modalChange.value.openModal();
     },
-  },
-  {
-    name: "approve",
-    icon: "ph:check",
-    doit: (name, data) => {
-      type.value = "approve";
-      detail.value = data;
-      modal.value.openModal();
-    },
-  },
-  {
-    name: "reject",
-    icon: "ph:x-light",
-    doit: (name, data) => {
-      type.value = "reject";
-      detail.value = data;
-      modal.value.openModal();
-    },
-  },
+  }
   // {
   //   name: "see reason",
   //   icon: "heroicons-outline:eye",
