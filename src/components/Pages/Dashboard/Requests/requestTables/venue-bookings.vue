@@ -438,6 +438,11 @@ const columns = [
     field: "purposeOfUsage",
   },
   {
+    label: "Approved by",
+    field: "actionByName",
+  },
+
+  {
     label: "Status",
     field: "status",
   },

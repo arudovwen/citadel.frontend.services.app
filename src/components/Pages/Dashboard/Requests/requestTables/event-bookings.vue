@@ -533,6 +533,11 @@ export default {
         field: "eventDate",
       },
       {
+        label: "Approved by",
+        field: "actionByName",
+      },
+
+      {
         label: "Status",
         field: "status",
       },
