@@ -121,9 +121,9 @@
               </span>
               <span v-if="props.column.field == 'action'">
                 <Dropdown classMenuItems=" w-[140px]">
-                  <span class="text-xl"
-                    ><Icon icon="heroicons-outline:dots-vertical"
-                  /></span>
+                  <span class="text-xl">
+                    <Icon icon="heroicons-outline:dots-vertical" />
+                  </span>
                   <template v-slot:menus>
                     <MenuItem
                       v-for="(item, i) in handleAction(props.row.status)"
@@ -360,6 +360,24 @@ const actions = [
       modalChange.value.openModal();
     },
   },
+  {
+    name: "approve",
+    icon: "ph:check",
+    doit: (name, data) => {
+      type.value = "approve";
+      detail.value = data;
+      modal.value.openModal();
+    },
+  },
+  {
+    name: "reject",
+    icon: "ph:x-light",
+    doit: (name, data) => {
+      type.value = "reject";
+      detail.value = data;
+      modal.value.openModal();
+    },
+  },
   // {
   //   name: "see reason",
   //   icon: "heroicons-outline:eye",
@@ -373,12 +391,12 @@ const actions = [
 const handleAction = (status) => {
   let newaction = actions;
 
-  if (status === true) {
+  if (status !== null) {
     return newaction.filter((i) => i.name == "view");
   }
-  if (status === false) {
-    return newaction.filter((i) => i.name !== "reject");
-  }
+  // if (status === false) {
+  //   return newaction.filter((i) => i.name !== "reject" || i.name !== "approve");
+  // }
   return newaction;
 };
 const options = [

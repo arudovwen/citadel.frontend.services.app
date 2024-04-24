@@ -218,6 +218,14 @@ export default {
         label: "Location",
         value: "description",
       },
+      {
+        label: "Total Members (ascending)",
+        value: "totalAsc",
+      },
+      {
+        label: "Total Members (descending)",
+        value: "totalDesc",
+      },
     ];
     onMounted(() => {
       dispatch("getAllCentersTotal", query);
