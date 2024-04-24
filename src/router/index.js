@@ -167,6 +167,7 @@ const routes = [
           {
             path: "",
             name: "Archived user management",
+
             component: () =>
               import("@/components/Pages/Dashboard/Demise/Demise.vue"),
             meta: {
