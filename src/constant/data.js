@@ -267,6 +267,13 @@ export const menuItems = [
     subroles: [],
   },
   {
+    title: "Demise",
+    icon: "bx:buildings",
+    link: "/demise",
+    roles: "CAN_UPDATE_DEMISE_MEMBERS",
+    subroles: [],
+  },
+  {
     title: "Users management",
     icon: "la:users-cog",
     link: "/users-management",
@@ -888,11 +895,11 @@ export const genderMenu = [
 export const demiseMenu = [
   {
     value: true,
-    label: "Yes",
+    label: "Active",
   },
   {
     value: false,
-    label: "No",
+    label: "Archived",
   },
 ];
 

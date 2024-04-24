@@ -1,5 +1,16 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
+    <FormDebug
+      :form="{
+        values: values,
+        canUpdateDemise,
+        demisePermission:
+          $store.state.auth.permissions[
+            store.state.auth.permissions.length - 1
+          ],
+      }"
+      class="hidden"
+    />
     <div
       v-if="!canEditDetails"
       class="z-30 h-full w-full absolute bg-transparent cursor-not-allowed"
@@ -9,7 +20,6 @@
       v-if="(!biodata && biodataLoading) || isShowing == false"
     />
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <!-- <FormDebug :form="values" /> -->
       <Select
         label="Title"
         :options="titleMenu"
@@ -230,7 +240,7 @@
       />
 
       <Select
-        label="Demise"
+        label="Status"
         :options="demiseMenu"
         v-model.value="demise"
         :modelValue="demise"
@@ -283,7 +293,7 @@ import { useToast } from "vue-toastification";
 // import { inject } from "vue";
 import { useRoute } from "vue-router";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
-// import FormDebug from "@/components/forms/FormDebug";
+import FormDebug from "@/components/forms/FormDebug";
 onMounted(() => {
   getBiodata();
 });
@@ -291,6 +301,10 @@ onMounted(() => {
 const store = useStore();
 const route = useRoute();
 const toast = useToast();
+const canUpdateDemise = computed(() =>
+  store?.state?.auth?.permissions.includes("CAN_UPDATE_DEMISE_MEMBERS")
+);
+
 const createProfileLoading = computed(
   () => store.state.profile.getBiodataloading
 );
