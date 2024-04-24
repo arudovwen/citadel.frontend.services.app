@@ -351,8 +351,11 @@ const isInspectorate = computed(
 const isHOD = computed(
   () => state.auth.userData.userRole.toLowerCase() === "hod"
 );
-const canEditDetails = computed(() =>
-  state.auth.permissions.includes("CAN_UPDATE_MEMBERS")
+const canEditDetails = computed(
+  () =>
+    state.auth.permissions.includes("CAN_UPDATE_MEMBERS") ||
+    (state.auth.permissions.includes("CAN_UPDATE_PROFILE_MEMBERS") &&
+      state.auth.userData.id === userId.value)
 );
 // const churchAffiliationsDataLoading = computed(
 //   () => state.profile.getChurchAffiliationsDataloading
