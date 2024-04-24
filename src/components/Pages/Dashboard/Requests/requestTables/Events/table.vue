@@ -197,6 +197,14 @@
     <div class="text-base text-slate-600 dark:text-slate-300 mb-6">
       Are you sure you want to {{ type.toLowerCase() }} this request?
     </div>
+    <FormGroup class="mb-4" label="Event Date" name="date">
+      <flat-pickr
+        v-model="dateOfRequestedEvent"
+        class="form-control"
+        id="d1"
+        placeholder="Select date of event"
+      />
+    </FormGroup>
     <div v-if="type.toLowerCase() === 'reject'">
       <textarea
         resize="none"
@@ -295,6 +303,7 @@ import AddEvent from "./addevent.vue";
 import EditEvent from "./editevent.vue";
 import ViewEvent from "./preview.vue";
 import { debounce } from "lodash";
+import FormGroup from "@/components/FormGroup";
 import { useToast } from "vue-toastification";
 // eslint-disable-next-line no-unused-vars
 import moment from "moment";
@@ -303,6 +312,7 @@ import window from "@/mixins/window";
 export default {
   mixins: [window],
   components: {
+    FormGroup,
     AddEvent,
     EditEvent,
     ViewEvent,
@@ -335,7 +345,7 @@ export default {
       dateValue: [],
       center: "",
       zone: "",
-
+      dateOfRequestedEvent: null,
       formatter: {
         date: "DD MMM YYYY",
         month: "MMM",
@@ -395,9 +405,22 @@ export default {
         Comments: this.comment,
         status: this.type === "approve" ? true : false,
       };
-
+      if (
+        !moment(this.dateOfRequestedEvent).isSame(moment(this.detail.eventDate))
+      ) {
+        this.$store.dispatch("updateEvent", {
+          ...this.detail,
+          dateOfRequestedEvent: moment(this.dateOfRequestedEvent).format(
+            "YYYY-MM-DDTHH:mm:ss"
+          ),
+          eventDate: moment(this.dateOfRequestedEvent).format(
+            "YYYY-MM-DDTHH:mm:ss"
+          ),
+        });
+      }
       this.$store.dispatch("updateEventStatus", data);
     },
+
     generateAction(name, id) {
       this.id = id;
 
@@ -417,6 +440,7 @@ export default {
           doit: (data, detail) => {
             this.type = data;
             this.detail = detail;
+            this.dateOfRequestedEvent = detail.eventDate;
             this.$refs.modalStatus.openModal();
           },
         },
