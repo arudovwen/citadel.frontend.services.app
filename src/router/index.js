@@ -154,6 +154,30 @@ const routes = [
         },
       },
       {
+        path: "/demise",
+        name: "Demise management",
+        component: () =>
+          import("@/components/Pages/Dashboard/Demise/index.vue"),
+        meta: {
+          activeName: "demise-management",
+          // roles: "CAN_UPDATE_DEMISE",
+          subroles: [],
+        },
+        children: [
+          {
+            path: "",
+            name: "Demise",
+            component: () =>
+              import("@/components/Pages/Dashboard/Demise/Demise.vue"),
+            meta: {
+              activeName: "demise-management",
+              // roles: "CAN_UPDATE_DEMISE",
+              subroles: [],
+            },
+          },
+        ],
+      },
+      {
         path: "/affinity-groups",
         name: "affinity-groups",
         component: AffinityGroupsIndex,

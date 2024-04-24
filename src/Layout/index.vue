@@ -2,7 +2,7 @@
   <main class="app-wrapper">
     <Header :class="window.width > 1280 ? switchHeaderClass() : ''" />
     <!-- end header -->
-
+    sss
     <Sidebar
       v-if="
         this.$store.state.menuLayout === 'vertical' &&
