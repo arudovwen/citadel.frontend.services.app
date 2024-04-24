@@ -128,6 +128,9 @@ const onSubmit = handleSubmit((values) => {
     dateOfRequestedEvent: moment(values.dateOfRequestedEvent).format(
       "YYYY-MM-DDTHH:mm:ss"
     ),
+    eventDate: moment(values.dateOfRequestedEvent).format(
+      "YYYY-MM-DDTHH:mm:ss"
+    ),
   });
 });
 watch(success, () => {

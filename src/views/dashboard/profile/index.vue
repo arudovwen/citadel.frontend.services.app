@@ -353,8 +353,8 @@ const isHOD = computed(
 );
 const canEditDetails = computed(
   () =>
-    state.auth.permissions.includes("CAN_UPDATE_MEMBERS") ||
-    (state.auth.permissions.includes("CAN_UPDATE_PROFILE_MEMBERS") &&
+    state.auth.permissions.includes("CAN_UPDATE_OTHER_MEMBERS") ||
+    (state.auth.permissions.includes("CAN_UPDATE_MEMBERS") &&
       state.auth.userData.id === userId.value)
 );
 // const churchAffiliationsDataLoading = computed(

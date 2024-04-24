@@ -48,7 +48,11 @@
         </div>
         <div class="-mx-6">
           <vue-good-table
-            :columns="columns"
+            :columns="
+              permissions?.includes('CAN_APPROVE_REJECT_VENUES')
+                ? columns
+                : columns.filter((i) => i.field !== 'requesterName')
+            "
             styleClass="vgt-table"
             :isLoading="loading"
             :rows="requests ? requests : [] || []"
@@ -401,10 +405,10 @@ const columns = [
     field: "venueName",
   },
 
-  // {
-  //   label: "Type",
-  //   field: "type",
-  // },
+  {
+    label: "Requester",
+    field: "requesterName",
+  },
 
   {
     label: "Date Of Usage",
