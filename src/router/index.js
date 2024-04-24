@@ -154,23 +154,23 @@ const routes = [
         },
       },
       {
-        path: "/demise",
-        name: "Demise ",
+        path: "/archived-users",
+        name: "Archived",
         component: () =>
           import("@/components/Pages/Dashboard/Demise/index.vue"),
         meta: {
-          activeName: "demise",
+          activeName: "archived",
           roles: "CAN_UPDATE_DEMISE_MEMBERS",
           subroles: [],
         },
         children: [
           {
             path: "",
-            name: "Demise management",
+            name: "Archived user management",
             component: () =>
               import("@/components/Pages/Dashboard/Demise/Demise.vue"),
             meta: {
-              activeName: "demise",
+              activeName: "archived-users",
               // roles: "CAN_UPDATE_DEMISE_MEMBERS",
               subroles: [],
             },

@@ -266,18 +266,19 @@ export const menuItems = [
     roles: "",
     subroles: [],
   },
-  {
-    title: "Demise",
-    icon: "bx:buildings",
-    link: "/demise",
-    roles: "CAN_UPDATE_DEMISE_MEMBERS",
-    subroles: [],
-  },
+
   {
     title: "Users management",
     icon: "la:users-cog",
     link: "/users-management",
     roles: "CAN_VIEW_USER_MANAGEMENT",
+    subroles: [],
+  },
+  {
+    title: "Archived Users",
+    icon: "bx:buildings",
+    link: "/archived-users",
+    roles: "CAN_UPDATE_DEMISE_MEMBERS",
     subroles: [],
   },
   {
