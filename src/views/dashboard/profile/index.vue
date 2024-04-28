@@ -393,6 +393,9 @@ function changeRole() {
     roleId: role.value,
   });
 }
+watch(route, () => {
+  getAuthUsersRoles();
+});
 provide("isMarried", isMarried);
 provide("isEmployed", isEmployed);
 provide("profileData", profileData);
