@@ -895,11 +895,11 @@ export const genderMenu = [
 
 export const demiseMenu = [
   {
-    value: true,
+    value: false,
     label: "Active",
   },
   {
-    value: false,
+    value: true,
     label: "Archived",
   },
 ];
