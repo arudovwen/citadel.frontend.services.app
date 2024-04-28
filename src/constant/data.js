@@ -275,9 +275,9 @@ export const menuItems = [
     subroles: [],
   },
   {
-    title: "Archived users",
-    icon: "pepicons-pencil:persons-off",
-    link: "/demise",
+    title: "Archived Users",
+    icon: "bx:buildings",
+    link: "/archived-users",
     roles: "CAN_UPDATE_DEMISE_MEMBERS",
     subroles: [],
   },
