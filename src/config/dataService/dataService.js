@@ -26,10 +26,6 @@ class DataService {
   }
 
   static post(path = "", data = {}, optionalHeader = {}) {
-    console.log(
-      "🚀 ~ DataService ~ post ~ { ...authHeader(), ...optionalHeader }:",
-      { ...authHeader(), ...optionalHeader }
-    );
     return client({
       method: "POST",
       url: path,
