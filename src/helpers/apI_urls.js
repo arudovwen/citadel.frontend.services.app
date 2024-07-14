@@ -133,6 +133,7 @@ export const urls = {
   GET_PENDING_DEPARTMENT_REQUESTS:
     "/ChurchAffiliation/GetPendingDepartmentRequest",
   SET_PRIMARY_DEPARTMENT: "/Department/SetPrimaryDepartment",
+  GET_MEMBER_ATS: "/ChurchAffiliation/GetMemberAtsRecords",
 
   // Department
   CREATE_DEPARTMENT: "/Department/CreateDepartment",

@@ -47,8 +47,25 @@
           classInput="!h-[40px]"
         />
       </div>
+      <div v-if="charteredMember">
+        <CustomVueSelect
+          :disabled="
+            !state.auth.permissions.includes(
+              'CAN_UPDATE_CHURCH_AFFILIATION_MEMBERS'
+            )
+          "
+          label="Charter Member Number"
+          :options="charteredMemberNumberMenu"
+          v-model.value="charteredMemberNumber"
+          :modelValue="charteredMemberNumber"
+          :error="charteredMemberNumberError"
+          classInput="!h-[40px]"
+          placeholder="Search and select"
+          :reduce="(option) => option.value"
+        />
+      </div>
 
-      <div
+      <!-- <div
         v-if="
           (Number(levelOfATS) >= 2 && charteredMember == true) ||
           charteredMember == 'true'
@@ -68,7 +85,7 @@
           :error="charteredMemberNumberError"
           classInput="h-[40px]"
         />
-      </div>
+      </div> -->
 
       <div>
         <div v-if="isUserProfile" class="">
@@ -267,7 +284,7 @@ import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import ProfileInputSkeleton from "@/components/Pages/Profile/ProfileInputSkeleton.vue";
 import FormGroup from "@/components/FormGroup";
-import CustomVueSelect from "@/components/Select/CustomVueSelect.vue";
+import CustomVueSelect from "@/components/Select/VueSelect.vue";
 // import { useRouter } from "vue-router";
 import { levelOfATSMenu, isCharterMemberMenu } from "@/constant/data";
 import RequestZone from "@/components/Pages/Profile/ChurchAffiliation/RequestZone.vue";
@@ -302,10 +319,16 @@ const canEditDetails = inject("canEditDetails");
 const isUserProfile = inject("isUserProfile");
 
 // const isInspectorate = inject("isInspectorate");
-
+const charteredMemberNumberMenu = computed(() =>
+  store.state.department.atsRecords.map((i) => ({
+    label: `${i.ats_membership_no} - ${i.ats_original_names}`,
+    value: i.ats_membership_no,
+  }))
+);
 const toast = useToast();
 const getChurchAffiliationsData = () => {
   store.dispatch("getChurchAffiliationsById", id.value);
+  store.dispatch("getAtsMembersRecords", { pageNumber: 1, pageSuze: 150000 });
 };
 const submitLoading = computed(
   () => store.state.profile.updateChurchAffiliationDataloading

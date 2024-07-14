@@ -33,6 +33,10 @@ export default {
     department: null,
     departments: [],
     userDepartments: [],
+    atsloading: false,
+    atssuccess: false,
+    atsRecords: [],
+    atserror: false,
   },
   getters: {
     departments: (state) => state.departments,
@@ -71,6 +75,23 @@ export default {
       state.error = err;
       state.success = false;
     },
+    atsBegin(state) {
+      state.atsloading = true;
+      state.atserror = null;
+      state.atssuccess = false;
+      state.atsRecords = [];
+    },
+    atsSuccess(state, { data, totalCount }) {
+      state.atsloading = false;
+      state.atssuccess = true;
+      state.atsRecords = data ? data : [];
+      state.total = totalCount;
+    },
+    atsErr(state, err) {
+      state.latsoading = false;
+      state.atserror = err;
+      state.atssuccess = false;
+    },
     fetchAllBegin(state) {
       // state.loading = true;
       state.error = null;
@@ -82,7 +103,7 @@ export default {
       state.error = err;
       state.success = false;
     },
-    fetchAllSuccess(state, { data, totalCount }) {
+    fetchAllSuccess(state, { data }) {
       state.allDepartments = data ? data : [];
     },
     updateBegin(state) {
@@ -285,6 +306,19 @@ export default {
         }
       } catch (err) {
         commit("fetchErr", err);
+      }
+    },
+    async getAtsMembersRecords({ commit }, data) {
+      try {
+        commit("atsBegin");
+        const response = await DataService.get(
+          `${urls.GET_MEMBER_ATS}?${new URLSearchParams(cleanObject(data))}`
+        );
+        if (response.status === 200) {
+          commit("atsSuccess", response.data);
+        }
+      } catch (err) {
+        commit("atsErr", err);
       }
     },
     async getDepartmentsTotal({ commit }, data) {
